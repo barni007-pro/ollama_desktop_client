@@ -114,6 +114,7 @@ Partial Class Form1
         dvg_execute = New DataGridView()
         SiticoneLabel2 = New SiticoneNetCoreUI.SiticoneLabel()
         TabPage_codeblock = New TabPage()
+        SiticoneButton_execute_run = New SiticoneNetCoreUI.SiticoneButton()
         SiticoneButton_code_save = New SiticoneNetCoreUI.SiticoneButton()
         SiticoneLabel_runpath = New SiticoneNetCoreUI.SiticoneLabel()
         SiticoneCheckBox_UseShellExecute = New SiticoneNetCoreUI.SiticoneCheckBox()
@@ -983,10 +984,10 @@ Partial Class Form1
         Scintilla_format.AutocompleteListSelectedBackColor = Color.FromArgb(CByte(0), CByte(120), CByte(215))
         Scintilla_format.Font = New Font("Consolas", 10F)
         Scintilla_format.LexerName = "json"
-        Scintilla_format.Location = New Point(8, 123)
+        Scintilla_format.Location = New Point(8, 130)
         Scintilla_format.Name = "Scintilla_format"
         Scintilla_format.ScrollWidth = 70
-        Scintilla_format.Size = New Size(1381, 212)
+        Scintilla_format.Size = New Size(1381, 203)
         Scintilla_format.TabIndex = 53
         ' 
         ' SiticoneButton_link_content_prompt
@@ -1039,7 +1040,7 @@ Partial Class Form1
         SiticoneButton_link_content_prompt.IsReadOnly = False
         SiticoneButton_link_content_prompt.IsToggleButton = False
         SiticoneButton_link_content_prompt.IsToggled = False
-        SiticoneButton_link_content_prompt.Location = New Point(8, 544)
+        SiticoneButton_link_content_prompt.Location = New Point(8, 543)
         SiticoneButton_link_content_prompt.LongPressDurationMS = 1000
         SiticoneButton_link_content_prompt.Name = "SiticoneButton_link_content_prompt"
         SiticoneButton_link_content_prompt.NormalFontStyle = FontStyle.Regular
@@ -1143,7 +1144,7 @@ Partial Class Form1
         SiticoneButton_link_output_format.IsReadOnly = False
         SiticoneButton_link_output_format.IsToggleButton = False
         SiticoneButton_link_output_format.IsToggled = False
-        SiticoneButton_link_output_format.Location = New Point(8, 96)
+        SiticoneButton_link_output_format.Location = New Point(8, 105)
         SiticoneButton_link_output_format.LongPressDurationMS = 1000
         SiticoneButton_link_output_format.Name = "SiticoneButton_link_output_format"
         SiticoneButton_link_output_format.NormalFontStyle = FontStyle.Regular
@@ -1220,7 +1221,7 @@ Partial Class Form1
         SiticoneButton_link_system_prompt.IsReadOnly = False
         SiticoneButton_link_system_prompt.IsToggleButton = False
         SiticoneButton_link_system_prompt.IsToggled = False
-        SiticoneButton_link_system_prompt.Location = New Point(8, 2)
+        SiticoneButton_link_system_prompt.Location = New Point(8, 6)
         SiticoneButton_link_system_prompt.LongPressDurationMS = 1000
         SiticoneButton_link_system_prompt.Name = "SiticoneButton_link_system_prompt"
         SiticoneButton_link_system_prompt.NormalFontStyle = FontStyle.Regular
@@ -1386,7 +1387,7 @@ Partial Class Form1
         SiticoneButton_link_options_parameter.IsReadOnly = False
         SiticoneButton_link_options_parameter.IsToggleButton = False
         SiticoneButton_link_options_parameter.IsToggled = False
-        SiticoneButton_link_options_parameter.Location = New Point(8, 337)
+        SiticoneButton_link_options_parameter.Location = New Point(8, 339)
         SiticoneButton_link_options_parameter.LongPressDurationMS = 1000
         SiticoneButton_link_options_parameter.Name = "SiticoneButton_link_options_parameter"
         SiticoneButton_link_options_parameter.NormalFontStyle = FontStyle.Regular
@@ -1468,7 +1469,7 @@ Partial Class Form1
         ' CheckBox_system_use
         ' 
         CheckBox_system_use.AutoSize = True
-        CheckBox_system_use.Location = New Point(166, 3)
+        CheckBox_system_use.Location = New Point(165, 7)
         CheckBox_system_use.Name = "CheckBox_system_use"
         CheckBox_system_use.Size = New Size(149, 23)
         CheckBox_system_use.TabIndex = 42
@@ -1478,7 +1479,7 @@ Partial Class Form1
         ' CheckBox_format_use
         ' 
         CheckBox_format_use.AutoSize = True
-        CheckBox_format_use.Location = New Point(166, 97)
+        CheckBox_format_use.Location = New Point(165, 106)
         CheckBox_format_use.Name = "CheckBox_format_use"
         CheckBox_format_use.Size = New Size(148, 23)
         CheckBox_format_use.TabIndex = 40
@@ -1489,7 +1490,7 @@ Partial Class Form1
         ' 
         SiticoneLabel6.BackColor = Color.Transparent
         SiticoneLabel6.Font = New Font("Segoe UI", 10F)
-        SiticoneLabel6.Location = New Point(44, 98)
+        SiticoneLabel6.Location = New Point(44, 108)
         SiticoneLabel6.Name = "SiticoneLabel6"
         SiticoneLabel6.Size = New Size(116, 21)
         SiticoneLabel6.TabIndex = 38
@@ -1617,7 +1618,7 @@ Partial Class Form1
         SiticoneButton_load_parameter.IsReadOnly = False
         SiticoneButton_load_parameter.IsToggleButton = False
         SiticoneButton_load_parameter.IsToggled = False
-        SiticoneButton_load_parameter.Location = New Point(1169, 642)
+        SiticoneButton_load_parameter.Location = New Point(1172, 642)
         SiticoneButton_load_parameter.LongPressDurationMS = 1000
         SiticoneButton_load_parameter.Name = "SiticoneButton_load_parameter"
         SiticoneButton_load_parameter.NormalFontStyle = FontStyle.Regular
@@ -1695,7 +1696,7 @@ Partial Class Form1
         SiticoneButton_save_parameter.IsReadOnly = False
         SiticoneButton_save_parameter.IsToggleButton = False
         SiticoneButton_save_parameter.IsToggled = False
-        SiticoneButton_save_parameter.Location = New Point(1282, 642)
+        SiticoneButton_save_parameter.Location = New Point(1285, 642)
         SiticoneButton_save_parameter.LongPressDurationMS = 1000
         SiticoneButton_save_parameter.Name = "SiticoneButton_save_parameter"
         SiticoneButton_save_parameter.NormalFontStyle = FontStyle.Regular
@@ -1727,7 +1728,7 @@ Partial Class Form1
         ' 
         SiticoneLabel1.BackColor = Color.Transparent
         SiticoneLabel1.Font = New Font("Segoe UI", 10F)
-        SiticoneLabel1.Location = New Point(44, 339)
+        SiticoneLabel1.Location = New Point(44, 342)
         SiticoneLabel1.Name = "SiticoneLabel1"
         SiticoneLabel1.Size = New Size(129, 21)
         SiticoneLabel1.TabIndex = 33
@@ -1737,16 +1738,16 @@ Partial Class Form1
         ' 
         dgv_option.Anchor = AnchorStyles.Top Or AnchorStyles.Bottom Or AnchorStyles.Left Or AnchorStyles.Right
         dgv_option.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        dgv_option.Location = New Point(8, 363)
+        dgv_option.Location = New Point(8, 364)
         dgv_option.Name = "dgv_option"
-        dgv_option.Size = New Size(1381, 179)
+        dgv_option.Size = New Size(1381, 173)
         dgv_option.TabIndex = 32
         ' 
         ' SiticoneLabel4
         ' 
         SiticoneLabel4.BackColor = Color.Transparent
         SiticoneLabel4.Font = New Font("Segoe UI", 10F)
-        SiticoneLabel4.Location = New Point(44, 3)
+        SiticoneLabel4.Location = New Point(44, 9)
         SiticoneLabel4.Name = "SiticoneLabel4"
         SiticoneLabel4.Size = New Size(116, 21)
         SiticoneLabel4.TabIndex = 30
@@ -1758,7 +1759,7 @@ Partial Class Form1
         SiticoneTextArea_system.BackColor = SystemColors.GradientInactiveCaption
         SiticoneTextArea_system.BorderStyle = BorderStyle.None
         SiticoneTextArea_system.Font = New Font("Century Gothic", 10F)
-        SiticoneTextArea_system.Location = New Point(8, 27)
+        SiticoneTextArea_system.Location = New Point(8, 32)
         SiticoneTextArea_system.Margin = New Padding(5)
         SiticoneTextArea_system.MinimumSize = New Size(100, 65)
         SiticoneTextArea_system.Multiline = True
@@ -1801,10 +1802,10 @@ Partial Class Form1
         Scintilla_Tools_pythoncode.AutocompleteListSelectedBackColor = Color.FromArgb(CByte(0), CByte(120), CByte(215))
         Scintilla_Tools_pythoncode.Font = New Font("Consolas", 10F)
         Scintilla_Tools_pythoncode.LexerName = "python"
-        Scintilla_Tools_pythoncode.Location = New Point(6, 453)
+        Scintilla_Tools_pythoncode.Location = New Point(6, 445)
         Scintilla_Tools_pythoncode.Name = "Scintilla_Tools_pythoncode"
         Scintilla_Tools_pythoncode.ScrollWidth = 70
-        Scintilla_Tools_pythoncode.Size = New Size(1383, 183)
+        Scintilla_Tools_pythoncode.Size = New Size(1383, 191)
         Scintilla_Tools_pythoncode.TabIndex = 58
         ' 
         ' Scintilla_Tools_Json
@@ -1816,7 +1817,7 @@ Partial Class Form1
         Scintilla_Tools_Json.Location = New Point(8, 130)
         Scintilla_Tools_Json.Name = "Scintilla_Tools_Json"
         Scintilla_Tools_Json.ScrollWidth = 70
-        Scintilla_Tools_Json.Size = New Size(1381, 290)
+        Scintilla_Tools_Json.Size = New Size(1381, 284)
         Scintilla_Tools_Json.TabIndex = 57
         ' 
         ' SiticoneButton_link_tool_python_code
@@ -1868,7 +1869,7 @@ Partial Class Form1
         SiticoneButton_link_tool_python_code.IsReadOnly = False
         SiticoneButton_link_tool_python_code.IsToggleButton = False
         SiticoneButton_link_tool_python_code.IsToggled = False
-        SiticoneButton_link_tool_python_code.Location = New Point(8, 425)
+        SiticoneButton_link_tool_python_code.Location = New Point(8, 420)
         SiticoneButton_link_tool_python_code.LongPressDurationMS = 1000
         SiticoneButton_link_tool_python_code.Name = "SiticoneButton_link_tool_python_code"
         SiticoneButton_link_tool_python_code.NormalFontStyle = FontStyle.Regular
@@ -1945,7 +1946,7 @@ Partial Class Form1
         SiticoneButton_link_tool_json.IsReadOnly = False
         SiticoneButton_link_tool_json.IsToggleButton = False
         SiticoneButton_link_tool_json.IsToggled = False
-        SiticoneButton_link_tool_json.Location = New Point(8, 103)
+        SiticoneButton_link_tool_json.Location = New Point(8, 105)
         SiticoneButton_link_tool_json.LongPressDurationMS = 1000
         SiticoneButton_link_tool_json.Name = "SiticoneButton_link_tool_json"
         SiticoneButton_link_tool_json.NormalFontStyle = FontStyle.Regular
@@ -2054,7 +2055,7 @@ Partial Class Form1
         ' 
         SiticoneLabel10.BackColor = Color.Transparent
         SiticoneLabel10.Font = New Font("Segoe UI", 10F)
-        SiticoneLabel10.Location = New Point(229, 425)
+        SiticoneLabel10.Location = New Point(205, 423)
         SiticoneLabel10.Name = "SiticoneLabel10"
         SiticoneLabel10.Size = New Size(169, 21)
         SiticoneLabel10.TabIndex = 53
@@ -2327,7 +2328,7 @@ Partial Class Form1
         SiticoneTextBox_request_answer.HoverBorderColor1 = Color.Gray
         SiticoneTextBox_request_answer.HoverBorderColor2 = Color.Gray
         SiticoneTextBox_request_answer.IsEnabled = True
-        SiticoneTextBox_request_answer.Location = New Point(404, 423)
+        SiticoneTextBox_request_answer.Location = New Point(404, 421)
         SiticoneTextBox_request_answer.Name = "SiticoneTextBox_request_answer"
         SiticoneTextBox_request_answer.PlaceholderColor = Color.Gray
         SiticoneTextBox_request_answer.PlaceholderText = "no request answer"
@@ -2356,7 +2357,7 @@ Partial Class Form1
         SiticoneTextArea_Tools_system.BackColor = SystemColors.GradientInactiveCaption
         SiticoneTextArea_Tools_system.BorderStyle = BorderStyle.None
         SiticoneTextArea_Tools_system.Font = New Font("Century Gothic", 10F)
-        SiticoneTextArea_Tools_system.Location = New Point(8, 34)
+        SiticoneTextArea_Tools_system.Location = New Point(8, 32)
         SiticoneTextArea_Tools_system.Margin = New Padding(5)
         SiticoneTextArea_Tools_system.MinimumSize = New Size(100, 65)
         SiticoneTextArea_Tools_system.Multiline = True
@@ -2390,7 +2391,7 @@ Partial Class Form1
         ' 
         SiticoneLabel8.BackColor = Color.Transparent
         SiticoneLabel8.Font = New Font("Segoe UI", 10F)
-        SiticoneLabel8.Location = New Point(44, 425)
+        SiticoneLabel8.Location = New Point(44, 423)
         SiticoneLabel8.Name = "SiticoneLabel8"
         SiticoneLabel8.Size = New Size(150, 21)
         SiticoneLabel8.TabIndex = 32
@@ -2400,7 +2401,7 @@ Partial Class Form1
         ' 
         SiticoneLabel7.BackColor = Color.Transparent
         SiticoneLabel7.Font = New Font("Segoe UI", 10F)
-        SiticoneLabel7.Location = New Point(44, 104)
+        SiticoneLabel7.Location = New Point(44, 108)
         SiticoneLabel7.Name = "SiticoneLabel7"
         SiticoneLabel7.Size = New Size(116, 21)
         SiticoneLabel7.TabIndex = 31
@@ -2497,7 +2498,7 @@ Partial Class Form1
         SiticoneButton_link_rag_tool_json.IsReadOnly = False
         SiticoneButton_link_rag_tool_json.IsToggleButton = False
         SiticoneButton_link_rag_tool_json.IsToggled = False
-        SiticoneButton_link_rag_tool_json.Location = New Point(8, 104)
+        SiticoneButton_link_rag_tool_json.Location = New Point(8, 105)
         SiticoneButton_link_rag_tool_json.LongPressDurationMS = 1000
         SiticoneButton_link_rag_tool_json.Name = "SiticoneButton_link_rag_tool_json"
         SiticoneButton_link_rag_tool_json.NormalFontStyle = FontStyle.Regular
@@ -2764,7 +2765,7 @@ Partial Class Form1
         SiticoneTextArea_Rag_system.BackColor = SystemColors.GradientInactiveCaption
         SiticoneTextArea_Rag_system.BorderStyle = BorderStyle.None
         SiticoneTextArea_Rag_system.Font = New Font("Century Gothic", 10F)
-        SiticoneTextArea_Rag_system.Location = New Point(8, 34)
+        SiticoneTextArea_Rag_system.Location = New Point(8, 31)
         SiticoneTextArea_Rag_system.Margin = New Padding(5)
         SiticoneTextArea_Rag_system.MinimumSize = New Size(100, 65)
         SiticoneTextArea_Rag_system.Multiline = True
@@ -2788,7 +2789,7 @@ Partial Class Form1
         ' 
         SiticoneLabel12.BackColor = Color.Transparent
         SiticoneLabel12.Font = New Font("Segoe UI", 10F)
-        SiticoneLabel12.Location = New Point(44, 106)
+        SiticoneLabel12.Location = New Point(44, 108)
         SiticoneLabel12.Name = "SiticoneLabel12"
         SiticoneLabel12.Size = New Size(174, 21)
         SiticoneLabel12.TabIndex = 60
@@ -3276,7 +3277,7 @@ Partial Class Form1
         SiticoneButton_link_execute_list.IsReadOnly = False
         SiticoneButton_link_execute_list.IsToggleButton = False
         SiticoneButton_link_execute_list.IsToggled = False
-        SiticoneButton_link_execute_list.Location = New Point(8, 3)
+        SiticoneButton_link_execute_list.Location = New Point(8, 6)
         SiticoneButton_link_execute_list.LongPressDurationMS = 1000
         SiticoneButton_link_execute_list.Name = "SiticoneButton_link_execute_list"
         SiticoneButton_link_execute_list.NormalFontStyle = FontStyle.Regular
@@ -3464,16 +3465,16 @@ Partial Class Form1
         ' 
         dvg_execute.Anchor = AnchorStyles.Top Or AnchorStyles.Bottom Or AnchorStyles.Left Or AnchorStyles.Right
         dvg_execute.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        dvg_execute.Location = New Point(8, 30)
+        dvg_execute.Location = New Point(8, 31)
         dvg_execute.Name = "dvg_execute"
-        dvg_execute.Size = New Size(1381, 606)
+        dvg_execute.Size = New Size(1381, 605)
         dvg_execute.TabIndex = 33
         ' 
         ' SiticoneLabel2
         ' 
         SiticoneLabel2.BackColor = Color.Transparent
         SiticoneLabel2.Font = New Font("Segoe UI", 10F)
-        SiticoneLabel2.Location = New Point(44, 6)
+        SiticoneLabel2.Location = New Point(44, 9)
         SiticoneLabel2.Name = "SiticoneLabel2"
         SiticoneLabel2.Size = New Size(171, 21)
         SiticoneLabel2.TabIndex = 31
@@ -3482,6 +3483,7 @@ Partial Class Form1
         ' TabPage_codeblock
         ' 
         TabPage_codeblock.BackColor = Color.WhiteSmoke
+        TabPage_codeblock.Controls.Add(SiticoneButton_execute_run)
         TabPage_codeblock.Controls.Add(SiticoneButton_code_save)
         TabPage_codeblock.Controls.Add(SiticoneLabel_runpath)
         TabPage_codeblock.Controls.Add(SiticoneCheckBox_UseShellExecute)
@@ -3494,6 +3496,83 @@ Partial Class Form1
         SiticoneButton_tab.SetTabImage(TabPage_codeblock, My.Resources.Resources.square_terminal)
         TabPage_codeblock.TabIndex = 6
         TabPage_codeblock.Text = "Code Block"
+        ' 
+        ' SiticoneButton_execute_run
+        ' 
+        SiticoneButton_execute_run.AccessibleDescription = "The default button control that accept input though the mouse, touch and keyboard"
+        SiticoneButton_execute_run.AccessibleName = ""
+        SiticoneButton_execute_run.AutoSizeBasedOnText = False
+        SiticoneButton_execute_run.BackColor = Color.Transparent
+        SiticoneButton_execute_run.BadgeBackColor = Color.Red
+        SiticoneButton_execute_run.BadgeFont = New Font("Segoe UI", 8F, FontStyle.Bold)
+        SiticoneButton_execute_run.BadgeValue = 0
+        SiticoneButton_execute_run.BadgeValueForeColor = Color.White
+        SiticoneButton_execute_run.BorderColor = Color.Gray
+        SiticoneButton_execute_run.BorderWidth = 2
+        SiticoneButton_execute_run.ButtonBackColor = Color.FromArgb(CByte(224), CByte(224), CByte(224))
+        SiticoneButton_execute_run.ButtonImage = My.Resources.Resources.help_16
+        SiticoneButton_execute_run.ButtonTextLeftPadding = 0
+        SiticoneButton_execute_run.CanBeep = True
+        SiticoneButton_execute_run.CanGlow = False
+        SiticoneButton_execute_run.CanShake = True
+        SiticoneButton_execute_run.ContextMenuStripEx = Nothing
+        SiticoneButton_execute_run.CornerRadiusBottomLeft = 8
+        SiticoneButton_execute_run.CornerRadiusBottomRight = 8
+        SiticoneButton_execute_run.CornerRadiusTopLeft = 8
+        SiticoneButton_execute_run.CornerRadiusTopRight = 8
+        SiticoneButton_execute_run.CustomCursor = Cursors.Default
+        SiticoneButton_execute_run.DisabledTextColor = Color.FromArgb(CByte(150), CByte(150), CByte(150))
+        SiticoneButton_execute_run.EnableLongPress = False
+        SiticoneButton_execute_run.EnablePressAnimation = True
+        SiticoneButton_execute_run.EnableRippleEffect = True
+        SiticoneButton_execute_run.EnableShadow = False
+        SiticoneButton_execute_run.EnableTextWrapping = False
+        SiticoneButton_execute_run.Font = New Font("Segoe UI", 9F)
+        SiticoneButton_execute_run.GlowColor = Color.FromArgb(CByte(100), CByte(255), CByte(255), CByte(255))
+        SiticoneButton_execute_run.GlowIntensity = 100
+        SiticoneButton_execute_run.GlowRadius = 20F
+        SiticoneButton_execute_run.GradientBackground = False
+        SiticoneButton_execute_run.GradientColor = Color.Gray
+        SiticoneButton_execute_run.GradientMode = Drawing2D.LinearGradientMode.Vertical
+        SiticoneButton_execute_run.HintText = Nothing
+        SiticoneButton_execute_run.HoverBackColor = Color.Silver
+        SiticoneButton_execute_run.HoverFontStyle = FontStyle.Regular
+        SiticoneButton_execute_run.HoverTextColor = Color.White
+        SiticoneButton_execute_run.HoverTransitionDuration = 250
+        SiticoneButton_execute_run.ImageAlign = ContentAlignment.MiddleCenter
+        SiticoneButton_execute_run.ImagePadding = 5
+        SiticoneButton_execute_run.ImageSize = New Size(16, 16)
+        SiticoneButton_execute_run.IsRadial = False
+        SiticoneButton_execute_run.IsReadOnly = False
+        SiticoneButton_execute_run.IsToggleButton = False
+        SiticoneButton_execute_run.IsToggled = False
+        SiticoneButton_execute_run.Location = New Point(8, 6)
+        SiticoneButton_execute_run.LongPressDurationMS = 1000
+        SiticoneButton_execute_run.Name = "SiticoneButton_execute_run"
+        SiticoneButton_execute_run.NormalFontStyle = FontStyle.Regular
+        SiticoneButton_execute_run.ParticleColor = Color.FromArgb(CByte(200), CByte(200), CByte(200))
+        SiticoneButton_execute_run.ParticleCount = 15
+        SiticoneButton_execute_run.PressAnimationScale = 0.97F
+        SiticoneButton_execute_run.PressedBackColor = Color.FromArgb(CByte(74), CByte(128), CByte(235))
+        SiticoneButton_execute_run.PressedFontStyle = FontStyle.Regular
+        SiticoneButton_execute_run.PressTransitionDuration = 150
+        SiticoneButton_execute_run.ReadOnlyTextColor = Color.FromArgb(CByte(100), CByte(100), CByte(100))
+        SiticoneButton_execute_run.RippleColor = Color.FromArgb(CByte(255), CByte(255), CByte(255))
+        SiticoneButton_execute_run.RippleOpacity = 0.3F
+        SiticoneButton_execute_run.RippleRadiusMultiplier = 0.6F
+        SiticoneButton_execute_run.ShadowBlur = 5
+        SiticoneButton_execute_run.ShadowColor = Color.FromArgb(CByte(100), CByte(0), CByte(0), CByte(0))
+        SiticoneButton_execute_run.ShadowOffset = New Point(2, 2)
+        SiticoneButton_execute_run.ShakeDuration = 500
+        SiticoneButton_execute_run.ShakeIntensity = 5
+        SiticoneButton_execute_run.Size = New Size(30, 24)
+        SiticoneButton_execute_run.TabIndex = 69
+        SiticoneButton_execute_run.TextAlign = ContentAlignment.MiddleCenter
+        SiticoneButton_execute_run.TextColor = Color.White
+        ToolTip1.SetToolTip(SiticoneButton_execute_run, "Help")
+        SiticoneButton_execute_run.TooltipText = Nothing
+        SiticoneButton_execute_run.UseAdvancedRendering = True
+        SiticoneButton_execute_run.UseParticles = False
         ' 
         ' SiticoneButton_code_save
         ' 
@@ -3546,7 +3625,7 @@ Partial Class Form1
         SiticoneButton_code_save.IsReadOnly = False
         SiticoneButton_code_save.IsToggleButton = False
         SiticoneButton_code_save.IsToggled = False
-        SiticoneButton_code_save.Location = New Point(1284, 4)
+        SiticoneButton_code_save.Location = New Point(1284, 6)
         SiticoneButton_code_save.LongPressDurationMS = 1000
         SiticoneButton_code_save.Name = "SiticoneButton_code_save"
         SiticoneButton_code_save.NormalFontStyle = FontStyle.Regular
@@ -3579,7 +3658,7 @@ Partial Class Form1
         SiticoneLabel_runpath.Anchor = AnchorStyles.Top Or AnchorStyles.Left Or AnchorStyles.Right
         SiticoneLabel_runpath.BackColor = Color.Transparent
         SiticoneLabel_runpath.Font = New Font("Segoe UI", 10F)
-        SiticoneLabel_runpath.Location = New Point(596, 4)
+        SiticoneLabel_runpath.Location = New Point(596, 6)
         SiticoneLabel_runpath.Name = "SiticoneLabel_runpath"
         SiticoneLabel_runpath.Size = New Size(682, 23)
         SiticoneLabel_runpath.TabIndex = 31
@@ -3628,7 +3707,7 @@ Partial Class Form1
         SiticoneCheckBox_UseShellExecute.IndeterminateColor = Color.FromArgb(CByte(180), CByte(180), CByte(180))
         SiticoneCheckBox_UseShellExecute.IsContained = False
         SiticoneCheckBox_UseShellExecute.IsReadOnly = False
-        SiticoneCheckBox_UseShellExecute.Location = New Point(412, 4)
+        SiticoneCheckBox_UseShellExecute.Location = New Point(412, 6)
         SiticoneCheckBox_UseShellExecute.MinimumSize = New Size(178, 24)
         SiticoneCheckBox_UseShellExecute.Name = "SiticoneCheckBox_UseShellExecute"
         SiticoneCheckBox_UseShellExecute.PressedBackColor = Color.DarkGray
@@ -3689,7 +3768,7 @@ Partial Class Form1
         SiticoneSplitContainer_runcont.SnapDistance = 20
         SiticoneSplitContainer_runcont.SnapPositions = New Single() {0.25F, 0.5F, 0.75F}
         SiticoneSplitContainer_runcont.SplitterCursor = Cursors.HSplit
-        SiticoneSplitContainer_runcont.SplitterDistance = 464
+        SiticoneSplitContainer_runcont.SplitterDistance = 502
         SiticoneSplitContainer_runcont.SplitterHighlightColor = Color.DodgerBlue
         SiticoneSplitContainer_runcont.SplitterMoveable = True
         SiticoneSplitContainer_runcont.SplitterMoveLeftKey = Keys.Left
@@ -3710,7 +3789,7 @@ Partial Class Form1
         Scintilla_code_block.Location = New Point(0, 0)
         Scintilla_code_block.Name = "Scintilla_code_block"
         Scintilla_code_block.ScrollWidth = 70
-        Scintilla_code_block.Size = New Size(1389, 464)
+        Scintilla_code_block.Size = New Size(1389, 502)
         Scintilla_code_block.TabIndex = 59
         ' 
         ' SiticoneTextArea_run_output
@@ -3725,7 +3804,7 @@ Partial Class Form1
         SiticoneTextArea_run_output.Name = "SiticoneTextArea_run_output"
         SiticoneTextArea_run_output.PlaceholderText = "Wait for Output..."
         SiticoneTextArea_run_output.ScrollBars = ScrollBars.Vertical
-        SiticoneTextArea_run_output.Size = New Size(1389, 168)
+        SiticoneTextArea_run_output.Size = New Size(1389, 130)
         SiticoneTextArea_run_output.TabIndex = 2
         ' 
         ' SiticoneButton_code_run
@@ -3778,7 +3857,7 @@ Partial Class Form1
         SiticoneButton_code_run.IsReadOnly = False
         SiticoneButton_code_run.IsToggleButton = False
         SiticoneButton_code_run.IsToggled = False
-        SiticoneButton_code_run.Location = New Point(299, 4)
+        SiticoneButton_code_run.Location = New Point(299, 6)
         SiticoneButton_code_run.LongPressDurationMS = 1000
         SiticoneButton_code_run.Name = "SiticoneButton_code_run"
         SiticoneButton_code_run.NormalFontStyle = FontStyle.Regular
@@ -3827,7 +3906,7 @@ Partial Class Form1
         SiticoneDropdown_language.HoveredItemTextColor = Color.Black
         SiticoneDropdown_language.IsReadonly = False
         SiticoneDropdown_language.ItemHeight = 30
-        SiticoneDropdown_language.Location = New Point(5, 4)
+        SiticoneDropdown_language.Location = New Point(44, 6)
         SiticoneDropdown_language.MaxDropDownItems = 8
         SiticoneDropdown_language.Name = "SiticoneDropdown_language"
         SiticoneDropdown_language.PlaceholderColor = Color.Gray
@@ -3838,7 +3917,7 @@ Partial Class Form1
         SiticoneDropdown_language.SelectedItemBackColor = Color.LightBlue
         SiticoneDropdown_language.SelectedItemTextColor = Color.Black
         SiticoneDropdown_language.SelectedValue = Nothing
-        SiticoneDropdown_language.Size = New Size(288, 23)
+        SiticoneDropdown_language.Size = New Size(249, 23)
         SiticoneDropdown_language.TabIndex = 27
         SiticoneDropdown_language.UnselectedItemTextColor = Color.Black
         SiticoneDropdown_language.ValueMember = Nothing
@@ -4731,5 +4810,6 @@ Partial Class Form1
     Friend WithEvents Scintilla_Response_JSON As ScintillaNET.Scintilla
     Friend WithEvents Scintilla_response As ScintillaNET.Scintilla
     Friend WithEvents Scintilla_code_block As ScintillaNET.Scintilla
+    Friend WithEvents SiticoneButton_execute_run As SiticoneNetCoreUI.SiticoneButton
 
 End Class

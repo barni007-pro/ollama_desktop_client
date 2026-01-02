@@ -1,4 +1,5 @@
 ﻿Imports System.Drawing.Printing
+Imports System.Formats
 Imports System.IO
 Imports System.Management
 Imports System.Media
@@ -2265,6 +2266,10 @@ Public Class Form1
         Await InitializeWebView2("link_execute_list")
     End Sub
 
+    Private Async Sub SiticoneButton_execute_run_Click(sender As Object, e As EventArgs) Handles SiticoneButton_execute_run.Click
+        Await InitializeWebView2("link_execute_run")
+    End Sub
+
     Private Sub SetupEditor(editor As ScintillaNET.Scintilla, langType As String)
         ' -------------------------------------------------------------------------
         ' 1. GRUND-DESIGN (RESET)
@@ -2392,6 +2397,7 @@ Public Class Form1
 
         End Select
     End Sub
+
 End Class
 
 Public Class DocumentIndex
