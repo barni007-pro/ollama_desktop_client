@@ -26,10 +26,14 @@
         '
         '    Version.Text = System.String.Format(Version.Text, My.Application.Info.Version.Major, My.Application.Info.Version.Minor, My.Application.Info.Version.Build, My.Application.Info.Version.Revision)
 
-        Version.Text = System.String.Format(Version.Text, My.Application.Info.Version.Major, My.Application.Info.Version.Minor)
+        Dim appVersion As Version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version
+        Version.Text = String.Format("Version {0}.{1}.{2}",
+                                           appVersion.Major,
+                                           appVersion.Minor,
+                                           appVersion.Build)
 
         'Copyrightinformationen
-        Copyright.Text = My.Application.Info.Copyright
+        Copyright.Text = "Copyright: " & My.Application.Info.Copyright
     End Sub
 
 End Class

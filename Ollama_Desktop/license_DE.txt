@@ -1,0 +1,73 @@
+DRITTANBIETER-LIZENZEN UND RECHTLICHE HINWEISE
+
+Diese Software verwendet Komponenten von Drittanbietern. Nachfolgend finden Sie die 
+vollständigen Urheberrechtshinweise und Lizenztexte für die verwendeten Pakete:
+
+--------------------------------------------------------------------------------
+1. Ollama_Desktop, Newtonsoft.Json, Scintilla5.NET (MIT-Lizenz)
+--------------------------------------------------------------------------------
+Die folgenden Komponenten unterliegen der MIT-Lizenz:
+- Ollama_Desktop (Urheber: 7soft)
+- Newtonsoft.Json (Urheber: Newtonsoft)
+- Scintilla5.NET (Urheber: Brandon Desjarlais)
+
+LIZENZTEXT:
+Permission is hereby granted, free of charge, to any person obtaining a copy of 
+this software and associated documentation files (the "Software"), to deal in 
+the Software without restriction, including without limitation the rights to 
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies 
+of the Software, and to permit persons to whom the Software is furnished to do 
+so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all 
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE 
+SOFTWARE.
+
+--------------------------------------------------------------------------------
+2. WebView2 (Microsoft Corporation)
+--------------------------------------------------------------------------------
+Urheber: Microsoft Corporation. Alle Rechte vorbehalten.
+
+Bedingungen:
+Die Weitergabe und Verwendung in Quell- oder Binärform, mit oder ohne 
+Modifikation, ist gestattet, sofern die folgenden Bedingungen erfüllt sind:
+* Weiterleihungen von Quellcode müssen den Urheberrechtshinweis, diese Liste der 
+  Bedingungen und den folgenden Haftungsausschluss beibehalten.
+* Weiterleihungen in Binärform müssen den obigen Urheberrechtshinweis, diese 
+  Liste der Bedingungen und den folgenden Haftungsausschluss in der 
+  Dokumentation und/oder anderen Materialien reproduzieren.
+* Der Name der Microsoft Corporation oder ihrer Mitwirkenden darf nicht ohne 
+  vorherige schriftliche Genehmigung verwendet werden, um von dieser Software 
+  abgeleitete Produkte zu bewerben.
+
+HAFTUNGSAUSSCHLUSS:
+DIESE SOFTWARE WIRD VON DEN URHEBERRECHTSINHABERN WIE BESEHEN BEREITGESTELLT. 
+JEGLICHE AUSDRÜCKLICHE ODER STILLSCHWEIGENDE GEWÄHRLEISTUNG IST AUSGESCHLOSSEN.
+IN KEINEM FALL HAFTET DER EIGENTÜMER FÜR DIREKTE, INDIREKTE ODER ZUFÄLLIGE SCHÄDEN 
+JEGLICHER ART (EINSCHLIESSLICH DATENVERLUST ODER ENTGANGENEM GEWINN).
+
+--------------------------------------------------------------------------------
+3. Markdig (BSD-2-Clause)
+--------------------------------------------------------------------------------
+Urheber: Alexandre MUTEL aka xoofx
+Lizenz: Diese Software wird unter der BSD-Clause 2 Lizenz veröffentlicht.
+
+--------------------------------------------------------------------------------
+4. PdfPig (Apache License 2.0)
+--------------------------------------------------------------------------------
+Urheber: Ugly Toad
+Lizenz: Lizenziert unter der Apache License, Version 2.0.
+
+--------------------------------------------------------------------------------
+5. Siticone.NetCore.UI (Proprietäre Lizenz)
+--------------------------------------------------------------------------------
+Urheber: Siticone Technology
+Bitte lesen und verstehen Sie alle rechtlichen Bedingungen von Siticone 
+Technology. Bei Fragen wenden Sie sich bitte jederzeit an den Anbieter.
