@@ -2,6 +2,8 @@
 
 > **Languages:** [English](README.md) | [Deutsch]
 
+---
+
 **Ollama Desktop** ist eine grafische Benutzeroberfläche (GUI) für **Ollama**. Sie ermöglicht es dir, lokal installierte KI-Modelle komfortabel zu steuern, Parameter fein abzustimmen und strukturierte JSON-Antworten zu erzwingen.
 
 ---
