@@ -1,0 +1,16 @@
+{
+  "german": {
+    "help_path": "help\\index_DE.html",
+    "model_path": "settings\\default_DE.model.json",
+    "code_path": "settings\\default_DE.code.json",
+    "tools_path": "settings\\default_DE.tools.json",
+    "rag_path": "settings\\default_DE.rag.json"
+  },
+  "english": {
+    "help_path": "help\\index_GB.html",
+    "model_path": "settings\\default_GB.model.json",
+    "code_path": "settings\\default_GB.code.json",
+    "tools_path": "settings\\default_GB.tools.json",
+    "rag_path": "settings\\default_GB.rag.json"
+  }    
+}

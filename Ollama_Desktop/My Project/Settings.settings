@@ -1,0 +1,330 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="My" GeneratedClassName="MySettings" UseMySettingsClassName="true">
+  <Profiles />
+  <Settings>
+    <Setting Name="ollama_host" Type="System.String" Scope="User">
+      <Value Profile="(Default)">localhost:11434</Value>
+    </Setting>
+    <Setting Name="run_execute_list" Type="System.Collections.Specialized.StringCollection" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;string&gt;python&amp;lt;|&amp;gt;python.exe&amp;lt;|&amp;gt;&amp;lt;|&amp;gt;temp_script.py&amp;lt;|&amp;gt;py&lt;/string&gt;
+  &lt;string&gt;powershell&amp;lt;|&amp;gt;powershell.exe&amp;lt;|&amp;gt;-File&amp;lt;|&amp;gt;temp_script.ps1&amp;lt;|&amp;gt;ps1&lt;/string&gt;
+  &lt;string&gt;ps1&amp;lt;|&amp;gt;powershell.exe&amp;lt;|&amp;gt;-File&amp;lt;|&amp;gt;temp_script.ps1&amp;lt;|&amp;gt;ps1&lt;/string&gt;
+  &lt;string&gt;batch&amp;lt;|&amp;gt;cmd.exe&amp;lt;|&amp;gt;/C&amp;lt;|&amp;gt;temp_script.bat&amp;lt;|&amp;gt;bat&lt;/string&gt;
+  &lt;string&gt;bat&amp;lt;|&amp;gt;cmd.exe&amp;lt;|&amp;gt;/C&amp;lt;|&amp;gt;temp_script.bat&amp;lt;|&amp;gt;bat&lt;/string&gt;
+  &lt;string&gt;html&amp;lt;|&amp;gt;chrome.exe&amp;lt;|&amp;gt;&amp;lt;|&amp;gt;temp_web.html&amp;lt;|&amp;gt;html&lt;/string&gt;
+  &lt;string&gt;javascript&amp;lt;|&amp;gt;node&amp;lt;|&amp;gt;&amp;lt;|&amp;gt;temp_java.js&amp;lt;|&amp;gt;js&lt;/string&gt;
+  &lt;string&gt;plaintext&amp;lt;|&amp;gt;&amp;lt;|&amp;gt;&amp;lt;|&amp;gt;&amp;lt;|&amp;gt;txt&lt;/string&gt;
+  &lt;string&gt;text&amp;lt;|&amp;gt;&amp;lt;|&amp;gt;&amp;lt;|&amp;gt;&amp;lt;|&amp;gt;txt&lt;/string&gt;
+  &lt;string&gt;txt&amp;lt;|&amp;gt;&amp;lt;|&amp;gt;&amp;lt;|&amp;gt;&amp;lt;|&amp;gt;txt&lt;/string&gt;
+  &lt;string&gt;json&amp;lt;|&amp;gt;&amp;lt;|&amp;gt;&amp;lt;|&amp;gt;&amp;lt;|&amp;gt;json&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+    <Setting Name="option_list" Type="System.Collections.Specialized.StringCollection" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;string&gt;temperature&amp;lt;|&amp;gt;false&amp;lt;|&amp;gt;float&amp;lt;|&amp;gt;0,7&lt;/string&gt;
+  &lt;string&gt;top_p&amp;lt;|&amp;gt;false&amp;lt;|&amp;gt;float&amp;lt;|&amp;gt;0,9&lt;/string&gt;
+  &lt;string&gt;top_k&amp;lt;|&amp;gt;false&amp;lt;|&amp;gt;int&amp;lt;|&amp;gt;20&lt;/string&gt;
+  &lt;string&gt;num_ctx&amp;lt;|&amp;gt;false&amp;lt;|&amp;gt;int&amp;lt;|&amp;gt;1024&lt;/string&gt;
+  &lt;string&gt;num_keep&amp;lt;|&amp;gt;false&amp;lt;|&amp;gt;int&amp;lt;|&amp;gt;5&lt;/string&gt;
+  &lt;string&gt;num_predict&amp;lt;|&amp;gt;false&amp;lt;|&amp;gt;int&amp;lt;|&amp;gt;500&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+    <Setting Name="html_def" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">&lt;!DOCTYPE html&gt;
+&lt;html lang='de'&gt;
+&lt;head&gt;
+    &lt;meta charset='UTF-8'&gt;
+    &lt;meta name='viewport' content='width=device-width, initial-scale=1.0'&gt;
+    &lt;title&gt;Markdown Vorschau&lt;/title&gt;
+    &lt;link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css'&gt;
+    &lt;link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css'&gt;
+    &lt;script src='https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js'&gt;&lt;/script&gt;
+    &lt;style&gt;
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 15px 0;
+        }
+        td, th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        code {
+            background-color: #e0e0e0;                         /* Helles Grau */
+            padding: 2px 6px;                                  /* Etwas mehr horizontales Padding */
+            border-radius: 4px;                                /* Runde Ecken für einen weicheren Look */
+            font-size: 0.85em;                                 /* Geringfügig kleinere Schriftgröße */
+            font-family: Consolas, ""Courier New"", monospace; /* Monospace-Schriftart */
+            border: 1px solid #666;                            /* Dezente Umrandung */
+            color: #333;                                       /* Dunklere Schriftfarbe */
+        }
+        lang {
+            background-color: #505050;                         /* sehr dunkel */
+            display: block;                                    /* Block-Element */
+            color: #ffffff;                                    /* Weißer Text */
+            padding: 0px 4px;                                  /* Innenabstand */
+            border-radius: 4px;                                /* Runde Ecken */
+            border: 1px solid #000;                            /* Dezente Umrandung */
+            font-size: 0.95em;                                 /* Schriftgröße */
+            margin: 0;                                         /* Kein äußerer Abstand */ 
+        }
+        pre code {
+            background-color: #ccffcc;                         /* Hellgrün */
+            display: block;                                    /* Block-Element */
+            padding: 0px 4px;                                  /* Innenabstand */
+            border-radius: 4px;                                /* Runde Ecken */
+            overflow-x: auto;                                  /* Seitliches Scrollen falls nötig */
+            margin: 0;                                         /* Kein äußerer Abstand */
+        }
+.       language-label {
+           background-color: #505050;
+           color: #ffffff;
+           padding: 0px 4px;
+           border-radius: 4px;
+           font-size: 0.95em;
+           margin: 0;
+       }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    {htmlContent}
+    &lt;script defer src='https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js'&gt;&lt;/script&gt;
+    &lt;script defer src='https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js' onload='renderMathInElement(document.body)'&gt;&lt;/script&gt;
+    &lt;script&gt; document.addEventListener('DOMContentLoaded', (event) =&gt; {hljs.highlightAll();}); &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</Value>
+    </Setting>
+    <Setting Name="format" Type="System.String" Scope="User">
+      <Value Profile="(Default)">{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "LänderListe",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "land": {
+        "type": "string",
+        "description": "Name des Landes"
+      },
+      "hauptstadt": {
+        "type": "string",
+        "description": "Hauptstadt des Landes"
+      },
+      "sprachen": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "description": "Name einer Sprache"
+        },
+        "minItems": 1,
+        "description": "Liste der gesprochenen Sprachen"
+      }
+    },
+    "required": ["land", "hauptstadt", "sprachen"],
+    "additionalProperties": false
+  }
+}</Value>
+    </Setting>
+    <Setting Name="format_use" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="system" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Antworte immer ausführlich und mit Beispielen. Gruppiere die Anwort in Abschnitte. Antworte immer in deutsch und niemals in englisch.</Value>
+    </Setting>
+    <Setting Name="tools_system" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Du bist ein Wetter-Assistent. Deine Aufgabe ist es, Wetteranfragen zu analysieren und das passende Tool aufzurufen.
+
+WICHTIGE REGELN:
+- Verwende 'get_weather' für aktuelle Wetterbedingungen
+- Verwende 'get_forecast' für Vorhersagen oder zukünftige Zeitpunkte
+- Schätze niemals Wetterdaten - rufe immer ein Tool auf
+- Bei mehrdeutigen Anfragen wähle das wahrscheinlichste Tool
+- Verwende den Stadtnamen in der Originalsprache oder auf Englisch
+
+BEISPIELE:
+- "Wie ist das Wetter in Berlin?" → get_weather mit city: "Berlin"
+- "Wird es morgen regnen?" → get_forecast (zukünftiger Zeitpunkt)
+- "Wettervorhersage für München" → get_forecast
+
+Antworte NUR mit einem JSON-Objekt in diesem Format:
+
+{"name":"get_weather","arguments":{"city":"&lt;Name der Stadt&gt;"}}
+
+oder
+
+{"name":"get_forecast","arguments":{"city":"&lt;Name der Stadt&gt;"}}</Value>
+    </Setting>
+    <Setting Name="tools_json" Type="System.String" Scope="User">
+      <Value Profile="(Default)">[
+  {
+    "type": "function",
+    "function": {
+      "name": "get_weather",
+      "description": "Gibt das aktuelle Wetter für eine angegebene Stadt zurück.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "city": {
+            "type": "string",
+            "description": "Der Name der Stadt, für die das Wetter abgefragt werden soll."
+          }
+        },
+        "required": ["city"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get_forecast",
+      "description": "Gibt die Wettervorhersage für die nächsten 5 Tage in 3-Stunden-Schritten für eine angegebene Stadt zurück.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "city": {
+            "type": "string",
+            "description": "Der Name der Stadt, für die die Wettervorhersage abgefragt werden soll."
+          }
+        },
+        "required": ["city"]
+      }
+    }
+  }
+]</Value>
+    </Setting>
+    <Setting Name="tools_pythoncode" Type="System.String" Scope="User">
+      <Value Profile="(Default)">import sys
+import json
+import requests
+
+API_KEY = "ac85d9cdcaef65f8c3130a7d5d5a0fde"
+
+USE_PROXY = True  # ← Diese Variable steuert die Proxy-Nutzung
+
+PROXIES = {
+    "http": "http://barnstorfr:MonalisaLinux!234@ndrprx01.ndr-net.de:8080",
+    "https": "http://barnstorfr:MonalisaLinux!234@ndrprx01.ndr-net.de:8080"
+} if USE_PROXY else None
+
+def get_weather(city):
+    url = "https://api.openweathermap.org/data/2.5/weather"
+    params = {"q": city, "appid": API_KEY, "units": "metric", "lang": "de"}
+    response = requests.get(url, params=params, proxies=PROXIES)
+    return response.json()
+
+def get_forecast(city):
+    url = "https://api.openweathermap.org/data/2.5/forecast"
+    params = {"q": city, "appid": API_KEY, "units": "metric", "lang": "de"}
+    response = requests.get(url, params=params, proxies=PROXIES)
+    return response.json()
+
+# Kommandozeilenargument verarbeiten
+if len(sys.argv) != 2:
+    print("Bitte ein JSON-Argument übergeben.")
+    sys.exit(1)
+
+try:
+    json_input = json.loads(sys.argv[1])
+    name = json_input.get("name")
+    city = json_input.get("arguments", {}).get("city")
+
+    if not city:
+        print("Stadtname fehlt im Argument.")
+        sys.exit(1)
+
+    if name == "get_weather":
+        result = get_weather(city)
+    elif name == "get_forecast":
+        result = get_forecast(city)
+    else:
+        print("Ungültiger Funktionsname. Verwende 'get_weather' oder 'get_forecast'.")
+        sys.exit(1)
+
+    print(json.dumps(result, indent=2, ensure_ascii=False))
+
+except Exception as e:
+    print(f"Fehler beim Verarbeiten des JSON: {e}")</Value>
+    </Setting>
+    <Setting Name="system_use" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="content_prompt" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Bearbeite die Anweisung basierend auf dem Dateiinhalt der folgenden Datei:
+{files}
+Anweisung:
+{prompt}</Value>
+    </Setting>
+    <Setting Name="context_file" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">{filename}:
+```{filextention}
+{text}
+```</Value>
+    </Setting>
+    <Setting Name="rag_system" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Du bist ein Keyword-Extraktions-Assistent. Deine Aufgabe ist es, aus Benutzeranfragen die wichtigsten Suchwörter zu identifizieren.
+
+AUFGABE:
+Extrahiere 3-6 relevante Schlüsselwörter aus der Frage, die für eine Textsuche optimal sind.
+
+REGELN:
+- Wähle die inhaltlich wichtigsten Wörter (keine Füllwörter wie "der", "und", "bitte")
+- Füge relevante Synonyme hinzu (z.B. "Auto" → auch "Fahrzeug", "PKW", "Wagen")
+- Füge gängige Abkürzungen hinzu (z.B. "Künstliche Intelligenz" → auch "KI", "AI")
+- Verwende die Grundform von Wörtern (z.B. "laufen" statt "gelaufen")
+- Priorisiere Substantive und Verben vor Adjektiven
+- Mindestens 3, maximal 6 Wörter
+
+BEISPIELE:
+
+Frage: "Wie funktioniert ein Elektromotor?"
+Antwort: {"name":"get_text","arguments":{"words":["Elektromotor","Motor","elektrisch","Funktionsweise","Antrieb"]}}
+
+Frage: "Welche Vorteile hat KI in der Medizin?"
+Antwort: {"name":"get_text","arguments":{"words":["KI","Künstliche Intelligenz","AI","Medizin","Gesundheit","Vorteile"]}}
+
+Frage: "Rezept für Apfelkuchen"
+Antwort: {"name":"get_text","arguments":{"words":["Apfelkuchen","Rezept","Kuchen","Apfel","backen"]}}
+
+Frage: "Unterschied zwischen Python und Java"
+Antwort: {"name":"get_text","arguments":{"words":["Python","Java","Programmiersprache","Vergleich","Unterschied"]}}</Value>
+    </Setting>
+    <Setting Name="rag_json" Type="System.String" Scope="User">
+      <Value Profile="(Default)">{
+  "type": "function",
+  "function": {
+    "name": "get_text",
+    "description": "Extrahiert relevante Schlüsselwörter, Synonyme und Abkürzungen aus einer Benutzeranfrage für die Textsuche. Gibt 3-6 Suchwörter zurück, die für eine semantische oder Volltextsuche optimiert sind.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "words": {
+          "type": "array",
+          "description": "Liste von 3-6 relevanten Suchwörtern, inklusive Synonymen, Abkürzungen und verwandten Begriffen",
+          "items": {
+            "type": "string",
+            "description": "Ein einzelnes Suchwort oder Synonym"
+          },
+          "minItems": 3,
+          "maxItems": 6
+        }
+      },
+      "required": ["words"],
+      "additionalProperties": false
+    }
+  }
+}</Value>
+    </Setting>
+    <Setting Name="help_path" Type="System.String" Scope="User">
+      <Value Profile="(Default)">help\index_DE.html</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

@@ -1,0 +1,533 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ollama Desktop Help</title>
+    <style>
+        :root {
+            --primary: #0078D7; /* Windows Blue */
+            --bg-body: #f3f3f3;
+            --bg-card: #ffffff;
+            --text-main: #2d2d2d;
+            --text-muted: #666;
+            --border: #e0e0e0;
+            --paypal-color: #0070ba;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-main);
+            background-color: var(--bg-body);
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1, h2, h3 {
+            color: var(--primary);
+            margin-top: 0;
+        }
+
+        h1 {
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 1.2rem;
+            margin-top: 20px;
+            border-left: 4px solid var(--primary);
+            padding-left: 10px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        /* Lists & Steps */
+        ol li {
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+            ol li span {
+                font-weight: normal;
+                color: var(--text-muted);
+            }
+
+        ul li {
+            margin-bottom: 5px;
+        }
+
+        /* Code Styling */
+        code {
+            background-color: #eee;
+            color: #d63384;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-family: Consolas, monospace;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background-color: #f8f8f8;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+            border: 1px solid #eee;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 0.95rem;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background-color: #f9f9f9;
+            color: var(--primary);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Note Boxes */
+        .note {
+            background-color: #e7f3fe;
+            border-left: 5px solid #2196F3;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .warn {
+            background-color: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 0 4px 4px 0;
+        }
+
+        /* Donate Button & Area */
+        .donate-card {
+            border: 1px solid #bce8f1;
+            background-color: #d9edf7;
+            text-align: center;
+        }
+
+        .donate-btn {
+            display: inline-block;
+            background-color: var(--paypal-color);
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: background 0.2s;
+        }
+
+            .donate-btn:hover {
+                background-color: #005ea6;
+            }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <div class="card">
+            <h1>Ollama Desktop - Help</h1>
+            <p>Welcome! This application is a graphical user interface (GUI) for <strong>Ollama</strong>. It allows you to comfortably control locally installed AI models, fine-tune parameters, and enforce structured JSON responses.</p>
+        </div>
+
+        <div class="card">
+            <h2>🚀 Quick Start</h2>
+            <ol>
+                <li>
+                    Start the Ollama server in the background.<br>
+                    <span>(Terminal: <code>ollama serve</code>)</span>
+                </li>
+                <li>
+                    Click on <strong>Get LLM List</strong> in the top left of the app.<br>
+                    <span>The list of your installed models will be loaded.</span>
+                </li>
+                <li>
+                    Select a model from the dropdown menu (e.g., <code>llama3</code> or <code>gemma2</code>).
+                </li>
+                <li>
+                    Enter your question below and press the <strong>Play Button (▶)</strong>.
+                </li>
+            </ol>
+            <div class="note">
+                <strong>Tip:</strong> Ensure the address in the top left is correct (Default: <code>127.0.0.1:11434</code>).
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>🔄 Operation Modes & Vision Support</h2>
+            <p>Use the <strong>API</strong> dropdown menu (top center) to control how the app communicates with the model. There are two modes:</p>
+
+            <h3>1. Generate Mode (Single Request)</h3>
+            <p>This mode is intended for one-off tasks ("One-Shot").</p>
+            <ul>
+                <li><strong>Vision / Images:</strong> This is the <em>only</em> mode where you can upload images (Buttons <code>+ File</code> or <code>+ Screenshot</code> bottom left). Use Vision models like <em>llava</em> or <em>moondream</em> for this.</li>
+                <li><strong>Behavior:</strong> Each request stands alone. The model "forgets" the previous question immediately.</li>
+                <li><strong>Context:</strong> However, it is possible to include the Context Tokens in the next request. This allows for a conversation even in Generate Mode.</li>
+            </ul>
+
+            <h3>2. Chat Mode (Conversation)</h3>
+            <p>Here, the entire conversation history is saved and sent with every new message.</p>
+            <ul>
+                <li><strong>Model Switching:</strong> A highlight of this mode is flexibility. You can <strong>switch LLMs</strong> in the middle of a conversation (e.g., from a fast 7B model to a smart 70B model) without losing the thread of the conversation.</li>
+            </ul>
+
+            <h3>🔀 The Bridge: "Generate > Chat"</h3>
+            <p>Since Chat Mode cannot directly receive images, the app offers an intelligent workflow:</p>
+            <ol>
+                <li>Select <strong>Generate</strong> and upload an image (e.g., "Describe this image").</li>
+                <li>Wait for the model's response.</li>
+                <li>Now click the <strong>Generate > Chat</strong> button at the top.</li>
+            </ol>
+            <p><strong>Result:</strong> The image analysis (Question + Answer) is copied into the Chat history. You can now ask follow-up questions about the image seamlessly in <strong>Chat Mode</strong>, as the model now "knows" the context.</p>
+        </div>
+
+        <div class="card">
+            <h2>🛠 Model Parameters</h2>
+
+            <h3 id="link_system_prompt">1. System Prompt</h3>
+            <p>Here you define the "personality" of the AI. Check the <strong>Use System Prompt</strong> box to send this instruction before every chat.</p>
+            <p><em>Example: "You are an experienced C# developer. Answer briefly and concisely."</em></p>
+
+            <h3 id="link_output_format">2. Output Format (JSON Mode)</h3>
+            <p>Especially useful for developers: If you need structured data, you can define a <strong>JSON Schema</strong> here. The model is forced to answer exactly in this format.</p>
+
+            <h3 id="link_content_prompt">3. Content Prompt</h3>
+            <p>This prompt extends the input prompt with attached files. These are generally files containing text (<strong>.txt</strong>, <strong>.json</strong>, <strong>.pdf</strong>...). Images are handled separately and passed to the LLM via an image parameter.</p>
+
+            <h3 id="link_options_parameter">4. Options Parameter Details</h3>
+            <p>In the "Options Parameter" table, you can precisely control the AI's response behavior. Here is the meaning of the standard settings:</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th width="25%">Option Name</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>temperature</code></td>
+                        <td>
+                            <strong>Creativity & Predictability.</strong><br>
+                            Controls how "boldly" the model chooses tokens. <br>
+                            <code>0.0</code>: Deterministic (always the same answer).<br>
+                            <code>0.7</code> - <code>0.8</code>: Balanced, natural answers (Default).<br>
+                            <code>1.2+</code>: Very experimental, diverse, or even chaotic.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>top_p</code></td>
+                        <td>
+                            <strong>Nucleus Sampling.</strong><br>
+                            Considers only words whose cumulative probability reaches value P. <br>
+                            Example: <code>0.9</code> means the model only looks at words that make up the top 90% of probability. Good for preventing completely absurd answers.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>top_k</code></td>
+                        <td>
+                            <strong>Selection Limit.</strong><br>
+                            Strictly limits the selection of the next word to the <code>K</code> most likely words.<br>
+                            Example: <code>40</code> allows only the top 40 candidates. Lower values make the model more focused and grammatically stable, but less varied.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>num_ctx</code></td>
+                        <td>
+                            <strong>Context Window (Input + Output).</strong><br>
+                            Determines how many tokens (word parts) the model can process simultaneously.<br>
+                            <code>1024</code>: Low VRAM usage, only for short chats.<br>
+                            <code>2048</code>: Standard for simple tasks.<br>
+                            <code>4096</code> - <code>8192</code>: Recommended for document analysis.<br>
+                            <em>Note: Higher values increase VRAM usage massively.</em>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>num_keep</code></td>
+                        <td>
+                            <strong>Permanent Context.</strong><br>
+                            Determines how many tokens from the beginning (usually the <strong>System Prompt</strong>) are kept in the cache when the context is full. <br>
+                            Example: <code>24</code> ensures that core instructions are not forgotten when the model starts deleting old messages.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>num_predict</code></td>
+                        <td>
+                            <strong>Maximum Response Length.</strong><br>
+                            Limits the number of tokens to be generated. <br>
+                            Example: <code>100</code> corresponds to approx. 75 words. <br>
+                            <code>-1</code>: Unlimited (until Stop-Token).<br>
+                            <code>-2</code>: Fills the remaining space in the context window.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>seed</code></td>
+                        <td>
+                            <strong>Random Number Generator Seed.</strong><br>
+                            A fixed value (e.g., <code>42</code>) ensures that the model always delivers the exact same answer given the exact same parameters and prompt. Useful for debugging and reproducibility.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>min_p</code></td>
+                        <td>
+                            <strong>Minimum Probability.</strong><br>
+                            Alternative to <code>top_p</code>. A word must have a minimum probability relative to the most likely word.<br>
+                            Example: <code>0.05</code> removes unlikely "outliers" often more efficiently and naturally than <code>top_p</code>.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>typical_p</code></td>
+                        <td>
+                            <strong>Linguistic Naturalness.</strong><br>
+                            Selects tokens that are "typical" for the context. Helps preserve the naturalness of language by balancing mathematically very probable but substantively repetitive words. (Standard mostly <code>1.0</code>).
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>repeat_last_n</code></td>
+                        <td>
+                            <strong>Repetition Guard Range.</strong><br>
+                            Determines how many tokens the model looks back to avoid repetitions. <br>
+                            Example: <code>64</code> checks the last 64 tokens. <code>0</code> disables the check.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>repeat_penalty</code></td>
+                        <td>
+                            <strong>Repetition Penalty.</strong><br>
+                            Penalizes words that have already appeared. <br>
+                            <code>1.0</code>: Neutral.<br>
+                            <code>1.1</code> - <code>1.2</code>: Good balance to prevent getting "stuck" in word loops.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>presence_penalty</code></td>
+                        <td>
+                            <strong>Topic Diversity.</strong><br>
+                            Penalizes tokens that are already present in the text (regardless of their frequency). Increases the likelihood that the model will talk about new aspects or topics.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>frequency_penalty</code></td>
+                        <td>
+                            <strong>Vocabulary Variation.</strong><br>
+                            Penalizes tokens based on how often they have already appeared. Effectively prevents the model from using the same sentences or specific phrases over and over.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>tfs_z</code></td>
+                        <td>
+                            <strong>Tail Free Sampling.</strong><br>
+                            Reduces the influence of very unlikely words at the end of the probability list ("Tail"). Similar to <code>top_p</code>, but weights the structure of the probability distribution more heavily.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="note">
+                <h3>➕ Extending the List</h3>
+                <p><strong>Missing a parameter?</strong> This list is not rigid! Ollama and new models often support additional parameters.</p>
+                <p>You can simply click into the bottom empty row (marked with an asterisk <code>*</code>) in the table and enter your <strong>own parameter name</strong> and value. As long as the loaded model supports this parameter, it will be applied.</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>⏱ Timeout Settings</h2>
+            <p>In the bottom left, you will find the <strong>Timeout [s]</strong> setting.</p>
+            <ul>
+                <li>The standard value is often set to 300 seconds (5 minutes).</li>
+                <li>If you use very large models or generate very long texts, the request may time out. Increase this value if necessary.</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>🛠 Tools & Function Calling</h2>
+            <p>The <strong>Tools</strong> tab transforms the LLM into an agent that can actively perform tasks (e.g., check weather, perform calculations). The entire process runs <strong>automatically</strong>.</p>
+
+            <h3 id="link_tool_system_prompt">1. Tool System Prompt</h3>
+            <p>This is the "guiding instruction" for the model. It is used in two phases:</p>
+            <ol>
+                <li><strong>Decision:</strong> The model uses this prompt to understand when it should call a tool.</li>
+                <li><strong>Processing:</strong> After the tool has been executed, the model uses the User Prompt and the Model System Prompt to correctly integrate the tool output into the response.</li>
+            </ol>
+            <div class="note">
+                <strong>Important:</strong> Check the <strong>Use Tool</strong> box in the top right to activate this function.
+            </div>
+
+            <h3 id="link_tool_json">2. Tool JSON (Schema)</h3>
+            <p>Here you define the interface (API) of your tool in JSON format. The model reads this JSON schema to know which parameters it must extract from the user request (e.g., <code>"city": "Berlin"</code>).</p>
+
+            <h3 id="link_tool_python_code">3. Tool Python Code</h3>
+            <p>Here you store the logic that should be executed. <strong>This code is automatically executed by the app</strong> as soon as the model requests the tool.</p>
+            <p><strong>The Workflow:</strong></p>
+            <ul>
+                <li>Model detects need for a tool and provides JSON parameters.</li>
+                <li>App executes your Python code with these parameters.</li>
+                <li>The return value of the Python code is automatically integrated into the original prompt.</li>
+                <li>The model generates the final answer based on your tool result.</li>
+            </ul>
+
+            <div class="warn">
+                <strong>Note:</strong> The Python code runs locally. Ensure that all required libraries (e.g., <code>requests</code>) are installed in your Python environment. You can copy the output of the Python Code to the clipboard using the <strong>Tools resp > CLP</strong> button.
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>📄 RAG Tool (Chat with Documents / Knowledge Base)</h2>
+            <p>Use this tab to upload your own text files or documents (<strong>.txt</strong> or <strong>.pdf</strong>). The content of these files is sent to the model as context so it can answer questions about your specific data.</p>
+
+            <h3>How it works (The Workflow)</h3>
+            <ol>
+                <li><strong>Load:</strong> The selected file is analyzed and internally split into individual sentences.</li>
+                <li><strong>Analysis:</strong> When you ask a question, the LLM first analyzes it and creates a list of <strong>search words, synonyms, and abbreviations</strong> (based on the internal configuration).</li>
+                <li><strong>Search:</strong> The app searches the split sentences for these terms ("Hit Count").</li>
+                <li><strong>Answer:</strong> The found text passages are passed to the LLM as background knowledge to precisely answer your question.</li>
+            </ol>
+
+            <div class="note">
+                <strong>Important:</strong> Check the <strong>Use RAG Tool</strong> box in the top right of the tab so that your documents are considered in the answer.
+            </div>
+
+            <h3>🎚 The Delta Parameter (Context)</h3>
+            <p>To the right of the file selection, you will find the <strong>Delta</strong> dropdown menu (0-9). This value controls how much context around a hit is sent to the LLM.</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th width="20%">Value</th>
+                        <th>Meaning</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>0</strong></td>
+                        <td>Only the exact sentence in which the search word was found is passed. (Very strict, context often missing).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>1</strong></td>
+                        <td>The hit sentence as well as <strong>1 sentence before and 1 sentence after</strong> are passed. (Recommended standard).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>2-9</strong></td>
+                        <td>Expands the context range accordingly. Useful if relationships are distributed over long paragraphs.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>⚙️ Background Info</h3>
+            <p>The logic for keyword determination ("Keyword Extraction Assistant") is stored in the RAG Tool settings. The system intelligently searches not only for your word but also for logical relatives (e.g., searching for "Car" also finds "Vehicle" or "Automobile").</p>
+
+            <h3 id="link_rag_tool_system_prompt">1. RAG Tool System Prompt</h3>
+            <p>This is the "guiding instruction" for the model. It is used in two phases:</p>
+            <ol>
+                <li><strong>Decision:</strong> The model uses this prompt to understand when it should call the RAG tool and how the search words should be determined.</li>
+                <li><strong>Processing:</strong> After the RAG tool has been executed, the model uses the User Prompt and the Model System Prompt to correctly integrate the filtered text results into the request.</li>
+            </ol>
+
+            <h3 id="link_rag_tool_json">2. RAG Tool JSON (Schema)</h3>
+            <p>Here you define the interface (API) of the RAG tool in JSON format. The model reads this JSON schema to know which parameters it must extract from the user request (e.g., <code>"words":["apple pie","recipe","cake","apple","baking"]</code>).</p>
+        </div>
+
+        <div class="card">
+            <h2>💻 Code Generation & Execution</h2>
+            <p>Ollama Desktop can not only display generated program code but also execute it directly. This supports languages like Python, PowerShell, Batch, HTML/JavaScript, and more.</p>
+
+            <h3 id="link_execute_list">1. Execute List (Tab: Code Parameter)</h3>
+            <p>For the app to know how to execute code, the interpreters must be defined. In the table, you store:</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Column</th>
+                        <th>Meaning</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Language</strong></td>
+                        <td>The name of the language as it appears in the Markdown code block (e.g., <code>python</code>, <code>powershell</code>).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Program</strong></td>
+                        <td>The path to the interpreter (e.g., <code>python.exe</code>, <code>node.exe</code>, <code>cmd.exe</code>).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Argument</strong></td>
+                        <td>Start parameters (e.g., <code>/C</code> for Batch or <code>-File</code> for PowerShell).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tempfile</strong></td>
+                        <td>The name of the temporary file where the code is saved before execution.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>2. Execution (Tab: Code Block)</h3>
+            <p>When the LLM has generated a code block (visible in the <em>Response HTML</em> tab), switch to the <strong>Code Block</strong> tab. The code is automatically extracted there.</p>
+
+            <h4>The Controls:</h4>
+            <ul>
+                <li><strong>Language Selection (Dropdown):</strong> If the LLM generated multiple code blocks (e.g., first Python, then SQL), select the desired block here.</li>
+                <li><strong>Run:</strong> Saves the code to the temporary file and executes it with the configured interpreter. The result appears in the "Output" window.</li>
+                <li>
+                    <strong>UseShellExecute:</strong>
+                    <ul>
+                        <li>✅ <strong>Activated:</strong> The program starts in its own external window (useful for GUI scripts). The output is <em>not</em> displayed in the app.</li>
+                        <li>⬜ <strong>Deactivated:</strong> The program runs in the background. The text output (console) is captured and displayed directly in the app's lower window.</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <div class="warn">
+                <strong>Security Warning:</strong> Only execute code that you understand! AIs can hallucinate and generate code that deletes files or creates infinite loops.
+            </div>
+        </div>
+
+        <div class="card donate-card">
+            <h2>☕ Support</h2>
+            <p>Do you like <strong>Ollama Desktop</strong>? The app is completely free and Open Source.</p>
+            <p>If you would like to support my work on this project, I would be very happy about a small donation via PayPal.</p>
+
+            <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=r.barnstorf@online.de&currency_code=EUR&source=url"
+               target="_blank"
+               class="donate-btn">
+                Donate via PayPal now
+            </a>
+            <p style="margin-top: 10px; font-size: 0.9em; color: #555;">
+                Recipient: <code>r.barnstorf@online.de</code>
+            </p>
+        </div>
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,43 @@
+{
+  "system_prompt": "Antworte immer ausführlich und mit Beispielen. Gruppiere die Anwort in Abschnitte. Antworte immer in deutsch und niemals in englisch.",
+  "option_parameter": [
+    {
+      "OptionName": "temperature",
+      "Use": false,
+      "ValueType": "float",
+      "Value": "0,9"
+    },
+    {
+      "OptionName": "top_p",
+      "Use": false,
+      "ValueType": "float",
+      "Value": "0,9"
+    },
+    {
+      "OptionName": "top_k",
+      "Use": false,
+      "ValueType": "int",
+      "Value": "20"
+    },
+    {
+      "OptionName": "num_ctx",
+      "Use": false,
+      "ValueType": "int",
+      "Value": "1024"
+    },
+    {
+      "OptionName": "num_keep",
+      "Use": false,
+      "ValueType": "int",
+      "Value": "5"
+    },
+    {
+      "OptionName": "num_predict",
+      "Use": false,
+      "ValueType": "int",
+      "Value": "5000"
+    }
+  ],
+  "output_format_use": false,
+  "output_format": "{\r\n    \"type\": \"object\",\r\n    \"properties\": {\r\n      \"name\": { \"type\": \"string\" },\r\n      \"capital\": { \"type\": \"string\" },\r\n      \"languages\": {\r\n        \"type\": \"array\",\r\n        \"items\": { \"type\": \"string\" }\r\n      }\r\n    },\r\n    \"required\": [\"name\", \"capital\", \"languages\"]\r\n}\r\n"
+}
