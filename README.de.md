@@ -2,78 +2,101 @@
 
 > **Languages:** [English](README.md) | [Deutsch]
 
-**Ollama Desktop** ist eine grafische Benutzeroberfläche (GUI) für **Ollama**. Die Anwendung ermöglicht die komfortable Steuerung lokal installierter KI-Modelle, die Feinabstimmung von Parametern und die Erzwingung strukturierter JSON-Antworten.
+**Ollama Desktop** ist eine grafische Benutzeroberfläche (GUI) für **Ollama**. Sie ermöglicht es dir, lokal installierte KI-Modelle komfortabel zu steuern, Parameter fein abzustimmen und strukturierte JSON-Antworten zu erzwingen.
 
 ---
 
 ## 🚀 Schnellstart
 
-1. **Ollama-Server starten:** Starten Sie den Server im Hintergrund (Terminal: `ollama serve`).
-2. **LLM-Liste laden:** Klicken Sie oben links auf **Get LLM List**.
-3. **Modell wählen:** Wählen Sie ein Modell aus dem Dropdown-Menü (z. B. `llama3` oder `gemma2`).
-4. **Anfrage stellen:** Geben Sie Ihre Frage ein und drücken Sie den **Play-Button (▶)**.
+1.  **Ollama-Server starten:** Starte den Ollama-Server im Hintergrund (Terminal: `ollama serve`).
+2.  **LLM-Liste laden:** Klicke oben links in der App auf **Get LLM List**, um deine installierten Modelle zu laden.
+3.  **Modell auswählen:** Wähle ein Modell aus dem Dropdown-Menü (z. B. `llama3` oder `gemma2`).
+4.  **Prompt ausführen:** Gib deine Frage ein und drücke den **Play-Button (▶)**.
 
-*Hinweis: Stellen Sie sicher, dass die Adresse korrekt ist (Standard: `127.0.0.1:11434`).*
-
----
-
-## ✨ Hauptfunktionen
-
-### Betriebsmodi
-* **Generate Modus:** Optimiert für Einzelanfragen ("One-Shot"). Dies ist der einzige Modus mit **Vision-Support** für Bilder (z. B. via *llava* oder *moondream*).
-* **Chat Modus:** Speichert den gesamten Gesprächsverlauf. Erlaubt den **Modell-Wechsel** mitten in einer Unterhaltung.
-* **Brückenfunktion:** Über den Button **Generate > Chat** können Bild-Analysen nahtlos in den Chat-Kontext übernommen werden.
-
-### RAG Tool (Chat mit Dokumenten)
-Laden Sie eigene **.txt** oder **.pdf** Dateien hoch, um Fragen zu spezifischen Inhalten zu stellen.
-* **Intelligente Suche:** Das System analysiert Anfragen und erstellt Listen von Suchwörtern und Synonymen.
-* **Delta-Parameter:** Steuern Sie den Kontextbereich um gefundene Textstellen (0-9 Sätze).
-
-### Tools & Function Calling
-Verwandeln Sie das LLM in einen Agenten:
-* **Automatisierung:** Definieren Sie Tool-Schnittstellen via JSON und hinterlegen Sie **Python-Code**, der bei Bedarf automatisch lokal ausgeführt wird.
-* **Integration:** Rückgabewerte des Codes werden direkt in den Antwortprozess des Modells integriert.
-
-### Code Generierung & Ausführung
-* **Interpreter-Support:** Führen Sie generierten Code in Sprachen wie Python, PowerShell, Batch oder HTML/JavaScript direkt aus.
-* **Konfiguration:** Hinterlegen Sie eigene Pfade zu Interpretern in der **Execute List**.
+*Tipp: Stelle sicher, dass die Adresse oben links korrekt ist (Standard: `127.0.0.1:11434`).*
 
 ---
 
-## 🛠 Parameter-Steuerung
+## 🔄 Betriebsmodi & Vision-Unterstützung
 
-Passen Sie das Modellverhalten über detaillierte Optionen an:
+Über das **API**-Dropdown-Menü kannst du steuern, wie die App mit dem Modell kommuniziert.
 
+### 1. Generate-Modus (Einzelanfrage)
+Dieser Modus ist für Einzelaufgaben (One-Shot-Tasks) konzipiert.
+* **Vision / Bilder:** Dies ist der *erinzige* Modus, in dem du Bilder hochladen kannst (über die Schaltflächen `+ File` oder `+ Screenshot`). Nutze dafür Vision-fähige Modelle wie *llava* oder *moondream*.
+* **Verhalten:** Jede Anfrage steht für sich allein; das Modell "vergisst" vorherige Fragen sofort.
+* **Kontext:** Du kannst jedoch Kontext-Token in die nächste Anfrage einbeziehen, um auch im Generate-Modus eine Konversation aufrechtzuerhalten.
+
+### 2. Chat-Modus (Konversation)
+Der gesamte Konversationsverlauf wird gespeichert und mit jeder neuen Nachricht gesendet.
+* **Modellwechsel:** Du kannst das **LLM mitten in einer Konversation wechseln** (z. B. von einem schnellen 7B-Modell zu einem intelligenten 70B-Modell), ohne den roten Faden zu verlieren.
+
+### 🔀 Die Brücke: „Generate > Chat“
+Da der Chat-Modus keine Bilder direkt empfangen kann, bietet die App diesen Workflow an:
+1. Wähle **Generate** und lade ein Bild hoch (z. B. „Beschreibe dieses Bild“).
+2. Warte auf die Antwort.
+3. Klicke auf die Schaltfläche **Generate > Chat**.
+*Die Analyse wird in den Chat-Verlauf kopiert, sodass du im Chat-Modus Folgefragen dazu stellen kannst.*
+
+---
+
+## 🛠 Modell-Parameter
+
+### 1. System-Prompt
+Definiere die „Persönlichkeit“ der KI (z. B. „Du bist ein erfahrener C#-Entwickler“). Aktiviere das Kontrollkästchen **Use System Prompt**, um diese Anweisung vor jedem Chat zu senden.
+
+### 2. Ausgabeformat (JSON-Modus)
+Zwinge das Modell dazu, exakt in einem definierten **JSON-Schema**-Format zu antworten. Dies ist ideal für Entwickler, die strukturierte Daten benötigen.
+
+### 3. Content-Prompt
+Dieser Prompt erweitert die Eingabe um angehängte textbasierte Dateien wie **.txt**, **.json** oder **.pdf**.
+
+### 4. Options-Parameter
 | Parameter | Beschreibung |
 | :--- | :--- |
-| `temperature` | Steuert Kreativität (0.0 = deterministisch, 0.7+ = natürlich). |
-| `num_ctx` | Legt die Größe des Kontext-Fensters fest (z. B. 4096 für Dokumente). |
-| `repeat_penalty` | Bestraft Wortwiederholungen. |
-| `JSON Mode` | Erzwingt die Antwort in einem definierten JSON-Schema. |
-| `System Prompt` | Definiert die "Persönlichkeit" der KI. |
+| `temperature` | **Kreativität.** `0.0` ist deterministisch; `0.7-0.8` ist natürlich (Standard); `1.2+` ist experimentell. |
+| `top_p` | **Nucleus Sampling.** Berücksichtigt Wörter, die eine kumulative Wahrscheinlichkeit `P` erreichen. |
+| `num_ctx` | **Kontextfenster.** Legt fest, wie viele Token das Modell gleichzeitig verarbeiten kann. `2048` ist Standard; `4096-8192` für Dokumente. |
+| `repeat_penalty` | Verhindert, dass das Modell Wörter wiederholt (empfohlen: `1.1-1.2`). |
+| `seed` | Ein fester Wert (z. B. `42`) stellt sicher, dass derselbe Prompt mit denselben Parametern immer die gleiche Antwort liefert. |
 
-*Die Parameterliste kann manuell um eigene Einträge erweitert werden.*
+*Du kannst manuell benutzerdefinierte Parameter hinzufügen, indem du auf die leere Zeile (markiert mit `*`) in der Tabelle klickst.*
 
 ---
 
-## ⚖️ Lizenzen & Komponenten
+## 🛠 Tools & Funktionsaufrufe (Function Calling)
+Der Reiter **Tools** macht das LLM zu einem Agenten, der Aufgaben wie Wetterabfragen oder Berechnungen automatisch ausführen kann.
+* **Tool JSON:** Definiere hier deine API-Schnittstelle, damit das Modell weiß, welche Parameter extrahiert werden müssen.
+* **Python-Code:** Hinterlege die Logik, die lokal ausgeführt werden soll. Die App führt diesen Code automatisch aus, wenn das Modell das Tool anfordert.
 
-Dieses Projekt verwendet folgende Open-Source-Komponenten:
+---
 
-* **Ollama_Desktop (7soft):** MIT-Lizenz
-* **Newtonsoft.Json:** MIT-Lizenz
-* **Scintilla5.NET:** MIT-Lizenz
-* **WebView2:** Microsoft Corporation
-* **Markdig:** BSD-Clause 2
-* **PdfPig:** Apache License 2.0
-* **Siticone.NetCore.UI:** Proprietäre Lizenz
+## 📄 RAG-Tool (Chat mit Dokumenten)
+Lade **.txt**- oder **.pdf**-Dateien hoch, um sie als Wissensdatenbank zu nutzen.
+* **Workflow:** Die App zerlegt die Datei in Sätze, extrahiert Schlüsselwörter/Synonyme aus deiner Anfrage und stellt dem LLM passende Textsegmente als Hintergrundwissen zur Verfügung.
+* **Delta-Parameter:** Steuert, wie viel Kontext (0-9 Sätze) um einen Treffer herum an das Modell gesendet wird.
+
+---
+
+## 💻 Code-Generierung & Ausführung
+Führe Code in Python, PowerShell, Batch oder HTML/JavaScript direkt in der App aus.
+* **Execute List:** Definiere deine Interpreter-Pfade (z. B. `python.exe`) im Reiter **Code Parameter**.
+* **ShellExecute:** Wähle zwischen der Code-Ausführung im Hintergrund (Ausgabe wird erfasst) oder in einem externen Fenster.
+
+---
+
+## ⚖️ Lizenzen & Drittanbieter-Komponenten
+* **Ollama_Desktop, Newtonsoft.Json, Scintilla5.NET:** MIT-Lizenz.
+* **WebView2:** Microsoft Corporation.
+* **Markdig:** BSD-Clause 2.
+* **PdfPig:** Apache-Lizenz 2.0.
+* **Siticone.NetCore.UI:** Proprietäre Lizenz.
 
 ---
 
 ## ☕ Unterstützung
+Ollama Desktop ist kostenlos und quelloffen. Wenn du die Entwicklung unterstützen möchtest, kannst du via PayPal spenden:
 
-Die App ist komplett kostenlos und Open Source. Wenn Ihnen das Projekt gefällt, können Sie die Arbeit via PayPal unterstützen:
-
-**[Jetzt via PayPal spenden](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=r.barnstorf@online.de&currency_code=EUR&source=url)**
+**[Über PayPal spenden](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=r.barnstorf@online.de&currency_code=EUR&source=url)**
 
 Empfänger: `r.barnstorf@online.de`
