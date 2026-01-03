@@ -1,6 +1,22 @@
 # Ollama Desktop
 
+---
+
 > **Languages:** [English] | [**Deutsch**](README.de.md)
+
+---
+
+**Ollama Desktop** is a graphical user interface (GUI) for **Ollama**. It allows you to comfortably control locally installed AI models, fine-tune parameters, and enforce structured JSON responses.
+
+---
+
+### ✨ Key Features
+* **Vision Support:** Upload and analyze images using vision-capable models (like llava or moondream) in Generate Mode.
+* **RAG Tool:** Chat with your documents! Upload `.pdf` or `.txt` files to use them as a local knowledge base.
+* **Advanced Chat Mode:** Switch models mid-conversation without losing context.
+* **Function Calling & Tools:** Turn your LLM into an agent with local Python code execution.
+* **JSON Mode:** Enforce structured responses using JSON Schemas.
+* **Code Execution:** Run generated Python, PowerShell, or Batch code directly within the app.
 
 ---
 
@@ -15,10 +31,6 @@
 ---
 
 ![Ollama Desktop Screenshot](Ollama_Desktop.png)
-
----
-
-**Ollama Desktop** is a graphical user interface (GUI) for **Ollama**. It allows you to comfortably control locally installed AI models, fine-tune parameters, and enforce structured JSON responses.
 
 ---
 
