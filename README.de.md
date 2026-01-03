@@ -4,6 +4,10 @@
 
 ---
 
+[![Download Portable ZIP](https://img.shields.io/badge/Download-v1.0.2.5_ZIP-blue?style=for-the-badge&logo=github)](Ollama_Desktop_1.0.2.5.zip)
+
+---
+
 **Ollama Desktop** ist eine grafische Benutzeroberfläche (GUI) für **Ollama**. Sie ermöglicht es dir, lokal installierte KI-Modelle komfortabel zu steuern, Parameter fein abzustimmen und strukturierte JSON-Antworten zu erzwingen.
 
 ---
