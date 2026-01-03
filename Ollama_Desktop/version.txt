@@ -2,3 +2,5 @@
 - first Version
 V 1.0.1.4
 - license info added
+V 1.0.2.5
+- default settings revised
