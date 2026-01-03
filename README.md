@@ -8,6 +8,10 @@
 
 ---
 
+![Ollama Desktop Screenshot](Ollama_Desktop.png)
+
+---
+
 **Ollama Desktop** is a graphical user interface (GUI) for **Ollama**. It allows you to comfortably control locally installed AI models, fine-tune parameters, and enforce structured JSON responses.
 
 ---
