@@ -1,6 +1,22 @@
 # Ollama Desktop
 
+---
+
 > **Languages:** [English](README.md) | [Deutsch]
+
+---
+
+**Ollama Desktop** ist eine grafische Benutzeroberfläche (GUI) für **Ollama**. Sie ermöglicht es dir, lokal installierte KI-Modelle komfortabel zu steuern, Parameter fein abzustimmen und strukturierte JSON-Antworten zu erzwingen.
+
+---
+
+### ✨ Highlights
+* **Vision-Unterstützung:** Bilder hochladen und analysieren (z. B. mit llava) im Generate-Modus.
+* **RAG-Tool:** Chatten Sie mit Ihren Dokumenten (.pdf/.txt) durch lokale Wissensextraktion.
+* **Chat-Modus:** Modellwechsel während der Konversation möglich.
+* **Tools & Functions:** Lokale Python-Code-Ausführung durch das Modell.
+* **JSON-Modus:** Erzwingen von strukturierten Antworten.
+* **Code-Ausführung:** Direktes Ausführen von Python, PowerShell oder Batch-Skripten.
 
 ---
 
@@ -15,10 +31,6 @@
 ---
 
 ![Ollama Desktop Screenshot](Ollama_Desktop.png)
-
----
-
-**Ollama Desktop** ist eine grafische Benutzeroberfläche (GUI) für **Ollama**. Sie ermöglicht es dir, lokal installierte KI-Modelle komfortabel zu steuern, Parameter fein abzustimmen und strukturierte JSON-Antworten zu erzwingen.
 
 ---
 
