@@ -6,6 +6,12 @@
 
 ### 📥 [Download Latest Version (ZIP)](https://github.com/barni007-pro/ollama_desktop_client/releases/latest)
 
+## 📦 Installation & Setup
+
+1. **Download:** Get the latest `Ollama_Desktop_1.0.2.5.zip` from the [Releases](https://github.com/barni007-pro/ollama_desktop_client/releases) page.
+2. **Extract:** Unzip the archive into a folder of your choice.
+3. **Ollama Server:** Ensure that the Ollama server is running (Terminal: `ollama serve`).
+4. **Launch:** Run `Ollama_Desktop.exe` from the extracted folder.
 ---
 
 ![Ollama Desktop Screenshot](Ollama_Desktop.png)
