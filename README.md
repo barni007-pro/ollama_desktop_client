@@ -4,7 +4,7 @@
 
 ---
 
-[![Download Portable ZIP](https://img.shields.io/badge/Download-v1.0.2.5_ZIP-blue?style=for-the-badge&logo=github)](Ollama_Desktop_1.0.2.5.zip)
+### 📥 [Download Latest Version (ZIP)](https://github.com/barni007-pro/ollama_desktop_client/releases/latest)
 
 ---
 
