@@ -11,12 +11,15 @@
 ---
 
 ### ✨ Highlights
-* **Vision-Unterstützung:** Bilder hochladen und analysieren (z. B. mit llava) im Generate-Modus.
-* **RAG-Tool:** Chatten Sie mit Ihren Dokumenten (.pdf/.txt) durch lokale Wissensextraktion.
+* **Vision-Unterstützung:** Bilder (.jpg,.png) hochladen und analysieren (z. B. mit llava) im Generate-Modus.
+* **Dateien einlesen:** Importieren von Textdateien (.pdf, .txt, .json), um deren Inhalte direkt in den Kontext einzubinden.
+* **RAG-Tool:** Chatten mit großen Dokumenten (.pdf/.txt) durch lokale Wissensextraktion.
 * **Chat-Modus:** Modellwechsel während der Konversation möglich.
 * **Tools & Functions:** Lokale Python-Code-Ausführung durch das Modell.
 * **JSON-Modus:** Erzwingen von strukturierten Antworten.
 * **Code-Ausführung:** Direktes Ausführen von Python, PowerShell oder Batch-Skripten.
+* **Screenshots:** Verabeiten von Screenshots durch ein Vision LLM.
+* **Formelausgabe:** Anzeigen von mathematischen Formeln (LaTeX Unterstützung).
 
 ---
 

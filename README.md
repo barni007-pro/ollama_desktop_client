@@ -11,12 +11,15 @@
 ---
 
 ### ✨ Key Features
-* **Vision Support:** Upload and analyze images using vision-capable models (like llava or moondream) in Generate Mode.
-* **RAG Tool:** Chat with your documents! Upload `.pdf` or `.txt` files to use them as a local knowledge base.
-* **Advanced Chat Mode:** Switch models mid-conversation without losing context.
+* **Vision Support:** Upload and analyze images (.jpg, .png) (e.g., with LLaVA) in generate mode.
+* **File Import:** Import text files (.pdf, .txt, .json) to include their content in the context.
+* **RAG Tool:** Chat with large documents (.pdf, .txt) through local knowledge extraction.
+* **Chat Mode:** Switch models during the conversation.
 * **Function Calling & Tools:** Turn your LLM into an agent with local Python code execution.
 * **JSON Mode:** Enforce structured responses using JSON Schemas.
 * **Code Execution:** Run generated Python, PowerShell, or Batch code directly within the app.
+* **Screenshots:** Processing screenshots using a Vision LLM.
+* **Formula output:** Display of mathematical formulas (LaTeX support).
 
 ---
 
