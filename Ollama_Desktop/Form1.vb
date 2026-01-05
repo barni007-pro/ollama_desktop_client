@@ -995,28 +995,26 @@ Public Class Form1
 
     End Function
     ' Die Funktion nimmt nun optional eine Marke entgegen (z.B. "export")
-
     Private Async Function InitializeWebView2(Optional ByVal anchor As String = "") As Task
         Try
-            ' --- NEU: WebView2-Umgebung mit beschreibbarem Pfad konfigurieren ---
-            ' Pfad: C:\Users\NAME\AppData\Local\Ollama_Desktop\WebView2_Data
-            Dim userDataFolder As String = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            "Ollama_Desktop",
-            "WebView2_Data"
-        )
+            ' --- SCHRITT 1: Initialisierung nur, wenn noch nicht geschehen ---
+            If WebView21.CoreWebView2 Is Nothing Then
+                Dim userDataFolder As String = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "Ollama_Desktop",
+                "WebView2_Data"
+            )
 
-            ' Wenn der Ordner nicht existiert, erstellen
-            If Not Directory.Exists(userDataFolder) Then Directory.CreateDirectory(userDataFolder)
+                If Not Directory.Exists(userDataFolder) Then Directory.CreateDirectory(userDataFolder)
 
-            ' Umgebung mit dem UserDataFolder erstellen
-            Dim env = Await CoreWebView2Environment.CreateAsync(Nothing, userDataFolder)
+                Dim env = Await CoreWebView2Environment.CreateAsync(Nothing, userDataFolder)
 
-            ' Initialisierung mit der speziellen Umgebung starten
-            ' (Wichtig: Das muss VOR jedem Zugriff auf WebView21.CoreWebView2 passieren)
-            Await WebView21.EnsureCoreWebView2Async(env)
+                ' Das hier darf nur einmal pro Control-Lebenszeit aufgerufen werden
+                Await WebView21.EnsureCoreWebView2Async(env)
+            End If
             ' --------------------------------------------------------------------
 
+            ' --- SCHRITT 2: Pfad prüfen und Navigation vorbereiten ---
             Dim appPath As String = AppContext.BaseDirectory
             Dim helpFilePath As String = Path.Combine(appPath, My.Settings.help_path)
 
@@ -1024,34 +1022,41 @@ Public Class Form1
                 ' Tab aktivieren
                 SiticoneButton_tab.SelectedTab = TabPage_responsehtml
 
-                ' URI absolut sicher erstellen
                 Dim fileUri As String = New Uri(helpFilePath).AbsoluteUri
 
-                ' Handler für das Scrollen definieren
-                Dim handler As EventHandler(Of Microsoft.Web.WebView2.Core.CoreWebView2NavigationCompletedEventArgs) = Nothing
+                ' Prüfen: Sind wir schon auf der Seite? 
+                ' Wenn ja, können wir direkt scrollen, ohne neu zu laden.
+                If WebView21.Source IsNot Nothing AndAlso WebView21.Source.AbsoluteUri = fileUri Then
+                    Await ScrollToAnchor(anchor)
+                Else
+                    ' Wenn neue Seite: Handler hinzufügen und navigieren
+                    Dim handler As EventHandler(Of Microsoft.Web.WebView2.Core.CoreWebView2NavigationCompletedEventArgs) = Nothing
+                    handler = Async Sub(sender, e)
+                                  RemoveHandler WebView21.NavigationCompleted, handler
+                                  If e.IsSuccess Then
+                                      Await ScrollToAnchor(anchor)
+                                  End If
+                              End Sub
 
-                handler = Async Sub(sender, e)
-                              ' Handler sofort entfernen
-                              RemoveHandler WebView21.NavigationCompleted, handler
-
-                              If e.IsSuccess AndAlso Not String.IsNullOrEmpty(anchor) Then
-                                  Await Task.Delay(250)
-                                  Dim script As String = $"document.getElementById('{anchor}')?.scrollIntoView({{behavior: 'smooth', block: 'start'}});"
-                                  Await WebView21.ExecuteScriptAsync(script)
-                              End If
-                          End Sub
-
-                ' Handler hinzufügen und navigieren
-                AddHandler WebView21.NavigationCompleted, handler
-                WebView21.CoreWebView2.Navigate(fileUri)
+                    AddHandler WebView21.NavigationCompleted, handler
+                    WebView21.CoreWebView2.Navigate(fileUri)
+                End If
             Else
-                ' Pfad-Anzeige zur Fehlersuche
                 WebView21.NavigateToString($"<html><body><h2 style='color:red;'>Datei nicht gefunden!</h2><p>Gesuchter Pfad:<br><code>{helpFilePath}</code></p></body></html>")
             End If
 
         Catch ex As Exception
             MessageBox.Show("Fehler: " & ex.Message)
         End Try
+    End Function
+
+    ' Hilfsfunktion für das eigentliche JavaScript-Scrolling
+    Private Async Function ScrollToAnchor(anchor As String) As Task
+        If Not String.IsNullOrEmpty(anchor) Then
+            Await Task.Delay(250) ' Kurze Pause, damit die Engine das DOM verarbeiten kann
+            Dim script As String = $"document.getElementById('{anchor}')?.scrollIntoView({{behavior: 'smooth', block: 'start'}});"
+            Await WebView21.ExecuteScriptAsync(script)
+        End If
     End Function
 
     Private Async Function LoadModelsAsync() As Task
