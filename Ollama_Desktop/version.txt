@@ -4,3 +4,7 @@ V 1.0.1.4
 - license info added
 V 1.0.2.5
 - default settings revised
+V 1.0.3.6
+- Cash files from WebView2 now in temp
+- new APP Icon
+- Portable and setup installation possible
