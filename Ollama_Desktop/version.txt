@@ -8,3 +8,5 @@ V 1.0.3.6
 - Cash files from WebView2 now in temp
 - new APP Icon
 - Portable and setup installation possible
+V 1.0.4.7
+- Bug: WebView2 initialization fails when routine is called again
