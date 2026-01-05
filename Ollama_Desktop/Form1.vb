@@ -998,37 +998,50 @@ Public Class Form1
 
     Private Async Function InitializeWebView2(Optional ByVal anchor As String = "") As Task
         Try
-            ' 1. Sicherstellen, dass die WebView2-Umgebung bereit ist
-            Await WebView21.EnsureCoreWebView2Async()
+            ' --- NEU: WebView2-Umgebung mit beschreibbarem Pfad konfigurieren ---
+            ' Pfad: C:\Users\NAME\AppData\Local\Ollama_Desktop\WebView2_Data
+            Dim userDataFolder As String = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "Ollama_Desktop",
+            "WebView2_Data"
+        )
+
+            ' Wenn der Ordner nicht existiert, erstellen
+            If Not Directory.Exists(userDataFolder) Then Directory.CreateDirectory(userDataFolder)
+
+            ' Umgebung mit dem UserDataFolder erstellen
+            Dim env = Await CoreWebView2Environment.CreateAsync(Nothing, userDataFolder)
+
+            ' Initialisierung mit der speziellen Umgebung starten
+            ' (Wichtig: Das muss VOR jedem Zugriff auf WebView21.CoreWebView2 passieren)
+            Await WebView21.EnsureCoreWebView2Async(env)
+            ' --------------------------------------------------------------------
 
             Dim appPath As String = AppContext.BaseDirectory
-            ' Sicherstellen, dass My.Settings.help_path nur den Dateinamen enthält, z.B. "index_DE.html"
             Dim helpFilePath As String = Path.Combine(appPath, My.Settings.help_path)
 
             If File.Exists(helpFilePath) Then
                 ' Tab aktivieren
                 SiticoneButton_tab.SelectedTab = TabPage_responsehtml
 
-                ' 2. URI absolut sicher erstellen
+                ' URI absolut sicher erstellen
                 Dim fileUri As String = New Uri(helpFilePath).AbsoluteUri
 
-                ' 3. Handler für das Scrollen definieren (als Variable, um ihn entfernen zu können)
+                ' Handler für das Scrollen definieren
                 Dim handler As EventHandler(Of Microsoft.Web.WebView2.Core.CoreWebView2NavigationCompletedEventArgs) = Nothing
 
                 handler = Async Sub(sender, e)
-                              ' Handler sofort entfernen, damit er nur einmal ausgeführt wird
+                              ' Handler sofort entfernen
                               RemoveHandler WebView21.NavigationCompleted, handler
 
                               If e.IsSuccess AndAlso Not String.IsNullOrEmpty(anchor) Then
-                                  ' Kurze Pause, damit das Layout stabil ist
                                   Await Task.Delay(250)
-                                  ' Scroll-Befehl ausführen
                                   Dim script As String = $"document.getElementById('{anchor}')?.scrollIntoView({{behavior: 'smooth', block: 'start'}});"
                                   Await WebView21.ExecuteScriptAsync(script)
                               End If
                           End Sub
 
-                ' 4. Handler hinzufügen und navigieren
+                ' Handler hinzufügen und navigieren
                 AddHandler WebView21.NavigationCompleted, handler
                 WebView21.CoreWebView2.Navigate(fileUri)
             Else

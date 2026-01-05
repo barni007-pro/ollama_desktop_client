@@ -6,16 +6,16 @@
     <StartupObject>Ollama_Desktop.My.MyApplication</StartupObject>
     <UseWindowsForms>true</UseWindowsForms>
     <MyType>WindowsForms</MyType>
-    <AssemblyVersion>1.0.2.5</AssemblyVersion>
-    <FileVersion>1.0.2.5</FileVersion>
+    <AssemblyVersion>1.0.3.6</AssemblyVersion>
+    <FileVersion>1.0.3.6</FileVersion>
     <PackageIcon>315878_ai_document_file_icon (2).png</PackageIcon>
-    <ApplicationIcon>pic\315878_ai_document_file_icon.ico</ApplicationIcon>
+    <ApplicationIcon>pic\ro.ico</ApplicationIcon>
     <Copyright>7soft</Copyright>
     <Description>Client für die Nutzung eines Ollama Servers</Description>
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="pic\315878_ai_document_file_icon.ico" />
+    <Content Include="pic\ro.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -80,10 +80,6 @@
       <CustomToolNamespace>My</CustomToolNamespace>
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
-    </None>
-    <None Update="pic\315878_ai_document_file_icon %282%29.png">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
     </None>
     <None Update="settings\default_DE.code.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
