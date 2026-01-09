@@ -10,3 +10,7 @@ V 1.0.3.6
 - Portable and setup installation possible
 V 1.0.4.7
 - Bug: WebView2 initialization fails when routine is called again
+V 1.0.5.8
+- Sorting the LLM list in dropdown control
+- Pre Loading LLM
+- Error messages are now in English

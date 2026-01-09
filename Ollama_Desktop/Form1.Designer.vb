@@ -144,6 +144,7 @@ Partial Class Form1
         SiticoneButton_switch_chat = New SiticoneNetCoreUI.SiticoneButton()
         SiticoneLabel_default = New SiticoneNetCoreUI.SiticoneLabel()
         SiticoneDropdown_default = New SiticoneNetCoreUI.SiticoneDropdown()
+        SiticoneButton_preload = New SiticoneNetCoreUI.SiticoneButton()
         CType(WebView21, ComponentModel.ISupportInitialize).BeginInit()
         SiticoneButton_tab.SuspendLayout()
         TabPage_modelinfo.SuspendLayout()
@@ -4002,7 +4003,7 @@ Partial Class Form1
         SiticoneButton_chat_clear.IsReadOnly = False
         SiticoneButton_chat_clear.IsToggleButton = False
         SiticoneButton_chat_clear.IsToggled = False
-        SiticoneButton_chat_clear.Location = New Point(767, 26)
+        SiticoneButton_chat_clear.Location = New Point(881, 26)
         SiticoneButton_chat_clear.LongPressDurationMS = 1000
         SiticoneButton_chat_clear.Name = "SiticoneButton_chat_clear"
         SiticoneButton_chat_clear.NormalFontStyle = FontStyle.Regular
@@ -4052,7 +4053,7 @@ Partial Class Form1
         SiticoneDropdown_API.IsReadonly = False
         SiticoneDropdown_API.ItemHeight = 30
         SiticoneDropdown_API.Items.AddRange(New String() {"generate", "chat"})
-        SiticoneDropdown_API.Location = New Point(615, 26)
+        SiticoneDropdown_API.Location = New Point(729, 26)
         SiticoneDropdown_API.MaxDropDownItems = 8
         SiticoneDropdown_API.Name = "SiticoneDropdown_API"
         SiticoneDropdown_API.PlaceholderColor = Color.Gray
@@ -4073,7 +4074,7 @@ Partial Class Form1
         ' 
         SiticoneLabel_API.BackColor = Color.Transparent
         SiticoneLabel_API.Font = New Font("Segoe UI", 10F)
-        SiticoneLabel_API.Location = New Point(615, 2)
+        SiticoneLabel_API.Location = New Point(729, 2)
         SiticoneLabel_API.Name = "SiticoneLabel_API"
         SiticoneLabel_API.Size = New Size(116, 21)
         SiticoneLabel_API.TabIndex = 31
@@ -4083,7 +4084,7 @@ Partial Class Form1
         ' 
         SiticoneLabel_chat_clear.BackColor = Color.Transparent
         SiticoneLabel_chat_clear.Font = New Font("Segoe UI", 10F)
-        SiticoneLabel_chat_clear.Location = New Point(767, 2)
+        SiticoneLabel_chat_clear.Location = New Point(881, 2)
         SiticoneLabel_chat_clear.Name = "SiticoneLabel_chat_clear"
         SiticoneLabel_chat_clear.Size = New Size(116, 21)
         SiticoneLabel_chat_clear.TabIndex = 32
@@ -4563,7 +4564,7 @@ Partial Class Form1
         SiticoneButton_switch_chat.IsReadOnly = False
         SiticoneButton_switch_chat.IsToggleButton = False
         SiticoneButton_switch_chat.IsToggled = False
-        SiticoneButton_switch_chat.Location = New Point(880, 26)
+        SiticoneButton_switch_chat.Location = New Point(994, 26)
         SiticoneButton_switch_chat.LongPressDurationMS = 1000
         SiticoneButton_switch_chat.Name = "SiticoneButton_switch_chat"
         SiticoneButton_switch_chat.NormalFontStyle = FontStyle.Regular
@@ -4595,7 +4596,7 @@ Partial Class Form1
         ' 
         SiticoneLabel_default.BackColor = Color.Transparent
         SiticoneLabel_default.Font = New Font("Segoe UI", 10F)
-        SiticoneLabel_default.Location = New Point(993, 2)
+        SiticoneLabel_default.Location = New Point(1107, 2)
         SiticoneLabel_default.Name = "SiticoneLabel_default"
         SiticoneLabel_default.Size = New Size(146, 21)
         SiticoneLabel_default.TabIndex = 36
@@ -4622,7 +4623,7 @@ Partial Class Form1
         SiticoneDropdown_default.HoveredItemTextColor = Color.Black
         SiticoneDropdown_default.IsReadonly = False
         SiticoneDropdown_default.ItemHeight = 30
-        SiticoneDropdown_default.Location = New Point(993, 26)
+        SiticoneDropdown_default.Location = New Point(1107, 26)
         SiticoneDropdown_default.MaxDropDownItems = 8
         SiticoneDropdown_default.Name = "SiticoneDropdown_default"
         SiticoneDropdown_default.PlaceholderColor = Color.Gray
@@ -4638,11 +4639,90 @@ Partial Class Form1
         SiticoneDropdown_default.UnselectedItemTextColor = Color.Black
         SiticoneDropdown_default.ValueMember = Nothing
         ' 
+        ' SiticoneButton_preload
+        ' 
+        SiticoneButton_preload.AccessibleDescription = "The default button control that accept input though the mouse, touch and keyboard"
+        SiticoneButton_preload.AccessibleName = "Pre Load LLM"
+        SiticoneButton_preload.AutoSizeBasedOnText = False
+        SiticoneButton_preload.BackColor = Color.Transparent
+        SiticoneButton_preload.BadgeBackColor = Color.Red
+        SiticoneButton_preload.BadgeFont = New Font("Segoe UI", 8F, FontStyle.Bold)
+        SiticoneButton_preload.BadgeValue = 0
+        SiticoneButton_preload.BadgeValueForeColor = Color.White
+        SiticoneButton_preload.BorderColor = Color.FromArgb(CByte(16), CByte(100), CByte(220))
+        SiticoneButton_preload.BorderWidth = 2
+        SiticoneButton_preload.ButtonBackColor = Color.FromArgb(CByte(26), CByte(115), CByte(232))
+        SiticoneButton_preload.ButtonImage = Nothing
+        SiticoneButton_preload.ButtonTextLeftPadding = 0
+        SiticoneButton_preload.CanBeep = True
+        SiticoneButton_preload.CanGlow = True
+        SiticoneButton_preload.CanShake = True
+        SiticoneButton_preload.ContextMenuStripEx = Nothing
+        SiticoneButton_preload.CornerRadiusBottomLeft = 8
+        SiticoneButton_preload.CornerRadiusBottomRight = 8
+        SiticoneButton_preload.CornerRadiusTopLeft = 8
+        SiticoneButton_preload.CornerRadiusTopRight = 8
+        SiticoneButton_preload.CustomCursor = Cursors.Default
+        SiticoneButton_preload.DisabledTextColor = Color.FromArgb(CByte(150), CByte(150), CByte(150))
+        SiticoneButton_preload.Enabled = False
+        SiticoneButton_preload.EnableLongPress = False
+        SiticoneButton_preload.EnablePressAnimation = True
+        SiticoneButton_preload.EnableRippleEffect = True
+        SiticoneButton_preload.EnableShadow = True
+        SiticoneButton_preload.EnableTextWrapping = False
+        SiticoneButton_preload.Font = New Font("Segoe UI", 9F)
+        SiticoneButton_preload.GlowColor = Color.FromArgb(CByte(30), CByte(110), CByte(178), CByte(230))
+        SiticoneButton_preload.GlowIntensity = 100
+        SiticoneButton_preload.GlowRadius = 20F
+        SiticoneButton_preload.GradientBackground = False
+        SiticoneButton_preload.GradientColor = Color.FromArgb(CByte(255), CByte(77), CByte(146))
+        SiticoneButton_preload.GradientMode = Drawing2D.LinearGradientMode.ForwardDiagonal
+        SiticoneButton_preload.HintText = Nothing
+        SiticoneButton_preload.HoverBackColor = Color.FromArgb(CByte(40), CByte(130), CByte(240))
+        SiticoneButton_preload.HoverFontStyle = FontStyle.Regular
+        SiticoneButton_preload.HoverTextColor = Color.White
+        SiticoneButton_preload.HoverTransitionDuration = 250
+        SiticoneButton_preload.ImageAlign = ContentAlignment.MiddleLeft
+        SiticoneButton_preload.ImagePadding = 5
+        SiticoneButton_preload.ImageSize = New Size(16, 16)
+        SiticoneButton_preload.IsRadial = False
+        SiticoneButton_preload.IsReadOnly = False
+        SiticoneButton_preload.IsToggleButton = False
+        SiticoneButton_preload.IsToggled = False
+        SiticoneButton_preload.Location = New Point(615, 26)
+        SiticoneButton_preload.LongPressDurationMS = 1000
+        SiticoneButton_preload.Name = "SiticoneButton_preload"
+        SiticoneButton_preload.NormalFontStyle = FontStyle.Regular
+        SiticoneButton_preload.ParticleColor = Color.FromArgb(CByte(200), CByte(200), CByte(200))
+        SiticoneButton_preload.ParticleCount = 15
+        SiticoneButton_preload.PressAnimationScale = 0.97F
+        SiticoneButton_preload.PressedBackColor = Color.FromArgb(CByte(16), CByte(100), CByte(220))
+        SiticoneButton_preload.PressedFontStyle = FontStyle.Regular
+        SiticoneButton_preload.PressTransitionDuration = 150
+        SiticoneButton_preload.ReadOnlyTextColor = Color.FromArgb(CByte(100), CByte(100), CByte(100))
+        SiticoneButton_preload.RippleColor = Color.White
+        SiticoneButton_preload.RippleOpacity = 0.2F
+        SiticoneButton_preload.RippleRadiusMultiplier = 0.6F
+        SiticoneButton_preload.ShadowBlur = 5
+        SiticoneButton_preload.ShadowColor = Color.FromArgb(CByte(50), CByte(0), CByte(64), CByte(128))
+        SiticoneButton_preload.ShadowOffset = New Point(0, 2)
+        SiticoneButton_preload.ShakeDuration = 500
+        SiticoneButton_preload.ShakeIntensity = 5
+        SiticoneButton_preload.Size = New Size(107, 30)
+        SiticoneButton_preload.TabIndex = 37
+        SiticoneButton_preload.Text = "Pre Load LLM"
+        SiticoneButton_preload.TextAlign = ContentAlignment.MiddleCenter
+        SiticoneButton_preload.TextColor = Color.White
+        SiticoneButton_preload.TooltipText = Nothing
+        SiticoneButton_preload.UseAdvancedRendering = True
+        SiticoneButton_preload.UseParticles = False
+        ' 
         ' Form1
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
         ClientSize = New Size(1408, 884)
+        Controls.Add(SiticoneButton_preload)
         Controls.Add(SiticoneLabel_default)
         Controls.Add(SiticoneDropdown_default)
         Controls.Add(SiticoneButton_switch_chat)
@@ -4813,5 +4893,6 @@ Partial Class Form1
     Friend WithEvents Scintilla_response As ScintillaNET.Scintilla
     Friend WithEvents Scintilla_code_block As ScintillaNET.Scintilla
     Friend WithEvents SiticoneButton_execute_run As SiticoneNetCoreUI.SiticoneButton
+    Friend WithEvents SiticoneButton_preload As SiticoneNetCoreUI.SiticoneButton
 
 End Class

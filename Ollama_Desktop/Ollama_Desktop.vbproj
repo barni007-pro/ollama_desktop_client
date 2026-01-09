@@ -6,8 +6,8 @@
     <StartupObject>Ollama_Desktop.My.MyApplication</StartupObject>
     <UseWindowsForms>true</UseWindowsForms>
     <MyType>WindowsForms</MyType>
-    <AssemblyVersion>1.0.4.7</AssemblyVersion>
-    <FileVersion>1.0.4.7</FileVersion>
+    <AssemblyVersion>1.0.5.8</AssemblyVersion>
+    <FileVersion>1.0.5.8</FileVersion>
     <PackageIcon>315878_ai_document_file_icon (2).png</PackageIcon>
     <ApplicationIcon>pic\ro.ico</ApplicationIcon>
     <Copyright>7soft</Copyright>

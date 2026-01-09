@@ -347,7 +347,7 @@ Public Class Form1
                             Await OllamaPullModel(apiBaseUrl, model)
 
                         Case Else
-                            Scintilla_response.Text = "Unbekannter ollama Befehl: " & command
+                            Scintilla_response.Text = "Unknown ollama command: " & command
                     End Select
                 Else
                     Scintilla_response.Text = "Syntax: ollama [rm|pull] MODELNAME"
@@ -581,10 +581,10 @@ Public Class Form1
                 WebView21.NavigateToString(BuildHtml("empty"))
             End If
         Catch ex As OperationCanceledException
-            MessageBox.Show("Der Vorgang wurde abgebrochen (Timeout oder Userabbruch).", "Abgebrochen", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            MessageBox.Show("The process was aborted (timeout or user cancellation).", "Cancelled", MessageBoxButtons.OK, MessageBoxIcon.Information)
         Catch ex As Exception
             'Me.Cursor = Cursors.Default
-            MessageBox.Show("Fehler: " & ex.Message, "Fehler", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MessageBox.Show("Error: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
             ' Cursor zurücksetzen, egal ob Erfolg oder Fehler
             'Me.Cursor = Cursors.Default
@@ -983,9 +983,9 @@ Public Class Form1
                     Catch ex As Exception
                         SiticoneButton_timing.Enabled = False
                     End Try
-                    Return If(extractedResponse, "Fehler: Kein 'response'-Feld oder message.content-feld gefunden.")
+                    Return If(extractedResponse, "Error: No 'response'-Feld or message.content-feld found.")
                 Else
-                    Return $"Fehler: {response.StatusCode} - {response.ReasonPhrase}"
+                    Return $"Error: {response.StatusCode} - {response.ReasonPhrase}"
                 End If
             End Using
         Else
@@ -1068,25 +1068,35 @@ Public Class Form1
                 Dim response As HttpResponseMessage = Await client.GetAsync(apiUrl)
                 If response.IsSuccessStatusCode Then
                     Dim responseBody As String = Await response.Content.ReadAsStringAsync()
-                    ' Parsen der JSON-Antwort, die ein Objekt mit dem Schlüssel "models" enthält
+
+                    ' Parsen der JSON-Antwort
                     Dim json As JObject = JObject.Parse(responseBody)
                     Dim modelsArray As JArray = json("models")
+
+                    ' --- ÄNDERUNG: Hier sortieren wir alphabetisch nach 'name' ---
+                    ' Wir nutzen LINQ, um die Models nach dem Namen zu ordnen
+                    Dim sortedModels = modelsArray.OrderBy(Function(m) m("name").ToString()).ToList()
+                    ' -------------------------------------------------------------
+
                     SiticoneDropdown_model.Items.Clear()
                     model_info.Clear()
-                    For Each model In modelsArray
+
+                    ' Jetzt iterieren wir über die sortierte Liste
+                    For Each model In sortedModels
                         Dim modelName As String = model("name").ToString()
                         SiticoneDropdown_model.Items.Add(modelName)
                         model_info.Add(model.ToString)
                     Next
+
                     If SiticoneDropdown_model.Items.Count > 0 Then
                         SiticoneDropdown_model.SelectedIndex = 0
                     End If
                 Else
-                    MessageBox.Show("Fehler beim Laden der Modelle: " & response.ReasonPhrase)
+                    MessageBox.Show("Error loading models: " & response.ReasonPhrase)
                 End If
             End Using
         Catch ex As Exception
-            MessageBox.Show("Fehler beim Abrufen der Modelle: " & ex.Message)
+            MessageBox.Show("Error retrieving models: " & ex.Message)
         End Try
         Me.Cursor = Cursors.Default
     End Function
@@ -1156,7 +1166,7 @@ Public Class Form1
 
                                     file_content = minified
                                 Catch ex As Exception
-                                    MessageBox.Show("Die JSON-Datei ist ungültig: " & ex.Message)
+                                    MessageBox.Show("The JSON file is invalid: " & ex.Message)
                                 End Try
 
                                 Dim text_content As New text_content_def
@@ -1182,7 +1192,7 @@ Public Class Form1
 
 
                     Catch ex As Exception
-                        MessageBox.Show("Fehler beim Laden der Datei: " & ex.Message)
+                        MessageBox.Show("Error loading file: " & ex.Message)
                     End Try
                 Next
             End If
@@ -1241,12 +1251,13 @@ Public Class Form1
                     Dim prettyJson As String = JsonConvert.SerializeObject(jsonObject, Formatting.Indented)
                     Scintilla_model_info_request.Text = prettyJson
                     extractedLicense = jsonObject.SelectToken("license")?.ToString()
+                    SiticoneButton_preload.Enabled = True
                 Else
-                    MessageBox.Show("Fehler beim Laden der Modellinfo: " & response.ReasonPhrase)
+                    MessageBox.Show("Error loading model information: " & response.ReasonPhrase)
                 End If
             End Using
         Catch ex As Exception
-            MessageBox.Show("Fehler beim Laden der Modellinfo: " & ex.Message)
+            MessageBox.Show("Error loading model information: " & ex.Message)
         End Try
         extractedContext.Clear()
         CheckBox_last_context.Text = String.Format("Use Last Context ({0} Tokens)", extractedContext.Count)
@@ -1391,7 +1402,7 @@ Public Class Form1
                         ' Timeout erreicht, Prozess beenden
                         process.Kill()
                         output = outputTask.Result
-                        errors = errorTask.Result & vbCrLf & "Prozess wurde aufgrund eines Zeitüberschreitungsfehlers beendet."
+                        errors = errorTask.Result & vbCrLf & "The process was terminated due to a timeout error."
                     End If
                 Else
                     ' Warte normal auf Beendigung, wenn UseShellExecute = True
@@ -1401,11 +1412,11 @@ Public Class Form1
                 ' 5. Zeige die Ausgabe in einer RichTextBox oder einem anderen Control
                 SiticoneTextArea_run_output.Text = "Execute:" & vbCrLf & psi.FileName & " " & psi.Arguments & vbCrLf & "Output:" & vbCrLf & output & vbCrLf & "Errors:" & vbCrLf & errors
             Catch ex As Exception
-                MessageBox.Show("Fehler beim Ausführen des Scripts: " & ex.Message)
+                MessageBox.Show("Error executing the script: " & ex.Message)
             End Try
 
         Else
-            MessageBox.Show("Für diesen Script Typ wurde kein Ausführungsprogramm in der ""run_execute_list"" hinterlegt! ")
+            MessageBox.Show("No execution program was specified in ""run_execute_list"" for this script type! ")
         End If
     End Sub
 
@@ -1437,13 +1448,13 @@ Public Class Form1
 
                 ' Fehlerbehandlung
                 If Not String.IsNullOrEmpty(errorOutput) Then
-                    Return $"Fehler beim Ausführen des Skripts:{Environment.NewLine}{errorOutput}"
+                    Return $"Error executing the script:{Environment.NewLine}{errorOutput}"
                 End If
 
                 Return output
             End Using
         Catch ex As Exception
-            Return $"Ausnahme beim Ausführen des Skripts: {ex.Message}"
+            Return $"Exception when running the script: {ex.Message}"
         End Try
     End Function
 
@@ -1531,8 +1542,8 @@ Public Class Form1
     Private Async Sub SiticoneButton_HTMLtoPDF_Click(sender As Object, e As EventArgs) Handles SiticoneButton_HTMLtoPDF.Click
         Using saveFileDialog As New SaveFileDialog
             ' Filter enthält alle gewünschten Dateiformate
-            saveFileDialog.Filter = "PDF Dateien (*.pdf)|*.pdf|Markdown Dateien (*.md)|*.md|HTML Dateien (*.html)|*.html"
-            saveFileDialog.Title = "Speichern als PDF, Markdown oder HTML"
+            saveFileDialog.Filter = "PDF files (*.pdf)|*.pdf|Markdown files (*.md)|*.md|HTML files (*.html)|*.html"
+            saveFileDialog.Title = "Save as PDF, Markdown or HTML"
             saveFileDialog.FileName = "output.pdf"  ' Standardmäßig PDF als Dateiendung
 
             If saveFileDialog.ShowDialog = DialogResult.OK Then
@@ -1766,7 +1777,7 @@ Public Class Form1
                 CheckBox_last_context.Checked = data("context_use")
                 SiticoneTextArea_content_prompt.Text = data("content_prompt")
             Catch ex As Exception
-                MessageBox.Show("Fehler beim Laden der Parameter: " & ex.Message)
+                MessageBox.Show("Error loading parameters: " & ex.Message)
             End Try
         End If
     End Sub
@@ -1837,7 +1848,7 @@ Public Class Form1
                     Next
                 Next
             Catch ex As Exception
-                MessageBox.Show("Fehler beim Laden der Parameter: " & ex.Message)
+                MessageBox.Show("Error loading parameters: " & ex.Message)
             End Try
         End If
     End Sub
@@ -1897,7 +1908,7 @@ Public Class Form1
                 Scintilla_Tools_Json.Text = data("tools_json").ToString
                 Scintilla_Tools_pythoncode.Text = data("tools_python_code").ToString
             Catch ex As Exception
-                MessageBox.Show("Fehler beim Laden der Parameter: " & ex.Message)
+                MessageBox.Show("Error loading parameters: " & ex.Message)
             End Try
         End If
     End Sub
@@ -1955,7 +1966,7 @@ Public Class Form1
                 SiticoneTextArea_Rag_system.Text = data("rag_system_prompt").ToString
                 Scintilla_Rag_Json.Text = data("rag_json").ToString
             Catch ex As Exception
-                MessageBox.Show("Fehler beim Laden der Parameter: " & ex.Message)
+                MessageBox.Show("Error loading parameters: " & ex.Message)
             End Try
         End If
     End Sub
@@ -2040,7 +2051,7 @@ Public Class Form1
             import_clp_image() ' oder: import_clp_image_from_image(img)
         Else
             ' Optional: Nutzer informieren, dass kein Bild kam
-            MessageBox.Show("Kein Screenshot in der Zwischenablage gefunden.")
+            MessageBox.Show("No screenshot found in the clipboard.")
         End If
         Me.WindowState = FormWindowState.Normal
         Me.Activate()
@@ -2080,7 +2091,7 @@ Public Class Form1
 
     Private Sub SiticoneButton_ragpath_Click(sender As Object, e As EventArgs) Handles SiticoneButton_ragpath.Click
         Dim openFileDialog As New OpenFileDialog()
-        openFileDialog.Filter = "Text Dateien (*.txt)|*.txt|PDF Datei (*.pdf)|*.pdf|Alle Dateien (*.*)|*.*"
+        openFileDialog.Filter = "Text files (*.txt)|*.txt|PDF files (*.pdf)|*.pdf|All files (*.*)|*.*"
         openFileDialog.Multiselect = False
 
         If openFileDialog.ShowDialog() = DialogResult.OK Then
@@ -2150,7 +2161,7 @@ Public Class Form1
             End If
 
         Catch ex As Exception
-            MessageBox.Show("Fehler beim Parsen der JSON: " & ex.Message)
+            MessageBox.Show("Error parsing the JSON: " & ex.Message)
         End Try
     End Sub
 
@@ -2414,6 +2425,55 @@ Public Class Form1
                 ' Hier passiert nichts, da Default oben schon auf SCLEX_NULL gesetzt wurde.
 
         End Select
+    End Sub
+
+    Private Async Sub SiticoneButton_preload_Click(sender As Object, e As EventArgs) Handles SiticoneButton_preload.Click
+        ' 1. Prüfen, ob ein Modell ausgewählt ist
+        If SiticoneDropdown_model.SelectedItem Is Nothing Then
+            MessageBox.Show("Please select a model first.")
+            Return
+        End If
+
+        Dim modelName As String = SiticoneDropdown_model.SelectedItem.ToString()
+
+        ' UI Feedback: Cursor ändern und Button deaktivieren
+        Me.Cursor = Cursors.WaitCursor
+        SiticoneButton_preload.Enabled = False
+
+        Try
+            ' URL zusammenbauen (nutzt deine existierende TextBox für den Host)
+            Dim apiUrl As String = "http://" & SiticoneTextBox_host.Text & "/api/generate"
+
+            ' 2. JSON Payload erstellen
+            ' Wir senden einen leeren Prompt. Das signalisiert Ollama: "Lade das Modell, aber mach nichts."
+            Dim jsonPayload As New JObject()
+            jsonPayload("model") = modelName
+            jsonPayload("prompt") = ""      ' Leerer Prompt = nur Laden
+            jsonPayload("stream") = False   ' Kein Streaming notwendig
+
+            Dim content As New StringContent(jsonPayload.ToString(), Encoding.UTF8, "application/json")
+
+            Using client As New HttpClient()
+                ' Optional: Timeout erhöhen, da große Modelle (z.B. 70b) ein paar Sekunden zum Laden brauchen
+                client.Timeout = TimeSpan.FromMinutes(2)
+
+                ' 3. Anfrage senden
+                Dim response As HttpResponseMessage = Await client.PostAsync(apiUrl, content)
+
+                If response.IsSuccessStatusCode Then
+                    MessageBox.Show($"The model '{modelName}' was successfully preloaded!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                Else
+                    MessageBox.Show("Preloading error: " & response.ReasonPhrase, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End If
+            End Using
+
+        Catch ex As Exception
+            MessageBox.Show("Connection error: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            ' UI wieder freigeben
+            Me.Cursor = Cursors.Default
+            SiticoneButton_preload.Enabled = True
+        End Try
     End Sub
 
 End Class
