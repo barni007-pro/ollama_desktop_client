@@ -933,60 +933,66 @@ Public Class Form1
 
         If SiticoneCheckBox_test.Checked = False Then
             ' HTTP-Request absetzen
-            Using client As New HttpClient()
+            Dim handler As New HttpClientHandler()
+            handler.UseProxy = My.Settings.use_proxy  ' Erzwingt direkte Verbindung ohne Firmen-Proxy
+
+            Using client As New HttpClient(handler)
+                ' Timeout setzen (muss am client Objekt gesetzt werden)
                 client.Timeout = TimeSpan.FromSeconds(Val(SiticoneTextBox_timeout.Text))
+
                 Dim content As New StringContent(requestBody, Encoding.UTF8, "application/json")
-                Dim response As HttpResponseMessage = Await client.PostAsync(apiUrl, content, ct)
 
-                If response.IsSuccessStatusCode Then
-                    Dim responseBody As String = Await response.Content.ReadAsStringAsync()
-                    Response_JSON = responseBody
-                    ' JSON parsen, um nur den "response"-Teil zu extrahieren
-                    Dim json As JObject = JObject.Parse(responseBody)
-                    Dim search_str As String = ""
-                    If SiticoneDropdown_API.SelectedIndex = 0 Then
-                        search_str = "response"
-                    Else
-                        search_str = "message.content"
-                    End If
-                    Dim extractedResponse As String = json.SelectToken(search_str)?.ToString()
-                    If SiticoneDropdown_API.SelectedIndex = 1 Then
-                        Dim newMessageAssistant As New message()
-                        newMessageAssistant.role = "assistant"
-                        newMessageAssistant.content = extractedResponse
-                        messages.Add(newMessageAssistant)
-                        SiticoneLabel_chat_clear.Text = "Chat Mem: " & messages.Count.ToString
-                    End If
-                    Try
-                        extractedContext.Clear()
-                        If SiticoneDropdown_API.SelectedIndex = 0 Then
-                            search_str = "thinking"
-                        Else
-                            search_str = "message.thinking"
+                Try
+                    Dim response As HttpResponseMessage = Await client.PostAsync(apiUrl, content, ct)
+
+                    If response.IsSuccessStatusCode Then
+                        Dim responseBody As String = Await response.Content.ReadAsStringAsync()
+                        Response_JSON = responseBody
+
+                        Dim json As JObject = JObject.Parse(responseBody)
+                        Dim search_str As String = If(SiticoneDropdown_API.SelectedIndex = 0, "response", "message.content")
+
+                        Dim extractedResponse As String = json.SelectToken(search_str)?.ToString()
+
+                        If SiticoneDropdown_API.SelectedIndex = 1 Then
+                            Dim newMessageAssistant As New message()
+                            newMessageAssistant.role = "assistant"
+                            newMessageAssistant.content = extractedResponse
+                            messages.Add(newMessageAssistant)
+                            SiticoneLabel_chat_clear.Text = "Chat Mem: " & messages.Count.ToString
                         End If
-                        extractedThinking = json.SelectToken(search_str)?.ToString()
-                        Dim tempItems = json("context")?.ToObject(Of List(Of Integer))()
-                        If tempItems IsNot Nothing Then
-                            extractedContext.AddRange(tempItems)
-                        Else
+
+                        Try
                             extractedContext.Clear()
-                        End If
-                        CheckBox_last_context.Text = String.Format("Use Last Context ({0} Tokens)", extractedContext.Count)
+                            Dim think_search = If(SiticoneDropdown_API.SelectedIndex = 0, "thinking", "message.thinking")
+                            extractedThinking = json.SelectToken(think_search)?.ToString()
 
-                        timing_total_duration = json.SelectToken("total_duration")?.Value(Of Long)
-                        timing_load_duration = json.SelectToken("load_duration")?.Value(Of Long)
-                        timing_prompt_eval_count = json.SelectToken("prompt_eval_count")?.Value(Of Long)
-                        timing_prompt_eval_duration = json.SelectToken("prompt_eval_duration")?.Value(Of Long)
-                        timing_eval_count = json.SelectToken("eval_count")?.Value(Of Long)
-                        timing_eval_duration = json.SelectToken("eval_duration")?.Value(Of Long)
-                        SiticoneButton_timing.Enabled = True
-                    Catch ex As Exception
-                        SiticoneButton_timing.Enabled = False
-                    End Try
-                    Return If(extractedResponse, "Error: No 'response'-Feld or message.content-feld found.")
-                Else
-                    Return $"Error: {response.StatusCode} - {response.ReasonPhrase}"
-                End If
+                            Dim tempItems = json("context")?.ToObject(Of List(Of Integer))()
+                            If tempItems IsNot Nothing Then
+                                extractedContext.AddRange(tempItems)
+                            End If
+                            CheckBox_last_context.Text = String.Format("Use Last Context ({0} Tokens)", extractedContext.Count)
+
+                            timing_total_duration = json.SelectToken("total_duration")?.Value(Of Long)
+                            timing_load_duration = json.SelectToken("load_duration")?.Value(Of Long)
+                            timing_prompt_eval_count = json.SelectToken("prompt_eval_count")?.Value(Of Long)
+                            timing_prompt_eval_duration = json.SelectToken("prompt_eval_duration")?.Value(Of Long)
+                            timing_eval_count = json.SelectToken("eval_count")?.Value(Of Long)
+                            timing_eval_duration = json.SelectToken("eval_duration")?.Value(Of Long)
+                            SiticoneButton_timing.Enabled = True
+                        Catch ex As Exception
+                            SiticoneButton_timing.Enabled = False
+                        End Try
+
+                        Return If(extractedResponse, "Error: No result field found.")
+                    Else
+                        Return $"Error: {response.StatusCode} - {response.ReasonPhrase}"
+                    End If
+                Catch ex As TaskCanceledException
+                    Return "Error: Request timed out (Client-side)."
+                Catch ex As Exception
+                    Return $"Error: {ex.Message}"
+                End Try
             End Using
         Else
             Response_JSON = "Test Mode"

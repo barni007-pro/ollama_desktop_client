@@ -379,6 +379,15 @@ Namespace My
                 Me("help_path") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
+        Public ReadOnly Property use_proxy() As Boolean
+            Get
+                Return CType(Me("use_proxy"),Boolean)
+            End Get
+        End Property
     End Class
 End Namespace
 
