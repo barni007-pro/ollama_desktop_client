@@ -326,5 +326,8 @@ Antwort: {"name":"get_text","arguments":{"words":["Python","Java","Programmiersp
     <Setting Name="help_path" Type="System.String" Scope="User">
       <Value Profile="(Default)">help\index_DE.html</Value>
     </Setting>
+    <Setting Name="use_proxy" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
