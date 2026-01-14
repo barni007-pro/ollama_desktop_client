@@ -10,6 +10,10 @@
 
 ---
 
+![Ollama Desktop Screenshot](./screenshots/response_html.png)
+
+---
+
 ### ✨ Key Features
 * **Vision Support:** Upload and analyze images (.jpg, .png) (e.g., with LLaVA) in generate mode.
 * **File Import:** Import text files (.pdf, .txt, .json) to include their content in the context.

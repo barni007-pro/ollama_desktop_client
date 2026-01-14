@@ -10,6 +10,10 @@
 
 ---
 
+![Ollama Desktop Screenshot](./screenshots/response_html.png)
+
+---
+
 ### ✨ Highlights
 * **Vision-Unterstützung:** Bilder (.jpg,.png) hochladen und analysieren (z. B. mit llava) im Generate-Modus.
 * **Dateien einlesen:** Importieren von Textdateien (.pdf, .txt, .json), um deren Inhalte direkt in den Kontext einzubinden.
