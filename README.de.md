@@ -23,14 +23,28 @@
 
 ---
 
-### 📥 [Download Latest Version (ZIP)](https://github.com/barni007-pro/ollama_desktop_client/releases/latest)
+### 📥 [Neueste Version herunterladen](https://github.com/barni007-pro/ollama_desktop_client/releases/latest)
+
+Du hast die Wahl zwischen der **Portablen** Version (keine Installation erforderlich) und der **Setup**-Version (Standard-Installation).
 
 ## 📦 Installation & Einrichtung
 
-1. **Download:** Laden Sie die aktuelle `Ollama_Desktop_1.0.2.5.zip` von der [Releases](https://github.com/barni007-pro/ollama_desktop_client/releases)-Seite herunter.
-2. **Entpacken:** Extrahieren Sie das Archiv in einen Ordner Ihrer Wahl.
-3. **Ollama Server:** Stellen Sie sicher, dass der Ollama-Server läuft (Terminal: `ollama serve`).
-4. **Starten:** Führen Sie die `Ollama_Desktop.exe` im entpackten Ordner aus.
+### 🚀 Option 1: Portable Version
+1. **Download:** Lade die `Ollama_Desktop_Portable_x.x.x.x.zip` von der [Releases](https://github.com/barni007-pro/ollama_desktop_client/releases)-Seite herunter.
+2. **Entpacken:** Entpacke das Archiv in einen Ordner deiner Wahl.
+3. **Starten:** Führe die `Ollama_Desktop.exe` direkt aus dem entpackten Ordner aus.
+
+### 💻 Option 2: Setup-Version (Installer)
+1. **Download:** Lade die `Ollama_Desktop_Setup_x.x.x.x.zip` von der [Releases](https://github.com/barni007-pro/ollama_desktop_client/releases)-Seite herunter.
+2. **Entpacken:** Entpacke die Installationsdatei aus dem ZIP-Archiv.
+3. **Installieren:** Starte die Setup-Datei und folge den Anweisungen auf dem Bildschirm.
+4. **Starten:** Öffne die Anwendung nach der Installation über das Startmenü oder die Desktop-Verknüpfung.
+
+---
+
+> [!IMPORTANT]
+> **Ollama Server:** Stelle sicher, dass der Ollama-Server läuft (Terminal: `ollama serve`), bevor du den Desktop-Client startest.
+
 ---
 
 ![Ollama Desktop Screenshot](Ollama_Desktop.png)
