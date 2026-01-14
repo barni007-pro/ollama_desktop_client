@@ -47,7 +47,24 @@ You can choose between the **Portable** version (no installation required) and t
 
 ---
 
-![Ollama Desktop Screenshot](Ollama_Desktop.png)
+## 🖼️ UI Overview
+
+<details>
+  <summary><b>Click to expand: Screenshots of all Tabs (Click images to enlarge)</b></summary>
+
+| Tab: Model Info | Tab: Model Parameter |
+| :---: | :---: |
+| [![Model Info](./screenshots/model_info.png)](./screenshots/model_info.png) | [![Model Parameter](./screenshots/model_parameter.png)](./screenshots/model_parameter.png) |
+| **Tab: Tools** | **Tab: RAG Tool** |
+| [![Tools](./screenshots/tools.png)](./screenshots/tools.png) | [![RAG Tool](./screenshots/rag_tool.png)](./screenshots/rag_tool.png) |
+| **Tab: Request JSON** | **Tab: Response JSON** |
+| [![Request JSON](./screenshots/request_json.png)](./screenshots/request_json.png) | [![Response JSON](./screenshots/response_json.png)](./screenshots/response_json.png) |
+| **Tab: Response MarkDown** | **Tab: Response HTML** |
+| [![Response MarkDown](./screenshots/response_markdown.png)](./screenshots/response_markdown.png) | [![Response HTML](./screenshots/response_html.png)](./screenshots/response_html.png) |
+| **Tab: Code Parameter** | **Tab: Code Block** |
+| [![Code Parameter](./screenshots/code_parameter.png)](./screenshots/code_parameter.png) | [![Code Block](./screenshots/code_block.png)](./screenshots/code_block.png) |
+
+</details>
 
 ---
 
