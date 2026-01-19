@@ -71,7 +71,7 @@ Partial Class SplashScreen1
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
-        BackgroundImage = My.Resources.Resources.splash_background
+        BackgroundImage = My.Resources.Resource_pic.splash_background
         ClientSize = New Size(598, 598)
         ControlBox = False
         Controls.Add(Copyright)

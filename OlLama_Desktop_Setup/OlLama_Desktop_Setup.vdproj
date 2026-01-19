@@ -15,13 +15,13 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_15777FA8C0604B3C9FD6DD06263C268D"
+        "MsmKey" = "8:_98477A32450247489B75463FF7FDCEDD"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_98477A32450247489B75463FF7FDCEDD"
+        "MsmKey" = "8:_9FBD764B948F4FA8A742C0CFD07744CD"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -122,7 +122,7 @@
         }
         "File"
         {
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_15777FA8C0604B3C9FD6DD06263C268D"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9FBD764B948F4FA8A742C0CFD07744CD"
             {
             "SourcePath" = "8:..\\Ollama_Desktop\\pic\\ro.ico"
             "TargetName" = "8:ro.ico"
@@ -209,15 +209,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:OlLama_Desktop"
-        "ProductCode" = "8:{90BBB3DD-EAB1-4568-A9F0-E7FFC7A5EAAE}"
-        "PackageCode" = "8:{FFF14A33-AA12-4FA6-A4D0-2AB85433BC93}"
+        "ProductCode" = "8:{BC927DDC-6B2A-480C-9F38-1B0AB862830C}"
+        "PackageCode" = "8:{CBB390CA-F175-4D97-982C-73410EE2B99A}"
         "UpgradeCode" = "8:{EEAEAF1C-182E-4396-90D7-8FAF8AD5D8C1}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.0"
+        "ProductVersion" = "8:1.1.0"
         "Manufacturer" = "8:7soft"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -341,7 +341,7 @@
             "Target" = "8:_98477A32450247489B75463FF7FDCEDD"
             "Folder" = "8:_2A0B4569DA6E4497B5F4BBB68B7BA515"
             "WorkingFolder" = "8:_1B8CF6C3523C4DA8A378BA2D8E25E219"
-            "Icon" = "8:_15777FA8C0604B3C9FD6DD06263C268D"
+            "Icon" = "8:_9FBD764B948F4FA8A742C0CFD07744CD"
             "Feature" = "8:"
             }
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_35841C07A11F45F6BA3E08C858626BB9"
@@ -355,7 +355,7 @@
             "Target" = "8:_98477A32450247489B75463FF7FDCEDD"
             "Folder" = "8:_09946642BE644E1087C1B642612C0455"
             "WorkingFolder" = "8:_1B8CF6C3523C4DA8A378BA2D8E25E219"
-            "Icon" = "8:_15777FA8C0604B3C9FD6DD06263C268D"
+            "Icon" = "8:_9FBD764B948F4FA8A742C0CFD07744CD"
             "Feature" = "8:"
             }
         }

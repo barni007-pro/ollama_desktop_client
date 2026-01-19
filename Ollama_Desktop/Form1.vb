@@ -21,6 +21,7 @@ Imports Newtonsoft.Json            ' Für die JSON-Serialisierung
 Imports Newtonsoft.Json.Linq       ' Für die JSON-Verarbeitung
 Imports Ollama_Desktop.Form1
 Imports Ollama_Desktop.My
+Imports Ollama_Desktop.My.Resources
 Imports ScintillaNET
 Imports SiticoneNetCoreUI
 Imports UglyToad.PdfPig
@@ -134,7 +135,7 @@ Public Class Form1
         ToolTip1.AutoPopDelay = 10000
         SiticoneTextBox_host.Text = My.Settings.ollama_host
         SiticoneDropdown_API.SelectedIndex = 0
-        SiticoneSplitContainer_main.SplitterDistance = 720
+        'SiticoneSplitContainer_main.SplitterDistance = 720
         SiticoneSplitContainer_runcont.SplitterDistance = 495
 
 
@@ -174,8 +175,8 @@ Public Class Form1
         Next
 
         SiticoneTextArea_system.Text = My.Settings.system
-        CheckBox_system_use.Checked = My.Settings.system_use
-        CheckBox_format_use.Checked = My.Settings.format_use
+        SiticoneToggleSwitch_system_use.Checked = My.Settings.system_use
+        SiticoneToggleSwitch_format_use.Checked = My.Settings.format_use
         Scintilla_format.Text = My.Settings.format
         SiticoneTextArea_content_prompt.Text = My.Settings.content_prompt
 
@@ -244,6 +245,12 @@ Public Class Form1
         SetupEditor(Scintilla_response, "markdown")
 
         'Me.Icon = New Icon("D: \Projekte\Visual Studio 2008\Projekte\Ollama_Desktop\Ollama_Desktop\pic\315878_ai_document_file_icon.ico")
+        SiticoneTextArea_prompt.ScrollBars = ScrollBars.None
+        RegisterStateImages(SiticoneButton_file, My.Resources.Resource_pic.paperclip_32_blau, My.Resources.Resource_pic.paperclip_32_grau)
+        RegisterStateImages(SiticoneButton_screenshot, My.Resources.Resource_pic.screenshot_32_blau, My.Resources.Resource_pic.screenshot_32_grau)
+        RegisterStateImages(SiticoneButton_timing, My.Resources.Resource_pic.statistics_32_blau, My.Resources.Resource_pic.statistics_32_grau)
+        RegisterStateImages(SiticoneButton_show_thinking, My.Resources.Resource_pic.think_32_blau, My.Resources.Resource_pic.think_32_grau)
+        RegisterStateImages(SiticoneButton_HTMLtoPDF, My.Resources.Resource_pic.save_32_blau, My.Resources.Resource_pic.save_32_grau)
 
     End Sub
 
@@ -251,8 +258,8 @@ Public Class Form1
         My.Settings.ollama_host = SiticoneTextBox_host.Text
 
         My.Settings.system = SiticoneTextArea_system.Text
-        My.Settings.system_use = CheckBox_system_use.Checked
-        My.Settings.format_use = CheckBox_format_use.Checked
+        My.Settings.system_use = SiticoneToggleSwitch_system_use.Checked
+        My.Settings.format_use = SiticoneToggleSwitch_format_use.Checked
         My.Settings.format = Scintilla_format.Text
         My.Settings.content_prompt = SiticoneTextArea_content_prompt.Text
 
@@ -264,6 +271,27 @@ Public Class Form1
         My.Settings.rag_json = Scintilla_Rag_Json.Text
     End Sub
 
+    Private Sub RegisterStateImages(btn As SiticoneButton,
+                                imgEnabled As Image,
+                                imgDisabled As Image)
+
+        ' 1. Die Logik zum Wechseln definieren
+        Dim updateImage = Sub()
+                              If btn.Enabled Then
+                                  ' Hier nutzen wir ButtonImage statt Image
+                                  btn.ButtonImage = imgEnabled
+                              Else
+                                  btn.ButtonImage = imgDisabled
+                              End If
+                          End Sub
+
+        ' 2. Event-Handler anhängen: Wenn sich "Enabled" ändert, Bild tauschen
+        AddHandler btn.EnabledChanged, Sub(sender, e) updateImage()
+
+        ' 3. Sofort einmal ausführen
+        updateImage()
+    End Sub
+
     Private Sub SiticoneTextArea_prompt_KeyDown(sender As Object, e As KeyEventArgs) Handles SiticoneTextArea_prompt.KeyDown
         If e.KeyCode = Keys.Enter AndAlso Not ModifierKeys.HasFlag(Keys.Shift) Then
             e.SuppressKeyPress = True ' Verhindert auch Umbrüche bei Enter
@@ -272,7 +300,7 @@ Public Class Form1
         If e.Control AndAlso e.KeyCode = Keys.V Then
 
 
-            If Clipboard.ContainsImage() Then
+            If Clipboard.ContainsImage Then
                 import_clp_image()
                 ' Unterdrücke Standard-Paste falls nötig
                 e.SuppressKeyPress = True
@@ -282,135 +310,118 @@ Public Class Form1
 
     Private Sub import_clp_image()
         Dim img As Image = Clipboard.GetImage()
-        Dim tempPath As String = Path.Combine(Path.GetTempPath(), $"ClipboardImage_{Guid.NewGuid()}.png")
+        If img Is Nothing Then Return
+
+        ' Temporären Pfad erstellen
+        Dim tempPath As String = Path.Combine(Path.GetTempPath(), $"Screenshot_{DateTime.Now:HHmmss}.png")
         img.Save(tempPath, System.Drawing.Imaging.ImageFormat.Png)
 
-        ' Optional: Zeige Pfad oder füge ihn in die Textbox ein
-        ' SiticoneTextArea_prompt.AppendText(vbCrLf & $"[Bild gespeichert unter: {tempPath}]" & vbCrLf)
-        text_contents.Clear()
-        image_contents.Clear()
+        ' Alte Inhalte löschen (wie in deinem Original-Code gewünscht)
+        ' Falls du mehrere Anhänge erlauben willst, entferne diese .Clear() Zeilen
+        'text_contents.Clear()
+        'image_contents.Clear()
+        'SiticoneFlowPanel_prompt_filecontent.Controls.Clear()
+
+        ' In Base64 Liste für die API speichern
         Dim imageBytes() As Byte = File.ReadAllBytes(tempPath)
         image_contents.Add(Convert.ToBase64String(imageBytes))
-        ListBox_file_list.Items.Clear()
-        ListBox_file_list.Items.Add(tempPath)
-        ListBox_file_list.Visible = True
-        SiticoneButton_file.Text = "- File"
+
+        ' Visuellen Chip hinzufügen (48px Version)
+        AddFileChip(tempPath, "png")
+
+        ' UI Aktualisierung
+        SiticoneFlowPanel_prompt_filecontent.Visible = True
     End Sub
-
-    'Private Async Sub SiticonePlayPauseButton_request_StateChanged(sender As Object, e As EventArgs) Handles SiticonePlayPauseButton_request.StateChanged
-    '    If SiticonePlayPauseButton_request.IsPlaying = True Then
-    '        SiticoneTextBox_request_answer.Text = ""
-    '        If Mid(SiticoneTextArea_prompt.Text, 1, 10) = "ollama_api" Then
-    '            Dim apiUrl
-    '            apiUrl = "http://" & SiticoneTextBox_host.Text & "/api/llm"
-
-    '        Else
-    '            Await MainAsync("")
-    '            If ToolsCodeBlockJson <> "emty" Then
-    '                tools_Response_mem = python_code_run(SiticoneTextArea_python_code.Text, ToolsCodeBlockJson)
-    '                CheckBox_tools.Checked = False
-    '                Await MainAsync(tools_Response_mem)
-    '            Else
-    '                SiticonePlayPauseButton_request.IsPlaying = False
-    '            End If
-
-    '        End If
-    '    Else
-    '        cancellationTokenSource.Cancel()
-    '    End If
-    'End Sub
 
     Private Async Sub SiticonePlayPauseButton_request_StateChanged(sender As Object, e As EventArgs) Handles SiticonePlayPauseButton_request.StateChanged
         If SiticonePlayPauseButton_request.IsPlaying = True Then
-
             SiticoneTextBox_request_answer.Text = ""
+            Dim prompt = SiticoneTextArea_prompt.Text.Trim
 
-            Dim prompt As String = SiticoneTextArea_prompt.Text.Trim()
-
-            ' -------------------------
-            ' OLLAMA API SONDERBEFEHLE
-            ' -------------------------
+            ' --- OLLAMA API SONDERBEFEHLE ---
             If prompt.StartsWith("ollama") Then
-
-                Dim apiBaseUrl As String = "http://" & SiticoneTextBox_host.Text & "/api"
-                Dim parts() As String = prompt.Split(" "c)
-
+                Dim apiBaseUrl = "http://" & SiticoneTextBox_host.Text & "/api"
+                Dim parts = prompt.Split(" "c)
                 If parts.Length >= 3 Then
-                    Dim command As String = parts(1).ToLower()
-                    Dim model As String = parts(2)
-
+                    Dim command = parts(1).ToLower
+                    Dim model = parts(2)
                     Select Case command
-                        Case "rm", "delete"
-                            Await OllamaDeleteModel(apiBaseUrl, model)
-
-                        Case "pull", "run"
-                            Await OllamaPullModel(apiBaseUrl, model)
-
-                        Case Else
-                            Scintilla_response.Text = "Unknown ollama command: " & command
+                        Case "rm", "delete" : Await OllamaDeleteModel(apiBaseUrl, model)
+                        Case "pull", "run" : Await OllamaPullModel(apiBaseUrl, model)
+                        Case Else : Scintilla_response.Text = "Unknown ollama command: " & command
                     End Select
                 Else
                     Scintilla_response.Text = "Syntax: ollama [rm|pull] MODELNAME"
                 End If
-
                 SiticonePlayPauseButton_request.IsPlaying = False
-                'SiticoneTabControl_control.SelectedIndex = 5
-                SiticoneButton_tab.SelectedTab = TabPage_responsemd
+                SiticoneTabControl_tab.SelectedTab = TabPage_responsemd
                 Exit Sub
             End If
 
-            ' -------------------------
-            ' NORMALE LLM-ANFRAGE
-            ' -------------------------
+            ' --- NORMALE LLM-ANFRAGE ---
             Await MainAsync()
 
+            ' --- TOOLS / RAG VERARBEITUNG ---
             If ToolsCodeBlockJson <> "empty" Then
-                If CheckBox_tools.Checked Then
+                If SiticoneToggleSwitch_tools.Checked Then
                     tools_Response_mem = python_code_run(Scintilla_Tools_pythoncode.Text, ToolsCodeBlockJson)
                 End If
-                If CheckBox_ragtools.Checked Then
+                If SiticoneToggleSwitch_ragtools.Checked Then
                     documentIndex.ResetHits()
                     ProcessLLMResponse(ToolsCodeBlockJson, SiticoneDropdown_delta_val.SelectedIndex)
                     tools_Response_mem = ""
-                    Dim HITS = documentIndex.GetSentencesWithHits()
+                    Dim HITS = documentIndex.GetSentencesWithHits
                     SiticoneLabel_HitCountVal.Text = HITS.Count.ToString
                     For Each HIT In HITS
                         tools_Response_mem &= HIT.Text & vbCrLf
                     Next
                 End If
-                text_contents.Clear()
-                ListBox_file_list.Items.Clear()
+
+                ' Vorherige Chips entfernen
+                ClearFileChips()
+
                 Try
-                    ' JSON parsen
+                    ' JSON parsen & minify
                     Dim jsonObj = JsonConvert.DeserializeObject(Of Object)(tools_Response_mem)
+                    tools_Response_mem = JsonConvert.SerializeObject(jsonObj, Formatting.None)
 
-                    ' JSON minify (ohne Einrückung)
-                    Dim minified = JsonConvert.SerializeObject(jsonObj, Formatting.None)
-
-                    tools_Response_mem = minified
-                    Dim text_content As New text_content_def
-                    text_content.text = tools_Response_mem
-                    text_content.fileName = "tools_response.json"
-                    text_content.fileExtention = "json"
+                    Dim text_content As New text_content_def With {
+                    .text = tools_Response_mem,
+                    .fileName = "tools_response.json",
+                    .fileExtention = "json"
+                }
                     text_contents.Clear()
                     text_contents.Add(text_content)
-                    ListBox_file_list.Items.Add(text_content.fileName)
-                    ListBox_file_list.Visible = True
-                    SiticoneButton_file.Text = "- File"
+
+                    ' --- NEU: Chip statt ListBox ---
+                    Dim tempPath = Path.Combine(Path.GetTempPath, text_content.fileName)
+                    File.WriteAllText(tempPath, tools_Response_mem)
+
+                    AddFileChip(tempPath, "json")
+                    SiticoneFlowPanel_prompt_filecontent.Visible = True
+
                 Catch ex As Exception
-                    Dim text_content As New text_content_def
-                    text_content.text = tools_Response_mem
-                    text_content.fileName = "tools_response.txt"
-                    text_content.fileExtention = "txt"
+                    Dim text_content As New text_content_def With {
+                    .text = tools_Response_mem,
+                    .fileName = "tools_response.txt",
+                    .fileExtention = "txt"
+                }
                     text_contents.Clear()
                     text_contents.Add(text_content)
-                    ListBox_file_list.Items.Add(text_content.fileName)
-                    ListBox_file_list.Visible = True
-                    SiticoneButton_file.Text = "- File"
+
+                    ' --- NEU: Chip statt ListBox (Fallback TXT) ---
+                    Dim tempPath = Path.Combine(Path.GetTempPath, text_content.fileName)
+                    File.WriteAllText(tempPath, tools_Response_mem)
+
+                    AddFileChip(tempPath, "txt")
+                    SiticoneFlowPanel_prompt_filecontent.Visible = True
                 End Try
 
-                CheckBox_tools.Checked = False
-                CheckBox_ragtools.Checked = False
+                ' Layout-Höhe nach dem Hinzufügen des Chips aktualisieren
+                SiticoneTextArea_prompt_TextChanged(Nothing, Nothing)
+
+                SiticoneToggleSwitch_tools.Checked = False
+                SiticoneToggleSwitch_ragtools.Checked = False
                 Await MainAsync()
             Else
                 SiticonePlayPauseButton_request.IsPlaying = False
@@ -422,7 +433,6 @@ Public Class Form1
             End If
         End If
     End Sub
-
     Private Async Function OllamaDeleteModel(apiBaseUrl As String, model As String) As Task
         Try
             Using client As New HttpClient()
@@ -477,25 +487,25 @@ Public Class Form1
             Dim prompt As String = SiticoneTextArea_prompt.Text
             Dim prompt_mem As String = prompt
             Dim system As String = ""
-            If CheckBox_system_use.Checked = True Then
+            If SiticoneToggleSwitch_system_use.Checked = True Then
                 system = SiticoneTextArea_system.Text
             End If
             Dim format As String = ""
-            If CheckBox_format_use.Checked = True Then
+            If SiticoneToggleSwitch_format_use.Checked = True Then
                 format = Scintilla_format.Text
             End If
             Dim tools As String = ""
-            If CheckBox_tools.Checked = True Then
+            If SiticoneToggleSwitch_tools.Checked = True Then
                 tools = Scintilla_Tools_Json.Text
                 system = SiticoneTextArea_Tools_system.Text
             End If
-            If CheckBox_ragtools.Checked = True Then
+            If SiticoneToggleSwitch_ragtools.Checked = True Then
                 tools = Scintilla_Rag_Json.Text
                 system = SiticoneTextArea_Rag_system.Text
             End If
-            Dim think As Boolean = CheckBox_thinking_use.Checked
+            Dim think As Boolean = SiticoneToggleSwitch_thinking_use.Checked
             Dim think_level As String = SiticoneDropdown_thinking_use.SelectedItem
-            Dim context As Boolean = CheckBox_last_context.Checked
+            Dim context As Boolean = SiticoneToggleSwitch_last_context.Checked
             prompt = prompt.Replace(vbCr, "") 'nur noch("/n") im prompt'
             request_mem = prompt
 
@@ -590,15 +600,15 @@ Public Class Form1
             'Me.Cursor = Cursors.Default
             'SiticoneCircularSpinner_request.IsRunning = False
             SiticoneLoadingSpinner_request.IsRunning = False
-            If CheckBox_tools.Checked = False Then
+            If SiticoneToggleSwitch_tools.Checked = False Then
                 SiticonePlayPauseButton_request.IsPlaying = False
             End If
-            If CheckBox_ragtools.Checked = False Then
+            If SiticoneToggleSwitch_ragtools.Checked = False Then
                 SiticonePlayPauseButton_request.IsPlaying = False
             End If
             SystemSounds.Asterisk.Play()
             'SiticoneTabControl_control.SelectedIndex = 6
-            SiticoneButton_tab.SelectedTab = TabPage_responsehtml
+            SiticoneTabControl_tab.SelectedTab = TabPage_responsehtml
         End Try
     End Function
 
@@ -621,7 +631,7 @@ Public Class Form1
         markDownStr = AddLanguageTag(markDownStr)
         markDownStr = ConvertThinkBlocks(markDownStr)
 
-        If SiticoneCheckBox_test.Checked = True Then
+        If SiticoneToggleSwitch_test.Checked = True Then
             Clipboard.SetText(markDownStr)
         End If
         Dim htmlContent As String = Markdig.Markdown.ToHtml(markDownStr, pipeline)
@@ -922,16 +932,12 @@ Public Class Form1
             'Else
             'Request_JSON = requestBody
             'End If
-            text_contents.Clear()
-            image_contents.Clear()
-            ListBox_file_list.Items.Clear()
-            ListBox_file_list.Visible = False
-            SiticoneButton_file.Text = "+ File"
+            ClearFileChips()
         End If
 
 
 
-        If SiticoneCheckBox_test.Checked = False Then
+        If SiticoneToggleSwitch_test.Checked = False Then
             ' HTTP-Request absetzen
             Dim handler As New HttpClientHandler()
             handler.UseProxy = My.Settings.use_proxy  ' Erzwingt direkte Verbindung ohne Firmen-Proxy
@@ -971,7 +977,7 @@ Public Class Form1
                             If tempItems IsNot Nothing Then
                                 extractedContext.AddRange(tempItems)
                             End If
-                            CheckBox_last_context.Text = String.Format("Use Last Context ({0} Tokens)", extractedContext.Count)
+                            SiticoneLabel_last_context.Text = String.Format("Use Last Context ({0} Tokens)", extractedContext.Count)
 
                             timing_total_duration = json.SelectToken("total_duration")?.Value(Of Long)
                             timing_load_duration = json.SelectToken("load_duration")?.Value(Of Long)
@@ -1026,7 +1032,7 @@ Public Class Form1
 
             If File.Exists(helpFilePath) Then
                 ' Tab aktivieren
-                SiticoneButton_tab.SelectedTab = TabPage_responsehtml
+                SiticoneTabControl_tab.SelectedTab = TabPage_responsehtml
 
                 Dim fileUri As String = New Uri(helpFilePath).AbsoluteUri
 
@@ -1108,113 +1114,222 @@ Public Class Form1
     End Function
 
     Private Sub SiticoneButton_file_Click(sender As Object, e As EventArgs) Handles SiticoneButton_file.Click
-        If text_contents.Count = 0 And image_contents.Count = 0 Then
-            Dim openFileDialog As New OpenFileDialog()
-            If SiticoneDropdown_API.SelectedIndex = 0 Then
-                openFileDialog.Filter = "Text Dateien (*.txt)|*.txt|PDF Datei (*.pdf)|*.pdf|JSON Datei (*.json)|*.json|Bild (*.jpg)|*.jpg|Bild (*.png)|*.png|Alle Dateien (*.*)|*.*"
-            Else
-                openFileDialog.Filter = "Text Dateien (*.txt)|*.txt|PDF Datei (*.pdf)|*.pdf|Alle Dateien (*.*)|*.*"
-            End If
-            openFileDialog.Multiselect = True
-            If openFileDialog.ShowDialog() = DialogResult.OK Then
-                For Each filePath In openFileDialog.FileNames
-                    Dim fileExtension As String = Mid(LCase(System.IO.Path.GetExtension(filePath)), 2)
-                    Dim fileName As String = System.IO.Path.GetFileName(filePath)
-                    Try
-                        Select Case fileExtension
-                            Case "jpg"
-                                Dim imageBytes() As Byte = File.ReadAllBytes(filePath)
-                                image_contents.Add(Convert.ToBase64String(imageBytes))
-                                ListBox_file_list.Items.Add(filePath)
-                                ListBox_file_list.Visible = True
-                                SiticoneButton_file.Text = "- File"
-                            Case "png"
-                                Dim imageBytes() As Byte = File.ReadAllBytes(filePath)
-                                image_contents.Add(Convert.ToBase64String(imageBytes))
-                                ListBox_file_list.Items.Add(filePath)
-                                ListBox_file_list.Visible = True
-                                SiticoneButton_file.Text = "- File"
-                            Case "txt"
-                                Dim file_content = File.ReadAllText(filePath)
-                                Dim text_content As New text_content_def
-                                text_content.text = file_content
-                                text_content.fileName = fileName
-                                text_content.fileExtention = fileExtension
-                                text_contents.Add(text_content)
-                                ListBox_file_list.Items.Add(filePath)
-                                ListBox_file_list.Visible = True
-                                SiticoneButton_file.Text = "- File"
-                            Case "pdf"
-                                Dim sb As New Text.StringBuilder()
-                                Using Pdfdoc = PdfDocument.Open(filePath)
-                                    For Each page In Pdfdoc.GetPages()
-                                        sb.AppendLine(page.Text & vbLf)
-                                    Next
-                                End Using
-                                Dim file_content As String = sb.ToString()
-                                Dim text_content As New text_content_def
-                                text_content.text = file_content
-                                text_content.fileName = fileName
-                                text_content.fileExtention = fileExtension
-                                text_contents.Add(text_content)
-                                ListBox_file_list.Items.Add(filePath)
-                                ListBox_file_list.Visible = True
-                                SiticoneButton_file.Text = "- File"
-                            Case "json"
-                                Dim file_content = File.ReadAllText(filePath)
+        ' Wir entfernen die Abfrage "If text_contents.Count = 0..." 
+        ' damit der Dialog immer geöffnet werden kann.
 
-                                Try
-                                    ' JSON parsen
-                                    Dim jsonObj = JsonConvert.DeserializeObject(Of Object)(file_content)
+        Dim openFileDialog As New OpenFileDialog
 
-                                    ' JSON minify (ohne Einrückung)
-                                    Dim minified = JsonConvert.SerializeObject(jsonObj, Formatting.None)
-
-                                    file_content = minified
-                                Catch ex As Exception
-                                    MessageBox.Show("The JSON file is invalid: " & ex.Message)
-                                End Try
-
-                                Dim text_content As New text_content_def
-                                text_content.text = file_content
-                                text_content.fileName = fileName
-                                text_content.fileExtention = fileExtension
-                                text_contents.Add(text_content)
-
-                                ListBox_file_list.Items.Add(filePath)
-                                ListBox_file_list.Visible = True
-                                SiticoneButton_file.Text = "- File"
-                            Case Else
-                                Dim file_content = File.ReadAllText(filePath)
-                                Dim text_content As New text_content_def
-                                text_content.text = file_content
-                                text_content.fileName = fileName
-                                text_content.fileExtention = fileExtension
-                                text_contents.Add(text_content)
-                                ListBox_file_list.Items.Add(filePath)
-                                ListBox_file_list.Visible = True
-                                SiticoneButton_file.Text = "- File"
-                        End Select
-
-
-                    Catch ex As Exception
-                        MessageBox.Show("Error loading file: " & ex.Message)
-                    End Try
-                Next
-            End If
+        ' Filter-Logik basierend auf der API-Auswahl
+        If SiticoneDropdown_API.SelectedIndex = 0 Then
+            openFileDialog.Filter = "Text Dateien (*.txt)|*.txt|PDF Datei (*.pdf)|*.pdf|JSON Datei (*.json)|*.json|Bild (*.jpg)|*.jpg|Bild (*.png)|*.png|Alle Dateien (*.*)|*.*"
         Else
-            text_contents.Clear()
-            image_contents.Clear()
-            ListBox_file_list.Items.Clear()
-            ListBox_file_list.Visible = False
-            SiticoneButton_file.Text = "+ File"
+            openFileDialog.Filter = "Text Dateien (*.txt)|*.txt|PDF Datei (*.pdf)|*.pdf|Alle Dateien (*.*)|*.*"
         End If
+
+        openFileDialog.Multiselect = True
+
+        If openFileDialog.ShowDialog = DialogResult.OK Then
+            For Each filePath In openFileDialog.FileNames
+                Dim fileExtension = Mid(LCase(Path.GetExtension(filePath)), 2)
+                Dim fileName = Path.GetFileName(filePath)
+
+                Try
+                    Select Case fileExtension
+                        Case "jpg", "png"
+                            ' --- BILDER HINZUFÜGEN ---
+                            Dim imageBytes = File.ReadAllBytes(filePath)
+                            image_contents.Add(Convert.ToBase64String(imageBytes))
+
+                        Case "txt"
+                            ' --- TEXT DATEIEN HINZUFÜGEN ---
+                            Dim file_content = File.ReadAllText(filePath)
+                            Dim tContent As New text_content_def With {
+                            .text = file_content,
+                            .fileName = fileName,
+                            .fileExtention = fileExtension
+                        }
+                            text_contents.Add(tContent)
+
+                        Case "pdf"
+                            ' --- PDF DATEIEN HINZUFÜGEN ---
+                            Dim sb As New Text.StringBuilder()
+                            Using Pdfdoc = UglyToad.PdfPig.PdfDocument.Open(filePath)
+                                For Each page In Pdfdoc.GetPages()
+                                    sb.AppendLine(page.Text & vbLf)
+                                Next
+                            End Using
+                            Dim tContent As New text_content_def With {
+                            .text = sb.ToString(),
+                            .fileName = fileName,
+                            .fileExtention = fileExtension
+                        }
+                            text_contents.Add(tContent)
+
+                        Case "json"
+                            ' --- JSON DATEIEN HINZUFÜGEN ---
+                            Dim file_content = File.ReadAllText(filePath)
+                            Try
+                                Dim jsonObj = JsonConvert.DeserializeObject(Of Object)(file_content)
+                                file_content = JsonConvert.SerializeObject(jsonObj, Formatting.None)
+                            Catch
+                                ' Bei Fehler Rohtext lassen
+                            End Try
+                            Dim tContent As New text_content_def With {
+                            .text = file_content,
+                            .fileName = fileName,
+                            .fileExtention = fileExtension
+                        }
+                            text_contents.Add(tContent)
+
+                        Case Else
+                            ' --- ANDERE DATEIEN ---
+                            Dim file_content = File.ReadAllText(filePath)
+                            Dim tContent As New text_content_def With {
+                            .text = file_content,
+                            .fileName = fileName,
+                            .fileExtention = fileExtension
+                        }
+                            text_contents.Add(tContent)
+                    End Select
+
+                    ' Erstellt den visuellen Chip im FlowPanel
+                    AddFileChip(filePath, fileExtension)
+
+                Catch ex As Exception
+                    MessageBox.Show("Fehler beim Laden der Datei '" & fileName & "': " & ex.Message)
+                End Try
+            Next
+
+            ' UI sichtbar machen und Layout aktualisieren
+            SiticoneFlowPanel_prompt_filecontent.Visible = True
+            SiticoneTextArea_prompt_TextChanged(Nothing, Nothing)
+        End If
+    End Sub
+
+    Private Sub ClearFileChips()
+        ' Alles leeren
+        text_contents.Clear()
+        image_contents.Clear()
+        SiticoneFlowPanel_prompt_filecontent.Controls.Clear()
+        SiticoneFlowPanel_prompt_filecontent.Visible = False
+        SiticoneTextArea_prompt_TextChanged(Nothing, Nothing)
+    End Sub
+
+
+    Private Sub AddFileChip(filePath As String, ext As String)
+        ' --- 1. DER CHIP-CONTAINER (SiticonePanel) ---
+        Dim chip As New SiticonePanel()
+        With chip
+            .Size = New Size(210, 64)
+            ' Eigenschaft aus image_1236cf.png
+            .FillColor = Color.FromArgb(235, 237, 240)
+            .BorderThickness = 0 ' Aus image_1236cf.png
+            .ShowBorder = False ' Verhindert Rahmen wie in image_1236cf.png
+            .Margin = New Padding(5)
+            .Tag = filePath
+        End With
+
+        ' --- 2. DAS ICON (SiticonePictureBox) ---
+        Dim picIcon As New SiticonePictureBox()
+        With picIcon
+            .Size = New Size(48, 48)
+            .Location = New Point(8, 8)
+            .SizeMode = PictureBoxSizeMode.Zoom
+            .BackColor = Color.Transparent
+            ' Icon-Logik bleibt gleich
+            Select Case ext.ToLower()
+                Case "txt" : .Image = Resource_pic.icon_txt
+                Case "pdf" : .Image = Resource_pic.icon_pdf
+                Case "json" : .Image = Resource_pic.icon_json
+                Case "jpg", "png", "jpeg"
+                    Try
+                        Using fs As New FileStream(filePath, FileMode.Open, FileAccess.Read)
+                            .Image = New Bitmap(Image.FromStream(fs).GetThumbnailImage(48, 48, Nothing, IntPtr.Zero))
+                        End Using
+                    Catch
+                        .Image = Resource_pic.icon_generic
+                    End Try
+                Case Else : .Image = Resource_pic.icon_generic
+            End Select
+        End With
+
+        ' --- 3. DER DATEINAME (Standard Label) ---
+        Dim lblName As New Label()
+        With lblName
+            .Text = Path.GetFileName(filePath)
+            .AutoSize = False
+            .Location = New Point(62, 12)
+            .Size = New Size(115, 40)
+            .Font = New Font("Segoe UI Semibold", 8.5)
+            .TextAlign = ContentAlignment.MiddleLeft
+            .BackColor = Color.Transparent
+        End With
+
+        ' --- 4. DER LÖSCH-BUTTON (SiticoneButton) ---
+        ' Korrektur basierend auf image_227e20.png, image_227e66.png und image_227ec3.png
+        Dim btnDelete As New SiticoneButton()
+        With btnDelete
+            .Size = New Size(24, 24)
+            .Location = New Point(180, 5)
+            .Text = "x"
+            ' In image_227e20.png heißt es ButtonBackColor statt FillColor
+            .ButtonBackColor = Color.Transparent
+            ' In image_227ec3.png heißt es TextColor statt ForeColor
+            .TextColor = Color.Gray
+            .Font = New Font("Arial", 12, FontStyle.Bold)
+            ' In image_227e20.png heißt es BorderWidth statt BorderThickness
+            .BorderWidth = 0
+            ' Hover-Eigenschaften aus image_227e66.png
+            .HoverBackColor = Color.FromArgb(255, 200, 200)
+            .HoverTextColor = Color.Red
+            ' CornerRadius einzeln setzen laut image_227e20.png
+            .CornerRadiusTopLeft = 12
+            .CornerRadiusTopRight = 12
+            .CornerRadiusBottomLeft = 12
+            .CornerRadiusBottomRight = 12
+            .Cursor = Cursors.Hand
+        End With
+
+        ' --- 5. LÖSCH-LOGIK (Angepasst) ---
+        ' ... (Code für btnDelete Setup) ...
+
+        AddHandler btnDelete.Click, Sub(s, ev)
+                                        SiticoneFlowPanel_prompt_filecontent.Controls.Remove(chip)
+
+                                        ' Listen leeren
+                                        image_contents.Clear() ' Ggf. anpassen, dass nur das spezifische Item gelöscht wird?
+                                        text_contents.Clear()
+
+                                        ' Sichtbarkeit prüfen
+                                        If SiticoneFlowPanel_prompt_filecontent.Controls.Count = 0 Then
+                                            SiticoneFlowPanel_prompt_filecontent.Visible = False
+                                        End If
+
+                                        ' HIER: Layout neu berechnen
+                                        UpdatePromptLayout()
+                                    End Sub
+
+        ' --- ZUSAMMENBAUEN & HINZUFÜGEN ---
+        chip.Controls.Add(picIcon)
+        chip.Controls.Add(lblName)
+        chip.Controls.Add(btnDelete)
+
+        SiticoneFlowPanel_prompt_filecontent.Controls.Add(chip)
+
+        ' WICHTIG: Panel sichtbar machen, falls es das erste Element ist
+        If SiticoneFlowPanel_prompt_filecontent.Controls.Count > 0 Then
+            SiticoneFlowPanel_prompt_filecontent.Visible = True
+        End If
+
+        ' HIER: Layout neu berechnen (nachdem hinzugefügt wurde)
+        UpdatePromptLayout()
     End Sub
 
     Private Async Sub SiticoneDropdown_model_SelectedIndexChanged(sender As Object, e As EventArgs) Handles SiticoneDropdown_model.SelectedIndexChanged
         Scintilla_model_info.Text = model_info.Item(SiticoneDropdown_model.SelectedIndex)
-        SiticoneButton_tab.SelectedTab = TabPage_modelinfo
+        SiticoneTabControl_tab.SelectedTab = TabPage_modelinfo
         Dim model_name = SiticoneDropdown_model.SelectedItem
+        SiticoneLabel_show_LLM.Text = model_name
         Dim model_info_get As ModelInfo = GetModelInfo(model_name)
         If model_info_get IsNot Nothing Then
             SiticoneLabel1_model_info_description.Text = model_info_get.description
@@ -1266,7 +1381,7 @@ Public Class Form1
             MessageBox.Show("Error loading model information: " & ex.Message)
         End Try
         extractedContext.Clear()
-        CheckBox_last_context.Text = String.Format("Use Last Context ({0} Tokens)", extractedContext.Count)
+        SiticoneLabel_last_context.Text = String.Format("Use Last Context ({0} Tokens)", extractedContext.Count)
     End Sub
 
     ' Extrahiert Code-Blöcke aus einem Markdown-String
@@ -1286,7 +1401,7 @@ Public Class Form1
                         .Language = currentLanguage,
                         .Code = DeleteSpaces(String.Join(Environment.NewLine, currentCode))
                     })
-                    If currentLanguage = "json" And (DeleteSpaces(String.Join(Environment.NewLine, currentCode)).Contains("""name"":") Or DeleteSpaces(String.Join(Environment.NewLine, currentCode)).Contains("""tool"":")) And (CheckBox_tools.Checked = True Or CheckBox_ragtools.Checked = True) Then
+                    If currentLanguage = "json" And (DeleteSpaces(String.Join(Environment.NewLine, currentCode)).Contains("""name"":") Or DeleteSpaces(String.Join(Environment.NewLine, currentCode)).Contains("""tool"":")) And (SiticoneToggleSwitch_tools.Checked = True Or SiticoneToggleSwitch_ragtools.Checked = True) Then
                         ToolsCodeBlockJson = DeleteSpaces(String.Join(Environment.NewLine, currentCode))
                         Dim parsedJson As JObject = JObject.Parse(ToolsCodeBlockJson)
                         ToolsCodeBlockJson = JsonConvert.SerializeObject(parsedJson, Formatting.None)
@@ -1376,9 +1491,9 @@ Public Class Form1
                 psi.Arguments = run_parameter.arg & " " & """" & tempFilePath & """"
             End If
 
-            psi.RedirectStandardOutput = Not (SiticoneCheckBox_UseShellExecute.Checked)
-            psi.RedirectStandardError = Not (SiticoneCheckBox_UseShellExecute.Checked)
-            psi.UseShellExecute = SiticoneCheckBox_UseShellExecute.Checked
+            psi.RedirectStandardOutput = Not (SiticoneToggleSwitch_UseShellExecute.Checked)
+            psi.RedirectStandardError = Not (SiticoneToggleSwitch_UseShellExecute.Checked)
+            psi.UseShellExecute = SiticoneToggleSwitch_UseShellExecute.Checked
             psi.CreateNoWindow = True
 
             Dim process As New Process()
@@ -1391,7 +1506,7 @@ Public Class Form1
                 SiticoneTextArea_run_output.Text = ""
 
                 ' 4. Lese die Ausgabe und Fehler
-                If SiticoneCheckBox_UseShellExecute.Checked = False Then
+                If SiticoneToggleSwitch_UseShellExecute.Checked = False Then
                     ' Asynchrones Lesen der Ausgabe und Fehler, falls ein Timeout erforderlich ist
                     Dim outputTask As Task(Of String) = Task.Run(Function() process.StandardOutput.ReadToEnd())
                     Dim errorTask As Task(Of String) = Task.Run(Function() process.StandardError.ReadToEnd())
@@ -1584,17 +1699,59 @@ Public Class Form1
     End Sub
 
     Private Sub SiticoneTextArea_prompt_TextChanged(sender As Object, e As EventArgs) Handles SiticoneTextArea_prompt.TextChanged
-        ' Festlegen der Basis-Höhe (falls nötig für Paddings, etc.)
-        Dim baseHeight As Integer = 20
-
-        ' Berechnen der erforderlichen Höhe basierend auf den Zeilen
-        Dim lineHeight As Integer = TextRenderer.MeasureText("Test", SiticoneTextArea_prompt.Font).Height
-        Dim numberOfLines As Integer = SiticoneTextArea_prompt.Lines.Length
-
-        ' Setzen der neuen Höhe
-        'SiticoneSplitContainer_main.SplitterDistance = SiticoneSplitContainer_main.Height - 1000 - (lineHeight * numberOfLines)
+        UpdatePromptLayout()
+        If SiticoneTextArea_prompt.TextLength = 0 Then
+            SiticonePlayPauseButton_request.Enabled = False
+        Else
+            SiticonePlayPauseButton_request.Enabled = True
+        End If
     End Sub
 
+    Private Sub UpdatePromptLayout()
+        ' --- 1. EINSTELLUNGEN ---
+        Dim minTextBoxHeight = 36
+        Dim maxTextBoxHeight = 200
+        Dim paddingAroundControls = 20
+
+        ' --- 2. TEXTHÖHE BERECHNEN ---
+        Dim textSize = TextRenderer.MeasureText(SiticoneTextArea_prompt.Text,
+                                            SiticoneTextArea_prompt.Font,
+                                            New Size(SiticoneTextArea_prompt.Width - 10, Integer.MaxValue),
+                                            TextFormatFlags.WordBreak)
+        Dim calculatedHeight = textSize.Height + 15
+
+        ' --- 3. TEXTAREA-HÖHE SETZEN ---
+        If calculatedHeight > maxTextBoxHeight Then
+            SiticoneTextArea_prompt.Height = maxTextBoxHeight
+            SiticoneTextArea_prompt.ScrollBars = ScrollBars.Vertical
+        ElseIf calculatedHeight < minTextBoxHeight Then
+            SiticoneTextArea_prompt.Height = minTextBoxHeight
+            SiticoneTextArea_prompt.ScrollBars = ScrollBars.None
+        Else
+            SiticoneTextArea_prompt.Height = calculatedHeight
+            SiticoneTextArea_prompt.ScrollBars = ScrollBars.None
+        End If
+
+        ' --- 4. GESAMTHÖHE DES ÄUẞEREN PANELS BERECHNEN ---
+        Dim currentFileHeight = 0
+        ' Sicherstellen, dass das FlowPanel seine Layout-Berechnung abgeschlossen hat,
+        ' bevor wir die Höhe abrufen (wichtig bei AutoSize)
+        If SiticoneFlowPanel_prompt_filecontent.Visible Then
+            ' FIX: Wir fragen das Panel: "Wie hoch musst du sein, um alle Controls bei deiner aktuellen Breite anzuzeigen?"
+            ' Das ignoriert die aktuelle (evtl. falsche) Höhe und berechnet sie frisch.
+            Dim preferredSize As Size = SiticoneFlowPanel_prompt_filecontent.GetPreferredSize(New Size(SiticoneFlowPanel_prompt_filecontent.Width, 0))
+            currentFileHeight = preferredSize.Height
+        End If
+
+        SiticonePanel_prompt.Height = currentFileHeight +
+                                  SiticoneTextArea_prompt.Height +
+                                  SiticonePanel_prompt_action.Height +
+                                  paddingAroundControls
+
+        ' --- 5. LAYOUT ERZWINGEN ---
+        SiticonePanel_prompt.PerformLayout()
+        Me.PerformLayout()
+    End Sub
 
     Private Sub dgv_option_CellValueChanged(sender As Object, e As DataGridViewCellEventArgs) Handles dgv_option.CellValueChanged
         Dim dgv = CType(sender, DataGridView)
@@ -1724,13 +1881,13 @@ Public Class Form1
             Dim data As New Dictionary(Of String, Object) From {
                 {"system_prompt", textAreaContent},
                 {"option_parameter", dataGridViewContent},
-                {"output_system_use", CheckBox_system_use.Checked},
-                {"output_format_use", CheckBox_format_use.Checked},
+                {"output_system_use", SiticoneToggleSwitch_system_use.Checked},
+                {"output_format_use", SiticoneToggleSwitch_format_use.Checked},
                 {"output_format", Scintilla_format.Text},
                 {"timeout", SiticoneTextBox_timeout.Text},
-                {"thinking_use", CheckBox_thinking_use.Checked},
+                {"thinking_use", SiticoneToggleSwitch_thinking_use.Checked},
                 {"thinking_parameter", SiticoneDropdown_thinking_use.SelectedItem},
-                {"context_use", CheckBox_last_context.Checked},
+                {"context_use", SiticoneToggleSwitch_last_context.Checked},
                 {"content_prompt", SiticoneTextArea_content_prompt.Text}
             }
 
@@ -1774,13 +1931,13 @@ Public Class Form1
                         dgv_option.Rows(rowIndex).Cells(key).Value = rowData(key).ToObject(Of Object)
                     Next
                 Next
-                CheckBox_system_use.Checked = data("output_system_use")
-                CheckBox_format_use.Checked = data("output_format_use")
+                SiticoneToggleSwitch_system_use.Checked = data("output_system_use")
+                SiticoneToggleSwitch_format_use.Checked = data("output_format_use")
                 Scintilla_format.Text = data("output_format").ToString
                 SiticoneTextBox_timeout.Text = data("timeout").ToString
-                CheckBox_thinking_use.Checked = data("thinking_use")
+                SiticoneToggleSwitch_thinking_use.Checked = data("thinking_use")
                 SiticoneDropdown_thinking_use.SelectedItem = data("thinking_parameter").ToString
-                CheckBox_last_context.Checked = data("context_use")
+                SiticoneToggleSwitch_last_context.Checked = data("context_use")
                 SiticoneTextArea_content_prompt.Text = data("content_prompt")
             Catch ex As Exception
                 MessageBox.Show("Error loading parameters: " & ex.Message)
@@ -1873,7 +2030,7 @@ Public Class Form1
 
             ' Create an object to hold the data
             Dim data As New Dictionary(Of String, Object) From {
-                {"tools_use", CheckBox_tools.Checked},
+                {"tools_use", SiticoneToggleSwitch_tools.Checked},
                 {"tools_system_prompt", SiticoneTextArea_Tools_system.Text},
                 {"tools_json", Scintilla_Tools_Json.Text},
                 {"tools_python_code", Scintilla_Tools_pythoncode.Text}
@@ -1909,7 +2066,7 @@ Public Class Form1
 
             Try
                 ' Load the content into the controls
-                CheckBox_tools.Checked = data("tools_use")
+                SiticoneToggleSwitch_tools.Checked = data("tools_use")
                 SiticoneTextArea_Tools_system.Text = data("tools_system_prompt").ToString
                 Scintilla_Tools_Json.Text = data("tools_json").ToString
                 Scintilla_Tools_pythoncode.Text = data("tools_python_code").ToString
@@ -1933,7 +2090,7 @@ Public Class Form1
 
             ' Create an object to hold the data
             Dim data As New Dictionary(Of String, Object) From {
-                {"rag_use", CheckBox_ragtools.Checked},
+                {"rag_use", SiticoneToggleSwitch_ragtools.Checked},
                 {"rag_system_prompt", SiticoneTextArea_Rag_system.Text},
                 {"rag_json", Scintilla_Rag_Json.Text}
             }
@@ -1968,7 +2125,7 @@ Public Class Form1
 
             Try
                 ' Load the content into the controls
-                CheckBox_ragtools.Checked = data("rag_use")
+                SiticoneToggleSwitch_ragtools.Checked = data("rag_use")
                 SiticoneTextArea_Rag_system.Text = data("rag_system_prompt").ToString
                 Scintilla_Rag_Json.Text = data("rag_json").ToString
             Catch ex As Exception
@@ -2039,14 +2196,14 @@ Public Class Form1
 
 
     Private Async Sub SiticoneButton_screenshot_Click(sender As Object, e As EventArgs) Handles SiticoneButton_screenshot.Click
-        Me.WindowState = FormWindowState.Minimized
+        WindowState = FormWindowState.Minimized
         Try
-            Clipboard.Clear()
+            Clipboard.Clear
         Catch
             ' notfalls ignorieren
         End Try
 
-        OpenSnipToolByUri() ' öffnet die Windows-Snipping-UI
+        OpenSnipToolByUri ' öffnet die Windows-Snipping-UI
 
         ' 45s warten, dabei UI nicht blockieren
         Dim img = Await WaitForClipboardImageAsync(TimeSpan.FromSeconds(45))
@@ -2059,9 +2216,11 @@ Public Class Form1
             ' Optional: Nutzer informieren, dass kein Bild kam
             MessageBox.Show("No screenshot found in the clipboard.")
         End If
-        Me.WindowState = FormWindowState.Normal
-        Me.Activate()
-        Me.BringToFront()
+        WindowState = FormWindowState.Normal
+        Activate()
+        BringToFront()
+        Application.DoEvents()
+        UpdatePromptLayout()
     End Sub
 
     Public Sub LoadModelConfig(filePath As String)
@@ -2225,7 +2384,7 @@ Public Class Form1
 
     Private Sub SiticoneButton_clear_context_Click(sender As Object, e As EventArgs) Handles SiticoneButton_clear_context.Click
         extractedContext.Clear()
-        CheckBox_last_context.Text = String.Format("Use Last Context ({0} Tokens)", extractedContext.Count)
+        SiticoneLabel_last_context.Text = String.Format("Use Last Context ({0} Tokens)", extractedContext.Count)
     End Sub
 
     Private Sub SiticoneButton_timing_Click(sender As Object, e As EventArgs) Handles SiticoneButton_timing.Click
@@ -2244,7 +2403,7 @@ Public Class Form1
             timing_eval_count,
             timing_eval_duration)
 
-            frm.ShowDialog() ' Als Dialog öffnen
+            frm.ShowDialog ' Als Dialog öffnen
         End Using
     End Sub
 
@@ -2481,6 +2640,7 @@ Public Class Form1
             SiticoneButton_preload.Enabled = True
         End Try
     End Sub
+
 
 End Class
 

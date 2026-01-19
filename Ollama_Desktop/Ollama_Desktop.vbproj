@@ -6,16 +6,16 @@
     <StartupObject>Ollama_Desktop.My.MyApplication</StartupObject>
     <UseWindowsForms>true</UseWindowsForms>
     <MyType>WindowsForms</MyType>
-    <AssemblyVersion>1.0.6.9</AssemblyVersion>
-    <FileVersion>1.0.6.9</FileVersion>
+    <AssemblyVersion>1.1.0.11</AssemblyVersion>
+    <FileVersion>1.1.0.11</FileVersion>
     <PackageIcon>315878_ai_document_file_icon (2).png</PackageIcon>
-    <ApplicationIcon>pic\ro.ico</ApplicationIcon>
+    <ApplicationIcon>pic\app_icon_hq.ico</ApplicationIcon>
     <Copyright>7soft</Copyright>
     <Description>Client für die Nutzung eines Ollama Servers</Description>
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="pic\ro.ico" />
+    <Content Include="pic\app_icon_hq.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -49,6 +49,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Update="Resource_pic.Designer.vb">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resource_pic.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -56,6 +61,11 @@
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resource_pic.resx">
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource_pic.Designer.vb</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 
@@ -114,6 +124,10 @@
     <None Update="version.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Resources\" />
   </ItemGroup>
 
 </Project>
