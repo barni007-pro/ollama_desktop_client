@@ -16,3 +16,6 @@ V 1.0.5.8
 - Error messages are now in English
 V 1.0.6.9
 - If Windows Proxy is configured, then it can be bypassed (use_proxy = false)
+V 1.1.0.11
+- new GUI design
+- Prompt input and file content now include thumbnails
