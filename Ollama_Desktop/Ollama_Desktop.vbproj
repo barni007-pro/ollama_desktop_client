@@ -6,8 +6,8 @@
     <StartupObject>Ollama_Desktop.My.MyApplication</StartupObject>
     <UseWindowsForms>true</UseWindowsForms>
     <MyType>WindowsForms</MyType>
-    <AssemblyVersion>1.1.0.11</AssemblyVersion>
-    <FileVersion>1.1.0.11</FileVersion>
+    <AssemblyVersion>1.1.1.12</AssemblyVersion>
+    <FileVersion>1.1.1.12</FileVersion>
     <PackageIcon>315878_ai_document_file_icon (2).png</PackageIcon>
     <ApplicationIcon>pic\app_icon_hq.ico</ApplicationIcon>
     <Copyright>7soft</Copyright>
@@ -54,6 +54,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resource_pic.resx</DependentUpon>
     </Compile>
+    <Compile Update="Resource_svg.Designer.vb">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resource_svg.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -66,6 +71,11 @@
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resource_pic.Designer.vb</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resource_svg.resx">
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource_svg.Designer.vb</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 
