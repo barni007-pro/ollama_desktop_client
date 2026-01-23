@@ -21,3 +21,6 @@ V 1.1.0.11
 - Prompt input and file content now include thumbnails
 V 1.1.1.12
 - Bugfix: GUI
+V 1.1.2.13
+- update webwiev2 and siticone.NETCore.UI
+- The application now saves the model selection when exiting

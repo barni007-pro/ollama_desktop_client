@@ -123,6 +123,8 @@ Public Class Form1
     End Class
     Public SettingsInfo_dic As Dictionary(Of String, SettingsInfo)
 
+    Public APP_Start = True
+
     Private Async Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Await InitializeWebView2()
         WebView21.CoreWebView2.Settings.IsScriptEnabled = True
@@ -252,6 +254,26 @@ Public Class Form1
         RegisterStateImages(SiticoneButton_show_thinking, My.Resources.Resource_pic.think_32_blau, My.Resources.Resource_pic.think_32_grau)
         RegisterStateImages(SiticoneButton_HTMLtoPDF, My.Resources.Resource_pic.save_32_blau, My.Resources.Resource_pic.save_32_grau)
 
+        'öffnet LLM API Setting Menü
+        SiticoneGroupBox_LLM_setting.IsCollapsed = My.Settings.LLM_seting
+
+        'läd die letzte Modell Liste
+        If My.Settings.LLM_model_info IsNot Nothing Then
+            For Each jsonString As String In My.Settings.LLM_model_info
+                ' Den JSON-String parsen, um an den Namen zu kommen
+                Dim modelJson As JObject = JObject.Parse(jsonString)
+                Dim displayName As String = modelJson("name").ToString()
+
+                ' JSON in die lokale Liste (für später) und Name ins Dropdown
+                model_info.Add(jsonString)
+                SiticoneDropdown_model.Items.Add(displayName)
+            Next
+        End If
+        'Selektiert die letzte Modell Auswahl
+        If SiticoneDropdown_model.Items.Count > 0 Then
+            SiticoneDropdown_model.SelectedIndex = My.Settings.LLM_model_index
+        End If
+        APP_Start = False
     End Sub
 
     Private Sub Form1_FormClosed(sender As Object, e As FormClosedEventArgs) Handles MyBase.FormClosed
@@ -269,6 +291,12 @@ Public Class Form1
 
         My.Settings.rag_system = SiticoneTextArea_Rag_system.Text
         My.Settings.rag_json = Scintilla_Rag_Json.Text
+
+        My.Settings.LLM_seting = SiticoneGroupBox_LLM_setting.IsCollapsed
+
+        My.Settings.LLM_model_info = New Specialized.StringCollection()
+        My.Settings.LLM_model_info.AddRange(model_info.ToArray())
+        My.Settings.LLM_model_index = SiticoneDropdown_model.SelectedIndex
     End Sub
 
     Private Sub RegisterStateImages(btn As SiticoneButton,
@@ -1327,7 +1355,9 @@ Public Class Form1
 
     Private Async Sub SiticoneDropdown_model_SelectedIndexChanged(sender As Object, e As EventArgs) Handles SiticoneDropdown_model.SelectedIndexChanged
         Scintilla_model_info.Text = model_info.Item(SiticoneDropdown_model.SelectedIndex)
-        SiticoneTabControl_tab.SelectedTab = TabPage_modelinfo
+        If APP_Start = False Then
+            SiticoneTabControl_tab.SelectedTab = TabPage_modelinfo
+        End If
         Dim model_name = SiticoneDropdown_model.SelectedItem
         SiticoneLabel_show_LLM.Text = model_name
         Dim model_info_get As ModelInfo = GetModelInfo(model_name)

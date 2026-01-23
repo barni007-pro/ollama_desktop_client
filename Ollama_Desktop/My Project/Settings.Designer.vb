@@ -388,6 +388,41 @@ Namespace My
                 Return CType(Me("use_proxy"),Boolean)
             End Get
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
+        Public Property LLM_seting() As Boolean
+            Get
+                Return CType(Me("LLM_seting"),Boolean)
+            End Get
+            Set
+                Me("LLM_seting") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute()>  _
+        Public Property LLM_model_info() As Global.System.Collections.Specialized.StringCollection
+            Get
+                Return CType(Me("LLM_model_info"),Global.System.Collections.Specialized.StringCollection)
+            End Get
+            Set
+                Me("LLM_model_info") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("0")>  _
+        Public Property LLM_model_index() As Integer
+            Get
+                Return CType(Me("LLM_model_index"),Integer)
+            End Get
+            Set
+                Me("LLM_model_index") = value
+            End Set
+        End Property
     End Class
 End Namespace
 
