@@ -534,6 +534,12 @@ Public Class Form1
             Dim think As Boolean = SiticoneToggleSwitch_thinking_use.Checked
             Dim think_level As String = SiticoneDropdown_thinking_use.SelectedItem
             Dim context As Boolean = SiticoneToggleSwitch_last_context.Checked
+            If extractedContext.Count = 0 Then
+                context = False
+            End If
+            If context = True Then
+                system = ""
+            End If
             prompt = prompt.Replace(vbCr, "") 'nur noch("/n") im prompt'
             request_mem = prompt
 
@@ -2417,6 +2423,77 @@ Public Class Form1
         SiticoneLabel_last_context.Text = String.Format("Use Last Context ({0} Tokens)", extractedContext.Count)
     End Sub
 
+    Private Sub SiticoneButton_load_context_Click(sender As Object, e As EventArgs) Handles SiticoneButton_load_context.Click
+        Dim modelName As String = SiticoneDropdown_model.SelectedItem?.ToString()
+        Dim safeModelName As String = GetSafeFilename(modelName)
+
+        Using ofd As New OpenFileDialog()
+            ' Using the safe name for the filter and dialog
+            ofd.Filter = $"Context File (*.{safeModelName}.cnt)|*.{safeModelName}.cnt"
+            ofd.Title = "Ollama Context load"
+
+            If ofd.ShowDialog() = DialogResult.OK Then
+                Try
+                    Using reader As New BinaryReader(File.Open(ofd.FileName, FileMode.Open))
+                        Dim count As Integer = reader.ReadInt32()
+
+                        ' Clear and refill the list
+                        extractedContext.Clear()
+                        For i As Integer = 0 To count - 1
+                            extractedContext.Add(reader.ReadInt32())
+                        Next
+                    End Using
+
+                    MessageBox.Show($"Successful {extractedContext.Count} Context-Token loaded.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
+
+                    ' Update the Label after successful load
+                    SiticoneLabel_last_context.Text = String.Format("Use Last Context ({0} Tokens)", extractedContext.Count)
+                Catch ex As Exception
+                    MessageBox.Show("Error loading: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End Try
+            End If
+        End Using
+    End Sub
+
+    Private Sub SiticoneButton_save_context_Click(sender As Object, e As EventArgs) Handles SiticoneButton_save_context.Click
+        If extractedContext Is Nothing OrElse extractedContext.Count = 0 Then
+            MessageBox.Show("No context available for saving.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            Return
+        End If
+
+        Dim modelName As String = SiticoneDropdown_model.SelectedItem?.ToString()
+        Dim safeModelName As String = GetSafeFilename(modelName)
+
+        Using sfd As New SaveFileDialog()
+            ' Using the safe name for the filter and default filename
+            sfd.Filter = $"Context File (*.{safeModelName}.cnt)|*.{safeModelName}.cnt"
+            sfd.Title = "Ollama Context save"
+            sfd.FileName = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss")
+
+            If sfd.ShowDialog() = DialogResult.OK Then
+                Try
+                    Using writer As New BinaryWriter(File.Open(sfd.FileName, FileMode.Create))
+                        ' Write the count first as a header
+                        writer.Write(extractedContext.Count)
+                        For Each id As Integer In extractedContext
+                            writer.Write(id)
+                        Next
+                    End Using
+                    ' Optional: Success message could be added here
+                Catch ex As Exception
+                    MessageBox.Show("Error saving: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End Try
+            End If
+        End Using
+    End Sub
+
+    Private Function GetSafeFilename(input As String) As String
+        If String.IsNullOrEmpty(input) Then Return "default"
+        Dim invalidChars As String = New String(Path.GetInvalidFileNameChars())
+        ' Replace invalid chars with "_"
+        Return Regex.Replace(input, "[" & Regex.Escape(invalidChars) & "]", "_")
+    End Function
+
     Private Sub SiticoneButton_timing_Click(sender As Object, e As EventArgs) Handles SiticoneButton_timing.Click
         ' Prüfen, ob überhaupt schon Daten vorhanden sind
         If timing_total_duration = 0 Then
@@ -2670,7 +2747,6 @@ Public Class Form1
             SiticoneButton_preload.Enabled = True
         End Try
     End Sub
-
 
 End Class
 
