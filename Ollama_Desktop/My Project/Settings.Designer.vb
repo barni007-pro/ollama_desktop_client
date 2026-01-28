@@ -423,6 +423,18 @@ Namespace My
                 Me("LLM_model_index") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property show_menue() As Boolean
+            Get
+                Return CType(Me("show_menue"),Boolean)
+            End Get
+            Set
+                Me("show_menue") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

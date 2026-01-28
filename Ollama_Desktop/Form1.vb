@@ -189,6 +189,8 @@ Public Class Form1
         SiticoneTextArea_Rag_system.Text = My.Settings.rag_system
         Scintilla_Rag_Json.Text = My.Settings.rag_json
 
+        SiticoneToggleSwitch_show_menue.Checked = My.Settings.show_menue
+
         ' Execute Language Spalte
         Dim ExecuteLanguageColumn As New DataGridViewTextBoxColumn()
         ExecuteLanguageColumn.Name = "Language"
@@ -274,6 +276,56 @@ Public Class Form1
             SiticoneDropdown_model.SelectedIndex = My.Settings.LLM_model_index
         End If
         APP_Start = False
+
+        ' 1. Das TabControl optisch "neutralisieren"
+        ' Wir setzen die Reiter-Größe auf fast Null, damit sie unsichtbar werden
+        'SiticoneTabControl_tab.ItemSize = New Size(0, 1)
+        'SiticoneTabControl_tab.ShowSeparatorLine = False
+        'SiticoneTabControl_tab.ShowToolTips = False
+        'SiticoneTabControl_tab.SizeMode = TabSizeMode.Fixed
+        'SiticoneTabControl_tab.ItemSize = New Size(10, 10)
+        SiticoneTabControl_tab.Top -= 51
+        SiticoneTabControl_tab.Height += 51
+
+        ' 2. Navbar vorbereiten
+        SiticoneNavbar_tab.Items.Clear()
+
+        ' 3. Navbar mit Tabs synchronisieren
+        For i As Integer = 0 To SiticoneTabControl_tab.TabPages.Count - 1
+            Dim page = SiticoneTabControl_tab.TabPages(i)
+            Dim navItem As New NavBarItem()
+
+            With navItem
+                .Text = page.Text
+                .Tag = i
+                ' Positioniert das Bild über dem Text
+                '.TextImageRelation = TextImageRelation.ImageAboveText
+
+                ' Optional: Text zentrieren, damit es harmonisch aussieht
+                '.TextAlign = HorizontalAlignment.Center
+
+                ' Wir wandeln den Tab-Text in einen gültigen Ressourcen-Namen um
+                ' Beispiel: "Model Info" wird zu "Model_Info"
+                Dim resourceName As String = page.Text.Replace(" ", "_")
+
+                Try
+                    ' Wir greifen über den ResourceManager auf die Datei Resource_svg zu
+                    ' und suchen nach dem Bild mit dem Namen der TabPage
+                    Dim resObject = My.Resources.Resource_svg.ResourceManager.GetObject(resourceName)
+
+                    If resObject IsNot Nothing Then
+                        .Image = DirectCast(resObject, Drawing.Image)
+                    End If
+                Catch ex As Exception
+                    ' Falls ein Name mal nicht übereinstimmt, passiert hier nichts (kein Absturz)
+                    Debug.WriteLine("Bild nicht gefunden für: " & resourceName)
+                End Try
+            End With
+
+            ' Item zur Navbar hinzufügen
+            SiticoneNavbar_tab.Items.Add(navItem)
+            SiticoneNavbar_tab.SelectedIndex = SiticoneTabControl_tab.SelectedIndex
+        Next
     End Sub
 
     Private Sub Form1_FormClosed(sender As Object, e As FormClosedEventArgs) Handles MyBase.FormClosed
@@ -297,6 +349,8 @@ Public Class Form1
         My.Settings.LLM_model_info = New Specialized.StringCollection()
         My.Settings.LLM_model_info.AddRange(model_info.ToArray())
         My.Settings.LLM_model_index = SiticoneDropdown_model.SelectedIndex
+
+        My.Settings.show_menue = SiticoneToggleSwitch_show_menue.Checked
     End Sub
 
     Private Sub RegisterStateImages(btn As SiticoneButton,
@@ -2748,6 +2802,17 @@ Public Class Form1
         End Try
     End Sub
 
+    Private Sub SiticoneNavbar_tab_SelectedItemChanged(sender As Object, e As SiticoneNavbar.NavBarSelectionEventArgs) Handles SiticoneNavbar_tab.SelectedItemChanged
+        SiticoneTabControl_tab.SelectedIndex = SiticoneNavbar_tab.SelectedIndex
+    End Sub
+
+    Private Sub SiticoneTabControl_tab_SelectedIndexChanged(sender As Object, e As EventArgs) Handles SiticoneTabControl_tab.SelectedIndexChanged
+        SiticoneNavbar_tab.SelectedIndex = SiticoneTabControl_tab.SelectedIndex
+    End Sub
+
+    Private Sub SiticoneToggleSwitch1_CheckedChanged(sender As Object, e As SiticoneToggleSwitch.ToggledEventArgs) Handles SiticoneToggleSwitch_show_menue.CheckedChanged
+        SiticoneNavbar_tab.Visible = SiticoneToggleSwitch_show_menue.Checked
+    End Sub
 End Class
 
 Public Class DocumentIndex
