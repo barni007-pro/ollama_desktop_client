@@ -67,9 +67,9 @@ Namespace My.Resources
         '''<summary>
         '''  Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
         '''</summary>
-        Friend Shared ReadOnly Property file_arrow_down_solid() As System.Drawing.Bitmap
+        Friend Shared ReadOnly Property Code_Block() As System.Drawing.Bitmap
             Get
-                Dim obj As Object = ResourceManager.GetObject("file-arrow-down-solid", resourceCulture)
+                Dim obj As Object = ResourceManager.GetObject("Code_Block", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
@@ -77,9 +77,9 @@ Namespace My.Resources
         '''<summary>
         '''  Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
         '''</summary>
-        Friend Shared ReadOnly Property file_arrow_up_solid() As System.Drawing.Bitmap
+        Friend Shared ReadOnly Property Code_Parameter() As System.Drawing.Bitmap
             Get
-                Dim obj As Object = ResourceManager.GetObject("file-arrow-up-solid", resourceCulture)
+                Dim obj As Object = ResourceManager.GetObject("Code_Parameter", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
@@ -87,9 +87,9 @@ Namespace My.Resources
         '''<summary>
         '''  Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
         '''</summary>
-        Friend Shared ReadOnly Property file_code_solid() As System.Drawing.Bitmap
+        Friend Shared ReadOnly Property Model_Info() As System.Drawing.Bitmap
             Get
-                Dim obj As Object = ResourceManager.GetObject("file-code-solid", resourceCulture)
+                Dim obj As Object = ResourceManager.GetObject("Model_Info", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
@@ -97,9 +97,9 @@ Namespace My.Resources
         '''<summary>
         '''  Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
         '''</summary>
-        Friend Shared ReadOnly Property gear_solid() As System.Drawing.Bitmap
+        Friend Shared ReadOnly Property Model_Parameter() As System.Drawing.Bitmap
             Get
-                Dim obj As Object = ResourceManager.GetObject("gear-solid", resourceCulture)
+                Dim obj As Object = ResourceManager.GetObject("Model_Parameter", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
@@ -107,9 +107,9 @@ Namespace My.Resources
         '''<summary>
         '''  Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
         '''</summary>
-        Friend Shared ReadOnly Property info_solid() As System.Drawing.Bitmap
+        Friend Shared ReadOnly Property RAG_Tool() As System.Drawing.Bitmap
             Get
-                Dim obj As Object = ResourceManager.GetObject("info-solid", resourceCulture)
+                Dim obj As Object = ResourceManager.GetObject("RAG_Tool", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
@@ -117,9 +117,9 @@ Namespace My.Resources
         '''<summary>
         '''  Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
         '''</summary>
-        Friend Shared ReadOnly Property magnifying_glass_solid() As System.Drawing.Bitmap
+        Friend Shared ReadOnly Property Request_JSON() As System.Drawing.Bitmap
             Get
-                Dim obj As Object = ResourceManager.GetObject("magnifying-glass-solid", resourceCulture)
+                Dim obj As Object = ResourceManager.GetObject("Request_JSON", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
@@ -127,9 +127,9 @@ Namespace My.Resources
         '''<summary>
         '''  Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
         '''</summary>
-        Friend Shared ReadOnly Property markdown_brands_solid() As System.Drawing.Bitmap
+        Friend Shared ReadOnly Property Response_HTML() As System.Drawing.Bitmap
             Get
-                Dim obj As Object = ResourceManager.GetObject("markdown-brands-solid", resourceCulture)
+                Dim obj As Object = ResourceManager.GetObject("Response_HTML", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
@@ -137,9 +137,9 @@ Namespace My.Resources
         '''<summary>
         '''  Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
         '''</summary>
-        Friend Shared ReadOnly Property message_regular() As System.Drawing.Bitmap
+        Friend Shared ReadOnly Property Response_JSON() As System.Drawing.Bitmap
             Get
-                Dim obj As Object = ResourceManager.GetObject("message-regular", resourceCulture)
+                Dim obj As Object = ResourceManager.GetObject("Response_JSON", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
@@ -147,9 +147,9 @@ Namespace My.Resources
         '''<summary>
         '''  Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
         '''</summary>
-        Friend Shared ReadOnly Property sliders_solid() As System.Drawing.Bitmap
+        Friend Shared ReadOnly Property Response_MD() As System.Drawing.Bitmap
             Get
-                Dim obj As Object = ResourceManager.GetObject("sliders-solid", resourceCulture)
+                Dim obj As Object = ResourceManager.GetObject("Response_MD", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
@@ -157,9 +157,9 @@ Namespace My.Resources
         '''<summary>
         '''  Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
         '''</summary>
-        Friend Shared ReadOnly Property terminal_solid() As System.Drawing.Bitmap
+        Friend Shared ReadOnly Property Tools() As System.Drawing.Bitmap
             Get
-                Dim obj As Object = ResourceManager.GetObject("terminal-solid", resourceCulture)
+                Dim obj As Object = ResourceManager.GetObject("Tools", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property

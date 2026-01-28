@@ -338,5 +338,8 @@ Antwort: {"name":"get_text","arguments":{"words":["Python","Java","Programmiersp
     <Setting Name="LLM_model_index" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
+    <Setting Name="show_menue" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
