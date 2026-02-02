@@ -28,3 +28,5 @@ V 1.1.3.14
 - load/save Context from/to file
 V 1.2.0.15
 - new GUI Menue (Top Menue is now a Sidebar)
+V 1.2.1.16
+- Bugfix: GUI

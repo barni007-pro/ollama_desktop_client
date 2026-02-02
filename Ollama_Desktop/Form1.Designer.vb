@@ -23,8 +23,8 @@ Partial Class Form1
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         components = New ComponentModel.Container()
-        Dim LayoutState2 As SiticoneNetCoreUI.SiticoneFlowPanel.LayoutState = New SiticoneNetCoreUI.SiticoneFlowPanel.LayoutState()
-        Dim NavBarItem2 As SiticoneNetCoreUI.NavBarItem = New SiticoneNetCoreUI.NavBarItem()
+        Dim LayoutState1 As SiticoneNetCoreUI.SiticoneFlowPanel.LayoutState = New SiticoneNetCoreUI.SiticoneFlowPanel.LayoutState()
+        Dim NavBarItem1 As SiticoneNetCoreUI.NavBarItem = New SiticoneNetCoreUI.NavBarItem()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form1))
         WebView21 = New Microsoft.Web.WebView2.WinForms.WebView2()
         SiticoneTextBox_host = New SiticoneNetCoreUI.SiticoneTextBox()
@@ -4320,7 +4320,7 @@ Partial Class Form1
         SiticoneSplitContainer_runcont.SnapDistance = 20
         SiticoneSplitContainer_runcont.SnapPositions = New Single() {0.25F, 0.5F, 0.75F}
         SiticoneSplitContainer_runcont.SplitterCursor = Cursors.HSplit
-        SiticoneSplitContainer_runcont.SplitterDistance = 341
+        SiticoneSplitContainer_runcont.SplitterDistance = 262
         SiticoneSplitContainer_runcont.SplitterHighlightColor = Color.DodgerBlue
         SiticoneSplitContainer_runcont.SplitterMoveable = True
         SiticoneSplitContainer_runcont.SplitterMoveLeftKey = Keys.Left
@@ -4341,7 +4341,7 @@ Partial Class Form1
         Scintilla_code_block.Location = New Point(0, 0)
         Scintilla_code_block.Name = "Scintilla_code_block"
         Scintilla_code_block.ScrollWidth = 70
-        Scintilla_code_block.Size = New Size(1399, 341)
+        Scintilla_code_block.Size = New Size(1399, 262)
         Scintilla_code_block.TabIndex = 59
         ' 
         ' SiticoneTextArea_run_output
@@ -4356,7 +4356,7 @@ Partial Class Form1
         SiticoneTextArea_run_output.Name = "SiticoneTextArea_run_output"
         SiticoneTextArea_run_output.PlaceholderText = "Wait for Output..."
         SiticoneTextArea_run_output.ScrollBars = ScrollBars.Vertical
-        SiticoneTextArea_run_output.Size = New Size(1399, 249)
+        SiticoneTextArea_run_output.Size = New Size(1399, 328)
         SiticoneTextArea_run_output.TabIndex = 2
         ' 
         ' SiticoneButton_code_run
@@ -4816,7 +4816,6 @@ Partial Class Form1
         SiticoneToggleSwitch_show_menue.AccessibleDescription = "A customizable toggle switch that can be turned on or off."
         SiticoneToggleSwitch_show_menue.AccessibleName = "Siticone Toggle Switch"
         SiticoneToggleSwitch_show_menue.AccessibleRole = AccessibleRole.CheckButton
-        SiticoneToggleSwitch_show_menue.Anchor = AnchorStyles.Top Or AnchorStyles.Right
         SiticoneToggleSwitch_show_menue.CanBeep = True
         SiticoneToggleSwitch_show_menue.CanShake = True
         SiticoneToggleSwitch_show_menue.Checked = True
@@ -4896,10 +4895,10 @@ Partial Class Form1
         SiticonePlayPauseButton_request.Size = New Size(36, 36)
         SiticonePlayPauseButton_request.StrokeWidth = 4F
         SiticonePlayPauseButton_request.TabIndex = 1
-        LayoutState2.Location = New Point(3, 3)
-        LayoutState2.Size = New Size(36, 36)
-        LayoutState2.Visible = True
-        SiticonePlayPauseButton_request.Tag = LayoutState2
+        LayoutState1.Location = New Point(3, 3)
+        LayoutState1.Size = New Size(36, 36)
+        LayoutState1.Visible = True
+        SiticonePlayPauseButton_request.Tag = LayoutState1
         SiticonePlayPauseButton_request.TopLeftRadius = 0
         SiticonePlayPauseButton_request.TopRightRadius = 0
         ' 
@@ -5538,16 +5537,16 @@ Partial Class Form1
         SiticoneNavbar_tab.IndicatorGradientEndColor = Color.FromArgb(CByte(0), CByte(180), CByte(240))
         SiticoneNavbar_tab.IndicatorGradientStartColor = Color.FromArgb(CByte(0), CByte(120), CByte(215))
         SiticoneNavbar_tab.IsCollapsed = True
-        NavBarItem2.BackColor = Color.Empty
-        NavBarItem2.BorderColor = Color.Empty
-        NavBarItem2.ForeColor = Color.Empty
-        NavBarItem2.Image = CType(resources.GetObject("NavBarItem2.Image"), Image)
-        NavBarItem2.PressBackColor = Color.Empty
-        NavBarItem2.SelectedBackColor = Color.Empty
-        NavBarItem2.SelectedBorderColor = Color.Empty
-        NavBarItem2.SelectedForeColor = Color.Empty
-        NavBarItem2.Text = "Button 1"
-        SiticoneNavbar_tab.Items.Add(NavBarItem2)
+        NavBarItem1.BackColor = Color.Empty
+        NavBarItem1.BorderColor = Color.Empty
+        NavBarItem1.ForeColor = Color.Empty
+        NavBarItem1.Image = CType(resources.GetObject("NavBarItem1.Image"), Image)
+        NavBarItem1.PressBackColor = Color.Empty
+        NavBarItem1.SelectedBackColor = Color.Empty
+        NavBarItem1.SelectedBorderColor = Color.Empty
+        NavBarItem1.SelectedForeColor = Color.Empty
+        NavBarItem1.Text = "Button 1"
+        SiticoneNavbar_tab.Items.Add(NavBarItem1)
         SiticoneNavbar_tab.Location = New Point(2, 2)
         SiticoneNavbar_tab.MaterialTabSelectedIndicatorColor = SystemColors.Highlight
         SiticoneNavbar_tab.MaxButtonHeight = 60
@@ -5562,7 +5561,7 @@ Partial Class Form1
         SiticoneNavbar_tab.SelectedIndex = 0
         SiticoneNavbar_tab.SelectedIndicatorSideColor = Color.FromArgb(CByte(16), CByte(100), CByte(220))
         SiticoneNavbar_tab.SelectedIndicatorThickness = 3
-        SiticoneNavbar_tab.SelectedItem = NavBarItem2
+        SiticoneNavbar_tab.SelectedItem = NavBarItem1
         SiticoneNavbar_tab.ShowCollapseButton = True
         SiticoneNavbar_tab.ShowHeaderTitle = True
         SiticoneNavbar_tab.ShowTitleSections = False
