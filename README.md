@@ -24,6 +24,7 @@
 * **Code Execution:** Run generated Python, PowerShell, or Batch code directly within the app.
 * **Screenshots:** Processing screenshots using a Vision LLM.
 * **Formula output:** Display of mathematical formulas (LaTeX support).
+* **Image generation:** Image generation support for x/z-image-turbo and x/flux2-klein models.
 
 ---
 

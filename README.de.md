@@ -24,6 +24,7 @@
 * **Code-Ausführung:** Direktes Ausführen von Python, PowerShell oder Batch-Skripten.
 * **Screenshots:** Verabeiten von Screenshots durch ein Vision LLM.
 * **Formelausgabe:** Anzeigen von mathematischen Formeln (LaTeX Unterstützung).
+* **Bildgenerierung:** Unterstützung für die Bildgenerierung der Modelle x/z-image-turbo und x/flux2-klein.
 
 ---
 
