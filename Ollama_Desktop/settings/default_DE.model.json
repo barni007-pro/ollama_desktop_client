@@ -38,6 +38,30 @@
       "Value": "500"
     },
     {
+      "OptionName": "width",
+      "Use": false,
+      "ValueType": "int",
+      "Value": "1024"
+    },
+    {
+      "OptionName": "height",
+      "Use": false,
+      "ValueType": "int",
+      "Value": "1024"
+    },
+    {
+      "OptionName": "num_steps",
+      "Use": false,
+      "ValueType": "int",
+      "Value": "25"
+    },
+    {
+      "OptionName": "cfg_scale",
+      "Use": false,
+      "ValueType": "float",
+      "Value": "7,5"
+    },
+    {
       "OptionName": "seed",
       "Use": false,
       "ValueType": "int",

@@ -352,6 +352,53 @@
                             Reduces the influence of very unlikely words at the end of the probability list ("Tail"). Similar to <code>top_p</code>, but weights the structure of the probability distribution more heavily.
                         </td>
                     </tr>
+                    <tr>
+                        <td><code>width</code></td>
+                        <td>
+                            <strong>Image Width.</strong><br>
+                            The width of the generated image in pixels.<br>
+                            Should ideally match the model (e.g., <code>512</code> for SD 1.5, <code>1024</code> for SDXL/Flux).<br>
+                            <em>Note: Values should be divisible by 8 or 64.</em>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>height</code></td>
+                        <td>
+                            <strong>Image Height.</strong><br>
+                            The height of the generated image in pixels.<br>
+                            Together with the width, this determines the aspect ratio.<br>
+                            Higher values require significantly more VRAM.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>num_steps</code></td>
+                        <td>
+                            <strong>Denoising Steps.</strong><br>
+                            The number of passes used to develop the image from noise.<br>
+                            <code>1-10</code>: Fast, but often blurry or flawed.<br>
+                            <code>20-30</code>: Good balance between quality and speed (standard).<br>
+                            <code>50+</code>: Higher detail, but diminishing returns with increased wait time.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>cfg_scale</code></td>
+                        <td>
+                            <strong>CFG Scale (Prompt Adherence).</strong><br>
+                            Determines how strictly the model follows your text prompt.<br>
+                            <code>< 5</code>: Very creative, the model "dreams" more freely.<br>
+                            <code>7.0 - 8.0</code>: Standard value. Good balance between prompt adherence and image quality.<br>
+                            <code>> 15</code>: Forces the model strictly to the prompt, often leading to artifacts or "oversaturated" images.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>seed</code></td>
+                        <td>
+                            <strong>Reproducibility (Seed).</strong><br>
+                            The starting value for the initial image noise.<br>
+                            Same Seed + Same Prompt + Same Settings = <strong>Exactly the same image.</strong><br>
+                            Use this to slightly modify an image (e.g., changing colors) without completely changing the underlying composition.
+                        </td>
+                    </tr>
                 </tbody>
             </table>
 

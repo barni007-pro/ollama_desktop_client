@@ -109,6 +109,7 @@ Public Class Form1
         Public Property tools As Boolean
         Public Property thinking As Boolean
         Public Property embedding As Boolean
+        Public Property image As Boolean
         Public Property context As Integer
         Public Property description As String
     End Class
@@ -651,6 +652,15 @@ Public Class Form1
 
                 Try
                     Dim parsedJson As JToken = JToken.Parse(Response_JSON)
+                    ' >>> NEU: Bild-Daten für die Anzeige kürzen <<<
+                    ' Wir prüfen, ob ein Feld "image" existiert und nicht leer ist
+                    If parsedJson("image") IsNot Nothing Then
+                        ' Wir ersetzen den riesigen Base64-String durch einen kurzen Hinweis.
+                        ' Das ändert nur die Anzeige-Variable 'parsedJson', 
+                        ' der originale String 'Response_JSON' bleibt unberührt.
+                        parsedJson("image") = "<... Base64 Image Data Truncated ...>"
+                    End If
+                    ' >>> ENDE NEU <<<
                     Dim prettyJsonString As String = parsedJson.ToString(Formatting.Indented)
                     Scintilla_Response_JSON.Text = prettyJsonString
                     CodeBlock_List.Clear()
@@ -920,7 +930,7 @@ Public Class Form1
                 ' Überprüfe, ob das "images"-Feld existiert
                 If jsonObj("images") IsNot Nothing Then
                     ' Setze den Wert des "images"-Abschnitts auf ["..."]
-                    jsonObj("images") = JArray.Parse("[""...""]")
+                    jsonObj("images") = JArray.Parse("[""<... Base64 Image Data Truncated ...>""]")
                 End If
 
                 ' Serialisiere das JSON-Objekt zurück in einen String
@@ -1023,8 +1033,6 @@ Public Class Form1
             ClearFileChips()
         End If
 
-
-
         If SiticoneToggleSwitch_test.Checked = False Then
             ' HTTP-Request absetzen
             Dim handler As New HttpClientHandler()
@@ -1041,12 +1049,66 @@ Public Class Form1
 
                     If response.IsSuccessStatusCode Then
                         Dim responseBody As String = Await response.Content.ReadAsStringAsync()
+                        If My.Settings.test_response <> "" Then
+                            responseBody = My.Settings.test_response
+                        End If
                         Response_JSON = responseBody
 
                         Dim json As JObject = JObject.Parse(responseBody)
                         Dim search_str As String = If(SiticoneDropdown_API.SelectedIndex = 0, "response", "message.content")
 
                         Dim extractedResponse As String = json.SelectToken(search_str)?.ToString()
+
+                        ' --- NEU: Bildverarbeitung START ---
+                        Dim imageBase64 As String = json.SelectToken("image")?.ToString()
+
+                        If Not String.IsNullOrEmpty(imageBase64) Then
+                            Try
+                                ' 1. Base64 zu Byte-Array konvertieren
+                                Dim imageBytes As Byte() = Convert.FromBase64String(imageBase64)
+
+                                ' 2. Pfad generieren (Temp-Ordner oder App-Ordner)
+                                ' Tipp: Nutzen Sie einen eindeutigen Namen mit Zeitstempel
+                                ' --- NEU: Dateiendung anhand der "Magic Bytes" ermitteln ---
+                                Dim fileExtension As String = ".png" ' Default
+
+                                If imageBytes.Length > 1 Then
+                                    If imageBytes(0) = &HFF AndAlso imageBytes(1) = &HD8 Then
+                                        fileExtension = ".jpg"
+                                    ElseIf imageBytes(0) = &H89 AndAlso imageBytes(1) = &H50 Then
+                                        fileExtension = ".png"
+                                    ElseIf imageBytes(0) = &H47 AndAlso imageBytes(1) = &H49 Then
+                                        fileExtension = ".gif" ' Unwahrscheinlich, aber möglich
+                                    ElseIf imageBytes(0) = &H42 AndAlso imageBytes(1) = &H4D Then
+                                        fileExtension = ".bmp"
+                                    End If
+                                End If
+                                ' Pfad mit korrekter Endung generieren
+                                Dim fileName As String = $"ollama_img_{DateTime.Now:yyyyMMdd_HHmmss}_{Guid.NewGuid().ToString().Substring(0, 5)}{fileExtension}"
+                                Dim tempFilePath As String = IO.Path.Combine(IO.Path.GetTempPath(), fileName)
+
+                                ' 3. Datei speichern
+                                IO.File.WriteAllBytes(tempFilePath, imageBytes)
+
+                                ' 4. Markdown-Link generieren
+                                ' Statt fileUri nutzen wir jetzt die virtuelle Domain
+                                Dim fileNameOnly As String = IO.Path.GetFileName(tempFilePath)
+                                Dim virtualUrl As String = $"https://ollama.local/{fileNameOnly}"
+
+                                Dim markdownImage As String = $"![Generiertes Bild]({virtualUrl})"
+
+                                ' An die Antwort anhängen
+                                If String.IsNullOrEmpty(extractedResponse) Then
+                                    extractedResponse = markdownImage
+                                Else
+                                    extractedResponse &= vbCrLf & vbCrLf & markdownImage
+                                End If
+                            Catch ex As Exception
+                                ' Falls das Bild korrupt ist oder Schreibrechte fehlen
+                                extractedResponse &= vbCrLf & $"[ERROR_SAVING_IMAGE: {ex.Message}]"
+                            End Try
+                        End If
+                        ' --- NEU: Bildverarbeitung ENDE ---
 
                         If SiticoneDropdown_API.SelectedIndex = 1 Then
                             Dim newMessageAssistant As New message()
@@ -1089,7 +1151,7 @@ Public Class Form1
                 End Try
             End Using
         Else
-            Response_JSON = "Test Mode"
+            Response_JSON = "empty"
             Return Scintilla_response.Text
         End If
 
@@ -1111,6 +1173,15 @@ Public Class Form1
 
                 ' Das hier darf nur einmal pro Control-Lebenszeit aufgerufen werden
                 Await WebView21.EnsureCoreWebView2Async(env)
+
+                ' >>> NEU: Virtuelles Mapping für Bilder aus dem Temp-Ordner <<<
+                ' Damit wird https://ollama.local/ auf C:\Users\...\AppData\Local\Temp\ gemappt.
+                WebView21.CoreWebView2.SetVirtualHostNameToFolderMapping(
+                    "ollama.local",
+                    IO.Path.GetTempPath(),
+                    Microsoft.Web.WebView2.Core.CoreWebView2HostResourceAccessKind.Allow
+                )
+                ' >>> ENDE NEU <<<
             End If
             ' --------------------------------------------------------------------
 
@@ -1427,6 +1498,7 @@ Public Class Form1
             SiticoneChip_model_info_Tools.IsSelected = model_info_get.tools
             SiticoneChip_model_info_Thinking.IsSelected = model_info_get.thinking
             SiticoneChip_model_info_Embedding.IsSelected = model_info_get.embedding
+            SiticoneChip_model_info_Image.IsSelected = model_info_get.image
             If model_info_get.context > 0 Then
                 SiticoneChip_model_info_Context.IsSelected = True
                 SiticoneChip_model_info_Context.Text = "context: " & model_info_get.context.ToString & "k"
@@ -1442,6 +1514,7 @@ Public Class Form1
             SiticoneChip_model_info_Tools.IsSelected = False
             SiticoneChip_model_info_Thinking.IsSelected = False
             SiticoneChip_model_info_Embedding.IsSelected = False
+            SiticoneChip_model_info_Image.IsSelected = False
             SiticoneChip_model_info_Context.IsSelected = False
             SiticoneChip_model_info_Context.Text = "context: ?"
             SiticoneChip_model_info_Context.Refresh()

@@ -99,8 +99,12 @@ Namespace My
             "p_p&lt;|&gt;false&lt;|&gt;float&lt;|&gt;0,9</string>"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"  <string>top_k&lt;|&gt;fa"& _ 
             "lse&lt;|&gt;int&lt;|&gt;20</string>"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"  <string>num_ctx&lt;|&gt;false&lt;|&gt;int"& _ 
             "&lt;|&gt;1024</string>"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"  <string>num_keep&lt;|&gt;false&lt;|&gt;int&lt;|&gt;5</"& _ 
-            "string>"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"  <string>num_predict&lt;|&gt;false&lt;|&gt;int&lt;|&gt;500</string>"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"<"& _ 
-            "/ArrayOfString>")>  _
+            "string>"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"  <string>num_predict&lt;|&gt;false&lt;|&gt;int&lt;|&gt;500</string>"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&" "& _ 
+            " <string>width&lt;|&gt;false&lt;|&gt;int&lt;|&gt;1024</string>"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"  <string>height"& _ 
+            "&lt;|&gt;false&lt;|&gt;int&lt;|&gt;1024</string>"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"  <string>num_steps&lt;|&gt;fa"& _ 
+            "lse&lt;|&gt;int&lt;|&gt;25</string>"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"  <string>cfg_scale&lt;|&gt;false&lt;|&gt;f"& _ 
+            "loat&lt;|&gt;7,5</string>"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"  <string>seed&lt;|&gt;false&lt;|&gt;int&lt;|&gt;42</"& _ 
+            "string>"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"</ArrayOfString>")>  _
         Public Property option_list() As Global.System.Collections.Specialized.StringCollection
             Get
                 Return CType(Me("option_list"),Global.System.Collections.Specialized.StringCollection)
@@ -434,6 +438,15 @@ Namespace My
             Set
                 Me("show_menue") = value
             End Set
+        End Property
+        
+        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public ReadOnly Property test_response() As String
+            Get
+                Return CType(Me("test_response"),String)
+            End Get
         End Property
     End Class
 End Namespace

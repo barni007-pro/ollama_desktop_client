@@ -1,5 +1,5 @@
 {
-  "system_prompt": "Always respond in detail and with examples. Group the response into sections. Always answer in English and never in German.",
+  "system_prompt": "Always respond in detail and with examples. Group the response into sections. Always answer in English",
   "option_parameter": [
     {
       "OptionName": "temperature",
@@ -36,6 +36,30 @@
       "Use": false,
       "ValueType": "int",
       "Value": "500"
+    },
+    {
+      "OptionName": "width",
+      "Use": false,
+      "ValueType": "int",
+      "Value": "1024"
+    },
+    {
+      "OptionName": "height",
+      "Use": false,
+      "ValueType": "int",
+      "Value": "1024"
+    },
+    {
+      "OptionName": "num_steps",
+      "Use": false,
+      "ValueType": "int",
+      "Value": "25"
+    },
+    {
+      "OptionName": "cfg_scale",
+      "Use": false,
+      "ValueType": "float",
+      "Value": "7,5"
     },
     {
       "OptionName": "seed",

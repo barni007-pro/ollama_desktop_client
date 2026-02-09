@@ -352,6 +352,53 @@
                             Reduziert den Einfluss von sehr unwahrscheinlichen Wörtern am Ende der Wahrscheinlichkeitsliste ("Tail"). Ähnlich wie <code>top_p</code>, gewichtet aber die Struktur der Wahrscheinlichkeitsverteilung stärker.
                         </td>
                     </tr>
+                    <tr>
+                        <td><code>width</code></td>
+                        <td>
+                            <strong>Bildbreite.</strong><br>
+                            Die Breite des generierten Bildes in Pixeln.<br>
+                            Sollte idealerweise zum Modell passen (z. B. <code>512</code> für SD 1.5, <code>1024</code> für SDXL/Flux).<br>
+                            <em>Hinweis: Werte sollten durch 8 oder 64 teilbar sein.</em>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>height</code></td>
+                        <td>
+                            <strong>Bildhöhe.</strong><br>
+                            Die Höhe des generierten Bildes in Pixeln.<br>
+                            Zusammen mit der Breite bestimmt dies das Seitenverhältnis (Aspect Ratio).<br>
+                            Höhere Werte benötigen signifikant mehr VRAM.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>num_steps</code></td>
+                        <td>
+                            <strong>Entrauschungs-Schritte (Steps).</strong><br>
+                            Anzahl der Durchläufe, um das Bild aus dem Rauschen zu entwickeln.<br>
+                            <code>1-10</code>: Schnell, aber oft unscharf oder fehlerhaft.<br>
+                            <code>20-30</code>: Guter Standard für Qualität und Geschwindigkeit.<br>
+                            <code>50+</code>: Höhere Details, aber sinkender Nutzen bei doppelter Wartezeit.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>cfg_scale</code></td>
+                        <td>
+                            <strong>CFG Scale (Prompt-Treue).</strong><br>
+                            Bestimmt, wie strikt sich das Modell an deinen Text-Prompt hält.<br>
+                            <code>< 5</code>: Sehr kreativ, das Modell "träumt" freier.<br>
+                            <code>7.0 - 8.0</code>: Der Standardwert. Gute Balance zwischen Prompt und Bildqualität.<br>
+                            <code>> 15</code>: Zwingt das Modell starr in den Prompt, führt oft zu Artefakten oder "überschärften" Bildern.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>seed</code></td>
+                        <td>
+                            <strong>Reproduzierbarkeit (Seed).</strong><br>
+                            Der Startwert für das initiale Bildrauschen.<br>
+                            Gleicher Seed + Gleicher Prompt + Gleiche Einstellungen = <strong>Exakt das gleiche Bild.</strong><br>
+                            Nutze dies, um ein Bild leicht zu verändern (z. B. Farbe ändern), ohne die Komposition komplett neu zu würfeln.
+                        </td>
+                    </tr>
                 </tbody>
             </table>
 

@@ -30,6 +30,11 @@
   &lt;string&gt;num_ctx&amp;lt;|&amp;gt;false&amp;lt;|&amp;gt;int&amp;lt;|&amp;gt;1024&lt;/string&gt;
   &lt;string&gt;num_keep&amp;lt;|&amp;gt;false&amp;lt;|&amp;gt;int&amp;lt;|&amp;gt;5&lt;/string&gt;
   &lt;string&gt;num_predict&amp;lt;|&amp;gt;false&amp;lt;|&amp;gt;int&amp;lt;|&amp;gt;500&lt;/string&gt;
+  &lt;string&gt;width&amp;lt;|&amp;gt;false&amp;lt;|&amp;gt;int&amp;lt;|&amp;gt;1024&lt;/string&gt;
+  &lt;string&gt;height&amp;lt;|&amp;gt;false&amp;lt;|&amp;gt;int&amp;lt;|&amp;gt;1024&lt;/string&gt;
+  &lt;string&gt;num_steps&amp;lt;|&amp;gt;false&amp;lt;|&amp;gt;int&amp;lt;|&amp;gt;25&lt;/string&gt;
+  &lt;string&gt;cfg_scale&amp;lt;|&amp;gt;false&amp;lt;|&amp;gt;float&amp;lt;|&amp;gt;7,5&lt;/string&gt;
+  &lt;string&gt;seed&amp;lt;|&amp;gt;false&amp;lt;|&amp;gt;int&amp;lt;|&amp;gt;42&lt;/string&gt;
 &lt;/ArrayOfString&gt;</Value>
     </Setting>
     <Setting Name="html_def" Type="System.String" Scope="Application">
@@ -340,6 +345,9 @@ Antwort: {"name":"get_text","arguments":{"words":["Python","Java","Programmiersp
     </Setting>
     <Setting Name="show_menue" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="test_response" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>

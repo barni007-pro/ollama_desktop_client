@@ -4,6 +4,7 @@
     "tools": false,
     "embedding": true,
     "thinking": false,
+    "image": false,
     "context": 1,
     "description": "all-minilm - Sentence Transformers - Kompaktes, schnelles Embedding-Modell (33M Parameter) für semantische Ähnlichkeit."
   },
@@ -12,6 +13,7 @@
     "tools": false,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 32,
     "description": "alpha-orionis-uncensored - WizardLM - Uncensored Fine-Tune von WizardLM für kreative/freie Anwendungen."
   },
@@ -20,6 +22,7 @@
     "tools": false,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 8,
     "description": "aya - Cohere - Mehrsprachiges Modell (101+ Sprachen), gut für Übersetzung und Multilingual-Tasks."
   },
@@ -28,6 +31,7 @@
     "tools": false,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 8,
     "description": "bitnet - Microsoft - Ein 1-Bit LLM-Ansatz, der extrem energieeffizient ist und fast ohne klassische Multiplikationen auskommt."
   },
@@ -36,6 +40,7 @@
     "tools": true,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 8,
     "description": "codegemma - Google - Code-spezialisiertes Gemma, Fill-in-the-middle, Code-Generierung, Mathematik."
   },
@@ -44,6 +49,7 @@
     "tools": false,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 16,
     "description": "codellama - Meta - Für Programmier- und Code-Aufgaben optimiert. Verfügbar in mehreren Größen (7B-34B)."
   },
@@ -52,6 +58,7 @@
     "tools": false,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 16,
     "description": "codellama-instruct - Meta - Instruction-tuned Varianten von CodeLlama für bessere Befehlsbefolgung."
   },
@@ -60,6 +67,7 @@
     "tools": true,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 128,
     "description": "command-r - Cohere - Konversations-/anwendungsoptimiertes Modell mit Fokus auf lange Kontexte und RAG."
   },
@@ -68,6 +76,7 @@
     "tools": true,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 128,
     "description": "command-r-xl - Cohere - XL-Version für lange Kontexte und komplexe Dialoge, optimiert für Business-Integration."
   },
@@ -76,6 +85,7 @@
     "tools": true,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 32,
     "description": "dbrx - Databricks - Anpassbar für eigene Geschäftsdaten mit voller Kontrolle, Enterprise-fokussiert."
   },
@@ -84,6 +94,7 @@
     "tools": false,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 32,
     "description": "deepcoder - DeepSeek - Vollständig Open-Source (1.5B, 14B), O3-mini-Level-Performance für Code-Generierung."
   },
@@ -92,6 +103,7 @@
     "tools": false,
     "embedding": false,
     "thinking": true,
+    "image": false,
     "context": 128,
     "description": "deepscaler - DeepSeek - Sehr kleines effizientes Modell, welches eine hohe Genauigkeit erreicht, optimiert für Reasoning."
   },
@@ -100,6 +112,7 @@
     "tools": false,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 16,
     "description": "deepseek-coder - DeepSeek - Spezialisiertes Modell für Programmieraufgaben, mehrere Größen verfügbar."
   },
@@ -108,6 +121,7 @@
     "tools": true,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 160,
     "description": "deepseek-coder-v2 - DeepSeek - Open-Source-Mixture-of-Experts Code-Modell, 87+ Programmiersprachen, 2 Billionen Tokens Training."
   },
@@ -116,6 +130,7 @@
     "tools": false,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 128,
     "description": "deepseek-ocr - DeepSeek - Ist ein Bildverarbeitungs- und Sprachmodell, das tokeneffiziente OCR durchführen kann. LLM Token werden in Image Token effektiver verarbeitet."
   },
@@ -124,6 +139,7 @@
     "tools": true,
     "embedding": false,
     "thinking": true,
+    "image": false,
     "context": 128,
     "description": "deepseek-r1 - DeepSeek - Reasoning-orientiertes Modell (671B, 37B aktiv), 97% MATH-500 Genauigkeit, transparentes Reasoning, distillierte Varianten verfügbar."
   },
@@ -132,6 +148,7 @@
     "tools": true,
     "embedding": false,
     "thinking": true,
+    "image": false,
     "context": 128,
     "description": "deepseek-v3.1-terminus - DeepSeek - Hybrid-Modell (685B, 37B aktiv) mit Thinking- und Non-Thinking-Modus, verbesserte Version von V3."
   },
@@ -140,6 +157,7 @@
     "tools": false,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 2,
     "description": "dolly - Databricks - Offene Instruction-tuned Modelle, für einfache Assistenzaufgaben nützlich."
   },
@@ -148,6 +166,7 @@
     "tools": false,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 2,
     "description": "dolly-v2 - Databricks - Verbesserte Instruction-Version der Dolly-Familie."
   },
@@ -156,6 +175,7 @@
     "tools": true,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 32,
     "description": "dolphin - Eric Hartford - Uncensored Modelle basierend auf Mistral (v2.8), exzellent für Coding und kreative Arbeiten."
   },
@@ -164,6 +184,7 @@
     "tools": false,
     "embedding": true,
     "thinking": false,
+    "image": false,
     "context": 8,
     "description": "embeddinggemma - Google - State-of-the-art 308M Embedding-Modell, #1 auf MTEB unter 500M Parameter. Trainiert auf 100+ Sprachen, 768 Dimensionen (anpassbar auf 128-768), läuft mit <200MB RAM. Ideal für RAG, Semantic Search, Classification, Clustering."
   },
@@ -172,6 +193,7 @@
     "tools": false,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 16,
     "description": "everythinglm - Totally Not An LLM - Uncensored Llama2-basiertes Modell mit 16K Context Window."
   },
@@ -180,6 +202,7 @@
     "tools": false,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 32,
     "description": "exaone - LG AI Research - EXAONE Deep (2.4B-32B), exzellent in Math und Coding Benchmarks."
   },
@@ -188,14 +211,25 @@
     "tools": false,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 32,
     "description": "falcon3 - TII (UAE) - Open-Source-Modelle (1B-10B, auch 40B/180B), Apache 2.0 Lizenz, mehrere Varianten."
+  },
+  "x/flux2-klein": {
+    "vision": false,
+    "tools": false,
+    "embedding": false,
+    "thinking": false,
+    "image": true,
+    "context": 4,
+    "description": "x/flux2-klein - Black Forest Labs - Eine kompakte/quantisierte Version des Flux-Modells, optimiert für lokale Bildgenerierung."
   },
   "gemma2": {
     "vision": false,
     "tools": false,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 8,
     "description": "gemma2 - Google - Effiziente Modelle (2B, 9B, 27B) mit guter Basisleistung, kompakt und leistungsstark."
   },
@@ -204,6 +238,7 @@
     "tools": false,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 8,
     "description": "gemma2-chat - Google - Chat-tuned Variante der Gemma2 Familie für konversationelle Aufgaben."
   },
@@ -212,6 +247,7 @@
     "tools": false,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 8,
     "description": "gemma2-vision - Google - Gemma2 mit Multimodal-/Bildunterstützung für visuelle Aufgaben."
   },
@@ -220,14 +256,25 @@
     "tools": true,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 128,
     "description": "gemma3 - Google - Multimodale Familie (Text+Bild, 270M-27B), 128K Context, 140+ Sprachen, 3x weniger Speicher durch Quantisierung."
+  },
+  "glm-ocr": {
+    "vision": true,
+    "tools": true,
+    "embedding": false,
+    "thinking": false,
+    "image": false,
+    "context": 128,
+    "description": "glm-ocr - GLM - multimodales OCR-Modell zum Verarbeiten komplexer Dokumente"
   },
   "gpt-oss": {
     "vision": false,
     "tools": true,
     "embedding": false,
     "thinking": true,
+    "image": false,
     "context": 128,
     "description": "gpt-oss - OpenAI - Erstes Open-Weight Modell von OpenAI seit GPT-2 (20B, 120B), für Reasoning und agentenbasierte Tasks, MoE mit 5.1B aktiv, think (low,medium,high)."
   },
@@ -236,6 +283,7 @@
     "tools": true,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 128,
     "description": "granite3.1 - IBM - Low-Latency MoE-Modelle (1B, 3B), effizient für Edge-Deployment."
   },
@@ -244,6 +292,7 @@
     "tools": true,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 128,
     "description": "granite3.2-vision - IBM - Kompaktes Vision-Language Modell, gut für Dokument-Parsing und visuelle Dokumentenanalyse."
   },
@@ -252,6 +301,7 @@
     "tools": false,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 128,
     "description": "grok-1.5 - xAI - Verbessertes Modell von xAI mit deutlich längerem Kontext (128k) und verbesserter Reasoning-Leistung."
   },
@@ -260,6 +310,7 @@
     "tools": true,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 256,
     "description": "hunyuan-large - Tencent - Massives MoE Modell mit exzellenter Sprachabdeckung und langem Kontext."
   },
@@ -268,6 +319,7 @@
     "tools": true,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 256,
     "description": "jamba-1.5 - AI21 Labs - Hybrid-Architektur (SSM-Transformer), die extrem lange Kontexte effizient verarbeitet."
   },
@@ -276,6 +328,7 @@
     "tools": true,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 130,
     "description": "kimi-k2 - Moonshot AI - Spezialist für extrem lange Kontexte and präzises Retrieval."
   },
@@ -284,6 +337,7 @@
     "tools": false,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 4,
     "description": "llama2 - Meta - Klassische Llama-Foundation-Modelle (7B–70B), ältere Generation."
   },
@@ -292,6 +346,7 @@
     "tools": false,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 4,
     "description": "llama2-chat - Meta - Llama 2 Chat-tuned Variante für konversationelle Anwendungen."
   },
@@ -300,6 +355,7 @@
     "tools": false,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 4,
     "description": "llama2-uncensored - Community (George Sung/Jarrad Hope) - Uncensored Version von Llama 2 für kreative Arbeiten ohne Filter."
   },
@@ -308,6 +364,7 @@
     "tools": false,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 1040,
     "description": "llama3-gradient - Gradient/Crusoe - Extended Context Llama-3 8B mit bis zu 1M+ Token Context Window (erfordert 64-100GB+ RAM)."
   },
@@ -316,6 +373,7 @@
     "tools": true,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 128,
     "description": "llama3.1 - Meta - Größere Llama-familie (8B-405B) mit sehr guten allgemeinen Fähigkeiten und großem Context Window."
   },
@@ -324,6 +382,7 @@
     "tools": true,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 128,
     "description": "llama3.2 - Meta - Kompakte Modellfamilie (1B-90B). Gute Allround-Leistung, häufig für Tool-Workflows genutzt."
   },
@@ -332,6 +391,7 @@
     "tools": true,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 128,
     "description": "llama3.2-vision - Meta - Multimodales Llama-3.2 Modell mit Bildverständnis und Tool-Support."
   },
@@ -340,6 +400,7 @@
     "tools": true,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 128,
     "description": "llama3.3 - Meta - Neuestes State-of-the-art 70B Modell von Meta mit verbesserter Performance gegenüber 3.1. Hervorragende Allround-Leistung."
   },
@@ -348,6 +409,7 @@
     "tools": false,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 4,
     "description": "llava - LLaVA - Vision+Language Assistant (v1.6), stark bei Bild-Captioning und visuellen Q&A, kombiniert Vision Encoder mit Vicuna."
   },
@@ -356,6 +418,7 @@
     "tools": true,
     "embedding": false,
     "thinking": true,
+    "image": false,
     "context": 128,
     "description": "marco-o1 - Alibaba - Open-Source Reasoning Modell, spezialisiert auf komplexe Problemstellungen und Chain-of-Thought."
   },
@@ -364,6 +427,7 @@
     "tools": true,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 256,
     "description": "ministral-3 - Mistral AI - Bilder analysieren, Apache 2.0 License, Large context, Mathematik."
   },
@@ -372,6 +436,7 @@
     "tools": true,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 32,
     "description": "mistral - Mistral AI - Effizientes 7B Modell (v0.3), leistungsfähig und oft in Tool-Setups verwendet."
   },
@@ -380,6 +445,7 @@
     "tools": true,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 128,
     "description": "mistral-large - Mistral AI - Mistral Large 2 (123B), Flaggschiff-Modell mit 128K Context, exzellent in Code, Mathematik und Reasoning."
   },
@@ -388,6 +454,7 @@
     "tools": true,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 128,
     "description": "mistral-nemo - Mistral AI - 12B Modell mit großem Context Window und guter Performance."
   },
@@ -396,6 +463,7 @@
     "tools": true,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 128,
     "description": "mistral-small - Mistral AI - Mistral Small 3.1 mit Vision-Understanding, 128K Context, verbesserte Fehlerreduzierung."
   },
@@ -404,6 +472,7 @@
     "tools": true,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 32,
     "description": "mixtral - Mistral AI - Mixture-of-Experts (8x7B, 8x22B), sehr effizient durch aktivierte Teilmodelle."
   },
@@ -412,6 +481,7 @@
     "tools": false,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 2,
     "description": "moondream - Moondream - Kompaktes Vision-Language-Modell für Bildanalyse und visuelle Aufgaben."
   },
@@ -420,6 +490,7 @@
     "tools": false,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 8,
     "description": "mpt - MosaicML - MosaicML Modelle (7B-30B), beliebt für Fine-Tuning und Research."
   },
@@ -428,6 +499,7 @@
     "tools": false,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 8,
     "description": "mpt-vision - MosaicML - Multimodale MPT Variante mit Bildverarbeitung."
   },
@@ -436,6 +508,7 @@
     "tools": false,
     "embedding": true,
     "thinking": false,
+    "image": false,
     "context": 1,
     "description": "mxbai-embed-large - MixedBread AI - Leistungsstarkes Embedding-Modell mit sehr großem Context für semantische Suche."
   },
@@ -444,6 +517,7 @@
     "tools": false,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 4,
     "description": "nemotron-4 - NVIDIA - Hochperformantes Modell, das speziell für die Generierung von synthetischen Trainingsdaten entwickelt wurde."
   },
@@ -452,6 +526,7 @@
     "tools": false,
     "embedding": true,
     "thinking": false,
+    "image": false,
     "context": 8,
     "description": "nomic-embed-text - Nomic AI - Embedding-Modell mit großem Token-Context-Fenster für Retrieval-Aufgaben."
   },
@@ -460,6 +535,7 @@
     "tools": true,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 8,
     "description": "nous-hermes - Nous Research - General-Use-Modelle basierend auf Llama/Llama2, gut für Assistenz-Aufgaben."
   },
@@ -468,6 +544,7 @@
     "tools": true,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 300,
     "description": "nova-pro - Amazon - Multimodales Flaggschiff-Modell von AWS, optimiert für Enterprise-Workflows und Dokumentenanalyse."
   },
@@ -476,6 +553,7 @@
     "tools": false,
     "embedding": false,
     "thinking": true,
+    "image": false,
     "context": 65,
     "description": "olmo-3 - Allen Institute (Ai2) - Reasoning/CoT Modell, Apache 2.0 License, Stark in Logik & Code sowie Mathematik."
   },
@@ -484,6 +562,7 @@
     "tools": false,
     "embedding": false,
     "thinking": true,
+    "image": false,
     "context": 32,
     "description": "openthinker - Open Thoughts - Destillation von DeepSeek-R1 für Reasoning-Aufgaben."
   },
@@ -492,6 +571,7 @@
     "tools": false,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 2,
     "description": "orca-mini - Microsoft - Kompakt (3B), für Einsteiger und ressourcenbeschränkte Systeme."
   },
@@ -500,6 +580,7 @@
     "tools": false,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 128,
     "description": "phi3-medium - Microsoft - 14B Modell, ausgewogener Kompromiss zwischen Leistung und Ressourceneinsatz."
   },
@@ -508,6 +589,7 @@
     "tools": false,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 128,
     "description": "phi3-mini - Microsoft - Leichtgewichtiges 3.8B Modell, nützlich für ressourcenarme Setups, gute Leistung."
   },
@@ -516,6 +598,7 @@
     "tools": true,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 16,
     "description": "phi4 - Microsoft - State-of-the-art 14B Modell, exzellentes Reasoning und präzise Instruktionsbefolgung."
   },
@@ -524,6 +607,7 @@
     "tools": true,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 16,
     "description": "phoenix - Together AI - Modellfamilie mit Fokus auf Retrieval/Tool-Integration."
   },
@@ -532,6 +616,7 @@
     "tools": true,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 16,
     "description": "phoenix-vl - Together AI - Vision-Language Ableitung von Phoenix mit Tool-Support."
   },
@@ -540,6 +625,7 @@
     "tools": true,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 128,
     "description": "pixtral-12b - Mistral AI - Erstes natives multimodales Modell von Mistral. Exzellentes Bildverständnis bei moderater Modellgröße."
   },
@@ -548,6 +634,7 @@
     "tools": true,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 32,
     "description": "qwen-chat - Alibaba - Chat-optimierte Version der Qwen-Reihe für Konversationen."
   },
@@ -556,6 +643,7 @@
     "tools": true,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 128,
     "description": "qwen2 - Alibaba - Vielseitige Modellfamilie (0.5B-72B), gut für Tool-Workflows, mehrsprachig."
   },
@@ -564,6 +652,7 @@
     "tools": true,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 128,
     "description": "qwen2.5 - Alibaba - Verbesserte Version (0.5B-72B), 18+ Sprachen, stark in Mathematik und Reasoning."
   },
@@ -572,6 +661,7 @@
     "tools": true,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 128,
     "description": "qwen2.5-coder - Alibaba - Code-spezialisiert, verbesserte Code-Generierung, Reasoning und Fixing."
   },
@@ -580,6 +670,7 @@
     "tools": true,
     "embedding": false,
     "thinking": true,
+    "image": false,
     "context": 128,
     "description": "qwen3 - Alibaba - Neueste Generation (4B, 30B, 235B MoE mit 22B aktiv), Thinking- und Non-Thinking-Modus, stark verbessertes Reasoning."
   },
@@ -588,6 +679,7 @@
     "tools": true,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 128,
     "description": "qwen3-coder - Alibaba - Qwen3 Code-spezialisiert (480B für Cloud), neueste Generation für Programmieraufgaben."
   },
@@ -596,6 +688,7 @@
     "tools": false,
     "embedding": true,
     "thinking": false,
+    "image": false,
     "context": 40,
     "description": "qwen3-embedding - Alibaba - Neueste Generation (600M, 4B, 8B), Embedding Model."
   },
@@ -604,6 +697,7 @@
     "tools": true,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 32,
     "description": "qwen3-vl - Alibaba - Leistungsfähigstes Vision-Language Modell der Qwen-Familie (multimodal, Tool-freundlich)."
   },
@@ -612,6 +706,7 @@
     "tools": true,
     "embedding": false,
     "thinking": true,
+    "image": false,
     "context": 128,
     "description": "skywork-o1 - Skywork AI - Fokus auf Open-Source Reasoning mit hoher Transparenz in der Denkweise."
   },
@@ -620,6 +715,7 @@
     "tools": false,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 2,
     "description": "smollm - HuggingFace - Reihe von kompakten Modellen (135M-360M) für einfache Aufgaben auf Edge-Geräten."
   },
@@ -628,6 +724,7 @@
     "tools": true,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 8,
     "description": "smollm2 - HuggingFace - Sehr kleine, effiziente Modelle (135M-1.7B) mit Tool-Support für ressourcenbeschränkte Systeme."
   },
@@ -636,6 +733,7 @@
     "tools": false,
     "embedding": true,
     "thinking": false,
+    "image": false,
     "context": 1,
     "description": "snowflake-arctic-embed - Snowflake - Suite von Text-Embedding-Modellen, optimiert für Performance."
   },
@@ -644,6 +742,7 @@
     "tools": true,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 128,
     "description": "solar-pro - Upstage - Ein 22B Modell, das für Single-GPU-Setups optimiert ist und in Benchmarks oft deutlich größere Modelle schlägt."
   },
@@ -652,6 +751,7 @@
     "tools": false,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 4,
     "description": "stablelm-2 - Stability AI - Sehr kompakte und schnelle Modelle (1.6B - 12B), ideal für Chat-Anwendungen auf schwacher Hardware."
   },
@@ -660,6 +760,7 @@
     "tools": false,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 8,
     "description": "starcoder - BigCode - Open-Source-Code-Modell für 80+ Programmiersprachen, gut für Code-Vervollständigung."
   },
@@ -668,6 +769,7 @@
     "tools": false,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 8,
     "description": "starcoder-instruct - BigCode - Anweisungsoptimierte Code-Variante für bessere Instruktionsbefolgung."
   },
@@ -676,6 +778,7 @@
     "tools": false,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 16,
     "description": "starcoder2 - BigCode - Weiterentwicklung von StarCoder (3B, 7B, 15B) mit verbessertem Codeverständnis, transparent trainiert."
   },
@@ -684,14 +787,25 @@
     "tools": false,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 2,
     "description": "tinyllama - Meta - Sehr kleine Llama-Ableitungen (1.1B) für Embedded/Edge-Usecases."
+  },
+  "translategemma": {
+    "vision": true,
+    "tools": false,
+    "embedding": false,
+    "thinking": false,
+    "image": false,
+    "context": 128,
+    "description": "translategemma - Google - Übersetzungsmodell, die auf Gemma 3 basieren und bei der Kommunikation in 55 Sprachen unterstützen."
   },
   "vicuna": {
     "vision": false,
     "tools": false,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 4,
     "description": "vicuna - LMSYS - Konversations-Modell (13B), gut für Dialoge und Chat-Anwendungen."
   },
@@ -700,6 +814,7 @@
     "tools": true,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 8,
     "description": "wizard-vicuna - WizardLM - Instruction-tuned Varianten (7B, 13B, 30B), häufig für Assistenz/Tool-Workflows."
   },
@@ -708,6 +823,7 @@
     "tools": true,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 8,
     "description": "wizardlm - WizardLM - Instruction-tuned Modell, oft für Tool-Calling und Assistenz verwendet."
   },
@@ -716,6 +832,7 @@
     "tools": true,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 32,
     "description": "wizardlm2 - WizardLM - Neuere Instruction-Variante mit verbessertem Reasoning und Tool-Support."
   },
@@ -724,6 +841,7 @@
     "tools": false,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 200,
     "description": "yi - 01.AI - Bilingual (EN/CN) Modell (6B-34B), hohe Performance, lange Context-Unterstützung."
   },
@@ -732,14 +850,25 @@
     "tools": false,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 4,
     "description": "yi-vision - 01.AI - Multimodales Modell mit Bildverarbeitungsfähigkeiten."
+  },
+  "x/z-image-turbo": {
+    "vision": false,
+    "tools": false,
+    "embedding": false,
+    "thinking": false,
+    "image": true,
+    "context": 2,
+    "description": "x/z-image-turbo - Custom - Schnelles Modell, optimiert für die prompte Bildgenerierung."
   },
   "zephyr": {
     "vision": false,
     "tools": false,
     "embedding": false,
     "thinking": false,
+    "image": false,
     "context": 8,
     "description": "zephyr - HuggingFace - Fine-tuned als hilfreicher Assistent, gut für Konversationen."
   }
