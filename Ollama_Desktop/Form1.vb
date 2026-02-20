@@ -190,7 +190,9 @@ Public Class Form1
         SiticoneTextArea_Rag_system.Text = My.Settings.rag_system
         Scintilla_Rag_Json.Text = My.Settings.rag_json
 
-        SiticoneToggleSwitch_show_menue.Checked = My.Settings.show_menue
+        SiticoneNavbar_tab.Visible = My.Settings.show_menue
+
+        SiticoneLabel_version.Text = My.Settings.serv_ver
 
         ' Execute Language Spalte
         Dim ExecuteLanguageColumn As New DataGridViewTextBoxColumn()
@@ -351,7 +353,8 @@ Public Class Form1
         My.Settings.LLM_model_info.AddRange(model_info.ToArray())
         My.Settings.LLM_model_index = SiticoneDropdown_model.SelectedIndex
 
-        My.Settings.show_menue = SiticoneToggleSwitch_show_menue.Checked
+        My.Settings.show_menue = SiticoneNavbar_tab.Visible
+        My.Settings.serv_ver = SiticoneLabel_version.Text
     End Sub
 
     Private Sub RegisterStateImages(btn As SiticoneButton,
@@ -558,6 +561,7 @@ Public Class Form1
 
     Private Async Sub SiticoneButton_get_llm_Click(sender As Object, e As EventArgs) Handles SiticoneButton_get_llm.Click
         Await LoadModelsAsync() ' Modelle beim Start laden
+        Await GetOllamaVersionAsync()
     End Sub
 
     Private Async Function MainAsync() As Task
@@ -1270,6 +1274,39 @@ Public Class Form1
             MessageBox.Show("Error retrieving models: " & ex.Message)
         End Try
         Me.Cursor = Cursors.Default
+    End Function
+
+    Private Async Function GetOllamaVersionAsync() As Task
+        Dim version As String = "Unknown Version"
+
+        Try
+            ' Der Endpunkt für die Version
+            Dim apiUrl As String = "http://" & SiticoneTextBox_host.Text & "/api/version"
+
+            Using client As New HttpClient()
+                ' Kurzer Timeout, falls der Server nicht erreichbar ist
+                client.Timeout = TimeSpan.FromSeconds(5)
+
+                Dim response As HttpResponseMessage = Await client.GetAsync(apiUrl)
+
+                If response.IsSuccessStatusCode Then
+                    Dim responseBody As String = Await response.Content.ReadAsStringAsync()
+
+                    ' Parsen der Antwort: {"version":"0.1.x"}
+                    Dim json As JObject = JObject.Parse(responseBody)
+                    version = json("version").ToString()
+                Else
+                    version = "Error: " & response.StatusCode.ToString()
+                End If
+            End Using
+
+        Catch ex As Exception
+            version = "Offline / Error"
+            ' Optional: Debug.WriteLine(ex.Message)
+        End Try
+
+        SiticoneLabel_version.Text = version
+
     End Function
 
     Private Sub SiticoneButton_file_Click(sender As Object, e As EventArgs) Handles SiticoneButton_file.Click
@@ -2418,28 +2455,28 @@ Public Class Form1
     End Function
 
     Private Sub SiticoneButton_ragpath_Click(sender As Object, e As EventArgs) Handles SiticoneButton_ragpath.Click
-        Dim openFileDialog As New OpenFileDialog()
+        Dim openFileDialog As New OpenFileDialog
         openFileDialog.Filter = "Text files (*.txt)|*.txt|PDF files (*.pdf)|*.pdf|All files (*.*)|*.*"
         openFileDialog.Multiselect = False
 
-        If openFileDialog.ShowDialog() = DialogResult.OK Then
+        If openFileDialog.ShowDialog = DialogResult.OK Then
             Dim filePath = openFileDialog.FileName
-            Dim fileExtension As String = Mid(LCase(System.IO.Path.GetExtension(filePath)), 2)
-            Dim fileName As String = System.IO.Path.GetFileName(filePath)
-            Dim file_content As String = ""
+            Dim fileExtension = Mid(LCase(Path.GetExtension(filePath)), 2)
+            Dim fileName = Path.GetFileName(filePath)
+            Dim file_content = ""
 
             Select Case fileExtension
                 Case "txt"
                     file_content = File.ReadAllText(filePath)
 
                 Case "pdf"
-                    Dim sb As New Text.StringBuilder()
+                    Dim sb As New StringBuilder
                     Using Pdfdoc = PdfDocument.Open(filePath)
-                        For Each page In Pdfdoc.GetPages()
+                        For Each page In Pdfdoc.GetPages
                             sb.AppendLine(page.Text & vbLf)
                         Next
                     End Using
-                    file_content = sb.ToString()
+                    file_content = sb.ToString
 
                 Case Else
                     file_content = File.ReadAllText(filePath)
@@ -2453,7 +2490,7 @@ Public Class Form1
 
             ' Dokument indexieren für schnelle Wortsuche
             documentIndex.IndexDocument(file_content)
-            Dim sentenece_n = documentIndex.GetAllSentences()
+            Dim sentenece_n = documentIndex.GetAllSentences
             SiticoneLabel_SentencesCountVal.Text = sentenece_n.Count.ToString
 
         End If
@@ -2883,9 +2920,96 @@ Public Class Form1
         SiticoneNavbar_tab.SelectedIndex = SiticoneTabControl_tab.SelectedIndex
     End Sub
 
-    Private Sub SiticoneToggleSwitch1_CheckedChanged(sender As Object, e As SiticoneToggleSwitch.ToggledEventArgs) Handles SiticoneToggleSwitch_show_menue.CheckedChanged
-        SiticoneNavbar_tab.Visible = SiticoneToggleSwitch_show_menue.Checked
+    Private Sub SiticoneButton4_close1_Click(sender As Object, e As EventArgs) Handles SiticoneButton4_close1.Click
+        Close()
     End Sub
+
+    Private Sub SiticoneButton_max1_Click(sender As Object, e As EventArgs) Handles SiticoneButton_max1.Click
+        If WindowState = FormWindowState.Normal Then
+            WindowState = FormWindowState.Maximized
+            ' Optional: Text/Icon ändern, um "Wiederherstellen" anzuzeigen
+            SiticoneButton_max1.Text = "❐"
+        Else
+            WindowState = FormWindowState.Normal
+            ' Optional: Text/Icon zurück zum Quadrat
+            SiticoneButton_max1.Text = "☐"
+        End If
+    End Sub
+
+    Private Sub SiticoneButton_min1_Click(sender As Object, e As EventArgs) Handles SiticoneButton_min1.Click
+        WindowState = FormWindowState.Minimized
+    End Sub
+
+    Private Sub SiticoneButton_hamburg_Click(sender As Object, e As EventArgs) Handles SiticoneButton_hamburg.Click
+        SiticoneNavbar_tab.Visible = Not SiticoneNavbar_tab.Visible
+    End Sub
+
+    Protected Overrides Sub WndProc(ByRef m As System.Windows.Forms.Message)
+        ' Konstanten
+        Const WM_NCHITTEST As Integer = &H84
+
+        ' Die "Hit"-Ergebnisse (sagen Windows, wo die Maus ist)
+        Const HTCLIENT As Integer = 1
+        Const HTLEFT As Integer = 10
+        Const HTRIGHT As Integer = 11
+        Const HTTOP As Integer = 12
+        Const HTTOPLEFT As Integer = 13
+        Const HTTOPRIGHT As Integer = 14
+        Const HTBOTTOM As Integer = 15
+        Const HTBOTTOMLEFT As Integer = 16
+        Const HTBOTTOMRIGHT As Integer = 17
+
+        ' Wenn die Nachricht NICHT "Wo ist die Maus?" ist, mach normal weiter
+        If m.Msg <> WM_NCHITTEST Then
+            MyBase.WndProc(m)
+            Return
+        End If
+
+        ' --- Hier beginnt die Magie ---
+
+        ' 1. Wo ist die Maus auf dem Bildschirm?
+        Dim screenPoint As Point = Cursor.Position
+
+        ' 2. Wo ist sie relativ zu unserem Fenster?
+        Dim clientPoint As Point = Me.PointToClient(screenPoint)
+
+        ' 3. Wie breit soll der unsichtbare Rand zum Greifen sein? 
+        ' Erhöhe diesen Wert, wenn es schwer zu treffen ist!
+        Dim resizeArea As Integer = 40
+
+        ' Wir nehmen an, wir sind im normalen Fensterbereich...
+        m.Result = New IntPtr(HTCLIENT)
+
+        ' ... und prüfen jetzt die Ränder
+        If clientPoint.Y <= resizeArea Then
+            If clientPoint.X <= resizeArea Then
+                m.Result = New IntPtr(HTTOPLEFT)
+            ElseIf clientPoint.X >= (Me.Size.Width - resizeArea) Then
+                m.Result = New IntPtr(HTTOPRIGHT)
+            Else
+                m.Result = New IntPtr(HTTOP)
+            End If
+        ElseIf clientPoint.Y >= (Me.Size.Height - resizeArea) Then
+            If clientPoint.X <= resizeArea Then
+                m.Result = New IntPtr(HTBOTTOMLEFT)
+            ElseIf clientPoint.X >= (Me.Size.Width - resizeArea) Then
+                m.Result = New IntPtr(HTBOTTOMRIGHT)
+            Else
+                m.Result = New IntPtr(HTBOTTOM)
+            End If
+        Else
+            ' Seitenränder (wenn nicht oben oder unten)
+            If clientPoint.X <= resizeArea Then
+                m.Result = New IntPtr(HTLEFT)
+            ElseIf clientPoint.X >= (Me.Size.Width - resizeArea) Then
+                m.Result = New IntPtr(HTRIGHT)
+            Else
+                ' Wenn wir nirgendwo am Rand sind, lassen wir Windows den Rest machen
+                MyBase.WndProc(m)
+            End If
+        End If
+    End Sub
+
 End Class
 
 Public Class DocumentIndex
@@ -3044,5 +3168,6 @@ Public Class DocumentIndex
 
         Return words
     End Function
+
 End Class
 

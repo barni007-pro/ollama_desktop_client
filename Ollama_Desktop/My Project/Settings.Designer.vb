@@ -448,6 +448,18 @@ Namespace My
                 Return CType(Me("test_response"),String)
             End Get
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("Unknown Version")>  _
+        Public Property serv_ver() As String
+            Get
+                Return CType(Me("serv_ver"),String)
+            End Get
+            Set
+                Me("serv_ver") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

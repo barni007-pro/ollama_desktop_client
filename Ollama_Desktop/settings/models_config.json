@@ -26,6 +26,15 @@
     "context": 8,
     "description": "aya - Cohere - Mehrsprachiges Modell (101+ Sprachen), gut für Übersetzung und Multilingual-Tasks."
   },
+  "bespoke-minicheck": {
+    "vision": false,
+    "tools": false,
+    "embedding": false,
+    "thinking": false,
+    "image": false,
+    "context": 32,
+    "description": "bespoke-minicheck - Bespoke Labs - Spezialisiertes Modell zur Überprüfung von Fakten (Fact-Checking) und Vermeidung von Halluzinationen in RAG-Pipelines."
+  },
   "bitnet-b1.58": {
     "vision": false,
     "tools": false,
@@ -34,6 +43,15 @@
     "image": false,
     "context": 8,
     "description": "bitnet - Microsoft - Ein 1-Bit LLM-Ansatz, der extrem energieeffizient ist und fast ohne klassische Multiplikationen auskommt."
+  },
+  "codegeex4": {
+    "vision": false,
+    "tools": false,
+    "embedding": false,
+    "thinking": false,
+    "image": false,
+    "context": 128,
+    "description": "codegeex4 - THUDM - 9B Modell spezialisiert auf Code-Generierung und -Vervollständigung. Sehr starkes Preis-Leistungs-Verhältnis für Coding."
   },
   "codegemma": {
     "vision": false,
@@ -269,6 +287,24 @@
     "context": 128,
     "description": "glm-ocr - GLM - multimodales OCR-Modell zum Verarbeiten komplexer Dokumente"
   },
+  "glm4": {
+    "vision": false,
+    "tools": true,
+    "embedding": false,
+    "thinking": true,
+    "image": false,
+    "context": 198,
+    "description": "glm4 - Zhipu AI - Starkes, mehrsprachiges Modell (besonders EN/CN). Hervorragend in Reasoning und komplexen Instruktionen."
+  },
+  "glm-4.7-flash": {
+    "vision": false,
+    "tools": true,
+    "embedding": false,
+    "thinking": true,
+    "image": false,
+    "context": 198,
+    "description": "glm-4.7-flash - Zhipu AI - Starkes, mehrsprachiges Modell (besonders EN/CN). Hervorragend in Reasoning und komplexen Instruktionen."
+  },
   "gpt-oss": {
     "vision": false,
     "tools": true,
@@ -304,6 +340,15 @@
     "image": false,
     "context": 128,
     "description": "grok-1.5 - xAI - Verbessertes Modell von xAI mit deutlich längerem Kontext (128k) und verbesserter Reasoning-Leistung."
+  },
+  "hermes3": {
+    "vision": false,
+    "tools": true,
+    "embedding": false,
+    "thinking": false,
+    "image": false,
+    "context": 128,
+    "description": "hermes3 - Nous Research - 'Flagship' Generalist-Modell (8B, 70B). Sehr stark im Befolgen von Anweisungen, Roleplay und Agenten-Tasks."
   },
   "hunyuan-large": {
     "vision": false,
@@ -421,6 +466,33 @@
     "image": false,
     "context": 128,
     "description": "marco-o1 - Alibaba - Open-Source Reasoning Modell, spezialisiert auf komplexe Problemstellungen und Chain-of-Thought."
+  },
+  "mathstral": {
+    "vision": false,
+    "tools": false,
+    "embedding": false,
+    "thinking": false,
+    "image": false,
+    "context": 32,
+    "description": "mathstral - Mistral AI - Auf Mathematik und logische Probleme spezialisiertes 7B Modell. Basiert auf Mistral-Technologie."
+  },
+  "nemotron-mini": {
+    "vision": false,
+    "tools": true,
+    "embedding": false,
+    "thinking": false,
+    "image": false,
+    "context": 4,
+    "description": "nemotron-mini - NVIDIA - Kleines, hocheffizientes 4B Modell. Optimiert für schnelle Antworten und Function-Calling auf Consumer-Hardware."
+  },
+  "minicpm-v": {
+    "vision": true,
+    "tools": false,
+    "embedding": false,
+    "thinking": false,
+    "image": false,
+    "context": 32,
+    "description": "minicpm-v - OpenBMB - Leistungsstarkes Vision-Language-Modell (8B). Übertrifft oft größere Modelle bei OCR und Bildverständnis."
   },
   "ministral-3": {
     "vision": true,

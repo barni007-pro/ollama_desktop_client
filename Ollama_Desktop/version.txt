@@ -33,3 +33,6 @@ V 1.2.1.16
 V 1.3.1.18
 - Image generation support for x/z-image-turbo and x/flux2-klein models
 - Now we wait for Linux and Windows image genaration support by ollama, MAC already supported
+V 1.4.0.19
+- models_config - new models added
+- GUI - new Header design

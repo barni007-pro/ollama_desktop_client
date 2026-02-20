@@ -349,5 +349,8 @@ Antwort: {"name":"get_text","arguments":{"words":["Python","Java","Programmiersp
     <Setting Name="test_response" Type="System.String" Scope="Application">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="serv_ver" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Unknown Version</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
