@@ -4385,7 +4385,7 @@ Partial Class Form1
         SiticoneSplitContainer_runcont.SnapDistance = 20
         SiticoneSplitContainer_runcont.SnapPositions = New Single() {0.25F, 0.5F, 0.75F}
         SiticoneSplitContainer_runcont.SplitterCursor = Cursors.HSplit
-        SiticoneSplitContainer_runcont.SplitterDistance = 428
+        SiticoneSplitContainer_runcont.SplitterDistance = 423
         SiticoneSplitContainer_runcont.SplitterHighlightColor = Color.DodgerBlue
         SiticoneSplitContainer_runcont.SplitterMoveable = True
         SiticoneSplitContainer_runcont.SplitterMoveLeftKey = Keys.Left
@@ -4406,7 +4406,7 @@ Partial Class Form1
         Scintilla_code_block.Location = New Point(0, 0)
         Scintilla_code_block.Name = "Scintilla_code_block"
         Scintilla_code_block.ScrollWidth = 70
-        Scintilla_code_block.Size = New Size(1409, 428)
+        Scintilla_code_block.Size = New Size(1409, 423)
         Scintilla_code_block.TabIndex = 59
         ' 
         ' SiticoneTextArea_run_output
@@ -4421,7 +4421,7 @@ Partial Class Form1
         SiticoneTextArea_run_output.Name = "SiticoneTextArea_run_output"
         SiticoneTextArea_run_output.PlaceholderText = "Wait for Output..."
         SiticoneTextArea_run_output.ScrollBars = ScrollBars.Vertical
-        SiticoneTextArea_run_output.Size = New Size(1409, 142)
+        SiticoneTextArea_run_output.Size = New Size(1409, 147)
         SiticoneTextArea_run_output.TabIndex = 2
         ' 
         ' SiticoneButton_code_run
@@ -5849,7 +5849,7 @@ Partial Class Form1
         SiticoneButton4_close1.GradientColor = Color.FromArgb(CByte(114), CByte(168), CByte(255))
         SiticoneButton4_close1.GradientMode = Drawing2D.LinearGradientMode.Vertical
         SiticoneButton4_close1.HintText = Nothing
-        SiticoneButton4_close1.HoverBackColor = Color.FromArgb(CByte(114), CByte(168), CByte(255))
+        SiticoneButton4_close1.HoverBackColor = Color.Coral
         SiticoneButton4_close1.HoverFontStyle = FontStyle.Regular
         SiticoneButton4_close1.HoverTextColor = Color.White
         SiticoneButton4_close1.HoverTransitionDuration = 250

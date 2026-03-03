@@ -773,6 +773,15 @@
     "context": 32,
     "description": "qwen3-vl - Alibaba - Leistungsfähigstes Vision-Language Modell der Qwen-Familie (multimodal, Tool-freundlich)."
   },
+  "qwen3.5": {
+    "vision": true,
+    "tools": true,
+    "embedding": false,
+    "thinking": true,
+    "image": false,
+    "context": 256,
+    "description": "qwen3.5 - Alibaba - LLM mit Multimodalität und hocheffizienter Architektur für Bild- und Textdaten."
+  },
   "skywork-o1": {
     "vision": false,
     "tools": true,
