@@ -38,3 +38,5 @@ V 1.4.0.19
 - GUI - new Header design
 V 1.4.1.20
 - add qwen3.5 to models_config.json
+V 1.4.2.21
+- Navigation buttons added. (response JSON are included -> Context repeat for new Promt)

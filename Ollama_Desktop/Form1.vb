@@ -16,6 +16,7 @@ Imports Markdig
 Imports Markdig.Renderers
 Imports Markdig.Renderers.Html
 Imports Markdig.Syntax
+Imports Microsoft.DotNet.DesignTools.Protocol.Endpoints
 Imports Microsoft.Web.WebView2.Core
 Imports Newtonsoft.Json            ' Für die JSON-Serialisierung
 Imports Newtonsoft.Json.Linq       ' Für die JSON-Verarbeitung
@@ -60,6 +61,9 @@ Public Class Form1
 
     Public Request_JSON As String = ""
     Public Response_JSON As String = ""
+    Public Response_json_nav_mem As New List(Of String)
+    Public Response_nav_mem As New List(Of String)
+    Public Response_nav_pointer As Integer = -1
     Public model_info As New List(Of String)
 
 
@@ -126,6 +130,8 @@ Public Class Form1
 
     Public APP_Start = True
 
+    Public Ollama_ver As String = My.Settings.serv_ver
+
     Private Async Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Await InitializeWebView2()
         WebView21.CoreWebView2.Settings.IsScriptEnabled = True
@@ -141,6 +147,13 @@ Public Class Form1
         'SiticoneSplitContainer_main.SplitterDistance = 720
         SiticoneSplitContainer_runcont.SplitterDistance = 495
 
+        ' Auslesen von Name und Version
+        Dim programName As String = My.Application.Info.Title ' Alternativ: My.Application.Info.AssemblyName
+        Dim programVersion As String = My.Application.Info.Version.ToString()
+
+        ' Zusammenfügen zu einem String
+        Dim appInfo As String = programName & ": v" & programVersion & " / Ollama: v" & Ollama_ver
+        SiticoneDragForm_Header.Title = appInfo
 
         ' Option Name Spalte
         Dim optionNameColumn As New DataGridViewTextBoxColumn()
@@ -191,8 +204,6 @@ Public Class Form1
         Scintilla_Rag_Json.Text = My.Settings.rag_json
 
         SiticoneNavbar_tab.Visible = My.Settings.show_menue
-
-        SiticoneLabel_version.Text = My.Settings.serv_ver
 
         ' Execute Language Spalte
         Dim ExecuteLanguageColumn As New DataGridViewTextBoxColumn()
@@ -354,7 +365,7 @@ Public Class Form1
         My.Settings.LLM_model_index = SiticoneDropdown_model.SelectedIndex
 
         My.Settings.show_menue = SiticoneNavbar_tab.Visible
-        My.Settings.serv_ver = SiticoneLabel_version.Text
+        My.Settings.serv_ver = Ollama_ver 'SiticoneLabel_version.Text
     End Sub
 
     Private Sub RegisterStateImages(btn As SiticoneButton,
@@ -635,63 +646,25 @@ Public Class Form1
                 Scintilla_Request_JSON.Text = Request_JSON
             End Try
             If response <> Nothing Then
-                'prüfe ob response ein JSON ist und kein MarkDown, das kann vorkommen wenn ein format JSON angefordert wurde
-                If IsValidJsonCore(response) Then
-                    'format wurde genutzt und json zurückgeliefert
-                    response = "```json" & vbLf & response & vbLf & "```"
-                End If
+                'in die History speichern um die NAV Buttons zu ermöglichen
+                Response_json_nav_mem.Add(Response_JSON)
+                Response_nav_mem.Add(response)
 
-                Scintilla_response.Text = response.Replace(vbLf, vbCrLf)
-                ' 1. Markdig-Pipeline mit Tabellen- und Mathe-Unterstützung
-                If SiticoneDropdown_API.SelectedIndex = 0 Then
-                    WebView21.NavigateToString(BuildHtml(response))
-                    chat_mem = "***" & vbLf & ":star: user:  " & vbLf & prompt_mem.Replace(vbCrLf, "  " & vbLf) & "  " & vbLf & "***" & vbLf & ":thumbsup: " & model & ":  " & vbLf & response & "  " & vbLf & "***" & vbLf
-                    SiticoneButton_HTMLtoPDF.Enabled = True
+                If Response_nav_mem.Count > 1 Then
+                    SiticoneButton_nav_l.Enabled = True
+                    SiticoneButton_nav_r.Enabled = False
+                    Response_nav_pointer = Response_nav_mem.Count - 1
                 Else
-                    chat_mem = chat_mem & "***" & vbLf & ":star: user:  " & vbLf & prompt_mem.Replace(vbCrLf, "  " & vbLf) & "  " & vbLf & "***" & vbLf & ":thumbsup: " & model & ":  " & vbLf & response & "  " & vbLf & "***" & vbLf
-                    WebView21.NavigateToString(BuildHtml(chat_mem))
-                    SiticoneTextArea_prompt.Text = ""
-                    SiticoneButton_HTMLtoPDF.Enabled = True
+                    Response_nav_pointer = -1
                 End If
-
-                Try
-                    Dim parsedJson As JToken = JToken.Parse(Response_JSON)
-                    ' >>> NEU: Bild-Daten für die Anzeige kürzen <<<
-                    ' Wir prüfen, ob ein Feld "image" existiert und nicht leer ist
-                    If parsedJson("image") IsNot Nothing Then
-                        ' Wir ersetzen den riesigen Base64-String durch einen kurzen Hinweis.
-                        ' Das ändert nur die Anzeige-Variable 'parsedJson', 
-                        ' der originale String 'Response_JSON' bleibt unberührt.
-                        parsedJson("image") = "<... Base64 Image Data Truncated ...>"
-                    End If
-                    ' >>> ENDE NEU <<<
-                    Dim prettyJsonString As String = parsedJson.ToString(Formatting.Indented)
-                    Scintilla_Response_JSON.Text = prettyJsonString
-                    CodeBlock_List.Clear()
-                    ToolsCodeBlockJson = ""
-                    SiticoneDropdown_language.Items.Clear()
-                    Scintilla_code_block.Text = ""
-                    SiticoneTextArea_run_output.Text = ""
-                    CodeBlock_List = ExtractCodeBlocks(response)
-                    If ToolsCodeBlockJson <> "empty" Then
-                        SiticoneTextBox_request_answer.Text = ToolsCodeBlockJson
-                    End If
-                    SiticoneButton_code_run.Enabled = False
-                    If CodeBlock_List.Count >= 1 Then
-                        For Each CodeBlock In CodeBlock_List
-                            SiticoneDropdown_language.Items.Add(CodeBlock.Language)
-                        Next
-                        SiticoneDropdown_language.SelectedIndex = 0
-                        change_language()
-                    End If
-                Catch ex As Exception
-                    Scintilla_Response_JSON.Text = Response_JSON
-                End Try
+                'und das ganze rendern
+                render_response(response)
             Else
                 Scintilla_Response_JSON.Text = "empty"
                 Scintilla_response.Text = "empty"
                 WebView21.NavigateToString(BuildHtml("empty"))
             End If
+
         Catch ex As OperationCanceledException
             MessageBox.Show("The process was aborted (timeout or user cancellation).", "Cancelled", MessageBoxButtons.OK, MessageBoxIcon.Information)
         Catch ex As Exception
@@ -713,6 +686,113 @@ Public Class Form1
             SiticoneTabControl_tab.SelectedTab = TabPage_responsehtml
         End Try
     End Function
+
+    Sub render_response(response_sub As String)
+        Dim model As String = SiticoneDropdown_model.SelectedItem
+        Dim prompt_mem As String = SiticoneTextArea_prompt.Text
+
+        'prüfe ob response_sub ein JSON ist und kein MarkDown, das kann vorkommen wenn ein format JSON angefordert wurde
+        If IsValidJsonCore(response_sub) Then
+            'format wurde genutzt und json zurückgeliefert
+            response_sub = "```json" & vbLf & response_sub & vbLf & "```"
+        End If
+
+        Scintilla_response.Text = response_sub.Replace(vbLf, vbCrLf)
+        ' 1. Markdig-Pipeline mit Tabellen- und Mathe-Unterstützung
+        If SiticoneDropdown_API.SelectedIndex = 0 Then
+            WebView21.NavigateToString(BuildHtml(response_sub))
+            chat_mem = "***" & vbLf & ":star: user:  " & vbLf & prompt_mem.Replace(vbCrLf, "  " & vbLf) & "  " & vbLf & "***" & vbLf & ":thumbsup: " & model & ":  " & vbLf & response_sub & "  " & vbLf & "***" & vbLf
+            SiticoneButton_HTMLtoPDF.Enabled = True
+        Else
+            chat_mem = chat_mem & "***" & vbLf & ":star: user:  " & vbLf & prompt_mem.Replace(vbCrLf, "  " & vbLf) & "  " & vbLf & "***" & vbLf & ":thumbsup: " & model & ":  " & vbLf & response_sub & "  " & vbLf & "***" & vbLf
+            WebView21.NavigateToString(BuildHtml(chat_mem))
+            SiticoneTextArea_prompt.Text = ""
+            SiticoneButton_HTMLtoPDF.Enabled = True
+            Response_json_nav_mem.Clear()
+            Response_nav_mem.Clear()
+            Response_nav_pointer = -1
+            SiticoneButton_nav_l.Enabled = False
+            SiticoneButton_nav_r.Enabled = False
+        End If
+
+        Try
+            Dim parsedJson As JToken = JToken.Parse(Response_JSON)
+            ' >>> NEU: Bild-Daten für die Anzeige kürzen <<<
+            ' Wir prüfen, ob ein Feld "image" existiert und nicht leer ist
+            If parsedJson("image") IsNot Nothing Then
+                ' Wir ersetzen den riesigen Base64-String durch einen kurzen Hinweis.
+                ' Das ändert nur die Anzeige-Variable 'parsedJson', 
+                ' der originale String 'response_sub_JSON' bleibt unberührt.
+                parsedJson("image") = "<... Base64 Image Data Truncated ...>"
+            End If
+            ' >>> ENDE NEU <<<
+            Dim prettyJsonString As String = parsedJson.ToString(Formatting.Indented)
+            Scintilla_Response_JSON.Text = prettyJsonString
+            CodeBlock_List.Clear()
+            ToolsCodeBlockJson = ""
+            SiticoneDropdown_language.Items.Clear()
+            Scintilla_code_block.Text = ""
+            SiticoneTextArea_run_output.Text = ""
+            CodeBlock_List = ExtractCodeBlocks(response_sub)
+            If ToolsCodeBlockJson <> "empty" Then
+                SiticoneTextBox_request_answer.Text = ToolsCodeBlockJson
+            End If
+            SiticoneButton_code_run.Enabled = False
+            If CodeBlock_List.Count >= 1 Then
+                For Each CodeBlock In CodeBlock_List
+                    SiticoneDropdown_language.Items.Add(CodeBlock.Language)
+                Next
+                SiticoneDropdown_language.SelectedIndex = 0
+                change_language()
+            End If
+        Catch ex As Exception
+            Scintilla_Response_JSON.Text = Response_JSON
+        End Try
+    End Sub
+
+    Private Sub SiticoneButton_nav_l_Click(sender As Object, e As EventArgs) Handles SiticoneButton_nav_l.Click
+        Response_nav_pointer -= 1
+        If Response_nav_pointer <= 0 Then
+            SiticoneButton_nav_l.Enabled = False
+        End If
+        If Response_nav_pointer + 1 < Response_nav_mem.Count Then
+            SiticoneButton_nav_r.Enabled = True
+        End If
+
+        Debug.Print(Response_nav_pointer.ToString)
+        Response_JSON = Response_json_nav_mem.Item(Response_nav_pointer)
+        render_response(Response_nav_mem.Item(Response_nav_pointer))
+
+        extractedContext.Clear()
+        Dim parsedJson As JObject = JObject.Parse(Response_JSON)
+        Dim tempItems = parsedJson("context")?.ToObject(Of List(Of Integer))()
+        If tempItems IsNot Nothing Then
+            extractedContext.AddRange(tempItems)
+        End If
+        SiticoneLabel_last_context.Text = String.Format("Use Last Context ({0} Tokens)", extractedContext.Count)
+    End Sub
+
+    Private Sub SiticoneButton_nav_r_Click(sender As Object, e As EventArgs) Handles SiticoneButton_nav_r.Click
+        Response_nav_pointer += 1
+        If Response_nav_pointer + 1 >= Response_nav_mem.Count Then
+            SiticoneButton_nav_r.Enabled = False
+        End If
+        If Response_nav_pointer > 0 Then
+            SiticoneButton_nav_l.Enabled = True
+        End If
+
+        Debug.Print(Response_nav_pointer.ToString)
+        Response_JSON = Response_json_nav_mem.Item(Response_nav_pointer)
+        render_response(Response_nav_mem.Item(Response_nav_pointer))
+
+        extractedContext.Clear()
+        Dim parsedJson As JObject = JObject.Parse(Response_JSON)
+        Dim tempItems = parsedJson("context")?.ToObject(Of List(Of Integer))()
+        If tempItems IsNot Nothing Then
+            extractedContext.AddRange(tempItems)
+        End If
+        SiticoneLabel_last_context.Text = String.Format("Use Last Context ({0} Tokens)", extractedContext.Count)
+    End Sub
 
     Private Function BuildHtml(markDownStr As String) As String
         ' Erstelle die Pipeline für Markdig mit den gewünschten Extensions:
@@ -1305,7 +1385,14 @@ Public Class Form1
             ' Optional: Debug.WriteLine(ex.Message)
         End Try
 
-        SiticoneLabel_version.Text = version
+        Ollama_ver = version
+        ' Auslesen von Name und Version
+        Dim programName As String = My.Application.Info.Title ' Alternativ: My.Application.Info.AssemblyName
+        Dim programVersion As String = My.Application.Info.Version.ToString()
+
+        ' Zusammenfügen zu einem String
+        Dim appInfo As String = programName & ": v" & programVersion & " / Ollama: v" & Ollama_ver
+        SiticoneDragForm_Header.Title = appInfo
 
     End Function
 

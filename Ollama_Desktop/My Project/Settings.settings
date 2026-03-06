@@ -350,7 +350,7 @@ Antwort: {"name":"get_text","arguments":{"words":["Python","Java","Programmiersp
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="serv_ver" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Unknown Version</Value>
+      <Value Profile="(Default)"> Unknown</Value>
     </Setting>
   </Settings>
 </SettingsFile>

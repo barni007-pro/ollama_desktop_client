@@ -451,7 +451,7 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("Unknown Version")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute(" Unknown")>  _
         Public Property serv_ver() As String
             Get
                 Return CType(Me("serv_ver"),String)
