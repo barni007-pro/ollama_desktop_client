@@ -40,3 +40,13 @@ V 1.4.1.20
 - add qwen3.5 to models_config.json
 V 1.4.2.21
 - Navigation buttons added. (response JSON are included -> Context repeat for new Promt)
+V 1.4.3.22
+- Navigation buttons code refactoring and optimization
+V 1.4.4.23
+- Navigation Buttons with history and token deletion
+- Ollama API Control via window top bar Button
+- new revised Ollama communication process layer
+- Debug Output with Shift F12
+- new Prompt Start and Stop Button
+- new Sound prozessing when the API communication is complete
+- add lfm2 to models_config.json

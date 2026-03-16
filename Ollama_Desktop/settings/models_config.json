@@ -377,6 +377,15 @@
     "context": 130,
     "description": "kimi-k2 - Moonshot AI - Spezialist für extrem lange Kontexte and präzises Retrieval."
   },
+  "lfm2": {
+    "vision": false,
+    "tools": true,
+    "embedding": false,
+    "thinking": false,
+    "image": false,
+    "context": 32,
+    "description": "lfm2 - Liquid - ist ein Hybridmodellen, das für den Einsatz auf Endgeräten entwickelt wurden. Erstklassige Effizienz"
+  },
   "llama2": {
     "vision": false,
     "tools": false,

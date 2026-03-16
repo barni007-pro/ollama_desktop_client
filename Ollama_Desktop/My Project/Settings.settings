@@ -352,5 +352,8 @@ Antwort: {"name":"get_text","arguments":{"words":["Python","Java","Programmiersp
     <Setting Name="serv_ver" Type="System.String" Scope="User">
       <Value Profile="(Default)"> Unknown</Value>
     </Setting>
+    <Setting Name="context_use" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
