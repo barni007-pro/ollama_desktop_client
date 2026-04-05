@@ -50,3 +50,5 @@ V 1.4.4.23
 - new Prompt Start and Stop Button
 - new Sound prozessing when the API communication is complete
 - add lfm2 to models_config.json
+V 1.4.5.24
+- add gemma4 to models_config.json

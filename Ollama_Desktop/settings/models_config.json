@@ -278,6 +278,15 @@
     "context": 128,
     "description": "gemma3 - Google - Multimodale Familie (Text+Bild, 270M-27B), 128K Context, 140+ Sprachen, 3x weniger Speicher durch Quantisierung."
   },
+  "gemma4": {
+    "vision": true,
+    "tools": true,
+    "embedding": false,
+    "thinking": true,
+    "image": false,
+    "context": 256,
+    "description": "gemma4 - Google - eignen sich hervorragend für logisches Denken, agentenbasierte Arbeitsabläufe, Codierung und multimodales Verständnis."
+  },
   "glm-ocr": {
     "vision": true,
     "tools": true,
