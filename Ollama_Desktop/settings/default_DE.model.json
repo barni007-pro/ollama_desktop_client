@@ -74,6 +74,6 @@
   "timeout": "600",
   "thinking_use": false,
   "thinking_parameter": "false",
-  "context_use": false,
+  "context_use": true,
   "content_prompt": "Bearbeite die Anweisung basierend auf dem Dateiinhalt der folgenden Datei:\r\n{files}\r\nAnweisung:\r\n{prompt}"
 }

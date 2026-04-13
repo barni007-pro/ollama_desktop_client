@@ -6,8 +6,8 @@
     <StartupObject>Ollama_Desktop.My.MyApplication</StartupObject>
     <UseWindowsForms>true</UseWindowsForms>
     <MyType>WindowsForms</MyType>
-    <AssemblyVersion>1.4.5.24</AssemblyVersion>
-    <FileVersion>1.4.5.24</FileVersion>
+    <AssemblyVersion>1.5.0.25</AssemblyVersion>
+    <FileVersion>1.5.0.25</FileVersion>
     <PackageIcon>315878_ai_document_file_icon (2).png</PackageIcon>
     <ApplicationIcon>pic\app_icon_hq.ico</ApplicationIcon>
     <Copyright>7soft</Copyright>
@@ -31,6 +31,7 @@
     <PackageReference Include="PdfPig" Version="0.1.12" />
     <PackageReference Include="Scintilla5.NET" Version="6.1.1" />
     <PackageReference Include="Siticone.NetCore.UI" Version="2026.1.20.1" />
+    <PackageReference Include="SSH.NET" Version="2025.1.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -110,6 +111,9 @@
     <None Update="settings\default_DE.rag.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="settings\default_DE.ssh.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="settings\default_DE.tools.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -122,6 +126,9 @@
     <None Update="settings\default_GB.rag.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="settings\default_GB.ssh.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="settings\default_GB.tools.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -131,7 +138,19 @@
     <None Update="settings\settings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="terminal.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="version.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="xterm\xterm-addon-fit.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="xterm\xterm.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="xterm\xterm.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

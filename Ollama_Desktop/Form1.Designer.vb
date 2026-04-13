@@ -23,9 +23,9 @@ Partial Class Form1
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         components = New ComponentModel.Container()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form1))
         Dim LayoutState1 As SiticoneNetCoreUI.SiticoneFlowPanel.LayoutState = New SiticoneNetCoreUI.SiticoneFlowPanel.LayoutState()
         Dim NavBarItem1 As SiticoneNetCoreUI.NavBarItem = New SiticoneNetCoreUI.NavBarItem()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form1))
         WebView21 = New Microsoft.Web.WebView2.WinForms.WebView2()
         SiticoneTextBox_host = New SiticoneNetCoreUI.SiticoneTextBox()
         SiticoneDropdown_model = New SiticoneNetCoreUI.SiticoneDropdown()
@@ -145,6 +145,44 @@ Partial Class Form1
         SiticoneTextArea_run_output = New SiticoneNetCoreUI.SiticoneTextArea()
         SiticoneButton_code_run = New SiticoneNetCoreUI.SiticoneButton()
         SiticoneDropdown_language = New SiticoneNetCoreUI.SiticoneDropdown()
+        TabPage_sshbot = New TabPage()
+        SiticoneButton_load_ssh = New SiticoneNetCoreUI.SiticoneButton()
+        SiticoneButton_save_ssh = New SiticoneNetCoreUI.SiticoneButton()
+        SiticoneButton_ssh_par = New SiticoneNetCoreUI.SiticoneButton()
+        SiticoneLabel25 = New SiticoneNetCoreUI.SiticoneLabel()
+        SiticoneLabel24 = New SiticoneNetCoreUI.SiticoneLabel()
+        SiticoneLabel23 = New SiticoneNetCoreUI.SiticoneLabel()
+        SiticoneLabel22 = New SiticoneNetCoreUI.SiticoneLabel()
+        SiticoneLabel21 = New SiticoneNetCoreUI.SiticoneLabel()
+        SiticoneLabel20 = New SiticoneNetCoreUI.SiticoneLabel()
+        SiticoneLabel19 = New SiticoneNetCoreUI.SiticoneLabel()
+        SiticoneLabel18 = New SiticoneNetCoreUI.SiticoneLabel()
+        SiticoneTextArea_ssh_response = New SiticoneNetCoreUI.SiticoneTextArea()
+        SiticoneButton_ssh_response = New SiticoneNetCoreUI.SiticoneButton()
+        SiticoneLabel17 = New SiticoneNetCoreUI.SiticoneLabel()
+        SiticoneFlatPanel3 = New SiticoneNetCoreUI.SiticoneFlatPanel()
+        SiticoneLabel16 = New SiticoneNetCoreUI.SiticoneLabel()
+        SiticoneToggleSwitch_sshreinsert = New SiticoneNetCoreUI.SiticoneToggleSwitch()
+        SiticoneTextBox_ssh_maxi = New SiticoneNetCoreUI.SiticoneTextBox()
+        SiticoneFlatPanel2 = New SiticoneNetCoreUI.SiticoneFlatPanel()
+        SiticoneLabel14 = New SiticoneNetCoreUI.SiticoneLabel()
+        SiticoneToggleSwitch_sshautoexecute = New SiticoneNetCoreUI.SiticoneToggleSwitch()
+        SiticoneTextBox_ssh_timeout = New SiticoneNetCoreUI.SiticoneTextBox()
+        SiticoneTextBox_ssh_pwrequest = New SiticoneNetCoreUI.SiticoneTextBox()
+        SiticoneTextBox_ssh_sudopw = New SiticoneNetCoreUI.SiticoneTextBox()
+        SiticoneTextBox_ssh_regex = New SiticoneNetCoreUI.SiticoneTextBox()
+        SiticoneButton_test = New SiticoneNetCoreUI.SiticoneButton()
+        SiticoneTextBox_ssh_pw = New SiticoneNetCoreUI.SiticoneTextBox()
+        SiticoneTextBox_ssh_user = New SiticoneNetCoreUI.SiticoneTextBox()
+        SiticoneTextBox_ssh_address = New SiticoneNetCoreUI.SiticoneTextBox()
+        SiticoneButton_connectssh = New SiticoneNetCoreUI.SiticoneButton()
+        WebViewTerminal = New Microsoft.Web.WebView2.WinForms.WebView2()
+        SiticoneFlatPanel1 = New SiticoneNetCoreUI.SiticoneFlatPanel()
+        SiticoneLabel15 = New SiticoneNetCoreUI.SiticoneLabel()
+        SiticoneToggleSwitch_sshbot = New SiticoneNetCoreUI.SiticoneToggleSwitch()
+        SiticoneButton_ssh_system = New SiticoneNetCoreUI.SiticoneButton()
+        SiticoneLabel3 = New SiticoneNetCoreUI.SiticoneLabel()
+        SiticoneTextArea_ssh_system = New SiticoneNetCoreUI.SiticoneTextArea()
         ToolTip1 = New ToolTip(components)
         SiticoneLabel_host = New SiticoneNetCoreUI.SiticoneLabel()
         SiticoneLabel_model = New SiticoneNetCoreUI.SiticoneLabel()
@@ -212,6 +250,11 @@ Partial Class Form1
         SiticoneSplitContainer_runcont.Panel1.SuspendLayout()
         SiticoneSplitContainer_runcont.Panel2.SuspendLayout()
         SiticoneSplitContainer_runcont.SuspendLayout()
+        TabPage_sshbot.SuspendLayout()
+        SiticoneFlatPanel3.SuspendLayout()
+        SiticoneFlatPanel2.SuspendLayout()
+        CType(WebViewTerminal, ComponentModel.ISupportInitialize).BeginInit()
+        SiticoneFlatPanel1.SuspendLayout()
         SiticonePanel_prompt.SuspendLayout()
         SiticonePanel_prompt_action.SuspendLayout()
         SiticonePanel_dock.SuspendLayout()
@@ -415,7 +458,7 @@ Partial Class Form1
         SiticoneTextArea_prompt.BackColor = Color.LightGray
         SiticoneTextArea_prompt.BorderStyle = BorderStyle.None
         SiticoneTextArea_prompt.Dock = DockStyle.Top
-        SiticoneTextArea_prompt.Font = New Font("Century Gothic", 12F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
+        SiticoneTextArea_prompt.Font = New Font("Consolas", 12F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
         SiticoneTextArea_prompt.Location = New Point(10, 10)
         SiticoneTextArea_prompt.Margin = New Padding(5)
         SiticoneTextArea_prompt.MinimumSize = New Size(100, 10)
@@ -523,6 +566,7 @@ Partial Class Form1
         SiticoneTabControl_tab.Controls.Add(TabPage_responsehtml)
         SiticoneTabControl_tab.Controls.Add(TabPage_codeparameter)
         SiticoneTabControl_tab.Controls.Add(TabPage_codeblock)
+        SiticoneTabControl_tab.Controls.Add(TabPage_sshbot)
         SiticoneTabControl_tab.DragIndicatorColor = Color.FromArgb(CByte(25), CByte(118), CByte(210))
         SiticoneTabControl_tab.Font = New Font("Segoe UI", 10F)
         SiticoneTabControl_tab.GhostBackColor = Color.FromArgb(CByte(20), CByte(34), CByte(30), CByte(65))
@@ -4388,7 +4432,7 @@ Partial Class Form1
         SiticoneSplitContainer_runcont.SnapDistance = 20
         SiticoneSplitContainer_runcont.SnapPositions = New Single() {0.25F, 0.5F, 0.75F}
         SiticoneSplitContainer_runcont.SplitterCursor = Cursors.HSplit
-        SiticoneSplitContainer_runcont.SplitterDistance = 462
+        SiticoneSplitContainer_runcont.SplitterDistance = 523
         SiticoneSplitContainer_runcont.SplitterHighlightColor = Color.DodgerBlue
         SiticoneSplitContainer_runcont.SplitterMoveable = True
         SiticoneSplitContainer_runcont.SplitterMoveLeftKey = Keys.Left
@@ -4409,7 +4453,7 @@ Partial Class Form1
         Scintilla_code_block.Location = New Point(0, 0)
         Scintilla_code_block.Name = "Scintilla_code_block"
         Scintilla_code_block.ScrollWidth = 70
-        Scintilla_code_block.Size = New Size(1409, 462)
+        Scintilla_code_block.Size = New Size(1409, 523)
         Scintilla_code_block.TabIndex = 59
         ' 
         ' SiticoneTextArea_run_output
@@ -4424,7 +4468,7 @@ Partial Class Form1
         SiticoneTextArea_run_output.Name = "SiticoneTextArea_run_output"
         SiticoneTextArea_run_output.PlaceholderText = "Wait for Output..."
         SiticoneTextArea_run_output.ScrollBars = ScrollBars.Vertical
-        SiticoneTextArea_run_output.Size = New Size(1409, 147)
+        SiticoneTextArea_run_output.Size = New Size(1409, 86)
         SiticoneTextArea_run_output.TabIndex = 2
         ' 
         ' SiticoneButton_code_run
@@ -4546,6 +4590,1368 @@ Partial Class Form1
         SiticoneDropdown_language.TabIndex = 27
         SiticoneDropdown_language.UnselectedItemTextColor = Color.Black
         SiticoneDropdown_language.ValueMember = Nothing
+        ' 
+        ' TabPage_sshbot
+        ' 
+        TabPage_sshbot.Controls.Add(SiticoneButton_load_ssh)
+        TabPage_sshbot.Controls.Add(SiticoneButton_save_ssh)
+        TabPage_sshbot.Controls.Add(SiticoneButton_ssh_par)
+        TabPage_sshbot.Controls.Add(SiticoneLabel25)
+        TabPage_sshbot.Controls.Add(SiticoneLabel24)
+        TabPage_sshbot.Controls.Add(SiticoneLabel23)
+        TabPage_sshbot.Controls.Add(SiticoneLabel22)
+        TabPage_sshbot.Controls.Add(SiticoneLabel21)
+        TabPage_sshbot.Controls.Add(SiticoneLabel20)
+        TabPage_sshbot.Controls.Add(SiticoneLabel19)
+        TabPage_sshbot.Controls.Add(SiticoneLabel18)
+        TabPage_sshbot.Controls.Add(SiticoneTextArea_ssh_response)
+        TabPage_sshbot.Controls.Add(SiticoneButton_ssh_response)
+        TabPage_sshbot.Controls.Add(SiticoneLabel17)
+        TabPage_sshbot.Controls.Add(SiticoneFlatPanel3)
+        TabPage_sshbot.Controls.Add(SiticoneTextBox_ssh_maxi)
+        TabPage_sshbot.Controls.Add(SiticoneFlatPanel2)
+        TabPage_sshbot.Controls.Add(SiticoneTextBox_ssh_timeout)
+        TabPage_sshbot.Controls.Add(SiticoneTextBox_ssh_pwrequest)
+        TabPage_sshbot.Controls.Add(SiticoneTextBox_ssh_sudopw)
+        TabPage_sshbot.Controls.Add(SiticoneTextBox_ssh_regex)
+        TabPage_sshbot.Controls.Add(SiticoneButton_test)
+        TabPage_sshbot.Controls.Add(SiticoneTextBox_ssh_pw)
+        TabPage_sshbot.Controls.Add(SiticoneTextBox_ssh_user)
+        TabPage_sshbot.Controls.Add(SiticoneTextBox_ssh_address)
+        TabPage_sshbot.Controls.Add(SiticoneButton_connectssh)
+        TabPage_sshbot.Controls.Add(WebViewTerminal)
+        TabPage_sshbot.Controls.Add(SiticoneFlatPanel1)
+        TabPage_sshbot.Controls.Add(SiticoneButton_ssh_system)
+        TabPage_sshbot.Controls.Add(SiticoneLabel3)
+        TabPage_sshbot.Controls.Add(SiticoneTextArea_ssh_system)
+        TabPage_sshbot.Location = New Point(4, 54)
+        TabPage_sshbot.Name = "TabPage_sshbot"
+        TabPage_sshbot.Size = New Size(1417, 649)
+        SiticoneTabControl_tab.SetTabImage(TabPage_sshbot, CType(resources.GetObject("TabPage_sshbot.TabImage"), Image))
+        TabPage_sshbot.TabIndex = 10
+        TabPage_sshbot.Text = "SSH Bot"
+        TabPage_sshbot.UseVisualStyleBackColor = True
+        ' 
+        ' SiticoneButton_load_ssh
+        ' 
+        SiticoneButton_load_ssh.AccessibleDescription = "The default button control that accept input though the mouse, touch and keyboard"
+        SiticoneButton_load_ssh.AccessibleName = "Load SSH"
+        SiticoneButton_load_ssh.AutoSizeBasedOnText = False
+        SiticoneButton_load_ssh.BackColor = Color.Transparent
+        SiticoneButton_load_ssh.BadgeBackColor = Color.Red
+        SiticoneButton_load_ssh.BadgeFont = New Font("Segoe UI", 8F, FontStyle.Bold)
+        SiticoneButton_load_ssh.BadgeValue = 0
+        SiticoneButton_load_ssh.BadgeValueForeColor = Color.White
+        SiticoneButton_load_ssh.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
+        SiticoneButton_load_ssh.BorderWidth = 2
+        SiticoneButton_load_ssh.ButtonBackColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
+        SiticoneButton_load_ssh.ButtonImage = Nothing
+        SiticoneButton_load_ssh.ButtonTextLeftPadding = 0
+        SiticoneButton_load_ssh.CanBeep = True
+        SiticoneButton_load_ssh.CanGlow = False
+        SiticoneButton_load_ssh.CanShake = True
+        SiticoneButton_load_ssh.ContextMenuStripEx = Nothing
+        SiticoneButton_load_ssh.CornerRadiusBottomLeft = 8
+        SiticoneButton_load_ssh.CornerRadiusBottomRight = 8
+        SiticoneButton_load_ssh.CornerRadiusTopLeft = 8
+        SiticoneButton_load_ssh.CornerRadiusTopRight = 8
+        SiticoneButton_load_ssh.CustomCursor = Cursors.Default
+        SiticoneButton_load_ssh.DisabledTextColor = Color.FromArgb(CByte(150), CByte(150), CByte(150))
+        SiticoneButton_load_ssh.EnableLongPress = False
+        SiticoneButton_load_ssh.EnablePressAnimation = True
+        SiticoneButton_load_ssh.EnableRippleEffect = True
+        SiticoneButton_load_ssh.EnableShadow = False
+        SiticoneButton_load_ssh.EnableTextWrapping = False
+        SiticoneButton_load_ssh.Font = New Font("Segoe UI", 9F)
+        SiticoneButton_load_ssh.GlowColor = Color.FromArgb(CByte(100), CByte(255), CByte(255), CByte(255))
+        SiticoneButton_load_ssh.GlowIntensity = 100
+        SiticoneButton_load_ssh.GlowRadius = 20F
+        SiticoneButton_load_ssh.GradientBackground = False
+        SiticoneButton_load_ssh.GradientColor = Color.FromArgb(CByte(114), CByte(168), CByte(255))
+        SiticoneButton_load_ssh.GradientMode = Drawing2D.LinearGradientMode.Vertical
+        SiticoneButton_load_ssh.HintText = Nothing
+        SiticoneButton_load_ssh.HoverBackColor = Color.FromArgb(CByte(114), CByte(168), CByte(255))
+        SiticoneButton_load_ssh.HoverFontStyle = FontStyle.Regular
+        SiticoneButton_load_ssh.HoverTextColor = Color.White
+        SiticoneButton_load_ssh.HoverTransitionDuration = 250
+        SiticoneButton_load_ssh.ImageAlign = ContentAlignment.MiddleLeft
+        SiticoneButton_load_ssh.ImagePadding = 5
+        SiticoneButton_load_ssh.ImageSize = New Size(16, 16)
+        SiticoneButton_load_ssh.IsRadial = False
+        SiticoneButton_load_ssh.IsReadOnly = False
+        SiticoneButton_load_ssh.IsToggleButton = False
+        SiticoneButton_load_ssh.IsToggled = False
+        SiticoneButton_load_ssh.Location = New Point(1010, 200)
+        SiticoneButton_load_ssh.LongPressDurationMS = 1000
+        SiticoneButton_load_ssh.Name = "SiticoneButton_load_ssh"
+        SiticoneButton_load_ssh.NormalFontStyle = FontStyle.Regular
+        SiticoneButton_load_ssh.ParticleColor = Color.FromArgb(CByte(200), CByte(200), CByte(200))
+        SiticoneButton_load_ssh.ParticleCount = 15
+        SiticoneButton_load_ssh.PressAnimationScale = 0.97F
+        SiticoneButton_load_ssh.PressedBackColor = Color.FromArgb(CByte(74), CByte(128), CByte(235))
+        SiticoneButton_load_ssh.PressedFontStyle = FontStyle.Regular
+        SiticoneButton_load_ssh.PressTransitionDuration = 150
+        SiticoneButton_load_ssh.ReadOnlyTextColor = Color.FromArgb(CByte(100), CByte(100), CByte(100))
+        SiticoneButton_load_ssh.RippleColor = Color.FromArgb(CByte(255), CByte(255), CByte(255))
+        SiticoneButton_load_ssh.RippleOpacity = 0.3F
+        SiticoneButton_load_ssh.RippleRadiusMultiplier = 0.6F
+        SiticoneButton_load_ssh.ShadowBlur = 5
+        SiticoneButton_load_ssh.ShadowColor = Color.FromArgb(CByte(100), CByte(0), CByte(0), CByte(0))
+        SiticoneButton_load_ssh.ShadowOffset = New Point(2, 2)
+        SiticoneButton_load_ssh.ShakeDuration = 500
+        SiticoneButton_load_ssh.ShakeIntensity = 5
+        SiticoneButton_load_ssh.Size = New Size(107, 24)
+        SiticoneButton_load_ssh.TabIndex = 89
+        SiticoneButton_load_ssh.Text = "Load SSH"
+        SiticoneButton_load_ssh.TextAlign = ContentAlignment.MiddleCenter
+        SiticoneButton_load_ssh.TextColor = Color.White
+        SiticoneButton_load_ssh.TooltipText = Nothing
+        SiticoneButton_load_ssh.UseAdvancedRendering = True
+        SiticoneButton_load_ssh.UseParticles = False
+        ' 
+        ' SiticoneButton_save_ssh
+        ' 
+        SiticoneButton_save_ssh.AccessibleDescription = "The default button control that accept input though the mouse, touch and keyboard"
+        SiticoneButton_save_ssh.AccessibleName = "Save SSH"
+        SiticoneButton_save_ssh.AutoSizeBasedOnText = False
+        SiticoneButton_save_ssh.BackColor = Color.Transparent
+        SiticoneButton_save_ssh.BadgeBackColor = Color.Red
+        SiticoneButton_save_ssh.BadgeFont = New Font("Segoe UI", 8F, FontStyle.Bold)
+        SiticoneButton_save_ssh.BadgeValue = 0
+        SiticoneButton_save_ssh.BadgeValueForeColor = Color.White
+        SiticoneButton_save_ssh.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
+        SiticoneButton_save_ssh.BorderWidth = 2
+        SiticoneButton_save_ssh.ButtonBackColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
+        SiticoneButton_save_ssh.ButtonImage = Nothing
+        SiticoneButton_save_ssh.ButtonTextLeftPadding = 0
+        SiticoneButton_save_ssh.CanBeep = True
+        SiticoneButton_save_ssh.CanGlow = False
+        SiticoneButton_save_ssh.CanShake = True
+        SiticoneButton_save_ssh.ContextMenuStripEx = Nothing
+        SiticoneButton_save_ssh.CornerRadiusBottomLeft = 8
+        SiticoneButton_save_ssh.CornerRadiusBottomRight = 8
+        SiticoneButton_save_ssh.CornerRadiusTopLeft = 8
+        SiticoneButton_save_ssh.CornerRadiusTopRight = 8
+        SiticoneButton_save_ssh.CustomCursor = Cursors.Default
+        SiticoneButton_save_ssh.DisabledTextColor = Color.FromArgb(CByte(150), CByte(150), CByte(150))
+        SiticoneButton_save_ssh.EnableLongPress = False
+        SiticoneButton_save_ssh.EnablePressAnimation = True
+        SiticoneButton_save_ssh.EnableRippleEffect = True
+        SiticoneButton_save_ssh.EnableShadow = False
+        SiticoneButton_save_ssh.EnableTextWrapping = False
+        SiticoneButton_save_ssh.Font = New Font("Segoe UI", 9F)
+        SiticoneButton_save_ssh.GlowColor = Color.FromArgb(CByte(100), CByte(255), CByte(255), CByte(255))
+        SiticoneButton_save_ssh.GlowIntensity = 100
+        SiticoneButton_save_ssh.GlowRadius = 20F
+        SiticoneButton_save_ssh.GradientBackground = False
+        SiticoneButton_save_ssh.GradientColor = Color.FromArgb(CByte(114), CByte(168), CByte(255))
+        SiticoneButton_save_ssh.GradientMode = Drawing2D.LinearGradientMode.Vertical
+        SiticoneButton_save_ssh.HintText = Nothing
+        SiticoneButton_save_ssh.HoverBackColor = Color.FromArgb(CByte(114), CByte(168), CByte(255))
+        SiticoneButton_save_ssh.HoverFontStyle = FontStyle.Regular
+        SiticoneButton_save_ssh.HoverTextColor = Color.White
+        SiticoneButton_save_ssh.HoverTransitionDuration = 250
+        SiticoneButton_save_ssh.ImageAlign = ContentAlignment.MiddleLeft
+        SiticoneButton_save_ssh.ImagePadding = 5
+        SiticoneButton_save_ssh.ImageSize = New Size(16, 16)
+        SiticoneButton_save_ssh.IsRadial = False
+        SiticoneButton_save_ssh.IsReadOnly = False
+        SiticoneButton_save_ssh.IsToggleButton = False
+        SiticoneButton_save_ssh.IsToggled = False
+        SiticoneButton_save_ssh.Location = New Point(1123, 200)
+        SiticoneButton_save_ssh.LongPressDurationMS = 1000
+        SiticoneButton_save_ssh.Name = "SiticoneButton_save_ssh"
+        SiticoneButton_save_ssh.NormalFontStyle = FontStyle.Regular
+        SiticoneButton_save_ssh.ParticleColor = Color.FromArgb(CByte(200), CByte(200), CByte(200))
+        SiticoneButton_save_ssh.ParticleCount = 15
+        SiticoneButton_save_ssh.PressAnimationScale = 0.97F
+        SiticoneButton_save_ssh.PressedBackColor = Color.FromArgb(CByte(74), CByte(128), CByte(235))
+        SiticoneButton_save_ssh.PressedFontStyle = FontStyle.Regular
+        SiticoneButton_save_ssh.PressTransitionDuration = 150
+        SiticoneButton_save_ssh.ReadOnlyTextColor = Color.FromArgb(CByte(100), CByte(100), CByte(100))
+        SiticoneButton_save_ssh.RippleColor = Color.FromArgb(CByte(255), CByte(255), CByte(255))
+        SiticoneButton_save_ssh.RippleOpacity = 0.3F
+        SiticoneButton_save_ssh.RippleRadiusMultiplier = 0.6F
+        SiticoneButton_save_ssh.ShadowBlur = 5
+        SiticoneButton_save_ssh.ShadowColor = Color.FromArgb(CByte(100), CByte(0), CByte(0), CByte(0))
+        SiticoneButton_save_ssh.ShadowOffset = New Point(2, 2)
+        SiticoneButton_save_ssh.ShakeDuration = 500
+        SiticoneButton_save_ssh.ShakeIntensity = 5
+        SiticoneButton_save_ssh.Size = New Size(107, 24)
+        SiticoneButton_save_ssh.TabIndex = 88
+        SiticoneButton_save_ssh.Text = "Save SSH"
+        SiticoneButton_save_ssh.TextAlign = ContentAlignment.MiddleCenter
+        SiticoneButton_save_ssh.TextColor = Color.White
+        SiticoneButton_save_ssh.TooltipText = Nothing
+        SiticoneButton_save_ssh.UseAdvancedRendering = True
+        SiticoneButton_save_ssh.UseParticles = False
+        ' 
+        ' SiticoneButton_ssh_par
+        ' 
+        SiticoneButton_ssh_par.AccessibleDescription = "The default button control that accept input though the mouse, touch and keyboard"
+        SiticoneButton_ssh_par.AccessibleName = ""
+        SiticoneButton_ssh_par.AutoSizeBasedOnText = False
+        SiticoneButton_ssh_par.BackColor = Color.Transparent
+        SiticoneButton_ssh_par.BadgeBackColor = Color.Red
+        SiticoneButton_ssh_par.BadgeFont = New Font("Segoe UI", 8F, FontStyle.Bold)
+        SiticoneButton_ssh_par.BadgeValue = 0
+        SiticoneButton_ssh_par.BadgeValueForeColor = Color.White
+        SiticoneButton_ssh_par.BorderColor = Color.Gray
+        SiticoneButton_ssh_par.BorderWidth = 2
+        SiticoneButton_ssh_par.ButtonBackColor = Color.FromArgb(CByte(224), CByte(224), CByte(224))
+        SiticoneButton_ssh_par.ButtonImage = My.Resources.Resource_pic.help_16
+        SiticoneButton_ssh_par.ButtonTextLeftPadding = 0
+        SiticoneButton_ssh_par.CanBeep = True
+        SiticoneButton_ssh_par.CanGlow = False
+        SiticoneButton_ssh_par.CanShake = True
+        SiticoneButton_ssh_par.ContextMenuStripEx = Nothing
+        SiticoneButton_ssh_par.CornerRadiusBottomLeft = 8
+        SiticoneButton_ssh_par.CornerRadiusBottomRight = 8
+        SiticoneButton_ssh_par.CornerRadiusTopLeft = 8
+        SiticoneButton_ssh_par.CornerRadiusTopRight = 8
+        SiticoneButton_ssh_par.CustomCursor = Cursors.Default
+        SiticoneButton_ssh_par.DisabledTextColor = Color.FromArgb(CByte(150), CByte(150), CByte(150))
+        SiticoneButton_ssh_par.EnableLongPress = False
+        SiticoneButton_ssh_par.EnablePressAnimation = True
+        SiticoneButton_ssh_par.EnableRippleEffect = True
+        SiticoneButton_ssh_par.EnableShadow = False
+        SiticoneButton_ssh_par.EnableTextWrapping = False
+        SiticoneButton_ssh_par.Font = New Font("Segoe UI", 9F)
+        SiticoneButton_ssh_par.GlowColor = Color.FromArgb(CByte(100), CByte(255), CByte(255), CByte(255))
+        SiticoneButton_ssh_par.GlowIntensity = 100
+        SiticoneButton_ssh_par.GlowRadius = 20F
+        SiticoneButton_ssh_par.GradientBackground = False
+        SiticoneButton_ssh_par.GradientColor = Color.Gray
+        SiticoneButton_ssh_par.GradientMode = Drawing2D.LinearGradientMode.Vertical
+        SiticoneButton_ssh_par.HintText = Nothing
+        SiticoneButton_ssh_par.HoverBackColor = Color.Silver
+        SiticoneButton_ssh_par.HoverFontStyle = FontStyle.Regular
+        SiticoneButton_ssh_par.HoverTextColor = Color.White
+        SiticoneButton_ssh_par.HoverTransitionDuration = 250
+        SiticoneButton_ssh_par.ImageAlign = ContentAlignment.MiddleCenter
+        SiticoneButton_ssh_par.ImagePadding = 5
+        SiticoneButton_ssh_par.ImageSize = New Size(16, 16)
+        SiticoneButton_ssh_par.IsRadial = False
+        SiticoneButton_ssh_par.IsReadOnly = False
+        SiticoneButton_ssh_par.IsToggleButton = False
+        SiticoneButton_ssh_par.IsToggled = False
+        SiticoneButton_ssh_par.Location = New Point(8, 201)
+        SiticoneButton_ssh_par.LongPressDurationMS = 1000
+        SiticoneButton_ssh_par.Name = "SiticoneButton_ssh_par"
+        SiticoneButton_ssh_par.NormalFontStyle = FontStyle.Regular
+        SiticoneButton_ssh_par.ParticleColor = Color.FromArgb(CByte(200), CByte(200), CByte(200))
+        SiticoneButton_ssh_par.ParticleCount = 15
+        SiticoneButton_ssh_par.PressAnimationScale = 0.97F
+        SiticoneButton_ssh_par.PressedBackColor = Color.FromArgb(CByte(74), CByte(128), CByte(235))
+        SiticoneButton_ssh_par.PressedFontStyle = FontStyle.Regular
+        SiticoneButton_ssh_par.PressTransitionDuration = 150
+        SiticoneButton_ssh_par.ReadOnlyTextColor = Color.FromArgb(CByte(100), CByte(100), CByte(100))
+        SiticoneButton_ssh_par.RippleColor = Color.FromArgb(CByte(255), CByte(255), CByte(255))
+        SiticoneButton_ssh_par.RippleOpacity = 0.3F
+        SiticoneButton_ssh_par.RippleRadiusMultiplier = 0.6F
+        SiticoneButton_ssh_par.ShadowBlur = 5
+        SiticoneButton_ssh_par.ShadowColor = Color.FromArgb(CByte(100), CByte(0), CByte(0), CByte(0))
+        SiticoneButton_ssh_par.ShadowOffset = New Point(2, 2)
+        SiticoneButton_ssh_par.ShakeDuration = 500
+        SiticoneButton_ssh_par.ShakeIntensity = 5
+        SiticoneButton_ssh_par.Size = New Size(30, 24)
+        SiticoneButton_ssh_par.TabIndex = 87
+        SiticoneButton_ssh_par.TextAlign = ContentAlignment.MiddleCenter
+        SiticoneButton_ssh_par.TextColor = Color.White
+        ToolTip1.SetToolTip(SiticoneButton_ssh_par, "Help")
+        SiticoneButton_ssh_par.TooltipText = Nothing
+        SiticoneButton_ssh_par.UseAdvancedRendering = True
+        SiticoneButton_ssh_par.UseParticles = False
+        ' 
+        ' SiticoneLabel25
+        ' 
+        SiticoneLabel25.BackColor = Color.Transparent
+        SiticoneLabel25.Font = New Font("Segoe UI", 10F)
+        SiticoneLabel25.Location = New Point(1050, 231)
+        SiticoneLabel25.Name = "SiticoneLabel25"
+        SiticoneLabel25.Size = New Size(122, 23)
+        SiticoneLabel25.TabIndex = 86
+        SiticoneLabel25.Text = "Max. Agent-Steps:"
+        ' 
+        ' SiticoneLabel24
+        ' 
+        SiticoneLabel24.BackColor = Color.Transparent
+        SiticoneLabel24.Font = New Font("Segoe UI", 10F)
+        SiticoneLabel24.Location = New Point(886, 232)
+        SiticoneLabel24.Name = "SiticoneLabel24"
+        SiticoneLabel24.Size = New Size(82, 23)
+        SiticoneLabel24.TabIndex = 85
+        SiticoneLabel24.Text = "Timeout [s]:"
+        ' 
+        ' SiticoneLabel23
+        ' 
+        SiticoneLabel23.BackColor = Color.Transparent
+        SiticoneLabel23.Font = New Font("Segoe UI", 10F)
+        SiticoneLabel23.Location = New Point(637, 232)
+        SiticoneLabel23.Name = "SiticoneLabel23"
+        SiticoneLabel23.Size = New Size(114, 23)
+        SiticoneLabel23.TabIndex = 84
+        SiticoneLabel23.Text = "Sudo-Password:"
+        ' 
+        ' SiticoneLabel22
+        ' 
+        SiticoneLabel22.BackColor = Color.Transparent
+        SiticoneLabel22.Font = New Font("Segoe UI", 10F)
+        SiticoneLabel22.Location = New Point(637, 202)
+        SiticoneLabel22.Name = "SiticoneLabel22"
+        SiticoneLabel22.Size = New Size(91, 23)
+        SiticoneLabel22.TabIndex = 83
+        SiticoneLabel22.Text = "Password:"
+        ' 
+        ' SiticoneLabel21
+        ' 
+        SiticoneLabel21.BackColor = Color.Transparent
+        SiticoneLabel21.Font = New Font("Segoe UI", 10F)
+        SiticoneLabel21.Location = New Point(365, 232)
+        SiticoneLabel21.Name = "SiticoneLabel21"
+        SiticoneLabel21.Size = New Size(102, 23)
+        SiticoneLabel21.TabIndex = 82
+        SiticoneLabel21.Text = "Sudo-Prompt:"
+        ' 
+        ' SiticoneLabel20
+        ' 
+        SiticoneLabel20.BackColor = Color.Transparent
+        SiticoneLabel20.Font = New Font("Segoe UI", 10F)
+        SiticoneLabel20.Location = New Point(365, 202)
+        SiticoneLabel20.Name = "SiticoneLabel20"
+        SiticoneLabel20.Size = New Size(91, 23)
+        SiticoneLabel20.TabIndex = 81
+        SiticoneLabel20.Text = "Username:"
+        ' 
+        ' SiticoneLabel19
+        ' 
+        SiticoneLabel19.BackColor = Color.Transparent
+        SiticoneLabel19.Font = New Font("Segoe UI", 10F)
+        SiticoneLabel19.Location = New Point(8, 232)
+        SiticoneLabel19.Name = "SiticoneLabel19"
+        SiticoneLabel19.Size = New Size(159, 23)
+        SiticoneLabel19.TabIndex = 80
+        SiticoneLabel19.Text = "Terminal-Prompt RegEx:"
+        ' 
+        ' SiticoneLabel18
+        ' 
+        SiticoneLabel18.BackColor = Color.Transparent
+        SiticoneLabel18.Font = New Font("Segoe UI", 10F)
+        SiticoneLabel18.Location = New Point(71, 202)
+        SiticoneLabel18.Name = "SiticoneLabel18"
+        SiticoneLabel18.Size = New Size(94, 23)
+        SiticoneLabel18.TabIndex = 79
+        SiticoneLabel18.Text = "SSH Host / IP:"
+        ' 
+        ' SiticoneTextArea_ssh_response
+        ' 
+        SiticoneTextArea_ssh_response.Anchor = AnchorStyles.Top Or AnchorStyles.Left Or AnchorStyles.Right
+        SiticoneTextArea_ssh_response.BackColor = SystemColors.GradientInactiveCaption
+        SiticoneTextArea_ssh_response.BorderStyle = BorderStyle.None
+        SiticoneTextArea_ssh_response.Font = New Font("Century Gothic", 10F)
+        SiticoneTextArea_ssh_response.Location = New Point(8, 129)
+        SiticoneTextArea_ssh_response.Margin = New Padding(5)
+        SiticoneTextArea_ssh_response.MinimumSize = New Size(100, 65)
+        SiticoneTextArea_ssh_response.Multiline = True
+        SiticoneTextArea_ssh_response.Name = "SiticoneTextArea_ssh_response"
+        SiticoneTextArea_ssh_response.PlaceholderText = "Write addition Prompt here..."
+        SiticoneTextArea_ssh_response.ScrollBars = ScrollBars.Vertical
+        SiticoneTextArea_ssh_response.Size = New Size(1401, 65)
+        SiticoneTextArea_ssh_response.TabIndex = 78
+        ' 
+        ' SiticoneButton_ssh_response
+        ' 
+        SiticoneButton_ssh_response.AccessibleDescription = "The default button control that accept input though the mouse, touch and keyboard"
+        SiticoneButton_ssh_response.AccessibleName = ""
+        SiticoneButton_ssh_response.AutoSizeBasedOnText = False
+        SiticoneButton_ssh_response.BackColor = Color.Transparent
+        SiticoneButton_ssh_response.BadgeBackColor = Color.Red
+        SiticoneButton_ssh_response.BadgeFont = New Font("Segoe UI", 8F, FontStyle.Bold)
+        SiticoneButton_ssh_response.BadgeValue = 0
+        SiticoneButton_ssh_response.BadgeValueForeColor = Color.White
+        SiticoneButton_ssh_response.BorderColor = Color.Gray
+        SiticoneButton_ssh_response.BorderWidth = 2
+        SiticoneButton_ssh_response.ButtonBackColor = Color.FromArgb(CByte(224), CByte(224), CByte(224))
+        SiticoneButton_ssh_response.ButtonImage = My.Resources.Resource_pic.help_16
+        SiticoneButton_ssh_response.ButtonTextLeftPadding = 0
+        SiticoneButton_ssh_response.CanBeep = True
+        SiticoneButton_ssh_response.CanGlow = False
+        SiticoneButton_ssh_response.CanShake = True
+        SiticoneButton_ssh_response.ContextMenuStripEx = Nothing
+        SiticoneButton_ssh_response.CornerRadiusBottomLeft = 8
+        SiticoneButton_ssh_response.CornerRadiusBottomRight = 8
+        SiticoneButton_ssh_response.CornerRadiusTopLeft = 8
+        SiticoneButton_ssh_response.CornerRadiusTopRight = 8
+        SiticoneButton_ssh_response.CustomCursor = Cursors.Default
+        SiticoneButton_ssh_response.DisabledTextColor = Color.FromArgb(CByte(150), CByte(150), CByte(150))
+        SiticoneButton_ssh_response.EnableLongPress = False
+        SiticoneButton_ssh_response.EnablePressAnimation = True
+        SiticoneButton_ssh_response.EnableRippleEffect = True
+        SiticoneButton_ssh_response.EnableShadow = False
+        SiticoneButton_ssh_response.EnableTextWrapping = False
+        SiticoneButton_ssh_response.Font = New Font("Segoe UI", 9F)
+        SiticoneButton_ssh_response.GlowColor = Color.FromArgb(CByte(100), CByte(255), CByte(255), CByte(255))
+        SiticoneButton_ssh_response.GlowIntensity = 100
+        SiticoneButton_ssh_response.GlowRadius = 20F
+        SiticoneButton_ssh_response.GradientBackground = False
+        SiticoneButton_ssh_response.GradientColor = Color.Gray
+        SiticoneButton_ssh_response.GradientMode = Drawing2D.LinearGradientMode.Vertical
+        SiticoneButton_ssh_response.HintText = Nothing
+        SiticoneButton_ssh_response.HoverBackColor = Color.Silver
+        SiticoneButton_ssh_response.HoverFontStyle = FontStyle.Regular
+        SiticoneButton_ssh_response.HoverTextColor = Color.White
+        SiticoneButton_ssh_response.HoverTransitionDuration = 250
+        SiticoneButton_ssh_response.ImageAlign = ContentAlignment.MiddleCenter
+        SiticoneButton_ssh_response.ImagePadding = 5
+        SiticoneButton_ssh_response.ImageSize = New Size(16, 16)
+        SiticoneButton_ssh_response.IsRadial = False
+        SiticoneButton_ssh_response.IsReadOnly = False
+        SiticoneButton_ssh_response.IsToggleButton = False
+        SiticoneButton_ssh_response.IsToggled = False
+        SiticoneButton_ssh_response.Location = New Point(8, 100)
+        SiticoneButton_ssh_response.LongPressDurationMS = 1000
+        SiticoneButton_ssh_response.Name = "SiticoneButton_ssh_response"
+        SiticoneButton_ssh_response.NormalFontStyle = FontStyle.Regular
+        SiticoneButton_ssh_response.ParticleColor = Color.FromArgb(CByte(200), CByte(200), CByte(200))
+        SiticoneButton_ssh_response.ParticleCount = 15
+        SiticoneButton_ssh_response.PressAnimationScale = 0.97F
+        SiticoneButton_ssh_response.PressedBackColor = Color.FromArgb(CByte(74), CByte(128), CByte(235))
+        SiticoneButton_ssh_response.PressedFontStyle = FontStyle.Regular
+        SiticoneButton_ssh_response.PressTransitionDuration = 150
+        SiticoneButton_ssh_response.ReadOnlyTextColor = Color.FromArgb(CByte(100), CByte(100), CByte(100))
+        SiticoneButton_ssh_response.RippleColor = Color.FromArgb(CByte(255), CByte(255), CByte(255))
+        SiticoneButton_ssh_response.RippleOpacity = 0.3F
+        SiticoneButton_ssh_response.RippleRadiusMultiplier = 0.6F
+        SiticoneButton_ssh_response.ShadowBlur = 5
+        SiticoneButton_ssh_response.ShadowColor = Color.FromArgb(CByte(100), CByte(0), CByte(0), CByte(0))
+        SiticoneButton_ssh_response.ShadowOffset = New Point(2, 2)
+        SiticoneButton_ssh_response.ShakeDuration = 500
+        SiticoneButton_ssh_response.ShakeIntensity = 5
+        SiticoneButton_ssh_response.Size = New Size(30, 24)
+        SiticoneButton_ssh_response.TabIndex = 77
+        SiticoneButton_ssh_response.TextAlign = ContentAlignment.MiddleCenter
+        SiticoneButton_ssh_response.TextColor = Color.White
+        ToolTip1.SetToolTip(SiticoneButton_ssh_response, "Help")
+        SiticoneButton_ssh_response.TooltipText = Nothing
+        SiticoneButton_ssh_response.UseAdvancedRendering = True
+        SiticoneButton_ssh_response.UseParticles = False
+        ' 
+        ' SiticoneLabel17
+        ' 
+        SiticoneLabel17.BackColor = Color.Transparent
+        SiticoneLabel17.Font = New Font("Segoe UI", 10F)
+        SiticoneLabel17.Location = New Point(46, 103)
+        SiticoneLabel17.Name = "SiticoneLabel17"
+        SiticoneLabel17.Size = New Size(189, 21)
+        SiticoneLabel17.TabIndex = 76
+        SiticoneLabel17.Text = "SSH Bot Response Prompt:"
+        ' 
+        ' SiticoneFlatPanel3
+        ' 
+        SiticoneFlatPanel3.BackColor = Color.Transparent
+        SiticoneFlatPanel3.Controls.Add(SiticoneLabel16)
+        SiticoneFlatPanel3.Controls.Add(SiticoneToggleSwitch_sshreinsert)
+        SiticoneFlatPanel3.Location = New Point(1236, 230)
+        SiticoneFlatPanel3.MinimumSize = New Size(20, 20)
+        SiticoneFlatPanel3.Name = "SiticoneFlatPanel3"
+        SiticoneFlatPanel3.Size = New Size(173, 25)
+        SiticoneFlatPanel3.TabIndex = 75
+        ' 
+        ' SiticoneLabel16
+        ' 
+        SiticoneLabel16.BackColor = Color.Transparent
+        SiticoneLabel16.Dock = DockStyle.Right
+        SiticoneLabel16.Font = New Font("Segoe UI", 10F)
+        SiticoneLabel16.Location = New Point(58, 0)
+        SiticoneLabel16.Name = "SiticoneLabel16"
+        SiticoneLabel16.Size = New Size(115, 25)
+        SiticoneLabel16.TabIndex = 55
+        SiticoneLabel16.Text = "Re Insert System"
+        SiticoneLabel16.TextAlign = ContentAlignment.MiddleLeft
+        ' 
+        ' SiticoneToggleSwitch_sshreinsert
+        ' 
+        SiticoneToggleSwitch_sshreinsert.AccessibleDescription = "A customizable toggle switch that can be turned on or off."
+        SiticoneToggleSwitch_sshreinsert.AccessibleName = "Siticone Toggle Switch"
+        SiticoneToggleSwitch_sshreinsert.AccessibleRole = AccessibleRole.CheckButton
+        SiticoneToggleSwitch_sshreinsert.CanBeep = True
+        SiticoneToggleSwitch_sshreinsert.CanShake = True
+        SiticoneToggleSwitch_sshreinsert.DisabledColor = Color.FromArgb(CByte(200), CByte(200), CByte(200))
+        SiticoneToggleSwitch_sshreinsert.DisallowToggling = False
+        SiticoneToggleSwitch_sshreinsert.Dock = DockStyle.Left
+        SiticoneToggleSwitch_sshreinsert.EnableGlowEffect = True
+        SiticoneToggleSwitch_sshreinsert.ExtraThumbSize = 2
+        SiticoneToggleSwitch_sshreinsert.IsOn = False
+        SiticoneToggleSwitch_sshreinsert.IsReadOnly = False
+        SiticoneToggleSwitch_sshreinsert.IsRequired = False
+        SiticoneToggleSwitch_sshreinsert.LabelColor = Color.Black
+        SiticoneToggleSwitch_sshreinsert.LabelFont = New Font("Segoe UI", 9F)
+        SiticoneToggleSwitch_sshreinsert.Location = New Point(0, 0)
+        SiticoneToggleSwitch_sshreinsert.Logger = Nothing
+        SiticoneToggleSwitch_sshreinsert.Name = "SiticoneToggleSwitch_sshreinsert"
+        SiticoneToggleSwitch_sshreinsert.OffBackColor1 = Color.FromArgb(CByte(229), CByte(229), CByte(229))
+        SiticoneToggleSwitch_sshreinsert.OffBackColor2 = Color.FromArgb(CByte(229), CByte(229), CByte(229))
+        SiticoneToggleSwitch_sshreinsert.OffBorderColor1 = Color.FromArgb(CByte(229), CByte(229), CByte(229))
+        SiticoneToggleSwitch_sshreinsert.OffBorderColor2 = Color.FromArgb(CByte(229), CByte(229), CByte(229))
+        SiticoneToggleSwitch_sshreinsert.OffIcon = Nothing
+        SiticoneToggleSwitch_sshreinsert.OffThumbColor1 = Color.FromArgb(CByte(60), CByte(60), CByte(60))
+        SiticoneToggleSwitch_sshreinsert.OffThumbColor2 = Color.FromArgb(CByte(60), CByte(60), CByte(60))
+        SiticoneToggleSwitch_sshreinsert.OnBackColor1 = Color.FromArgb(CByte(26), CByte(115), CByte(232))
+        SiticoneToggleSwitch_sshreinsert.OnBackColor2 = Color.FromArgb(CByte(26), CByte(115), CByte(232))
+        SiticoneToggleSwitch_sshreinsert.OnBorderColor1 = Color.FromArgb(CByte(26), CByte(115), CByte(232))
+        SiticoneToggleSwitch_sshreinsert.OnBorderColor2 = Color.FromArgb(CByte(26), CByte(115), CByte(232))
+        SiticoneToggleSwitch_sshreinsert.OnIcon = Nothing
+        SiticoneToggleSwitch_sshreinsert.OnThumbColor1 = Color.White
+        SiticoneToggleSwitch_sshreinsert.OnThumbColor2 = Color.White
+        SiticoneToggleSwitch_sshreinsert.PreventToggleOff = False
+        SiticoneToggleSwitch_sshreinsert.RippleColor = Color.FromArgb(CByte(100), CByte(255), CByte(255), CByte(255))
+        SiticoneToggleSwitch_sshreinsert.RippleExpansionRate = 2F
+        SiticoneToggleSwitch_sshreinsert.RippleOpacityDecay = 0.02F
+        SiticoneToggleSwitch_sshreinsert.Size = New Size(50, 25)
+        SiticoneToggleSwitch_sshreinsert.TabIndex = 54
+        SiticoneToggleSwitch_sshreinsert.ToggleOffSoundPath = ""
+        SiticoneToggleSwitch_sshreinsert.ToggleOnSoundPath = ""
+        SiticoneToggleSwitch_sshreinsert.ToolTipText = resources.GetString("SiticoneToggleSwitch_sshreinsert.ToolTipText")
+        SiticoneToggleSwitch_sshreinsert.TrackDeviceTheme = True
+        ' 
+        ' SiticoneTextBox_ssh_maxi
+        ' 
+        SiticoneTextBox_ssh_maxi.AccessibleDescription = "A customizable text input field."
+        SiticoneTextBox_ssh_maxi.AccessibleName = "Text Box"
+        SiticoneTextBox_ssh_maxi.AccessibleRole = AccessibleRole.Text
+        SiticoneTextBox_ssh_maxi.BackColor = Color.Transparent
+        SiticoneTextBox_ssh_maxi.BlinkCount = 3
+        SiticoneTextBox_ssh_maxi.BlinkShadow = False
+        SiticoneTextBox_ssh_maxi.BorderColor1 = Color.LightSlateGray
+        SiticoneTextBox_ssh_maxi.BorderColor2 = Color.LightSlateGray
+        SiticoneTextBox_ssh_maxi.BorderFocusColor1 = Color.FromArgb(CByte(77), CByte(77), CByte(255))
+        SiticoneTextBox_ssh_maxi.BorderFocusColor2 = Color.FromArgb(CByte(77), CByte(77), CByte(255))
+        SiticoneTextBox_ssh_maxi.CanShake = True
+        SiticoneTextBox_ssh_maxi.ContinuousBlink = False
+        SiticoneTextBox_ssh_maxi.CursorBlinkRate = 500
+        SiticoneTextBox_ssh_maxi.CursorColor = Color.Black
+        SiticoneTextBox_ssh_maxi.CursorHeight = 26
+        SiticoneTextBox_ssh_maxi.CursorOffset = 0
+        SiticoneTextBox_ssh_maxi.CursorStyle = SiticoneNetCoreUI.Helpers.DrawingStyle.SiticoneDrawingStyle.Solid
+        SiticoneTextBox_ssh_maxi.CursorWidth = 1
+        SiticoneTextBox_ssh_maxi.DisabledBackColor = Color.WhiteSmoke
+        SiticoneTextBox_ssh_maxi.DisabledBorderColor = Color.LightGray
+        SiticoneTextBox_ssh_maxi.DisabledTextColor = Color.Gray
+        SiticoneTextBox_ssh_maxi.EnableDropShadow = False
+        SiticoneTextBox_ssh_maxi.FillColor1 = Color.White
+        SiticoneTextBox_ssh_maxi.FillColor2 = Color.White
+        SiticoneTextBox_ssh_maxi.Font = New Font("Segoe UI", 9.5F)
+        SiticoneTextBox_ssh_maxi.ForeColor = Color.DimGray
+        SiticoneTextBox_ssh_maxi.HoverBorderColor1 = Color.Gray
+        SiticoneTextBox_ssh_maxi.HoverBorderColor2 = Color.Gray
+        SiticoneTextBox_ssh_maxi.IsEnabled = True
+        SiticoneTextBox_ssh_maxi.Location = New Point(1178, 230)
+        SiticoneTextBox_ssh_maxi.Name = "SiticoneTextBox_ssh_maxi"
+        SiticoneTextBox_ssh_maxi.PlaceholderColor = Color.Gray
+        SiticoneTextBox_ssh_maxi.PlaceholderText = "Enter SSH max Iterations here..."
+        SiticoneTextBox_ssh_maxi.ReadOnlyBorderColor1 = Color.LightGray
+        SiticoneTextBox_ssh_maxi.ReadOnlyBorderColor2 = Color.LightGray
+        SiticoneTextBox_ssh_maxi.ReadOnlyFillColor1 = Color.WhiteSmoke
+        SiticoneTextBox_ssh_maxi.ReadOnlyFillColor2 = Color.WhiteSmoke
+        SiticoneTextBox_ssh_maxi.ReadOnlyPlaceholderColor = Color.DarkGray
+        SiticoneTextBox_ssh_maxi.SelectionBackColor = Color.FromArgb(CByte(77), CByte(77), CByte(255))
+        SiticoneTextBox_ssh_maxi.ShadowAnimationDuration = 1
+        SiticoneTextBox_ssh_maxi.ShadowBlur = 10
+        SiticoneTextBox_ssh_maxi.ShadowColor = Color.FromArgb(CByte(15), CByte(0), CByte(0), CByte(0))
+        SiticoneTextBox_ssh_maxi.Size = New Size(52, 24)
+        SiticoneTextBox_ssh_maxi.SolidBorderColor = Color.LightSlateGray
+        SiticoneTextBox_ssh_maxi.SolidBorderFocusColor = Color.FromArgb(CByte(77), CByte(77), CByte(255))
+        SiticoneTextBox_ssh_maxi.SolidBorderHoverColor = Color.Gray
+        SiticoneTextBox_ssh_maxi.SolidFillColor = Color.White
+        SiticoneTextBox_ssh_maxi.TabIndex = 74
+        SiticoneTextBox_ssh_maxi.TextPadding = New Padding(16, 0, 6, 0)
+        SiticoneTextBox_ssh_maxi.ValidationErrorMessage = "Invalid input."
+        SiticoneTextBox_ssh_maxi.ValidationFunction = Nothing
+        ' 
+        ' SiticoneFlatPanel2
+        ' 
+        SiticoneFlatPanel2.BackColor = Color.Transparent
+        SiticoneFlatPanel2.Controls.Add(SiticoneLabel14)
+        SiticoneFlatPanel2.Controls.Add(SiticoneToggleSwitch_sshautoexecute)
+        SiticoneFlatPanel2.Location = New Point(1236, 202)
+        SiticoneFlatPanel2.MinimumSize = New Size(20, 20)
+        SiticoneFlatPanel2.Name = "SiticoneFlatPanel2"
+        SiticoneFlatPanel2.Size = New Size(173, 25)
+        SiticoneFlatPanel2.TabIndex = 73
+        ' 
+        ' SiticoneLabel14
+        ' 
+        SiticoneLabel14.BackColor = Color.Transparent
+        SiticoneLabel14.Dock = DockStyle.Right
+        SiticoneLabel14.Font = New Font("Segoe UI", 10F)
+        SiticoneLabel14.Location = New Point(80, 0)
+        SiticoneLabel14.Name = "SiticoneLabel14"
+        SiticoneLabel14.Size = New Size(93, 25)
+        SiticoneLabel14.TabIndex = 55
+        SiticoneLabel14.Text = "Auto Execute"
+        SiticoneLabel14.TextAlign = ContentAlignment.MiddleLeft
+        ' 
+        ' SiticoneToggleSwitch_sshautoexecute
+        ' 
+        SiticoneToggleSwitch_sshautoexecute.AccessibleDescription = "A customizable toggle switch that can be turned on or off."
+        SiticoneToggleSwitch_sshautoexecute.AccessibleName = "Siticone Toggle Switch"
+        SiticoneToggleSwitch_sshautoexecute.AccessibleRole = AccessibleRole.CheckButton
+        SiticoneToggleSwitch_sshautoexecute.CanBeep = True
+        SiticoneToggleSwitch_sshautoexecute.CanShake = True
+        SiticoneToggleSwitch_sshautoexecute.DisabledColor = Color.FromArgb(CByte(200), CByte(200), CByte(200))
+        SiticoneToggleSwitch_sshautoexecute.DisallowToggling = False
+        SiticoneToggleSwitch_sshautoexecute.Dock = DockStyle.Left
+        SiticoneToggleSwitch_sshautoexecute.EnableGlowEffect = True
+        SiticoneToggleSwitch_sshautoexecute.ExtraThumbSize = 2
+        SiticoneToggleSwitch_sshautoexecute.IsOn = False
+        SiticoneToggleSwitch_sshautoexecute.IsReadOnly = False
+        SiticoneToggleSwitch_sshautoexecute.IsRequired = False
+        SiticoneToggleSwitch_sshautoexecute.LabelColor = Color.Black
+        SiticoneToggleSwitch_sshautoexecute.LabelFont = New Font("Segoe UI", 9F)
+        SiticoneToggleSwitch_sshautoexecute.Location = New Point(0, 0)
+        SiticoneToggleSwitch_sshautoexecute.Logger = Nothing
+        SiticoneToggleSwitch_sshautoexecute.Name = "SiticoneToggleSwitch_sshautoexecute"
+        SiticoneToggleSwitch_sshautoexecute.OffBackColor1 = Color.FromArgb(CByte(229), CByte(229), CByte(229))
+        SiticoneToggleSwitch_sshautoexecute.OffBackColor2 = Color.FromArgb(CByte(229), CByte(229), CByte(229))
+        SiticoneToggleSwitch_sshautoexecute.OffBorderColor1 = Color.FromArgb(CByte(229), CByte(229), CByte(229))
+        SiticoneToggleSwitch_sshautoexecute.OffBorderColor2 = Color.FromArgb(CByte(229), CByte(229), CByte(229))
+        SiticoneToggleSwitch_sshautoexecute.OffIcon = Nothing
+        SiticoneToggleSwitch_sshautoexecute.OffThumbColor1 = Color.FromArgb(CByte(60), CByte(60), CByte(60))
+        SiticoneToggleSwitch_sshautoexecute.OffThumbColor2 = Color.FromArgb(CByte(60), CByte(60), CByte(60))
+        SiticoneToggleSwitch_sshautoexecute.OnBackColor1 = Color.FromArgb(CByte(26), CByte(115), CByte(232))
+        SiticoneToggleSwitch_sshautoexecute.OnBackColor2 = Color.FromArgb(CByte(26), CByte(115), CByte(232))
+        SiticoneToggleSwitch_sshautoexecute.OnBorderColor1 = Color.FromArgb(CByte(26), CByte(115), CByte(232))
+        SiticoneToggleSwitch_sshautoexecute.OnBorderColor2 = Color.FromArgb(CByte(26), CByte(115), CByte(232))
+        SiticoneToggleSwitch_sshautoexecute.OnIcon = Nothing
+        SiticoneToggleSwitch_sshautoexecute.OnThumbColor1 = Color.White
+        SiticoneToggleSwitch_sshautoexecute.OnThumbColor2 = Color.White
+        SiticoneToggleSwitch_sshautoexecute.PreventToggleOff = False
+        SiticoneToggleSwitch_sshautoexecute.RippleColor = Color.FromArgb(CByte(100), CByte(255), CByte(255), CByte(255))
+        SiticoneToggleSwitch_sshautoexecute.RippleExpansionRate = 2F
+        SiticoneToggleSwitch_sshautoexecute.RippleOpacityDecay = 0.02F
+        SiticoneToggleSwitch_sshautoexecute.Size = New Size(50, 25)
+        SiticoneToggleSwitch_sshautoexecute.TabIndex = 54
+        SiticoneToggleSwitch_sshautoexecute.ToggleOffSoundPath = ""
+        SiticoneToggleSwitch_sshautoexecute.ToggleOnSoundPath = ""
+        SiticoneToggleSwitch_sshautoexecute.ToolTipText = "Executes the SSH commands generated by the AI immediately and without prompting. WARNING: If disabled, every single command must be manually approved by the user."
+        SiticoneToggleSwitch_sshautoexecute.TrackDeviceTheme = True
+        ' 
+        ' SiticoneTextBox_ssh_timeout
+        ' 
+        SiticoneTextBox_ssh_timeout.AccessibleDescription = "A customizable text input field."
+        SiticoneTextBox_ssh_timeout.AccessibleName = "Text Box"
+        SiticoneTextBox_ssh_timeout.AccessibleRole = AccessibleRole.Text
+        SiticoneTextBox_ssh_timeout.BackColor = Color.Transparent
+        SiticoneTextBox_ssh_timeout.BlinkCount = 3
+        SiticoneTextBox_ssh_timeout.BlinkShadow = False
+        SiticoneTextBox_ssh_timeout.BorderColor1 = Color.LightSlateGray
+        SiticoneTextBox_ssh_timeout.BorderColor2 = Color.LightSlateGray
+        SiticoneTextBox_ssh_timeout.BorderFocusColor1 = Color.FromArgb(CByte(77), CByte(77), CByte(255))
+        SiticoneTextBox_ssh_timeout.BorderFocusColor2 = Color.FromArgb(CByte(77), CByte(77), CByte(255))
+        SiticoneTextBox_ssh_timeout.CanShake = True
+        SiticoneTextBox_ssh_timeout.ContinuousBlink = False
+        SiticoneTextBox_ssh_timeout.CursorBlinkRate = 500
+        SiticoneTextBox_ssh_timeout.CursorColor = Color.Black
+        SiticoneTextBox_ssh_timeout.CursorHeight = 26
+        SiticoneTextBox_ssh_timeout.CursorOffset = 0
+        SiticoneTextBox_ssh_timeout.CursorStyle = SiticoneNetCoreUI.Helpers.DrawingStyle.SiticoneDrawingStyle.Solid
+        SiticoneTextBox_ssh_timeout.CursorWidth = 1
+        SiticoneTextBox_ssh_timeout.DisabledBackColor = Color.WhiteSmoke
+        SiticoneTextBox_ssh_timeout.DisabledBorderColor = Color.LightGray
+        SiticoneTextBox_ssh_timeout.DisabledTextColor = Color.Gray
+        SiticoneTextBox_ssh_timeout.EnableDropShadow = False
+        SiticoneTextBox_ssh_timeout.FillColor1 = Color.White
+        SiticoneTextBox_ssh_timeout.FillColor2 = Color.White
+        SiticoneTextBox_ssh_timeout.Font = New Font("Segoe UI", 9.5F)
+        SiticoneTextBox_ssh_timeout.ForeColor = Color.DimGray
+        SiticoneTextBox_ssh_timeout.HoverBorderColor1 = Color.Gray
+        SiticoneTextBox_ssh_timeout.HoverBorderColor2 = Color.Gray
+        SiticoneTextBox_ssh_timeout.IsEnabled = True
+        SiticoneTextBox_ssh_timeout.Location = New Point(974, 231)
+        SiticoneTextBox_ssh_timeout.Name = "SiticoneTextBox_ssh_timeout"
+        SiticoneTextBox_ssh_timeout.PlaceholderColor = Color.Gray
+        SiticoneTextBox_ssh_timeout.PlaceholderText = "Enter SSH Timeout [s] here..."
+        SiticoneTextBox_ssh_timeout.ReadOnlyBorderColor1 = Color.LightGray
+        SiticoneTextBox_ssh_timeout.ReadOnlyBorderColor2 = Color.LightGray
+        SiticoneTextBox_ssh_timeout.ReadOnlyFillColor1 = Color.WhiteSmoke
+        SiticoneTextBox_ssh_timeout.ReadOnlyFillColor2 = Color.WhiteSmoke
+        SiticoneTextBox_ssh_timeout.ReadOnlyPlaceholderColor = Color.DarkGray
+        SiticoneTextBox_ssh_timeout.SelectionBackColor = Color.FromArgb(CByte(77), CByte(77), CByte(255))
+        SiticoneTextBox_ssh_timeout.ShadowAnimationDuration = 1
+        SiticoneTextBox_ssh_timeout.ShadowBlur = 10
+        SiticoneTextBox_ssh_timeout.ShadowColor = Color.FromArgb(CByte(15), CByte(0), CByte(0), CByte(0))
+        SiticoneTextBox_ssh_timeout.Size = New Size(70, 24)
+        SiticoneTextBox_ssh_timeout.SolidBorderColor = Color.LightSlateGray
+        SiticoneTextBox_ssh_timeout.SolidBorderFocusColor = Color.FromArgb(CByte(77), CByte(77), CByte(255))
+        SiticoneTextBox_ssh_timeout.SolidBorderHoverColor = Color.Gray
+        SiticoneTextBox_ssh_timeout.SolidFillColor = Color.White
+        SiticoneTextBox_ssh_timeout.TabIndex = 72
+        SiticoneTextBox_ssh_timeout.TextPadding = New Padding(16, 0, 6, 0)
+        SiticoneTextBox_ssh_timeout.ValidationErrorMessage = "Invalid input."
+        SiticoneTextBox_ssh_timeout.ValidationFunction = Nothing
+        ' 
+        ' SiticoneTextBox_ssh_pwrequest
+        ' 
+        SiticoneTextBox_ssh_pwrequest.AccessibleDescription = "A customizable text input field."
+        SiticoneTextBox_ssh_pwrequest.AccessibleName = "Text Box"
+        SiticoneTextBox_ssh_pwrequest.AccessibleRole = AccessibleRole.Text
+        SiticoneTextBox_ssh_pwrequest.BackColor = Color.Transparent
+        SiticoneTextBox_ssh_pwrequest.BlinkCount = 3
+        SiticoneTextBox_ssh_pwrequest.BlinkShadow = False
+        SiticoneTextBox_ssh_pwrequest.BorderColor1 = Color.LightSlateGray
+        SiticoneTextBox_ssh_pwrequest.BorderColor2 = Color.LightSlateGray
+        SiticoneTextBox_ssh_pwrequest.BorderFocusColor1 = Color.FromArgb(CByte(77), CByte(77), CByte(255))
+        SiticoneTextBox_ssh_pwrequest.BorderFocusColor2 = Color.FromArgb(CByte(77), CByte(77), CByte(255))
+        SiticoneTextBox_ssh_pwrequest.CanShake = True
+        SiticoneTextBox_ssh_pwrequest.ContinuousBlink = False
+        SiticoneTextBox_ssh_pwrequest.CursorBlinkRate = 500
+        SiticoneTextBox_ssh_pwrequest.CursorColor = Color.Black
+        SiticoneTextBox_ssh_pwrequest.CursorHeight = 26
+        SiticoneTextBox_ssh_pwrequest.CursorOffset = 0
+        SiticoneTextBox_ssh_pwrequest.CursorStyle = SiticoneNetCoreUI.Helpers.DrawingStyle.SiticoneDrawingStyle.Solid
+        SiticoneTextBox_ssh_pwrequest.CursorWidth = 1
+        SiticoneTextBox_ssh_pwrequest.DisabledBackColor = Color.WhiteSmoke
+        SiticoneTextBox_ssh_pwrequest.DisabledBorderColor = Color.LightGray
+        SiticoneTextBox_ssh_pwrequest.DisabledTextColor = Color.Gray
+        SiticoneTextBox_ssh_pwrequest.EnableDropShadow = False
+        SiticoneTextBox_ssh_pwrequest.FillColor1 = Color.White
+        SiticoneTextBox_ssh_pwrequest.FillColor2 = Color.White
+        SiticoneTextBox_ssh_pwrequest.Font = New Font("Segoe UI", 9.5F)
+        SiticoneTextBox_ssh_pwrequest.ForeColor = Color.DimGray
+        SiticoneTextBox_ssh_pwrequest.HoverBorderColor1 = Color.Gray
+        SiticoneTextBox_ssh_pwrequest.HoverBorderColor2 = Color.Gray
+        SiticoneTextBox_ssh_pwrequest.IsEnabled = True
+        SiticoneTextBox_ssh_pwrequest.Location = New Point(473, 231)
+        SiticoneTextBox_ssh_pwrequest.Name = "SiticoneTextBox_ssh_pwrequest"
+        SiticoneTextBox_ssh_pwrequest.PlaceholderColor = Color.Gray
+        SiticoneTextBox_ssh_pwrequest.PlaceholderText = "Enter Sudo Prompt here..."
+        SiticoneTextBox_ssh_pwrequest.ReadOnlyBorderColor1 = Color.LightGray
+        SiticoneTextBox_ssh_pwrequest.ReadOnlyBorderColor2 = Color.LightGray
+        SiticoneTextBox_ssh_pwrequest.ReadOnlyFillColor1 = Color.WhiteSmoke
+        SiticoneTextBox_ssh_pwrequest.ReadOnlyFillColor2 = Color.WhiteSmoke
+        SiticoneTextBox_ssh_pwrequest.ReadOnlyPlaceholderColor = Color.DarkGray
+        SiticoneTextBox_ssh_pwrequest.SelectionBackColor = Color.FromArgb(CByte(77), CByte(77), CByte(255))
+        SiticoneTextBox_ssh_pwrequest.ShadowAnimationDuration = 1
+        SiticoneTextBox_ssh_pwrequest.ShadowBlur = 10
+        SiticoneTextBox_ssh_pwrequest.ShadowColor = Color.FromArgb(CByte(15), CByte(0), CByte(0), CByte(0))
+        SiticoneTextBox_ssh_pwrequest.Size = New Size(158, 24)
+        SiticoneTextBox_ssh_pwrequest.SolidBorderColor = Color.LightSlateGray
+        SiticoneTextBox_ssh_pwrequest.SolidBorderFocusColor = Color.FromArgb(CByte(77), CByte(77), CByte(255))
+        SiticoneTextBox_ssh_pwrequest.SolidBorderHoverColor = Color.Gray
+        SiticoneTextBox_ssh_pwrequest.SolidFillColor = Color.White
+        SiticoneTextBox_ssh_pwrequest.TabIndex = 71
+        SiticoneTextBox_ssh_pwrequest.TextPadding = New Padding(16, 0, 6, 0)
+        SiticoneTextBox_ssh_pwrequest.ValidationErrorMessage = "Invalid input."
+        SiticoneTextBox_ssh_pwrequest.ValidationFunction = Nothing
+        ' 
+        ' SiticoneTextBox_ssh_sudopw
+        ' 
+        SiticoneTextBox_ssh_sudopw.AccessibleDescription = "A customizable text input field."
+        SiticoneTextBox_ssh_sudopw.AccessibleName = "Text Box"
+        SiticoneTextBox_ssh_sudopw.AccessibleRole = AccessibleRole.Text
+        SiticoneTextBox_ssh_sudopw.BackColor = Color.Transparent
+        SiticoneTextBox_ssh_sudopw.BlinkCount = 3
+        SiticoneTextBox_ssh_sudopw.BlinkShadow = False
+        SiticoneTextBox_ssh_sudopw.BorderColor1 = Color.LightSlateGray
+        SiticoneTextBox_ssh_sudopw.BorderColor2 = Color.LightSlateGray
+        SiticoneTextBox_ssh_sudopw.BorderFocusColor1 = Color.FromArgb(CByte(77), CByte(77), CByte(255))
+        SiticoneTextBox_ssh_sudopw.BorderFocusColor2 = Color.FromArgb(CByte(77), CByte(77), CByte(255))
+        SiticoneTextBox_ssh_sudopw.CanShake = True
+        SiticoneTextBox_ssh_sudopw.ContinuousBlink = False
+        SiticoneTextBox_ssh_sudopw.CursorBlinkRate = 500
+        SiticoneTextBox_ssh_sudopw.CursorColor = Color.Black
+        SiticoneTextBox_ssh_sudopw.CursorHeight = 26
+        SiticoneTextBox_ssh_sudopw.CursorOffset = 0
+        SiticoneTextBox_ssh_sudopw.CursorStyle = SiticoneNetCoreUI.Helpers.DrawingStyle.SiticoneDrawingStyle.Solid
+        SiticoneTextBox_ssh_sudopw.CursorWidth = 1
+        SiticoneTextBox_ssh_sudopw.DisabledBackColor = Color.WhiteSmoke
+        SiticoneTextBox_ssh_sudopw.DisabledBorderColor = Color.LightGray
+        SiticoneTextBox_ssh_sudopw.DisabledTextColor = Color.Gray
+        SiticoneTextBox_ssh_sudopw.EnableDropShadow = False
+        SiticoneTextBox_ssh_sudopw.FillColor1 = Color.White
+        SiticoneTextBox_ssh_sudopw.FillColor2 = Color.White
+        SiticoneTextBox_ssh_sudopw.Font = New Font("Segoe UI", 9.5F)
+        SiticoneTextBox_ssh_sudopw.ForeColor = Color.DimGray
+        SiticoneTextBox_ssh_sudopw.HoverBorderColor1 = Color.Gray
+        SiticoneTextBox_ssh_sudopw.HoverBorderColor2 = Color.Gray
+        SiticoneTextBox_ssh_sudopw.IsEnabled = True
+        SiticoneTextBox_ssh_sudopw.Location = New Point(751, 231)
+        SiticoneTextBox_ssh_sudopw.Name = "SiticoneTextBox_ssh_sudopw"
+        SiticoneTextBox_ssh_sudopw.PlaceholderColor = Color.Gray
+        SiticoneTextBox_ssh_sudopw.PlaceholderText = "Enter Sudo Password here..."
+        SiticoneTextBox_ssh_sudopw.ReadOnlyBorderColor1 = Color.LightGray
+        SiticoneTextBox_ssh_sudopw.ReadOnlyBorderColor2 = Color.LightGray
+        SiticoneTextBox_ssh_sudopw.ReadOnlyFillColor1 = Color.WhiteSmoke
+        SiticoneTextBox_ssh_sudopw.ReadOnlyFillColor2 = Color.WhiteSmoke
+        SiticoneTextBox_ssh_sudopw.ReadOnlyPlaceholderColor = Color.DarkGray
+        SiticoneTextBox_ssh_sudopw.SelectionBackColor = Color.FromArgb(CByte(77), CByte(77), CByte(255))
+        SiticoneTextBox_ssh_sudopw.ShadowAnimationDuration = 1
+        SiticoneTextBox_ssh_sudopw.ShadowBlur = 10
+        SiticoneTextBox_ssh_sudopw.ShadowColor = Color.FromArgb(CByte(15), CByte(0), CByte(0), CByte(0))
+        SiticoneTextBox_ssh_sudopw.Size = New Size(129, 24)
+        SiticoneTextBox_ssh_sudopw.SolidBorderColor = Color.LightSlateGray
+        SiticoneTextBox_ssh_sudopw.SolidBorderFocusColor = Color.FromArgb(CByte(77), CByte(77), CByte(255))
+        SiticoneTextBox_ssh_sudopw.SolidBorderHoverColor = Color.Gray
+        SiticoneTextBox_ssh_sudopw.SolidFillColor = Color.White
+        SiticoneTextBox_ssh_sudopw.TabIndex = 70
+        SiticoneTextBox_ssh_sudopw.TextPadding = New Padding(16, 0, 6, 0)
+        SiticoneTextBox_ssh_sudopw.UseSystemPasswordChar = True
+        SiticoneTextBox_ssh_sudopw.ValidationErrorMessage = "Invalid input."
+        SiticoneTextBox_ssh_sudopw.ValidationFunction = Nothing
+        ' 
+        ' SiticoneTextBox_ssh_regex
+        ' 
+        SiticoneTextBox_ssh_regex.AccessibleDescription = "A customizable text input field."
+        SiticoneTextBox_ssh_regex.AccessibleName = "Text Box"
+        SiticoneTextBox_ssh_regex.AccessibleRole = AccessibleRole.Text
+        SiticoneTextBox_ssh_regex.BackColor = Color.Transparent
+        SiticoneTextBox_ssh_regex.BlinkCount = 3
+        SiticoneTextBox_ssh_regex.BlinkShadow = False
+        SiticoneTextBox_ssh_regex.BorderColor1 = Color.LightSlateGray
+        SiticoneTextBox_ssh_regex.BorderColor2 = Color.LightSlateGray
+        SiticoneTextBox_ssh_regex.BorderFocusColor1 = Color.FromArgb(CByte(77), CByte(77), CByte(255))
+        SiticoneTextBox_ssh_regex.BorderFocusColor2 = Color.FromArgb(CByte(77), CByte(77), CByte(255))
+        SiticoneTextBox_ssh_regex.CanShake = True
+        SiticoneTextBox_ssh_regex.ContinuousBlink = False
+        SiticoneTextBox_ssh_regex.CursorBlinkRate = 500
+        SiticoneTextBox_ssh_regex.CursorColor = Color.Black
+        SiticoneTextBox_ssh_regex.CursorHeight = 26
+        SiticoneTextBox_ssh_regex.CursorOffset = 0
+        SiticoneTextBox_ssh_regex.CursorStyle = SiticoneNetCoreUI.Helpers.DrawingStyle.SiticoneDrawingStyle.Solid
+        SiticoneTextBox_ssh_regex.CursorWidth = 1
+        SiticoneTextBox_ssh_regex.DisabledBackColor = Color.WhiteSmoke
+        SiticoneTextBox_ssh_regex.DisabledBorderColor = Color.LightGray
+        SiticoneTextBox_ssh_regex.DisabledTextColor = Color.Gray
+        SiticoneTextBox_ssh_regex.EnableDropShadow = False
+        SiticoneTextBox_ssh_regex.FillColor1 = Color.White
+        SiticoneTextBox_ssh_regex.FillColor2 = Color.White
+        SiticoneTextBox_ssh_regex.Font = New Font("Segoe UI", 9.5F)
+        SiticoneTextBox_ssh_regex.ForeColor = Color.DimGray
+        SiticoneTextBox_ssh_regex.HoverBorderColor1 = Color.Gray
+        SiticoneTextBox_ssh_regex.HoverBorderColor2 = Color.Gray
+        SiticoneTextBox_ssh_regex.IsEnabled = True
+        SiticoneTextBox_ssh_regex.Location = New Point(169, 231)
+        SiticoneTextBox_ssh_regex.Name = "SiticoneTextBox_ssh_regex"
+        SiticoneTextBox_ssh_regex.PlaceholderColor = Color.Gray
+        SiticoneTextBox_ssh_regex.PlaceholderText = "Enter SSH RegEx here..."
+        SiticoneTextBox_ssh_regex.ReadOnlyBorderColor1 = Color.LightGray
+        SiticoneTextBox_ssh_regex.ReadOnlyBorderColor2 = Color.LightGray
+        SiticoneTextBox_ssh_regex.ReadOnlyFillColor1 = Color.WhiteSmoke
+        SiticoneTextBox_ssh_regex.ReadOnlyFillColor2 = Color.WhiteSmoke
+        SiticoneTextBox_ssh_regex.ReadOnlyPlaceholderColor = Color.DarkGray
+        SiticoneTextBox_ssh_regex.SelectionBackColor = Color.FromArgb(CByte(77), CByte(77), CByte(255))
+        SiticoneTextBox_ssh_regex.ShadowAnimationDuration = 1
+        SiticoneTextBox_ssh_regex.ShadowBlur = 10
+        SiticoneTextBox_ssh_regex.ShadowColor = Color.FromArgb(CByte(15), CByte(0), CByte(0), CByte(0))
+        SiticoneTextBox_ssh_regex.Size = New Size(190, 24)
+        SiticoneTextBox_ssh_regex.SolidBorderColor = Color.LightSlateGray
+        SiticoneTextBox_ssh_regex.SolidBorderFocusColor = Color.FromArgb(CByte(77), CByte(77), CByte(255))
+        SiticoneTextBox_ssh_regex.SolidBorderHoverColor = Color.Gray
+        SiticoneTextBox_ssh_regex.SolidFillColor = Color.White
+        SiticoneTextBox_ssh_regex.TabIndex = 69
+        SiticoneTextBox_ssh_regex.TextPadding = New Padding(16, 0, 6, 0)
+        SiticoneTextBox_ssh_regex.ValidationErrorMessage = "Invalid input."
+        SiticoneTextBox_ssh_regex.ValidationFunction = Nothing
+        ' 
+        ' SiticoneButton_test
+        ' 
+        SiticoneButton_test.AccessibleDescription = "The default button control that accept input though the mouse, touch and keyboard"
+        SiticoneButton_test.AccessibleName = "Test"
+        SiticoneButton_test.AutoSizeBasedOnText = False
+        SiticoneButton_test.BackColor = Color.Transparent
+        SiticoneButton_test.BadgeBackColor = Color.Red
+        SiticoneButton_test.BadgeFont = New Font("Segoe UI", 8F, FontStyle.Bold)
+        SiticoneButton_test.BadgeValue = 0
+        SiticoneButton_test.BadgeValueForeColor = Color.White
+        SiticoneButton_test.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
+        SiticoneButton_test.BorderWidth = 2
+        SiticoneButton_test.ButtonBackColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
+        SiticoneButton_test.ButtonImage = Nothing
+        SiticoneButton_test.ButtonTextLeftPadding = 0
+        SiticoneButton_test.CanBeep = True
+        SiticoneButton_test.CanGlow = False
+        SiticoneButton_test.CanShake = True
+        SiticoneButton_test.ContextMenuStripEx = Nothing
+        SiticoneButton_test.CornerRadiusBottomLeft = 8
+        SiticoneButton_test.CornerRadiusBottomRight = 8
+        SiticoneButton_test.CornerRadiusTopLeft = 8
+        SiticoneButton_test.CornerRadiusTopRight = 8
+        SiticoneButton_test.CustomCursor = Cursors.Default
+        SiticoneButton_test.DisabledTextColor = Color.FromArgb(CByte(150), CByte(150), CByte(150))
+        SiticoneButton_test.EnableLongPress = False
+        SiticoneButton_test.EnablePressAnimation = True
+        SiticoneButton_test.EnableRippleEffect = True
+        SiticoneButton_test.EnableShadow = False
+        SiticoneButton_test.EnableTextWrapping = False
+        SiticoneButton_test.Font = New Font("Segoe UI", 9F)
+        SiticoneButton_test.GlowColor = Color.FromArgb(CByte(100), CByte(255), CByte(255), CByte(255))
+        SiticoneButton_test.GlowIntensity = 100
+        SiticoneButton_test.GlowRadius = 20F
+        SiticoneButton_test.GradientBackground = False
+        SiticoneButton_test.GradientColor = Color.FromArgb(CByte(114), CByte(168), CByte(255))
+        SiticoneButton_test.GradientMode = Drawing2D.LinearGradientMode.Vertical
+        SiticoneButton_test.HintText = Nothing
+        SiticoneButton_test.HoverBackColor = Color.FromArgb(CByte(114), CByte(168), CByte(255))
+        SiticoneButton_test.HoverFontStyle = FontStyle.Regular
+        SiticoneButton_test.HoverTextColor = Color.White
+        SiticoneButton_test.HoverTransitionDuration = 250
+        SiticoneButton_test.ImageAlign = ContentAlignment.MiddleLeft
+        SiticoneButton_test.ImagePadding = 5
+        SiticoneButton_test.ImageSize = New Size(16, 16)
+        SiticoneButton_test.IsRadial = False
+        SiticoneButton_test.IsReadOnly = False
+        SiticoneButton_test.IsToggleButton = False
+        SiticoneButton_test.IsToggled = False
+        SiticoneButton_test.Location = New Point(952, 200)
+        SiticoneButton_test.LongPressDurationMS = 1000
+        SiticoneButton_test.Name = "SiticoneButton_test"
+        SiticoneButton_test.NormalFontStyle = FontStyle.Regular
+        SiticoneButton_test.ParticleColor = Color.FromArgb(CByte(200), CByte(200), CByte(200))
+        SiticoneButton_test.ParticleCount = 15
+        SiticoneButton_test.PressAnimationScale = 0.97F
+        SiticoneButton_test.PressedBackColor = Color.FromArgb(CByte(74), CByte(128), CByte(235))
+        SiticoneButton_test.PressedFontStyle = FontStyle.Regular
+        SiticoneButton_test.PressTransitionDuration = 150
+        SiticoneButton_test.ReadOnlyTextColor = Color.FromArgb(CByte(100), CByte(100), CByte(100))
+        SiticoneButton_test.RippleColor = Color.FromArgb(CByte(255), CByte(255), CByte(255))
+        SiticoneButton_test.RippleOpacity = 0.3F
+        SiticoneButton_test.RippleRadiusMultiplier = 0.6F
+        SiticoneButton_test.ShadowBlur = 5
+        SiticoneButton_test.ShadowColor = Color.FromArgb(CByte(100), CByte(0), CByte(0), CByte(0))
+        SiticoneButton_test.ShadowOffset = New Point(2, 2)
+        SiticoneButton_test.ShakeDuration = 500
+        SiticoneButton_test.ShakeIntensity = 5
+        SiticoneButton_test.Size = New Size(52, 24)
+        SiticoneButton_test.TabIndex = 67
+        SiticoneButton_test.Text = "Test"
+        SiticoneButton_test.TextAlign = ContentAlignment.MiddleCenter
+        SiticoneButton_test.TextColor = Color.White
+        SiticoneButton_test.TooltipText = Nothing
+        SiticoneButton_test.UseAdvancedRendering = True
+        SiticoneButton_test.UseParticles = False
+        ' 
+        ' SiticoneTextBox_ssh_pw
+        ' 
+        SiticoneTextBox_ssh_pw.AccessibleDescription = "A customizable text input field."
+        SiticoneTextBox_ssh_pw.AccessibleName = "Text Box"
+        SiticoneTextBox_ssh_pw.AccessibleRole = AccessibleRole.Text
+        SiticoneTextBox_ssh_pw.BackColor = Color.Transparent
+        SiticoneTextBox_ssh_pw.BlinkCount = 3
+        SiticoneTextBox_ssh_pw.BlinkShadow = False
+        SiticoneTextBox_ssh_pw.BorderColor1 = Color.LightSlateGray
+        SiticoneTextBox_ssh_pw.BorderColor2 = Color.LightSlateGray
+        SiticoneTextBox_ssh_pw.BorderFocusColor1 = Color.FromArgb(CByte(77), CByte(77), CByte(255))
+        SiticoneTextBox_ssh_pw.BorderFocusColor2 = Color.FromArgb(CByte(77), CByte(77), CByte(255))
+        SiticoneTextBox_ssh_pw.CanShake = True
+        SiticoneTextBox_ssh_pw.ContinuousBlink = False
+        SiticoneTextBox_ssh_pw.CursorBlinkRate = 500
+        SiticoneTextBox_ssh_pw.CursorColor = Color.Black
+        SiticoneTextBox_ssh_pw.CursorHeight = 26
+        SiticoneTextBox_ssh_pw.CursorOffset = 0
+        SiticoneTextBox_ssh_pw.CursorStyle = SiticoneNetCoreUI.Helpers.DrawingStyle.SiticoneDrawingStyle.Solid
+        SiticoneTextBox_ssh_pw.CursorWidth = 1
+        SiticoneTextBox_ssh_pw.DisabledBackColor = Color.WhiteSmoke
+        SiticoneTextBox_ssh_pw.DisabledBorderColor = Color.LightGray
+        SiticoneTextBox_ssh_pw.DisabledTextColor = Color.Gray
+        SiticoneTextBox_ssh_pw.EnableDropShadow = False
+        SiticoneTextBox_ssh_pw.FillColor1 = Color.White
+        SiticoneTextBox_ssh_pw.FillColor2 = Color.White
+        SiticoneTextBox_ssh_pw.Font = New Font("Segoe UI", 9.5F)
+        SiticoneTextBox_ssh_pw.ForeColor = Color.DimGray
+        SiticoneTextBox_ssh_pw.HoverBorderColor1 = Color.Gray
+        SiticoneTextBox_ssh_pw.HoverBorderColor2 = Color.Gray
+        SiticoneTextBox_ssh_pw.IsEnabled = True
+        SiticoneTextBox_ssh_pw.Location = New Point(751, 201)
+        SiticoneTextBox_ssh_pw.Name = "SiticoneTextBox_ssh_pw"
+        SiticoneTextBox_ssh_pw.PlaceholderColor = Color.Gray
+        SiticoneTextBox_ssh_pw.PlaceholderText = "Enter SSH Password here..."
+        SiticoneTextBox_ssh_pw.ReadOnlyBorderColor1 = Color.LightGray
+        SiticoneTextBox_ssh_pw.ReadOnlyBorderColor2 = Color.LightGray
+        SiticoneTextBox_ssh_pw.ReadOnlyFillColor1 = Color.WhiteSmoke
+        SiticoneTextBox_ssh_pw.ReadOnlyFillColor2 = Color.WhiteSmoke
+        SiticoneTextBox_ssh_pw.ReadOnlyPlaceholderColor = Color.DarkGray
+        SiticoneTextBox_ssh_pw.SelectionBackColor = Color.FromArgb(CByte(77), CByte(77), CByte(255))
+        SiticoneTextBox_ssh_pw.ShadowAnimationDuration = 1
+        SiticoneTextBox_ssh_pw.ShadowBlur = 10
+        SiticoneTextBox_ssh_pw.ShadowColor = Color.FromArgb(CByte(15), CByte(0), CByte(0), CByte(0))
+        SiticoneTextBox_ssh_pw.Size = New Size(129, 24)
+        SiticoneTextBox_ssh_pw.SolidBorderColor = Color.LightSlateGray
+        SiticoneTextBox_ssh_pw.SolidBorderFocusColor = Color.FromArgb(CByte(77), CByte(77), CByte(255))
+        SiticoneTextBox_ssh_pw.SolidBorderHoverColor = Color.Gray
+        SiticoneTextBox_ssh_pw.SolidFillColor = Color.White
+        SiticoneTextBox_ssh_pw.TabIndex = 66
+        SiticoneTextBox_ssh_pw.TextPadding = New Padding(16, 0, 6, 0)
+        SiticoneTextBox_ssh_pw.UseSystemPasswordChar = True
+        SiticoneTextBox_ssh_pw.ValidationErrorMessage = "Invalid input."
+        SiticoneTextBox_ssh_pw.ValidationFunction = Nothing
+        ' 
+        ' SiticoneTextBox_ssh_user
+        ' 
+        SiticoneTextBox_ssh_user.AccessibleDescription = "A customizable text input field."
+        SiticoneTextBox_ssh_user.AccessibleName = "Text Box"
+        SiticoneTextBox_ssh_user.AccessibleRole = AccessibleRole.Text
+        SiticoneTextBox_ssh_user.BackColor = Color.Transparent
+        SiticoneTextBox_ssh_user.BlinkCount = 3
+        SiticoneTextBox_ssh_user.BlinkShadow = False
+        SiticoneTextBox_ssh_user.BorderColor1 = Color.LightSlateGray
+        SiticoneTextBox_ssh_user.BorderColor2 = Color.LightSlateGray
+        SiticoneTextBox_ssh_user.BorderFocusColor1 = Color.FromArgb(CByte(77), CByte(77), CByte(255))
+        SiticoneTextBox_ssh_user.BorderFocusColor2 = Color.FromArgb(CByte(77), CByte(77), CByte(255))
+        SiticoneTextBox_ssh_user.CanShake = True
+        SiticoneTextBox_ssh_user.ContinuousBlink = False
+        SiticoneTextBox_ssh_user.CursorBlinkRate = 500
+        SiticoneTextBox_ssh_user.CursorColor = Color.Black
+        SiticoneTextBox_ssh_user.CursorHeight = 26
+        SiticoneTextBox_ssh_user.CursorOffset = 0
+        SiticoneTextBox_ssh_user.CursorStyle = SiticoneNetCoreUI.Helpers.DrawingStyle.SiticoneDrawingStyle.Solid
+        SiticoneTextBox_ssh_user.CursorWidth = 1
+        SiticoneTextBox_ssh_user.DisabledBackColor = Color.WhiteSmoke
+        SiticoneTextBox_ssh_user.DisabledBorderColor = Color.LightGray
+        SiticoneTextBox_ssh_user.DisabledTextColor = Color.Gray
+        SiticoneTextBox_ssh_user.EnableDropShadow = False
+        SiticoneTextBox_ssh_user.FillColor1 = Color.White
+        SiticoneTextBox_ssh_user.FillColor2 = Color.White
+        SiticoneTextBox_ssh_user.Font = New Font("Segoe UI", 9.5F)
+        SiticoneTextBox_ssh_user.ForeColor = Color.DimGray
+        SiticoneTextBox_ssh_user.HoverBorderColor1 = Color.Gray
+        SiticoneTextBox_ssh_user.HoverBorderColor2 = Color.Gray
+        SiticoneTextBox_ssh_user.IsEnabled = True
+        SiticoneTextBox_ssh_user.Location = New Point(473, 201)
+        SiticoneTextBox_ssh_user.Name = "SiticoneTextBox_ssh_user"
+        SiticoneTextBox_ssh_user.PlaceholderColor = Color.Gray
+        SiticoneTextBox_ssh_user.PlaceholderText = "Enter SSH User here..."
+        SiticoneTextBox_ssh_user.ReadOnlyBorderColor1 = Color.LightGray
+        SiticoneTextBox_ssh_user.ReadOnlyBorderColor2 = Color.LightGray
+        SiticoneTextBox_ssh_user.ReadOnlyFillColor1 = Color.WhiteSmoke
+        SiticoneTextBox_ssh_user.ReadOnlyFillColor2 = Color.WhiteSmoke
+        SiticoneTextBox_ssh_user.ReadOnlyPlaceholderColor = Color.DarkGray
+        SiticoneTextBox_ssh_user.SelectionBackColor = Color.FromArgb(CByte(77), CByte(77), CByte(255))
+        SiticoneTextBox_ssh_user.ShadowAnimationDuration = 1
+        SiticoneTextBox_ssh_user.ShadowBlur = 10
+        SiticoneTextBox_ssh_user.ShadowColor = Color.FromArgb(CByte(15), CByte(0), CByte(0), CByte(0))
+        SiticoneTextBox_ssh_user.Size = New Size(158, 24)
+        SiticoneTextBox_ssh_user.SolidBorderColor = Color.LightSlateGray
+        SiticoneTextBox_ssh_user.SolidBorderFocusColor = Color.FromArgb(CByte(77), CByte(77), CByte(255))
+        SiticoneTextBox_ssh_user.SolidBorderHoverColor = Color.Gray
+        SiticoneTextBox_ssh_user.SolidFillColor = Color.White
+        SiticoneTextBox_ssh_user.TabIndex = 65
+        SiticoneTextBox_ssh_user.TextPadding = New Padding(16, 0, 6, 0)
+        SiticoneTextBox_ssh_user.ValidationErrorMessage = "Invalid input."
+        SiticoneTextBox_ssh_user.ValidationFunction = Nothing
+        ' 
+        ' SiticoneTextBox_ssh_address
+        ' 
+        SiticoneTextBox_ssh_address.AccessibleDescription = "A customizable text input field."
+        SiticoneTextBox_ssh_address.AccessibleName = "Text Box"
+        SiticoneTextBox_ssh_address.AccessibleRole = AccessibleRole.Text
+        SiticoneTextBox_ssh_address.BackColor = Color.Transparent
+        SiticoneTextBox_ssh_address.BlinkCount = 3
+        SiticoneTextBox_ssh_address.BlinkShadow = False
+        SiticoneTextBox_ssh_address.BorderColor1 = Color.LightSlateGray
+        SiticoneTextBox_ssh_address.BorderColor2 = Color.LightSlateGray
+        SiticoneTextBox_ssh_address.BorderFocusColor1 = Color.FromArgb(CByte(77), CByte(77), CByte(255))
+        SiticoneTextBox_ssh_address.BorderFocusColor2 = Color.FromArgb(CByte(77), CByte(77), CByte(255))
+        SiticoneTextBox_ssh_address.CanShake = True
+        SiticoneTextBox_ssh_address.ContinuousBlink = False
+        SiticoneTextBox_ssh_address.CursorBlinkRate = 500
+        SiticoneTextBox_ssh_address.CursorColor = Color.Black
+        SiticoneTextBox_ssh_address.CursorHeight = 26
+        SiticoneTextBox_ssh_address.CursorOffset = 0
+        SiticoneTextBox_ssh_address.CursorStyle = SiticoneNetCoreUI.Helpers.DrawingStyle.SiticoneDrawingStyle.Solid
+        SiticoneTextBox_ssh_address.CursorWidth = 1
+        SiticoneTextBox_ssh_address.DisabledBackColor = Color.WhiteSmoke
+        SiticoneTextBox_ssh_address.DisabledBorderColor = Color.LightGray
+        SiticoneTextBox_ssh_address.DisabledTextColor = Color.Gray
+        SiticoneTextBox_ssh_address.EnableDropShadow = False
+        SiticoneTextBox_ssh_address.FillColor1 = Color.White
+        SiticoneTextBox_ssh_address.FillColor2 = Color.White
+        SiticoneTextBox_ssh_address.Font = New Font("Segoe UI", 9.5F)
+        SiticoneTextBox_ssh_address.ForeColor = Color.DimGray
+        SiticoneTextBox_ssh_address.HoverBorderColor1 = Color.Gray
+        SiticoneTextBox_ssh_address.HoverBorderColor2 = Color.Gray
+        SiticoneTextBox_ssh_address.IsEnabled = True
+        SiticoneTextBox_ssh_address.Location = New Point(169, 201)
+        SiticoneTextBox_ssh_address.Name = "SiticoneTextBox_ssh_address"
+        SiticoneTextBox_ssh_address.PlaceholderColor = Color.Gray
+        SiticoneTextBox_ssh_address.PlaceholderText = "Enter SSH Address here..."
+        SiticoneTextBox_ssh_address.ReadOnlyBorderColor1 = Color.LightGray
+        SiticoneTextBox_ssh_address.ReadOnlyBorderColor2 = Color.LightGray
+        SiticoneTextBox_ssh_address.ReadOnlyFillColor1 = Color.WhiteSmoke
+        SiticoneTextBox_ssh_address.ReadOnlyFillColor2 = Color.WhiteSmoke
+        SiticoneTextBox_ssh_address.ReadOnlyPlaceholderColor = Color.DarkGray
+        SiticoneTextBox_ssh_address.SelectionBackColor = Color.FromArgb(CByte(77), CByte(77), CByte(255))
+        SiticoneTextBox_ssh_address.ShadowAnimationDuration = 1
+        SiticoneTextBox_ssh_address.ShadowBlur = 10
+        SiticoneTextBox_ssh_address.ShadowColor = Color.FromArgb(CByte(15), CByte(0), CByte(0), CByte(0))
+        SiticoneTextBox_ssh_address.Size = New Size(190, 24)
+        SiticoneTextBox_ssh_address.SolidBorderColor = Color.LightSlateGray
+        SiticoneTextBox_ssh_address.SolidBorderFocusColor = Color.FromArgb(CByte(77), CByte(77), CByte(255))
+        SiticoneTextBox_ssh_address.SolidBorderHoverColor = Color.Gray
+        SiticoneTextBox_ssh_address.SolidFillColor = Color.White
+        SiticoneTextBox_ssh_address.TabIndex = 64
+        SiticoneTextBox_ssh_address.TextPadding = New Padding(16, 0, 6, 0)
+        SiticoneTextBox_ssh_address.ValidationErrorMessage = "Invalid input."
+        SiticoneTextBox_ssh_address.ValidationFunction = Nothing
+        ' 
+        ' SiticoneButton_connectssh
+        ' 
+        SiticoneButton_connectssh.AccessibleDescription = "The default button control that accept input though the mouse, touch and keyboard"
+        SiticoneButton_connectssh.AccessibleName = "Connect"
+        SiticoneButton_connectssh.AutoSizeBasedOnText = False
+        SiticoneButton_connectssh.BackColor = Color.Transparent
+        SiticoneButton_connectssh.BadgeBackColor = Color.Red
+        SiticoneButton_connectssh.BadgeFont = New Font("Segoe UI", 8F, FontStyle.Bold)
+        SiticoneButton_connectssh.BadgeValue = 0
+        SiticoneButton_connectssh.BadgeValueForeColor = Color.White
+        SiticoneButton_connectssh.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
+        SiticoneButton_connectssh.BorderWidth = 2
+        SiticoneButton_connectssh.ButtonBackColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
+        SiticoneButton_connectssh.ButtonImage = Nothing
+        SiticoneButton_connectssh.ButtonTextLeftPadding = 0
+        SiticoneButton_connectssh.CanBeep = True
+        SiticoneButton_connectssh.CanGlow = False
+        SiticoneButton_connectssh.CanShake = True
+        SiticoneButton_connectssh.ContextMenuStripEx = Nothing
+        SiticoneButton_connectssh.CornerRadiusBottomLeft = 8
+        SiticoneButton_connectssh.CornerRadiusBottomRight = 8
+        SiticoneButton_connectssh.CornerRadiusTopLeft = 8
+        SiticoneButton_connectssh.CornerRadiusTopRight = 8
+        SiticoneButton_connectssh.CustomCursor = Cursors.Default
+        SiticoneButton_connectssh.DisabledTextColor = Color.FromArgb(CByte(150), CByte(150), CByte(150))
+        SiticoneButton_connectssh.EnableLongPress = False
+        SiticoneButton_connectssh.EnablePressAnimation = True
+        SiticoneButton_connectssh.EnableRippleEffect = True
+        SiticoneButton_connectssh.EnableShadow = False
+        SiticoneButton_connectssh.EnableTextWrapping = False
+        SiticoneButton_connectssh.Font = New Font("Segoe UI", 9F)
+        SiticoneButton_connectssh.GlowColor = Color.FromArgb(CByte(100), CByte(255), CByte(255), CByte(255))
+        SiticoneButton_connectssh.GlowIntensity = 100
+        SiticoneButton_connectssh.GlowRadius = 20F
+        SiticoneButton_connectssh.GradientBackground = False
+        SiticoneButton_connectssh.GradientColor = Color.FromArgb(CByte(114), CByte(168), CByte(255))
+        SiticoneButton_connectssh.GradientMode = Drawing2D.LinearGradientMode.Vertical
+        SiticoneButton_connectssh.HintText = Nothing
+        SiticoneButton_connectssh.HoverBackColor = Color.FromArgb(CByte(114), CByte(168), CByte(255))
+        SiticoneButton_connectssh.HoverFontStyle = FontStyle.Regular
+        SiticoneButton_connectssh.HoverTextColor = Color.White
+        SiticoneButton_connectssh.HoverTransitionDuration = 250
+        SiticoneButton_connectssh.ImageAlign = ContentAlignment.MiddleLeft
+        SiticoneButton_connectssh.ImagePadding = 5
+        SiticoneButton_connectssh.ImageSize = New Size(16, 16)
+        SiticoneButton_connectssh.IsRadial = False
+        SiticoneButton_connectssh.IsReadOnly = False
+        SiticoneButton_connectssh.IsToggleButton = False
+        SiticoneButton_connectssh.IsToggled = False
+        SiticoneButton_connectssh.Location = New Point(886, 201)
+        SiticoneButton_connectssh.LongPressDurationMS = 1000
+        SiticoneButton_connectssh.Name = "SiticoneButton_connectssh"
+        SiticoneButton_connectssh.NormalFontStyle = FontStyle.Regular
+        SiticoneButton_connectssh.ParticleColor = Color.FromArgb(CByte(200), CByte(200), CByte(200))
+        SiticoneButton_connectssh.ParticleCount = 15
+        SiticoneButton_connectssh.PressAnimationScale = 0.97F
+        SiticoneButton_connectssh.PressedBackColor = Color.FromArgb(CByte(74), CByte(128), CByte(235))
+        SiticoneButton_connectssh.PressedFontStyle = FontStyle.Regular
+        SiticoneButton_connectssh.PressTransitionDuration = 150
+        SiticoneButton_connectssh.ReadOnlyTextColor = Color.FromArgb(CByte(100), CByte(100), CByte(100))
+        SiticoneButton_connectssh.RippleColor = Color.FromArgb(CByte(255), CByte(255), CByte(255))
+        SiticoneButton_connectssh.RippleOpacity = 0.3F
+        SiticoneButton_connectssh.RippleRadiusMultiplier = 0.6F
+        SiticoneButton_connectssh.ShadowBlur = 5
+        SiticoneButton_connectssh.ShadowColor = Color.FromArgb(CByte(100), CByte(0), CByte(0), CByte(0))
+        SiticoneButton_connectssh.ShadowOffset = New Point(2, 2)
+        SiticoneButton_connectssh.ShakeDuration = 500
+        SiticoneButton_connectssh.ShakeIntensity = 5
+        SiticoneButton_connectssh.Size = New Size(60, 24)
+        SiticoneButton_connectssh.TabIndex = 63
+        SiticoneButton_connectssh.Text = "Connect"
+        SiticoneButton_connectssh.TextAlign = ContentAlignment.MiddleCenter
+        SiticoneButton_connectssh.TextColor = Color.White
+        SiticoneButton_connectssh.TooltipText = "Connect to SSH Server"
+        SiticoneButton_connectssh.UseAdvancedRendering = True
+        SiticoneButton_connectssh.UseParticles = False
+        ' 
+        ' WebViewTerminal
+        ' 
+        WebViewTerminal.AllowExternalDrop = True
+        WebViewTerminal.Anchor = AnchorStyles.Top Or AnchorStyles.Bottom Or AnchorStyles.Left Or AnchorStyles.Right
+        WebViewTerminal.CreationProperties = Nothing
+        WebViewTerminal.DefaultBackgroundColor = Color.White
+        WebViewTerminal.Location = New Point(8, 261)
+        WebViewTerminal.Name = "WebViewTerminal"
+        WebViewTerminal.Size = New Size(1401, 385)
+        WebViewTerminal.TabIndex = 62
+        WebViewTerminal.ZoomFactor = 1R
+        ' 
+        ' SiticoneFlatPanel1
+        ' 
+        SiticoneFlatPanel1.BackColor = Color.Transparent
+        SiticoneFlatPanel1.Controls.Add(SiticoneLabel15)
+        SiticoneFlatPanel1.Controls.Add(SiticoneToggleSwitch_sshbot)
+        SiticoneFlatPanel1.Location = New Point(246, 4)
+        SiticoneFlatPanel1.MinimumSize = New Size(20, 20)
+        SiticoneFlatPanel1.Name = "SiticoneFlatPanel1"
+        SiticoneFlatPanel1.Size = New Size(143, 25)
+        SiticoneFlatPanel1.TabIndex = 61
+        ' 
+        ' SiticoneLabel15
+        ' 
+        SiticoneLabel15.BackColor = Color.Transparent
+        SiticoneLabel15.Dock = DockStyle.Right
+        SiticoneLabel15.Font = New Font("Segoe UI", 10F)
+        SiticoneLabel15.Location = New Point(56, 0)
+        SiticoneLabel15.Name = "SiticoneLabel15"
+        SiticoneLabel15.Size = New Size(87, 25)
+        SiticoneLabel15.TabIndex = 55
+        SiticoneLabel15.Text = "Use SSH Bot"
+        SiticoneLabel15.TextAlign = ContentAlignment.MiddleLeft
+        ' 
+        ' SiticoneToggleSwitch_sshbot
+        ' 
+        SiticoneToggleSwitch_sshbot.AccessibleDescription = "A customizable toggle switch that can be turned on or off."
+        SiticoneToggleSwitch_sshbot.AccessibleName = "Siticone Toggle Switch"
+        SiticoneToggleSwitch_sshbot.AccessibleRole = AccessibleRole.CheckButton
+        SiticoneToggleSwitch_sshbot.CanBeep = True
+        SiticoneToggleSwitch_sshbot.CanShake = True
+        SiticoneToggleSwitch_sshbot.DisabledColor = Color.FromArgb(CByte(200), CByte(200), CByte(200))
+        SiticoneToggleSwitch_sshbot.DisallowToggling = False
+        SiticoneToggleSwitch_sshbot.Dock = DockStyle.Left
+        SiticoneToggleSwitch_sshbot.EnableGlowEffect = True
+        SiticoneToggleSwitch_sshbot.ExtraThumbSize = 2
+        SiticoneToggleSwitch_sshbot.IsOn = False
+        SiticoneToggleSwitch_sshbot.IsReadOnly = False
+        SiticoneToggleSwitch_sshbot.IsRequired = False
+        SiticoneToggleSwitch_sshbot.LabelColor = Color.Black
+        SiticoneToggleSwitch_sshbot.LabelFont = New Font("Segoe UI", 9F)
+        SiticoneToggleSwitch_sshbot.Location = New Point(0, 0)
+        SiticoneToggleSwitch_sshbot.Logger = Nothing
+        SiticoneToggleSwitch_sshbot.Name = "SiticoneToggleSwitch_sshbot"
+        SiticoneToggleSwitch_sshbot.OffBackColor1 = Color.FromArgb(CByte(229), CByte(229), CByte(229))
+        SiticoneToggleSwitch_sshbot.OffBackColor2 = Color.FromArgb(CByte(229), CByte(229), CByte(229))
+        SiticoneToggleSwitch_sshbot.OffBorderColor1 = Color.FromArgb(CByte(229), CByte(229), CByte(229))
+        SiticoneToggleSwitch_sshbot.OffBorderColor2 = Color.FromArgb(CByte(229), CByte(229), CByte(229))
+        SiticoneToggleSwitch_sshbot.OffIcon = Nothing
+        SiticoneToggleSwitch_sshbot.OffThumbColor1 = Color.FromArgb(CByte(60), CByte(60), CByte(60))
+        SiticoneToggleSwitch_sshbot.OffThumbColor2 = Color.FromArgb(CByte(60), CByte(60), CByte(60))
+        SiticoneToggleSwitch_sshbot.OnBackColor1 = Color.FromArgb(CByte(26), CByte(115), CByte(232))
+        SiticoneToggleSwitch_sshbot.OnBackColor2 = Color.FromArgb(CByte(26), CByte(115), CByte(232))
+        SiticoneToggleSwitch_sshbot.OnBorderColor1 = Color.FromArgb(CByte(26), CByte(115), CByte(232))
+        SiticoneToggleSwitch_sshbot.OnBorderColor2 = Color.FromArgb(CByte(26), CByte(115), CByte(232))
+        SiticoneToggleSwitch_sshbot.OnIcon = Nothing
+        SiticoneToggleSwitch_sshbot.OnThumbColor1 = Color.White
+        SiticoneToggleSwitch_sshbot.OnThumbColor2 = Color.White
+        SiticoneToggleSwitch_sshbot.PreventToggleOff = False
+        SiticoneToggleSwitch_sshbot.RippleColor = Color.FromArgb(CByte(100), CByte(255), CByte(255), CByte(255))
+        SiticoneToggleSwitch_sshbot.RippleExpansionRate = 2F
+        SiticoneToggleSwitch_sshbot.RippleOpacityDecay = 0.02F
+        SiticoneToggleSwitch_sshbot.Size = New Size(50, 25)
+        SiticoneToggleSwitch_sshbot.TabIndex = 54
+        SiticoneToggleSwitch_sshbot.ToggleOffSoundPath = ""
+        SiticoneToggleSwitch_sshbot.ToggleOnSoundPath = ""
+        SiticoneToggleSwitch_sshbot.ToolTipText = ""
+        SiticoneToggleSwitch_sshbot.TrackDeviceTheme = True
+        ' 
+        ' SiticoneButton_ssh_system
+        ' 
+        SiticoneButton_ssh_system.AccessibleDescription = "The default button control that accept input though the mouse, touch and keyboard"
+        SiticoneButton_ssh_system.AccessibleName = ""
+        SiticoneButton_ssh_system.AutoSizeBasedOnText = False
+        SiticoneButton_ssh_system.BackColor = Color.Transparent
+        SiticoneButton_ssh_system.BadgeBackColor = Color.Red
+        SiticoneButton_ssh_system.BadgeFont = New Font("Segoe UI", 8F, FontStyle.Bold)
+        SiticoneButton_ssh_system.BadgeValue = 0
+        SiticoneButton_ssh_system.BadgeValueForeColor = Color.White
+        SiticoneButton_ssh_system.BorderColor = Color.Gray
+        SiticoneButton_ssh_system.BorderWidth = 2
+        SiticoneButton_ssh_system.ButtonBackColor = Color.FromArgb(CByte(224), CByte(224), CByte(224))
+        SiticoneButton_ssh_system.ButtonImage = My.Resources.Resource_pic.help_16
+        SiticoneButton_ssh_system.ButtonTextLeftPadding = 0
+        SiticoneButton_ssh_system.CanBeep = True
+        SiticoneButton_ssh_system.CanGlow = False
+        SiticoneButton_ssh_system.CanShake = True
+        SiticoneButton_ssh_system.ContextMenuStripEx = Nothing
+        SiticoneButton_ssh_system.CornerRadiusBottomLeft = 8
+        SiticoneButton_ssh_system.CornerRadiusBottomRight = 8
+        SiticoneButton_ssh_system.CornerRadiusTopLeft = 8
+        SiticoneButton_ssh_system.CornerRadiusTopRight = 8
+        SiticoneButton_ssh_system.CustomCursor = Cursors.Default
+        SiticoneButton_ssh_system.DisabledTextColor = Color.FromArgb(CByte(150), CByte(150), CByte(150))
+        SiticoneButton_ssh_system.EnableLongPress = False
+        SiticoneButton_ssh_system.EnablePressAnimation = True
+        SiticoneButton_ssh_system.EnableRippleEffect = True
+        SiticoneButton_ssh_system.EnableShadow = False
+        SiticoneButton_ssh_system.EnableTextWrapping = False
+        SiticoneButton_ssh_system.Font = New Font("Segoe UI", 9F)
+        SiticoneButton_ssh_system.GlowColor = Color.FromArgb(CByte(100), CByte(255), CByte(255), CByte(255))
+        SiticoneButton_ssh_system.GlowIntensity = 100
+        SiticoneButton_ssh_system.GlowRadius = 20F
+        SiticoneButton_ssh_system.GradientBackground = False
+        SiticoneButton_ssh_system.GradientColor = Color.Gray
+        SiticoneButton_ssh_system.GradientMode = Drawing2D.LinearGradientMode.Vertical
+        SiticoneButton_ssh_system.HintText = Nothing
+        SiticoneButton_ssh_system.HoverBackColor = Color.Silver
+        SiticoneButton_ssh_system.HoverFontStyle = FontStyle.Regular
+        SiticoneButton_ssh_system.HoverTextColor = Color.White
+        SiticoneButton_ssh_system.HoverTransitionDuration = 250
+        SiticoneButton_ssh_system.ImageAlign = ContentAlignment.MiddleCenter
+        SiticoneButton_ssh_system.ImagePadding = 5
+        SiticoneButton_ssh_system.ImageSize = New Size(16, 16)
+        SiticoneButton_ssh_system.IsRadial = False
+        SiticoneButton_ssh_system.IsReadOnly = False
+        SiticoneButton_ssh_system.IsToggleButton = False
+        SiticoneButton_ssh_system.IsToggled = False
+        SiticoneButton_ssh_system.Location = New Point(8, 6)
+        SiticoneButton_ssh_system.LongPressDurationMS = 1000
+        SiticoneButton_ssh_system.Name = "SiticoneButton_ssh_system"
+        SiticoneButton_ssh_system.NormalFontStyle = FontStyle.Regular
+        SiticoneButton_ssh_system.ParticleColor = Color.FromArgb(CByte(200), CByte(200), CByte(200))
+        SiticoneButton_ssh_system.ParticleCount = 15
+        SiticoneButton_ssh_system.PressAnimationScale = 0.97F
+        SiticoneButton_ssh_system.PressedBackColor = Color.FromArgb(CByte(74), CByte(128), CByte(235))
+        SiticoneButton_ssh_system.PressedFontStyle = FontStyle.Regular
+        SiticoneButton_ssh_system.PressTransitionDuration = 150
+        SiticoneButton_ssh_system.ReadOnlyTextColor = Color.FromArgb(CByte(100), CByte(100), CByte(100))
+        SiticoneButton_ssh_system.RippleColor = Color.FromArgb(CByte(255), CByte(255), CByte(255))
+        SiticoneButton_ssh_system.RippleOpacity = 0.3F
+        SiticoneButton_ssh_system.RippleRadiusMultiplier = 0.6F
+        SiticoneButton_ssh_system.ShadowBlur = 5
+        SiticoneButton_ssh_system.ShadowColor = Color.FromArgb(CByte(100), CByte(0), CByte(0), CByte(0))
+        SiticoneButton_ssh_system.ShadowOffset = New Point(2, 2)
+        SiticoneButton_ssh_system.ShakeDuration = 500
+        SiticoneButton_ssh_system.ShakeIntensity = 5
+        SiticoneButton_ssh_system.Size = New Size(30, 24)
+        SiticoneButton_ssh_system.TabIndex = 58
+        SiticoneButton_ssh_system.TextAlign = ContentAlignment.MiddleCenter
+        SiticoneButton_ssh_system.TextColor = Color.White
+        ToolTip1.SetToolTip(SiticoneButton_ssh_system, "Help")
+        SiticoneButton_ssh_system.TooltipText = Nothing
+        SiticoneButton_ssh_system.UseAdvancedRendering = True
+        SiticoneButton_ssh_system.UseParticles = False
+        ' 
+        ' SiticoneLabel3
+        ' 
+        SiticoneLabel3.BackColor = Color.Transparent
+        SiticoneLabel3.Font = New Font("Segoe UI", 10F)
+        SiticoneLabel3.Location = New Point(44, 8)
+        SiticoneLabel3.Name = "SiticoneLabel3"
+        SiticoneLabel3.Size = New Size(170, 21)
+        SiticoneLabel3.TabIndex = 56
+        SiticoneLabel3.Text = "SSH Bot System Prompt:"
+        ' 
+        ' SiticoneTextArea_ssh_system
+        ' 
+        SiticoneTextArea_ssh_system.Anchor = AnchorStyles.Top Or AnchorStyles.Left Or AnchorStyles.Right
+        SiticoneTextArea_ssh_system.BackColor = SystemColors.GradientInactiveCaption
+        SiticoneTextArea_ssh_system.BorderStyle = BorderStyle.None
+        SiticoneTextArea_ssh_system.Font = New Font("Century Gothic", 10F)
+        SiticoneTextArea_ssh_system.Location = New Point(8, 32)
+        SiticoneTextArea_ssh_system.Margin = New Padding(5)
+        SiticoneTextArea_ssh_system.MinimumSize = New Size(100, 65)
+        SiticoneTextArea_ssh_system.Multiline = True
+        SiticoneTextArea_ssh_system.Name = "SiticoneTextArea_ssh_system"
+        SiticoneTextArea_ssh_system.PlaceholderText = "Write addition Prompt here..."
+        SiticoneTextArea_ssh_system.ScrollBars = ScrollBars.Vertical
+        SiticoneTextArea_ssh_system.Size = New Size(1401, 65)
+        SiticoneTextArea_ssh_system.TabIndex = 57
         ' 
         ' SiticoneLabel_host
         ' 
@@ -6408,6 +7814,12 @@ Partial Class Form1
         SiticoneSplitContainer_runcont.Panel2.PerformLayout()
         CType(SiticoneSplitContainer_runcont, ComponentModel.ISupportInitialize).EndInit()
         SiticoneSplitContainer_runcont.ResumeLayout(False)
+        TabPage_sshbot.ResumeLayout(False)
+        TabPage_sshbot.PerformLayout()
+        SiticoneFlatPanel3.ResumeLayout(False)
+        SiticoneFlatPanel2.ResumeLayout(False)
+        CType(WebViewTerminal, ComponentModel.ISupportInitialize).EndInit()
+        SiticoneFlatPanel1.ResumeLayout(False)
         SiticonePanel_prompt.ResumeLayout(False)
         SiticonePanel_prompt.PerformLayout()
         SiticonePanel_prompt_action.ResumeLayout(False)
@@ -6458,7 +7870,7 @@ Partial Class Form1
     Friend WithEvents MySiticoneLicenseSettings1 As SiticoneNetCoreUI.MySiticoneLicenseSettings
     Friend WithEvents SiticoneButton_save_parameter As SiticoneNetCoreUI.SiticoneButton
     Friend WithEvents SiticoneButton_load_parameter As SiticoneNetCoreUI.SiticoneButton
-    Friend WithEvents SiticoneButton2 As SiticoneNetCoreUI.SiticoneButton
+    Friend WithEvents SiticoneButton_ssh_par As SiticoneNetCoreUI.SiticoneButton
     Friend WithEvents SiticoneButton_load_execute As SiticoneNetCoreUI.SiticoneButton
     Friend WithEvents SiticoneButton_save_execute As SiticoneNetCoreUI.SiticoneButton
     Friend WithEvents SiticoneTextBox_timeout As SiticoneNetCoreUI.SiticoneTextBox
@@ -6582,5 +7994,42 @@ Partial Class Form1
     Friend WithEvents SiticoneButton_LLM As SiticoneNetCoreUI.SiticoneButton
     Friend WithEvents SiticoneButton_nav_clear As SiticoneNetCoreUI.SiticoneButton
     Friend WithEvents Timer_LLM_progress As Timer
+    Friend WithEvents TabPage_sshbot As TabPage
+    Friend WithEvents SiticoneFlatPanel1 As SiticoneNetCoreUI.SiticoneFlatPanel
+    Friend WithEvents SiticoneLabel15 As SiticoneNetCoreUI.SiticoneLabel
+    Friend WithEvents SiticoneToggleSwitch_sshbot As SiticoneNetCoreUI.SiticoneToggleSwitch
+    Friend WithEvents SiticoneButton_ssh_system As SiticoneNetCoreUI.SiticoneButton
+    Friend WithEvents SiticoneLabel3 As SiticoneNetCoreUI.SiticoneLabel
+    Friend WithEvents SiticoneTextArea_ssh_system As SiticoneNetCoreUI.SiticoneTextArea
+    Friend WithEvents WebViewTerminal As Microsoft.Web.WebView2.WinForms.WebView2
+    Friend WithEvents SiticoneButton_connectssh As SiticoneNetCoreUI.SiticoneButton
+    Friend WithEvents SiticoneTextBox_ssh_address As SiticoneNetCoreUI.SiticoneTextBox
+    Friend WithEvents SiticoneTextBox_ssh_user As SiticoneNetCoreUI.SiticoneTextBox
+    Friend WithEvents SiticoneTextBox_ssh_pw As SiticoneNetCoreUI.SiticoneTextBox
+    Friend WithEvents SiticoneButton_test As SiticoneNetCoreUI.SiticoneButton
+    Friend WithEvents SiticoneTextBox_ssh_regex As SiticoneNetCoreUI.SiticoneTextBox
+    Friend WithEvents SiticoneTextBox_ssh_pwrequest As SiticoneNetCoreUI.SiticoneTextBox
+    Friend WithEvents SiticoneTextBox_ssh_sudopw As SiticoneNetCoreUI.SiticoneTextBox
+    Friend WithEvents SiticoneTextBox_ssh_timeout As SiticoneNetCoreUI.SiticoneTextBox
+    Friend WithEvents SiticoneFlatPanel2 As SiticoneNetCoreUI.SiticoneFlatPanel
+    Friend WithEvents SiticoneLabel14 As SiticoneNetCoreUI.SiticoneLabel
+    Friend WithEvents SiticoneToggleSwitch_sshautoexecute As SiticoneNetCoreUI.SiticoneToggleSwitch
+    Friend WithEvents SiticoneTextBox_ssh_maxi As SiticoneNetCoreUI.SiticoneTextBox
+    Friend WithEvents SiticoneFlatPanel3 As SiticoneNetCoreUI.SiticoneFlatPanel
+    Friend WithEvents SiticoneLabel16 As SiticoneNetCoreUI.SiticoneLabel
+    Friend WithEvents SiticoneToggleSwitch_sshreinsert As SiticoneNetCoreUI.SiticoneToggleSwitch
+    Friend WithEvents SiticoneTextArea_ssh_response As SiticoneNetCoreUI.SiticoneTextArea
+    Friend WithEvents SiticoneButton_ssh_response As SiticoneNetCoreUI.SiticoneButton
+    Friend WithEvents SiticoneLabel17 As SiticoneNetCoreUI.SiticoneLabel
+    Friend WithEvents SiticoneLabel18 As SiticoneNetCoreUI.SiticoneLabel
+    Friend WithEvents SiticoneLabel21 As SiticoneNetCoreUI.SiticoneLabel
+    Friend WithEvents SiticoneLabel20 As SiticoneNetCoreUI.SiticoneLabel
+    Friend WithEvents SiticoneLabel19 As SiticoneNetCoreUI.SiticoneLabel
+    Friend WithEvents SiticoneLabel23 As SiticoneNetCoreUI.SiticoneLabel
+    Friend WithEvents SiticoneLabel22 As SiticoneNetCoreUI.SiticoneLabel
+    Friend WithEvents SiticoneLabel24 As SiticoneNetCoreUI.SiticoneLabel
+    Friend WithEvents SiticoneLabel25 As SiticoneNetCoreUI.SiticoneLabel
+    Friend WithEvents SiticoneButton_load_ssh As SiticoneNetCoreUI.SiticoneButton
+    Friend WithEvents SiticoneButton_save_ssh As SiticoneNetCoreUI.SiticoneButton
 
 End Class

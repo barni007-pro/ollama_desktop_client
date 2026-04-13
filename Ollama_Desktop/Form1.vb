@@ -26,7 +26,9 @@ Imports Ollama_Desktop.My.Resources
 Imports ScintillaNET
 Imports SiticoneNetCoreUI
 Imports UglyToad.PdfPig
-
+Imports Renci.SshNet
+Imports Renci.SshNet.Common
+Imports System.Text.Json.Nodes
 
 Public Class Form1
     'Public fileContent As String = ""
@@ -130,7 +132,9 @@ Public Class Form1
         Public Property code_path As String
         Public Property tools_path As String
         Public Property rag_path As String
+        Public Property ssh_path As String
     End Class
+
     Public SettingsInfo_dic As Dictionary(Of String, SettingsInfo)
 
     Public APP_Start = True
@@ -143,6 +147,18 @@ Public Class Form1
     Private logFilePath As String = IO.Path.Combine(IO.Path.GetTempPath(), "OllamaDesktop_LiveLog.txt")
     Private logLock As New Object() ' Verhindert Abstürze, wenn zwei Threads gleichzeitig loggen wollen
 
+    ' SSH Terminal in WebView2 
+    Private _sshClient As SshClient
+    Private _shellStream As ShellStream
+    Private _cts As CancellationTokenSource
+    ' Variablen für den SSH LLM-Rückkanal
+    Private _llmBuffer As New StringBuilder()
+    Private _bufferLock As New Object()
+
+    Private currentErrMultiline As String
+    Private currentErrFormat As String
+    Private currentErrDenied As String
+
     Private Async Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         ' --- Log-Datei bei jedem Programmstart leeren ---
         Try
@@ -154,6 +170,10 @@ Public Class Form1
         ' -----------------------------------------------------
         Await InitializeWebView2()
         WebView21.CoreWebView2.Settings.IsScriptEnabled = True
+
+        ' WebView2 SSH Terminal initialisieren
+        Await InitializeWebViewTerminal()
+
         'ToolTip1.SetToolTip(SiticoneCheckBox_temperature, "Bedeutung: Beeinflusst die Streuung der Wahrscheinlichkeiten für die Auswahl von Vorschlägen." & vbCrLf & "Beispiel: `temperature = 0.8` sorgt für eine moderate Zufälligkeit in den Auswahlmöglichkeiten.")
         'ToolTip1.SetToolTip(SiticoneCheckBox_top_p, "Bedeutung: Diese Parameter steuern die Auswahl der Vorschläge." & vbCrLf & "Beispiel: `top_p = 0.9` berücksichtigt die Kandidaten, bis eine kumulierte Wahrscheinlichkeit von 90% erreicht ist.")
         'ToolTip1.SetToolTip(SiticoneCheckBox_top_k, "Bedeutung: Diese Parameter steuern die Auswahl der Vorschläge." & vbCrLf & "Beispiel: `top_k = 20` wählt nur aus den besten 20 Wahrscheinlichkeiten.")
@@ -165,6 +185,7 @@ Public Class Form1
         SiticoneDropdown_API.SelectedIndex = 0
         'SiticoneSplitContainer_main.SplitterDistance = 720
         SiticoneSplitContainer_runcont.SplitterDistance = 495
+
 
         ' Auslesen von Name und Version
         Dim programName As String = My.Application.Info.Title ' Alternativ: My.Application.Info.AssemblyName
@@ -222,6 +243,20 @@ Public Class Form1
 
         SiticoneTextArea_Rag_system.Text = My.Settings.rag_system
         Scintilla_Rag_Json.Text = My.Settings.rag_json
+
+        SiticoneTextArea_ssh_system.Text = My.Settings.ssh_system
+        SiticoneTextArea_ssh_response.Text = My.Settings.ssh_response
+        SiticoneTextBox_ssh_address.Text = My.Settings.ssh_address
+        SiticoneTextBox_ssh_user.Text = My.Settings.ssh_user
+        SiticoneTextBox_ssh_pw.Text = My.Settings.ssh_pw
+        SiticoneTextBox_ssh_regex.Text = My.Settings.ssh_regex
+        SiticoneTextBox_ssh_pwrequest.Text = My.Settings.ssh_pwrequest
+        SiticoneTextBox_ssh_sudopw.Text = My.Settings.ssh_sudopw
+        SiticoneTextBox_ssh_timeout.Text = My.Settings.ssh_timeout
+        SiticoneTextBox_ssh_maxi.Text = My.Settings.ssh_maxi
+        currentErrMultiline = My.Settings.currentErrMultiline
+        currentErrFormat = My.Settings.currentErrFormat
+        currentErrDenied = My.Settings.currentErrDenied
 
         SiticoneNavbar_tab.Visible = My.Settings.show_menue
 
@@ -379,8 +414,21 @@ Public Class Form1
         My.Settings.rag_system = SiticoneTextArea_Rag_system.Text
         My.Settings.rag_json = Scintilla_Rag_Json.Text
 
-        My.Settings.LLM_seting = SiticonePanel_llm_setting.Visible
+        My.Settings.ssh_system = SiticoneTextArea_ssh_system.Text
+        My.Settings.ssh_response = SiticoneTextArea_ssh_response.Text
+        My.Settings.ssh_address = SiticoneTextBox_ssh_address.Text
+        My.Settings.ssh_user = SiticoneTextBox_ssh_user.Text
+        My.Settings.ssh_pw = SiticoneTextBox_ssh_pw.Text
+        My.Settings.ssh_regex = SiticoneTextBox_ssh_regex.Text
+        My.Settings.ssh_pwrequest = SiticoneTextBox_ssh_pwrequest.Text
+        My.Settings.ssh_sudopw = SiticoneTextBox_ssh_sudopw.Text
+        My.Settings.ssh_timeout = SiticoneTextBox_ssh_timeout.Text
+        My.Settings.ssh_maxi = SiticoneTextBox_ssh_maxi.Text
+        My.Settings.currentErrMultiline = currentErrMultiline
+        My.Settings.currentErrFormat = currentErrFormat
+        My.Settings.currentErrDenied = currentErrDenied
 
+        My.Settings.LLM_seting = SiticonePanel_llm_setting.Visible
         My.Settings.LLM_model_info = New Specialized.StringCollection()
         My.Settings.LLM_model_info.AddRange(model_info.ToArray())
         My.Settings.LLM_model_index = SiticoneDropdown_model.SelectedIndex
@@ -485,117 +533,216 @@ Public Class Form1
     End Sub
 
     Private Async Sub SiticonePlayPauseButton_request_StateChanged(sender As Object, e As EventArgs) Handles SiticonePlayPauseButton_request.StateChanged
-        AppLog($"[DEBUG-StateChanged] ---> StateChanged EVENT GEFEUERT! IsPlaying ist jetzt: {SiticonePlayPauseButton_request.IsPlaying}")
+        AppLog($"[DEBUG-StateChanged] ---> StateChanged EVENT GEFEUERT! IsPlaying: {SiticonePlayPauseButton_request.IsPlaying}")
 
         ' 1. Abbruch-Logik
         If Not SiticonePlayPauseButton_request.IsPlaying Then
-            AppLog("[DEBUG-StateChanged] Button steht auf Pause/Stop. Breche ab (falls Token vorhanden).")
-            If cancellationTokenSource IsNot Nothing Then
-                cancellationTokenSource.Cancel()
-                AppLog("[DEBUG-StateChanged] cancellationTokenSource.Cancel() wurde ausgeführt.")
-            End If
+            AppLog("[DEBUG-StateChanged] Button auf Pause. Breche ab.")
+            If cancellationTokenSource IsNot Nothing Then cancellationTokenSource.Cancel()
             Exit Sub
         End If
 
         ' 2. Die Sperre
         If isRequestRunning Then
-            AppLog("[DEBUG-StateChanged] BLOCKIERT: Ein Request läuft bereits, zweiter Aufruf wird ignoriert!")
+            AppLog("[DEBUG-StateChanged] BLOCKIERT: Request läuft bereits.")
             Exit Sub
         End If
 
+        ' Bei SSH-Bot unbedingt auch den Context Speicher aktivieren, damit die KI ihr Gedächtnis behält und nicht bei jedem Schritt von Null startet.
+        If SiticoneToggleSwitch_sshbot.Checked Then
+            SiticoneToggleSwitch_last_context.Checked = True
+        End If
+
         isRequestRunning = True
-        AppLog("[DEBUG-StateChanged] Sperre aktiviert (isRequestRunning = True). Starte Verarbeitung...")
+        AppLog("[DEBUG-StateChanged] Sperre aktiviert. Starte Agent-Loop...")
 
         Try
-            SiticoneTextBox_request_answer.Text = ""
-            Dim prompt = SiticoneTextArea_prompt.Text.Trim
+            Dim iterationCount As Integer = 0
+            Dim maxIterations As Integer = Val(SiticoneTextBox_ssh_maxi.Text) ' Sicherheitsgrenze gegen Endlosschleifen
+            Dim continueLoop As Boolean = True
 
-            ' --- OLLAMA API SONDERBEFEHLE ---
-            If prompt.StartsWith("ollama") Then
-                AppLog("[DEBUG-StateChanged] Ollama Sonderbefehl erkannt. Beende StateChanged frühzeitig.")
+            ' --- Das ursprüngliche Ziel für das Goal-Anchoring sichern ---
+            Dim originalGoal As String = SiticoneTextArea_prompt.Text.Trim()
 
-                Dim apiBaseUrl = "http://" & SiticoneTextBox_host.Text & "/api"
-                Dim parts = prompt.Split(" "c)
+            While continueLoop AndAlso SiticonePlayPauseButton_request.IsPlaying
+                iterationCount += 1
+                AppLog($"[DEBUG-StateChanged] Agent Durchgang #{iterationCount}")
 
-                If parts.Length >= 3 Then
-                    Dim command = parts(1).ToLower
-                    Dim model = parts(2)
+                CodeBlock_List.Clear()
 
-                    Select Case command
-                        Case "rm", "delete" : Await OllamaDeleteModel(apiBaseUrl, model)
-                        Case "pull", "run" : Await OllamaPullModel(apiBaseUrl, model)
-                        Case Else : Scintilla_response.Text = "Unknown ollama command: " & command
-                    End Select
-                Else
-                    Scintilla_response.Text = "Syntax: ollama [rm|pull] MODELNAME"
+                SiticoneTextBox_request_answer.Text = ""
+                Dim prompt = SiticoneTextArea_prompt.Text.Trim
+
+                ' --- OLLAMA API SONDERBEFEHLE (Nur beim ersten Start prüfen) ---
+                If iterationCount = 1 AndAlso prompt.StartsWith("ollama") Then
+                    AppLog("[DEBUG-StateChanged] Ollama Sonderbefehl erkannt.")
+                    Dim apiBaseUrl = "http://" & SiticoneTextBox_host.Text & "/api"
+                    Dim parts = prompt.Split(" "c)
+                    If parts.Length >= 3 Then
+                        Dim command = parts(1).ToLower
+                        Dim model = parts(2)
+                        Select Case command
+                            Case "rm", "delete" : Await OllamaDeleteModel(apiBaseUrl, model)
+                            Case "pull", "run" : Await OllamaPullModel(apiBaseUrl, model)
+                            Case Else : Scintilla_response.Text = "Unknown ollama command: " & command
+                        End Select
+                    End If
+                    SiticoneTabControl_tab.SelectedTab = TabPage_responsemd
+                    Exit While ' Beendet den Loop
                 End If
 
-                SiticoneTabControl_tab.SelectedTab = TabPage_responsemd
-
-                ' Exit Sub springt jetzt direkt in den Finally-Block, 
-                ' wo die UI und isRequestRunning sauber zurückgesetzt werden!
-                Exit Sub
-            End If
-
-            ' --- NORMALE LLM-ANFRAGE ---
-            If SiticoneToggleSwitch_tools.Checked Or SiticoneToggleSwitch_ragtools.Checked Then
-                extractedContext.Clear()
-            End If
-
-            ' SICHERHEIT: Tools-Variable zurücksetzen
-            ToolsCodeBlockJson = "empty"
-
-            AppLog("[DEBUG-StateChanged] Rufe ERSTES MainAsync() auf...")
-            Await MainAsync()
-            AppLog($"[DEBUG-StateChanged] ERSTES MainAsync() ist fertig! ToolsCodeBlockJson = '{ToolsCodeBlockJson}'")
-
-            ' --- TOOLS / RAG VERARBEITUNG ---
-            If ToolsCodeBlockJson <> "empty" Then
-                AppLog("[DEBUG-StateChanged] ToolsCodeBlockJson ist NICHT empty. Starte Tool-Verarbeitung...")
-
-                If SiticoneToggleSwitch_tools.Checked Or SiticoneToggleSwitch_ragtools.Checked Then
-                    extractedContext.Clear()
-                    tools_Response_mem = python_code_run(Scintilla_Tools_pythoncode.Text, ToolsCodeBlockJson)
+                ' --- NORMALE LLM-ANFRAGE ---
+                ' --- KONTEXT-SPEICHER VORBEREITEN ---
+                ' WICHTIG: Nur bei der ersten Anfrage löschen, damit die KI 
+                ' während einer laufenden Aufgabe (ab Durchgang 2) ihr Gedächtnis behält!
+                If iterationCount = 1 Then
+                    If SiticoneToggleSwitch_tools.Checked Or SiticoneToggleSwitch_ragtools.Checked Or SiticoneToggleSwitch_sshbot.Checked Then
+                        extractedContext.Clear()
+                        AppLog("[DEBUG-StateChanged] Kontext-Speicher für den Start einer neuen Agenten-Aufgabe geleert.")
+                    End If
                 End If
 
-                If SiticoneToggleSwitch_ragtools.Checked Then
-                    documentIndex.ResetHits()
-                    ProcessLLMResponse(ToolsCodeBlockJson, SiticoneDropdown_delta_val.SelectedIndex)
-                    tools_Response_mem = ""
-                    Dim HITS = documentIndex.GetSentencesWithHits
-                    SiticoneLabel_HitCountVal.Text = HITS.Count.ToString
-                    For Each HIT In HITS
-                        tools_Response_mem &= HIT.Text & vbCrLf
-                    Next
-                End If
+                ToolsCodeBlockJson = "empty"
 
-                ClearFileChips()
-
-                Try
-                    Dim jsonObj = JsonConvert.DeserializeObject(Of Object)(tools_Response_mem)
-                    tools_Response_mem = JsonConvert.SerializeObject(jsonObj, Formatting.None)
-                    CreateAndAddFileChip("tools_response.json", "json", tools_Response_mem)
-                Catch ex As Exception
-                    CreateAndAddFileChip("tools_response.txt", "txt", tools_Response_mem)
-                End Try
-
-                SiticoneTextArea_prompt_TextChanged(Nothing, Nothing)
-                SiticoneToggleSwitch_tools.Checked = False
-                SiticoneToggleSwitch_ragtools.Checked = False
-
-                AppLog("[DEBUG-StateChanged] Rufe ZWEITES MainAsync() auf (mit Tool-Ergebnissen)...")
+                AppLog($"[DEBUG-StateChanged] Rufe MainAsync (Schritt {iterationCount})...")
                 Await MainAsync()
-                AppLog("[DEBUG-StateChanged] ZWEITES MainAsync() ist fertig!")
-            End If
+
+                ' --- TOOLS / RAG VERARBEITUNG ---
+                If ToolsCodeBlockJson <> "empty" Then
+                    AppLog("[DEBUG-StateChanged] Starte Tool/RAG-Verarbeitung...")
+
+                    If SiticoneToggleSwitch_tools.Checked Or SiticoneToggleSwitch_ragtools.Checked Then
+                        extractedContext.Clear()
+                        tools_Response_mem = python_code_run(Scintilla_Tools_pythoncode.Text, ToolsCodeBlockJson)
+                    End If
+
+                    If SiticoneToggleSwitch_ragtools.Checked Then
+                        documentIndex.ResetHits()
+                        ProcessLLMResponse(ToolsCodeBlockJson, SiticoneDropdown_delta_val.SelectedIndex)
+                        tools_Response_mem = ""
+                        Dim HITS = documentIndex.GetSentencesWithHits
+                        SiticoneLabel_HitCountVal.Text = HITS.Count.ToString
+                        For Each HIT In HITS : tools_Response_mem &= HIT.Text & vbCrLf : Next
+                    End If
+
+                    ClearFileChips()
+                    Try
+                        Dim jsonObj = JsonConvert.DeserializeObject(Of Object)(tools_Response_mem)
+                        tools_Response_mem = JsonConvert.SerializeObject(jsonObj, Formatting.None)
+                        CreateAndAddFileChip("tools_response.json", "json", tools_Response_mem)
+                    Catch
+                        CreateAndAddFileChip("tools_response.txt", "txt", tools_Response_mem)
+                    End Try
+
+                    SiticoneTextArea_prompt_TextChanged(Nothing, Nothing)
+                    SiticoneToggleSwitch_tools.Checked = False
+                    SiticoneToggleSwitch_ragtools.Checked = False
+
+                    ' Nach Tool-Verarbeitung muss die Schleife weiterlaufen, um das Ergebnis zu verarbeiten
+                    Continue While
+                End If
+
+                ' --- SSH BOT VERARBEITUNG ---
+                If SiticoneToggleSwitch_sshbot.Checked Then
+                    ' Wir suchen den ersten sh/bash Block in der CodeBlock_List
+                    Dim sshBlock = CodeBlock_List.FirstOrDefault(Function(cb) cb.Language.ToLower() = "sh" Or cb.Language.ToLower() = "bash")
+
+                    If sshBlock IsNot Nothing Then
+                        ' ==========================================
+                        ' ZUSTAND 1: BEFEHL GEFUNDEN (Normaler Loop)
+                        ' ==========================================
+                        Dim sshCommand = sshBlock.Code.Trim()
+                        AppLog("[DEBUG-StateChanged] SSH Befehl erkannt: " & sshCommand)
+
+                        Dim darfAusgefuehrtWerden As Boolean = True
+
+                        ' Sicherheitsabfrage (Human-in-the-Loop)
+                        If Not SiticoneToggleSwitch_sshautoexecute.Checked Then
+                            Dim msg = "Befehl ausführen?" & vbCrLf & vbCrLf & sshCommand
+                            If MessageBox.Show(msg, "SSH Sicherheit", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) = DialogResult.No Then
+                                darfAusgefuehrtWerden = False
+                            End If
+                        End If
+
+                        Dim sshResult As String
+
+                        ' --- AGENTEN-ERZIEHUNG (FAILSAFE FÜR MEHRZEILER) ---
+                        If sshCommand.Contains(vbLf) Then
+                            AppLog("[DEBUG-StateChanged] LLM hat mehrzeiligen Block gesendet. Blockiere Ausführung!")
+                            darfAusgefuehrtWerden = False
+                            sshResult = currentErrMultiline
+                        End If
+
+                        If darfAusgefuehrtWerden Then
+                            SiticoneTextBox_request_answer.Text = "SSH Executing: " & sshCommand
+                            ' Ausführung mit Timeout aus der TextBox
+                            sshResult = Await ExecuteCommandAndWaitAsync(sshCommand, Val(SiticoneTextBox_ssh_timeout.Text))
+                        ElseIf Not sshCommand.Contains(vbLf) Then ' Verhindert Überschreiben der Failsafe-Meldung
+                            AppLog("[DEBUG-StateChanged] SSH blockiert.")
+                            sshResult = currentErrDenied
+                        End If
+
+                        ' Ergebnis vorbereiten
+                        Dim cleanResult = sshResult.Replace(vbCr, "").Replace(vbLf, vbCrLf)
+
+                        ' --- Goal Anchoring ---
+                        SiticoneTextArea_prompt.Text = SiticoneTextArea_ssh_response.Text _
+                          .Replace("{original_prompt}", originalGoal) _
+                          .Replace("{command}", sshCommand) _
+                          .Replace("{response}", cleanResult)
+
+                        If iterationCount >= maxIterations Then
+                            AppLog("[DEBUG-StateChanged] Agent Maximum an Schritten erreicht.")
+                            continueLoop = False
+                        End If
+
+                    ElseIf response_mem.Contains("[ZIEL ERREICHT]") OrElse response_mem.Contains("[GOAL ACHIEVED]") Then
+                        ' ==========================================
+                        ' ZUSTAND 2: AUFGABE ERFOLGREICH BEENDET
+                        ' ==========================================
+                        AppLog("[DEBUG-StateChanged] Agent meldet [ZIEL ERREICHT]. Aufgabe beendet.")
+                        continueLoop = False
+
+                        ' Da der Loop hier False ist, stoppt die Automatik. 
+                        ' Dein MainAsync Tab-Wechsel-Code springt auf die HTML-Seite und der User liest den Bericht.
+
+                    Else
+                        ' ==========================================
+                        ' ZUSTAND 3: REGELVERSTOSS (Formatierungs-Fehler)
+                        ' ==========================================
+                        AppLog("[DEBUG-StateChanged] Warnung: Kein bash-Block und kein Abschluss-Flag. Erziehe KI...")
+
+                        Dim fehlerMeldung As String = currentErrFormat
+
+                        ' Wir generieren den nächsten Prompt, als wäre der Fehler eine Terminal-Ausgabe
+                        SiticoneTextArea_prompt.Text = SiticoneTextArea_ssh_response.Text _
+                          .Replace("{original_prompt}", originalGoal) _
+                          .Replace("{command}", "[FEHLENDER BEFEHL]") _
+                          .Replace("{response}", fehlerMeldung)
+
+                        If iterationCount >= maxIterations Then
+                            AppLog("[DEBUG-StateChanged] Agent Maximum an Schritten erreicht (beim Format-Failsafe).")
+                            continueLoop = False
+                        End If
+
+                        ' WICHTIG: continueLoop bleibt hier standardmäßig True! 
+                        ' Das LLM wird sofort wieder aufgerufen, bekommt die Fehlermeldung und korrigiert sich selbst.
+                    End If
+                Else
+                    ' Wenn weder Tools noch SSH aktiv sind, nach dem ersten Durchlauf stoppen
+                    continueLoop = False
+                End If
+
+                ' Kurze Pause, um das UI atmen zu lassen
+                Await Task.Delay(500)
+            End While
 
         Finally
-            AppLog("[DEBUG-StateChanged] <--- FINALLY-Block von StateChanged erreicht.")
+            AppLog("[DEBUG-StateChanged] <--- FINALLY. Agent-Loop beendet.")
             If SiticonePlayPauseButton_request.IsPlaying Then
-                AppLog("[DEBUG-StateChanged] Setze IsPlaying manuell auf False im Finally.")
                 SiticonePlayPauseButton_request.IsPlaying = False
             End If
             isRequestRunning = False
-            AppLog("[DEBUG-StateChanged] Sperre freigegeben (isRequestRunning = False).")
         End Try
     End Sub
 
@@ -660,10 +807,16 @@ Public Class Form1
                 AppLog("[DEBUG-MainAsync] Tools-Modus aktiv: Überschreibe System-Prompt mit 'Tools-System'.")
                 tools = Scintilla_Tools_Json.Text
                 system = SiticoneTextArea_Tools_system.Text
+
             ElseIf SiticoneToggleSwitch_ragtools.Checked Then
                 AppLog("[DEBUG-MainAsync] RAG-Modus aktiv: Überschreibe System-Prompt mit 'RAG-System'.")
                 tools = Scintilla_Rag_Json.Text
                 system = SiticoneTextArea_Rag_system.Text
+
+            ElseIf SiticoneToggleSwitch_sshbot.Checked Then
+                AppLog("[DEBUG-MainAsync] SSH-Bot-Modus aktiv: Überschreibe System-Prompt mit 'SSH-System'.")
+                system = SiticoneTextArea_ssh_system.Text
+                tools = ""
             Else
                 AppLog("[DEBUG-MainAsync] Normaler Modus: Nutze Standard-System-Prompt (falls aktiviert).")
             End If
@@ -672,7 +825,19 @@ Public Class Form1
             Dim think_level As String = SiticoneDropdown_thinking_use.SelectedItem
             Dim context As Boolean = SiticoneToggleSwitch_last_context.Checked AndAlso extractedContext.Count > 0
 
-            If context Then system = ""
+            If SiticoneToggleSwitch_sshbot.Checked Then
+                If SiticoneToggleSwitch_sshreinsert.Checked = False Then
+                    If context Then
+                        system = ""
+                        AppLog("[DEBUG-MainAsync] System Prompt gelöscht")
+                    End If
+                End If
+            Else
+                If context Then
+                    system = ""
+                    AppLog("[DEBUG-MainAsync] System Prompt gelöscht")
+                End If
+            End If
 
             If text_contents.Count > 0 Then
                 Dim prompt_files_content As String = ""
@@ -725,7 +890,14 @@ Public Class Form1
 
                 AppLog("[DEBUG-MainAsync] Rufe render_response() auf...")
                 render_response(response)
-                SiticoneTabControl_tab.SelectedTab = TabPage_responsehtml
+                ' --- Intelligente Tab-Umschaltung ---
+                ' Wenn SSH-Bot aktiv ist UND die Antwort noch einen Befehl enthält -> Zeige Terminal.
+                ' Wenn SSH-Bot aktiv ist, aber KEIN Befehl mehr kommt (Aufgabe fertig) -> Zeige HTML-Ergebnis.
+                If SiticoneToggleSwitch_sshbot.Checked AndAlso response.Contains("```bash") Then
+                    SiticoneTabControl_tab.SelectedTab = TabPage_sshbot
+                Else
+                    SiticoneTabControl_tab.SelectedTab = TabPage_responsehtml
+                End If
                 ' --- Zähler im Button updaten ---
                 UpdateMemoryUI()
                 ' -------------------------------------
@@ -1553,6 +1725,21 @@ Public Class Form1
         End Try
     End Function
 
+    Private Async Function InitializeWebViewTerminal() As Task
+        Dim userDataFolder As String = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "Ollama_Desktop",
+            "WebView2_Terminal"
+        )
+        If Not Directory.Exists(userDataFolder) Then Directory.CreateDirectory(userDataFolder)
+        Dim env = Await CoreWebView2Environment.CreateAsync(Nothing, userDataFolder)
+        Await WebViewTerminal.EnsureCoreWebView2Async(env)
+        ' Lokale HTML laden
+        Dim htmlPath As String = Path.Combine(AppContext.BaseDirectory, "terminal.html")
+        WebViewTerminal.CoreWebView2.Navigate(htmlPath)
+    End Function
+
+
     ' Hilfsfunktion für das eigentliche JavaScript-Scrolling
     Private Async Function ScrollToAnchor(anchor As String) As Task
         If Not String.IsNullOrEmpty(anchor) Then
@@ -2267,7 +2454,8 @@ Public Class Form1
     End Sub
 
     Private Sub SiticoneTextArea_prompt_TextChanged(sender As Object, e As EventArgs) Handles SiticoneTextArea_prompt.TextChanged
-        UpdatePromptLayout()
+        'UpdatePromptLayout()
+        Me.BeginInvoke(Sub() UpdatePromptLayout())
         If SiticoneTextArea_prompt.TextLength = 0 Then
             SiticonePlayPauseButton_request.Enabled = False
         Else
@@ -2626,24 +2814,36 @@ Public Class Form1
 
     Private Sub load_tools(setting_path As String)
         If File.Exists(setting_path) Then
-            ' Read the JSON from the selected file
-            Dim json = File.ReadAllText(setting_path)
-
-            ' Deserialize the JSON to an object
-            Dim data = JObject.Parse(json)
-
             Try
-                ' Load the content into the controls
-                SiticoneToggleSwitch_tools.Checked = data("tools_use")
-                SiticoneTextArea_Tools_system.Text = data("tools_system_prompt").ToString
-                Scintilla_Tools_Json.Text = data("tools_json").ToString
-                Scintilla_Tools_pythoncode.Text = data("tools_python_code").ToString
+                ' Read the JSON from the selected file
+                Dim json = File.ReadAllText(setting_path)
+
+                ' Deserialize the JSON to an object
+                Dim data = JObject.Parse(json)
+
+                ' Load the content into the controls (Safe Loading)
+                If data.ContainsKey("tools_use") Then
+                    SiticoneToggleSwitch_tools.Checked = Convert.ToBoolean(data("tools_use"))
+                End If
+
+                If data.ContainsKey("tools_system_prompt") Then
+                    SiticoneTextArea_Tools_system.Text = data("tools_system_prompt").ToString()
+                End If
+
+                If data.ContainsKey("tools_json") Then
+                    Scintilla_Tools_Json.Text = data("tools_json").ToString()
+                End If
+
+                If data.ContainsKey("tools_python_code") Then
+                    Scintilla_Tools_pythoncode.Text = data("tools_python_code").ToString()
+                End If
+
             Catch ex As Exception
-                MessageBox.Show("Error loading parameters: " & ex.Message)
+                ' Fängt Parser-Fehler und fehlende Keys sauber ab
+                MessageBox.Show("Fehler beim Laden der Tool-Parameter: " & ex.Message, "Ladefehler", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Try
         End If
     End Sub
-
     Private Sub SiticoneButton_save_rag_Click(sender As Object, e As EventArgs) Handles SiticoneButton_save_rag.Click
         ' Create a SaveFileDialog
         Dim saveFileDialog As New SaveFileDialog
@@ -2685,6 +2885,85 @@ Public Class Form1
 
     Private Sub load_rag(setting_path As String)
         If File.Exists(setting_path) Then
+            Try
+                ' Read the JSON from the selected file
+                Dim json = File.ReadAllText(setting_path)
+
+                ' Deserialize the JSON to an object
+                Dim data = JObject.Parse(json)
+
+                ' Load the content into the controls (Safe Loading)
+                If data.ContainsKey("rag_use") Then
+                    SiticoneToggleSwitch_ragtools.Checked = Convert.ToBoolean(data("rag_use"))
+                End If
+
+                If data.ContainsKey("rag_system_prompt") Then
+                    SiticoneTextArea_Rag_system.Text = data("rag_system_prompt").ToString()
+                End If
+
+                If data.ContainsKey("rag_json") Then
+                    Scintilla_Rag_Json.Text = data("rag_json").ToString()
+                End If
+
+            Catch ex As Exception
+                ' Fängt jetzt auch Fehler ab, falls die Datei gar kein gültiges JSON ist
+                MessageBox.Show("Fehler beim Laden der RAG-Parameter: " & ex.Message, "Ladefehler", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Try
+        End If
+    End Sub
+    'ssh load/save fehlt noch
+
+    Private Sub SiticoneButton_save_ssh_Click(sender As Object, e As EventArgs) Handles SiticoneButton_save_ssh.Click
+        ' Create a SaveFileDialog
+        Dim saveFileDialog As New SaveFileDialog
+        saveFileDialog.Filter = "JSON files (*.ssh.json)|*.ssh.json|All files (*.*)|*.*"
+        saveFileDialog.Title = "Save SSH Parameter to JSON File"
+
+        ' Show the dialog and check if the user clicked OK
+        If saveFileDialog.ShowDialog = DialogResult.OK Then
+            ' Get the content from the controls
+            Dim textAreaContent = SiticoneTextArea_system.Text
+            Dim dataGridViewContent As New List(Of Dictionary(Of String, Object))
+
+            ' Create an object to hold the data
+            Dim data As New Dictionary(Of String, Object) From {
+                {"ssh_system", SiticoneTextArea_ssh_system.Text},
+                {"ssh_response", SiticoneTextArea_ssh_response.Text},
+                {"ssh_address", SiticoneTextBox_ssh_address.Text},
+                {"ssh_user", SiticoneTextBox_ssh_user.Text},
+                {"ssh_pw", SiticoneTextBox_ssh_pw.Text},
+                {"ssh_regex", SiticoneTextBox_ssh_regex.Text},
+                {"ssh_pwrequest", SiticoneTextBox_ssh_pwrequest.Text},
+                {"ssh_sudopw", SiticoneTextBox_ssh_sudopw.Text},
+                {"ssh_timeout", SiticoneTextBox_ssh_timeout.Text},
+                {"ssh_maxi", SiticoneTextBox_ssh_maxi.Text},
+                {"ssh_err_multiline", currentErrMultiline},
+                {"ssh_err_format", currentErrFormat},
+                {"ssh_err_denied", currentErrDenied}
+            }
+
+            ' Serialize the object to JSON
+            Dim json = JsonConvert.SerializeObject(data, Formatting.Indented)
+
+            ' Save the JSON to the selected file
+            File.WriteAllText(saveFileDialog.FileName, json)
+        End If
+    End Sub
+
+    Private Sub SiticoneButton_load_ssh_Click(sender As Object, e As EventArgs) Handles SiticoneButton_load_ssh.Click
+        ' Create an OpenFileDialog
+        Dim openFileDialog As New OpenFileDialog
+        openFileDialog.Filter = "JSON files (*.ssh.json)|*.ssh.json|All files (*.*)|*.*"
+        openFileDialog.Title = "Load SSH Parameter from JSON File"
+
+        ' Show the dialog and check if the user clicked OK
+        If openFileDialog.ShowDialog = DialogResult.OK Then
+            load_ssh(openFileDialog.FileName)
+        End If
+    End Sub
+
+    Private Sub load_ssh(setting_path As String)
+        If File.Exists(setting_path) Then
             ' Read the JSON from the selected file
             Dim json = File.ReadAllText(setting_path)
 
@@ -2692,10 +2971,22 @@ Public Class Form1
             Dim data = JObject.Parse(json)
 
             Try
-                ' Load the content into the controls
-                SiticoneToggleSwitch_ragtools.Checked = data("rag_use")
-                SiticoneTextArea_Rag_system.Text = data("rag_system_prompt").ToString
-                Scintilla_Rag_Json.Text = data("rag_json").ToString
+                ' Load the content into the controls (Safe Loading)
+                If data.ContainsKey("ssh_system") Then SiticoneTextArea_ssh_system.Text = data("ssh_system").ToString()
+                If data.ContainsKey("ssh_response") Then SiticoneTextArea_ssh_response.Text = data("ssh_response").ToString()
+
+                If data.ContainsKey("ssh_address") Then SiticoneTextBox_ssh_address.Text = data("ssh_address").ToString()
+                If data.ContainsKey("ssh_user") Then SiticoneTextBox_ssh_user.Text = data("ssh_user").ToString()
+                If data.ContainsKey("ssh_pw") Then SiticoneTextBox_ssh_pw.Text = data("ssh_pw").ToString()
+                If data.ContainsKey("ssh_regex") Then SiticoneTextBox_ssh_regex.Text = data("ssh_regex").ToString()
+                If data.ContainsKey("ssh_pwrequest") Then SiticoneTextBox_ssh_pwrequest.Text = data("ssh_pwrequest").ToString()
+                If data.ContainsKey("ssh_sudopw") Then SiticoneTextBox_ssh_sudopw.Text = data("ssh_sudopw").ToString()
+                If data.ContainsKey("ssh_timeout") Then SiticoneTextBox_ssh_timeout.Text = data("ssh_timeout").ToString()
+                If data.ContainsKey("ssh_maxi") Then SiticoneTextBox_ssh_maxi.Text = data("ssh_maxi").ToString()
+                ' Load the error messages into the global variables (Safe Loading)
+                If data.ContainsKey("ssh_err_multiline") Then currentErrMultiline = data("ssh_err_multiline").ToString()
+                If data.ContainsKey("ssh_err_format") Then currentErrFormat = data("ssh_err_format").ToString()
+                If data.ContainsKey("ssh_err_denied") Then currentErrDenied = data("ssh_err_denied").ToString()
             Catch ex As Exception
                 MessageBox.Show("Error loading parameters: " & ex.Message)
             End Try
@@ -3057,6 +3348,7 @@ Public Class Form1
         load_execute(Path.Combine(appPath, val.code_path))
         load_tools(Path.Combine(appPath, val.tools_path))
         load_rag(Path.Combine(appPath, val.rag_path))
+        load_ssh(Path.Combine(appPath, val.ssh_path))
         Me.Cursor = Cursors.Default
     End Sub
     Private Async Sub SiticoneButton_link_options_parameter_Click(sender As Object, e As EventArgs) Handles SiticoneButton_link_options_parameter.Click
@@ -3101,6 +3393,18 @@ Public Class Form1
 
     Private Async Sub SiticoneButton_execute_run_Click(sender As Object, e As EventArgs) Handles SiticoneButton_execute_run.Click
         Await InitializeWebView2("link_execute_run")
+    End Sub
+
+    Private Async Sub SiticoneButton_ssh_system_Click(sender As Object, e As EventArgs) Handles SiticoneButton_ssh_system.Click
+        Await InitializeWebView2("link_ssh_system")
+    End Sub
+
+    Private Async Sub SiticoneButton_ssh_response_Click(sender As Object, e As EventArgs) Handles SiticoneButton_ssh_response.Click
+        Await InitializeWebView2("link_ssh_response")
+    End Sub
+
+    Private Async Sub SiticoneButton_ssh_par_Click(sender As Object, e As EventArgs) Handles SiticoneButton_ssh_par.Click
+        Await InitializeWebView2("link_ssh_par")
     End Sub
 
     Private Sub SetupEditor(editor As ScintillaNET.Scintilla, langType As String)
@@ -3405,7 +3709,7 @@ Public Class Form1
                 ' PowerShell starten
                 Process.Start("powershell.exe", psCommand)
 
-                AppLog("PowerShell Live-Monitor wurde vom User über Shift+F12 gestartet.")
+                AppLog("[DEBUG-KeyDown] PowerShell Live-Monitor wurde vom User über Shift+F12 gestartet.")
                 Debug.WriteLine("[DEBUG-HOTKEY] PowerShell wurde erfolgreich gestartet!")
             Catch ex As Exception
                 Debug.WriteLine($"[DEBUG-HOTKEY] FEHLER beim Starten der PowerShell: {ex.Message}")
@@ -3431,6 +3735,323 @@ Public Class Form1
             ' Wenn die Datei ganz kurz blockiert ist, ignorieren wir das einfach
         End Try
     End Sub
+
+    ' SSH Terminal in WebView2
+    Private Async Sub SiticoneButton_connectssh_Click(sender As Object, e As EventArgs) Handles SiticoneButton_connectssh.Click
+        ' Optional: Button während des Verbindungsaufbaus deaktivieren
+        SiticoneButton_connectssh.Enabled = False
+        _sshClient = New SshClient(SiticoneTextBox_ssh_address.Text, SiticoneTextBox_ssh_user.Text, SiticoneTextBox_ssh_pw.Text)
+        Try
+            ' Wir versuchen, die Verbindung aufzubauen
+            Await Task.Run(Sub() _sshClient.Connect())
+
+            ' --- Wenn wir diese Zeile erreichen, war das Passwort KORREKT! ---
+
+            ' Terminal-Stream starten
+            _shellStream = _sshClient.CreateShellStream("xterm-256color", 80, 24, 800, 600, 1024)
+
+            ' --- NEU: Terminal-Größe JETZT synchronisieren ---
+            ' Zwingt das WebView, die aktuellen Maße an den frischen ShellStream zu senden
+            If WebViewTerminal IsNot Nothing AndAlso WebViewTerminal.CoreWebView2 IsNot Nothing Then
+                WebViewTerminal.CoreWebView2.ExecuteScriptAsync("if (typeof updateTerminalSize === 'function') updateTerminalSize();")
+            End If
+
+            ' Endlosschleife zum Lesen starten
+            _cts = New CancellationTokenSource()
+            StartReadingLoop(_cts.Token)
+
+        Catch ex As SshAuthenticationException
+            ' Fall 1: Falsches Passwort oder falscher User
+            MessageBox.Show("Access denied! Please check your username and password.",
+                            "Authentication Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+
+        Catch ex As Net.Sockets.SocketException
+            ' Fall 2: Server ist gar nicht erreichbar (falsche IP, keine Netzwerkverbindung)
+            MessageBox.Show("The server is unreachable. Please verify the IP address or hostname.",
+                            "Connection Failed", MessageBoxButtons.OK, MessageBoxIcon.Error)
+
+        Catch ex As Exception
+            ' Fall 3: Irgendein anderer, unerwarteter Fehler
+            MessageBox.Show("An unexpected error occurred while connecting: " & ex.Message,
+                            "Connection Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+
+        Finally
+            ' Egal ob Erfolg oder Fehler: Button wieder anklickbar machen
+            SiticoneButton_connectssh.Enabled = True
+        End Try
+    End Sub
+
+    ' --- 3. SERVER -> TERMINAL (Lesen) ---
+    Private Sub StartReadingLoop(token As CancellationToken)
+        Task.Run(Async Function()
+                     Dim buffer(4096) As Byte
+                     Try
+                         While _sshClient.IsConnected AndAlso Not token.IsCancellationRequested
+                             If _shellStream.DataAvailable Then
+                                 Dim count = _shellStream.Read(buffer, 0, buffer.Length)
+                                 Dim text = Encoding.UTF8.GetString(buffer, 0, count)
+
+                                 ' 1. Für das Terminal-UI (WebView2) in Base64 umwandeln
+                                 Dim base64Str = Convert.ToBase64String(buffer, 0, count)
+                                 Me.Invoke(Sub()
+                                               WebViewTerminal.CoreWebView2.ExecuteScriptAsync($"window.writeFromDotNet('{base64Str}');")
+                                           End Sub)
+
+                                 ' 2. NEU: In den Schatten-Buffer für Ollama kopieren (Thread-Safe!)
+                                 SyncLock _bufferLock
+                                     _llmBuffer.Append(text)
+                                     AppLog($"[DEBUG-StartReadingLoop] Append _llmBuffer {text.Length} Zeichen hinzu...")
+                                     ' Sicherheits-Netz: Buffer nicht endlos wachsen lassen (max 10.000 Zeichen)
+                                     If _llmBuffer.Length > 10000 Then
+                                         _llmBuffer.Remove(0, _llmBuffer.Length - 10000)
+                                     End If
+                                 End SyncLock
+                             End If
+                         End While
+                     Catch ex As Exception
+                         ' Fehlerbehandlung
+                     End Try
+                 End Function, token)
+    End Sub
+
+    ' --- 4. TERMINAL -> SERVER (User tippt) ---
+    Private Sub WebViewTerminal_WebMessageReceived(sender As Object, e As CoreWebView2WebMessageReceivedEventArgs) Handles WebViewTerminal.WebMessageReceived
+        Dim msg As String = e.TryGetWebMessageAsString()
+
+        Try
+            ' JSON parsen (Variablenname geändert, um Konflikt mit der Klasse zu vermeiden)
+            Dim parsedJson = JsonNode.Parse(msg)
+            Dim msgType = parsedJson("type")?.ToString()
+
+            If msgType = "resize" Then
+                ' 1. Größenänderung: Spalten und Zeilen auslesen
+                If _shellStream IsNot Nothing Then
+                    Dim cols As UInteger = parsedJson("cols").GetValue(Of UInteger)()
+                    Dim rows As UInteger = parsedJson("rows").GetValue(Of UInteger)()
+
+                    ' Dem Linux-Server die neuen Dimensionen mitteilen
+                    _shellStream.ChangeWindowSize(cols, rows, 0, 0)
+                End If
+
+            ElseIf msgType = "input" Then
+                ' 2. User hat etwas getippt
+                If _shellStream IsNot Nothing AndAlso _shellStream.CanWrite Then
+                    Dim data As String = parsedJson("data")?.ToString()
+                    Dim bytes = Encoding.UTF8.GetBytes(data)
+                    _shellStream.Write(bytes, 0, bytes.Length)
+                    _shellStream.Flush()
+                End If
+            End If
+
+        Catch ex As Exception
+            ' Ignorieren, falls fehlerhaftes JSON ankommt
+            Debug.WriteLine("JSON Parse Error: " & ex.Message)
+        End Try
+    End Sub
+
+    ' --- 5. OLLAMA LLM -> SERVER (KI tippt) ---
+    Public Sub ExecuteLlmCommand(llmCommand As String)
+        If _shellStream IsNot Nothing AndAlso _shellStream.CanWrite Then
+            ' Befehl der KI plus Zeilenumbruch (Enter-Taste) senden
+            Dim bytes = Encoding.UTF8.GetBytes(llmCommand & vbLf)
+            _shellStream.Write(bytes, 0, bytes.Length)
+            _shellStream.Flush()
+        End If
+    End Sub
+
+    Private Async Sub SiticoneButton_test_Click(sender As Object, e As EventArgs) Handles SiticoneButton_test.Click
+        'ExecuteLlmCommand("ls -al")
+        ' Button deaktivieren, damit der User nicht mehrfach klickt
+        SiticoneButton_test.Enabled = False
+
+        ' Befehl senden und warten (mit einem Timeout von z. B. 60 Sekunden)
+        Dim ergebnis = Await ExecuteCommandAndWaitAsync("sudo ls -al", Val(SiticoneTextBox_ssh_timeout.Text))
+
+        ' Ergebnis an Ollama senden
+        AppLog("[DEBUG-test_Click] SSH Response: " & ergebnis)
+
+        SiticoneButton_test.Enabled = True
+    End Sub
+
+    Public Function GetTerminalContextForLlm() As String
+        SyncLock _bufferLock
+            Dim output = _llmBuffer.ToString()
+            _llmBuffer.Clear() ' Buffer für den nächsten Befehl leeren
+            AppLog($"[DEBUG-GetTerminalContextForLlm] Clear _llmBuffer...")
+            Return output
+        End SyncLock
+    End Function
+
+    ' -------------------------------------------------------------------------
+    ' 1. Die asynchrone Ausführungs- und Warte-Routine
+    ' -------------------------------------------------------------------------
+    Public Async Function ExecuteCommandAndWaitAsync(command As String, maxWaitTimeSeconds As Integer) As Task(Of String)
+        ' Hier muss der SSH Buffer geleert werden, bevor der Befehl gesendet wird!
+        SyncLock _bufferLock
+            _llmBuffer.Clear()
+            AppLog("[DEBUG-ExecuteCommandAndWaitAsync] Clear _llmBuffer...")
+        End SyncLock
+
+        ' --- NEU: DER UNIVERSELLE COMMAND SANITIZER ---
+        Dim safeCommand As String = command.Trim()
+
+        ' Diese Variablen zwingen Linux in den absoluten "Maschinen-Modus":
+        ' 1. PAGER=cat -> Schaltet alle Pager (less/more) für man, git, etc. ab
+        ' 2. SYSTEMD_PAGER=cat -> Schaltet Pager für systemctl/journalctl ab
+        ' 3. DEBIAN_FRONTEND=noninteractive -> Verhindert Dialog-Menüs bei apt-get
+        Dim botEnvVars As String = "PAGER=cat SYSTEMD_PAGER=cat DEBIAN_FRONTEND=noninteractive "
+
+        ' Wir müssen sicherstellen, dass die Variablen auch nach einem "sudo" überleben.
+        If safeCommand.Contains("sudo ") Then
+            ' Wir ersetzen jedes "sudo " durch "sudo + Variablen ", 
+            ' so klappt es auch bei verketteten Befehlen (sudo apt update && sudo apt upgrade)
+            safeCommand = safeCommand.Replace("sudo ", "sudo " & botEnvVars)
+        Else
+            ' Wenn kein sudo genutzt wird, setzen wir die Variablen einfach ganz an den Anfang
+            safeCommand = botEnvVars & safeCommand
+        End If
+        ' ----------------------------------------------
+
+        ' 2. BEREINIGTEN Befehl absenden
+        ExecuteLlmCommand(safeCommand)
+        AppLog("[DEBUG-ExecuteCommandAndWaitAsync] SSH Command: " & safeCommand)
+
+        ' 3. Konfiguration aus den Textboxen laden
+        Dim promptRegex As New Regex(SiticoneTextBox_ssh_regex.Text, RegexOptions.Multiline)
+        Dim passwordRequest As String = SiticoneTextBox_ssh_pwrequest.Text ' z.B. "Passwort:"
+        Dim sudoPassword As String = SiticoneTextBox_ssh_sudopw.Text
+
+        ' RegEx für ANSI-Steuerzeichen (Farben etc.)
+        Dim ansiStripRegex As New Regex("\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])")
+
+        Dim startTime As DateTime = DateTime.Now
+        Dim currentOutput As String = ""
+        Dim cleanOutput As String = ""
+        Dim isFinished As Boolean = False
+        Dim passwordSent As Boolean = False
+
+        AppLog("[DEBUG-ExecuteCommandAndWaitAsync] SSH Wait for RegEx or Password Request...")
+
+        ' 4. Asynchrone Polling-Schleife
+        While (DateTime.Now - startTime).TotalSeconds < maxWaitTimeSeconds
+            Await Task.Delay(200)
+
+            SyncLock _bufferLock
+                currentOutput = _llmBuffer.ToString()
+            End SyncLock
+
+            ' Text bereinigen
+            cleanOutput = ansiStripRegex.Replace(currentOutput, "")
+            ' Linux-Umbrüche (LF) in Windows-Umbrüche (CRLF) umwandeln:
+            cleanOutput = cleanOutput.Replace(vbCr, "").Replace(vbLf, vbCrLf)
+
+            ' --- CHECK A: Passwort-Aufforderung ---
+            ' Wenn der Text die Aufforderung enthält und wir noch nichts gesendet haben
+            If Not passwordSent AndAlso cleanOutput.Contains(passwordRequest) Then
+                AppLog("[DEBUG-ExecuteCommandAndWaitAsync] SSH Sudo password requested. Sending password...")
+
+                ' Passwort + LineFeed senden
+                Dim pwBytes = Encoding.UTF8.GetBytes(sudoPassword & vbLf)
+                _shellStream.Write(pwBytes, 0, pwBytes.Length)
+                _shellStream.Flush()
+
+                passwordSent = True
+                ' Wir setzen die Startzeit neu, falls der Befehl nach dem Sudo-Login lange dauert
+                startTime = DateTime.Now
+            End If
+
+            ' --- CHECK B: Normaler Prompt (Befehl fertig) ---
+            If promptRegex.IsMatch(cleanOutput) Then
+                ' Wenn wir ein Passwort gesendet haben, taucht der Prompt oft erst 
+                ' nach der eigentlichen Ausgabe auf. Wir prüfen, ob der Prompt am Ende steht.
+                isFinished = True
+                Exit While
+            End If
+        End While
+
+        ' 5. Buffer leeren für den nächsten Befehl
+        SyncLock _bufferLock
+            _llmBuffer.Clear()
+            AppLog($"[DEBUG-ExecuteCommandAndWaitAsync] Clear _llmBuffer...")
+        End SyncLock
+
+        ' 6. Timeout-Handling
+        If Not isFinished Then
+            cleanOutput &= vbCrLf & "[SYSTEM: Timeout reached. Command might still be running or Sudo failed.]"
+            AppLog("[DEBUG-ExecuteCommandAndWaitAsync] SSH SYSTEM: Timeout reached.")
+        End If
+
+        ' >>> ULTIMATIVER CLEANUP FÜR DAS LLM <<<
+
+        ' 1. Echo des Befehls entfernen
+        Dim cmdIndex As Integer = cleanOutput.IndexOf(safeCommand)
+        If cmdIndex >= 0 Then
+            cleanOutput = cleanOutput.Substring(cmdIndex + safeCommand.Length)
+        End If
+
+        ' 2. Debian Fenstertitel-Reste (OSC 0) restlos löschen
+        cleanOutput = Regex.Replace(cleanOutput, "\]?0;[^\x07]+\x07", "")
+
+        ' 3. Den Linux-Prompt am Ende des Textes löschen
+        cleanOutput = promptRegex.Replace(cleanOutput, "")
+
+        ' --- NEU: TERMINAL-SIMULATOR & SPAM-FILTER ---
+
+        ' 4. Ladebalken-Animationen (Carriage Return) korrekt auflösen
+        Dim lines As String() = cleanOutput.Split(vbLf)
+        For i As Integer = 0 To lines.Length - 1
+            Dim currentLine As String = lines(i)
+            If currentLine.EndsWith(vbCr) Then
+                currentLine = currentLine.Substring(0, currentLine.Length - 1)
+            End If
+            If currentLine.Contains(vbCr) Then
+                lines(i) = currentLine.Split(vbCr).Last()
+            Else
+                lines(i) = currentLine
+            End If
+        Next
+        cleanOutput = String.Join(vbLf, lines)
+
+        ' 5. Spezifischer Paketmanager-Spam Filter (apt / dpkg)
+
+        ' a) Löscht apt-Download-Fragmente
+        cleanOutput = Regex.Replace(cleanOutput, "\d+%\s*\[[^\]]+\][ \t]*", "")
+        cleanOutput = Regex.Replace(cleanOutput, "\[[^\]]+%\][ \t]*", "")
+        cleanOutput = Regex.Replace(cleanOutput, "(?:\d+%\s*)?\[(?:Working|Connecting|Waiting)[^\]]*\][ \t]*", "")
+        cleanOutput = Regex.Replace(cleanOutput, "(?:\d+%\s*)?\[[^\]]+\][ \t]{5,}", "")
+
+        ' b) Repariert Einrückungen vor apt/dpkg-Schlüsselwörtern
+        cleanOutput = Regex.Replace(cleanOutput, "(?m)^[ \t]+(Hit:|Get:|Ign:|Err:|Unpacking|Setting up|Preparing|Progress:)", "$1")
+
+        ' c) Zerstört horizontal zusammengeklebte apt-Texte
+        cleanOutput = Regex.Replace(cleanOutput, "[ \t]*(Reading package lists|Building dependency tree|Reading state information|Calculating upgrade)[ \.\d%]*", "")
+
+        ' --- NEU: DPKG INSTALLATION & UPGRADE FILTER ---
+
+        ' d) Versteckte Cursor-Befehle (ESC 7 / ESC 8) und einzelne nackte ESC-Zeichen (\x1B) löschen
+        cleanOutput = Regex.Replace(cleanOutput, "\x1B[78]?", "")
+
+        ' e) dpkg "Reading database..." Spam inklusive dem End-Satz komplett löschen
+        cleanOutput = Regex.Replace(cleanOutput, "\(?Reading database \.\.\.[ \d%]*\)?", "")
+        cleanOutput = Regex.Replace(cleanOutput, ".*files and directories currently installed\.\)", "")
+
+        ' f) FIX: dpkg Installations-Ladebalken ("Progress: [████...]") gnadenlos löschen.
+        ' Sucht jetzt einfach nach "Progress:" und einer eckigen Klammer, egal was drinsteht.
+        cleanOutput = Regex.Replace(cleanOutput, "Progress:\s*\[[^\]]*\]\s*", "")
+
+        ' 6. Mehrfache leere Zeilen auf maximal zwei Umbrüche reduzieren
+        cleanOutput = cleanOutput.Trim()
+        cleanOutput = Regex.Replace(cleanOutput, "\n{3,}", vbLf & vbLf)
+
+        ' 7. Leere Ergebnisse abfangen
+        If String.IsNullOrWhiteSpace(cleanOutput) Then
+            cleanOutput = "[Keine Textausgabe - Befehl wurde erfolgreich ohne Fehler ausgeführt]"
+        End If
+
+        ' Linux-Umbruch (LF) in Windows-Umbruch (CRLF) für die TextBox
+        Return cleanOutput.Replace(vbLf, vbCrLf)
+    End Function
+
 
 End Class
 

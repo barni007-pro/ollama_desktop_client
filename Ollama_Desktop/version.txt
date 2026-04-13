@@ -52,3 +52,8 @@ V 1.4.4.23
 - add lfm2 to models_config.json
 V 1.4.5.24
 - add gemma4 to models_config.json
+V 1.5.0.25
+- SSH Bot (Autonomous AI Agent)
+  Exclusive feature! 
+  Transforms the app into an autonomous system administrator that manages servers via SSH, 
+  executes commands, and independently reacts to terminal outputs.

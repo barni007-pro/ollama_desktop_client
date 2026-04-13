@@ -74,6 +74,6 @@
   "timeout": "600",
   "thinking_use": false,
   "thinking_parameter": "false",
-  "context_use": false,
+  "context_use": true,
   "content_prompt": "Process the instruction based on the content of the following file(s):\r\n{files}\r\nInstruction:\r\n{prompt}"
 }

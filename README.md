@@ -2,11 +2,11 @@
 
 ---
 
-> **Languages:** [English] | [**Deutsch**](README.de.md)
+> **Languages:** [English](README.md) | [Deutsch](README.de.md)
 
 ---
 
-**Ollama Desktop** is a graphical user interface (GUI) for **Ollama**. It allows you to comfortably control locally installed AI models, fine-tune parameters, and enforce structured JSON responses.
+**Ollama Desktop** is a Graphical User Interface (GUI) for **Ollama**. It allows you to comfortably control locally installed AI models, fine-tune parameters, and enforce structured JSON responses.
 
 ---
 
@@ -14,48 +14,49 @@
 
 ---
 
-### ✨ Key Features
-* **Vision Support:** Upload and analyze images (.jpg, .png) (e.g., with LLaVA) in generate mode.
-* **File Import:** Import text files (.pdf, .txt, .json) to include their content in the context.
-* **RAG Tool:** Chat with large documents (.pdf, .txt) through local knowledge extraction.
-* **Chat Mode:** Switch models during the conversation.
-* **Function Calling & Tools:** Turn your LLM into an agent with local Python code execution.
-* **JSON Mode:** Enforce structured responses using JSON Schemas.
-* **Code Execution:** Run generated Python, PowerShell, or Batch code directly within the app.
-* **Screenshots:** Processing screenshots using a Vision LLM.
-* **Formula output:** Display of mathematical formulas (LaTeX support).
-* **Image generation:** Image generation support for x/z-image-turbo and x/flux2-klein models.
+### ✨ Highlights
+* **🤖 SSH Bot (Autonomous AI Agent):** Exclusive feature! Transforms the app into an autonomous system administrator that manages servers via SSH, executes commands, and independently reacts to terminal outputs.
+* **Vision Support:** Upload and analyze images (.jpg, .png) (e.g., with llava) in Generate mode.
+* **Read Files:** Import text files (.pdf, .txt, .json) to include their contents directly into the context.
+* **RAG Tool:** Chat with large documents (.pdf/.txt) through local knowledge extraction.
+* **Chat Mode:** Model switching during conversation is possible.
+* **Tools & Functions:** Local Python code execution by the model.
+* **JSON Mode:** Enforce structured responses.
+* **Code Execution:** Direct execution of Python, PowerShell, or Batch scripts.
+* **Screenshots:** Process screenshots through a Vision LLM.
+* **Formula Output:** Display mathematical formulas (LaTeX support).
+* **Image Generation:** Support for image generation with models x/z-image-turbo and x/flux2-klein.
 
 ---
 
 ### 📥 [Download Latest Version](https://github.com/barni007-pro/ollama_desktop_client/releases/latest)
 
-You can choose between the **Portable** version (no installation required) and the **Setup** version (standard installation).
+You have the choice between the **Portable** version (no installation required) and the **Setup** version (standard installation).
 
 ## 📦 Installation & Setup
 
 ### 🚀 Option 1: Portable Version
-1. **Download:** Get the `Ollama_Desktop_Portable_x.x.x.x.zip` from the [Releases](https://github.com/barni007-pro/ollama_desktop_client/releases) page.
-2. **Extract:** Unzip the archive into a folder of your choice.
-3. **Launch:** Run `Ollama_Desktop.exe` from the extracted folder.
+1. **Download:** Download `Ollama_Desktop_Portable_x.x.x.x.zip` from the [Releases](https://github.com/barni007-pro/ollama_desktop_client/releases) page.
+2. **Extract:** Extract the archive into a folder of your choice.
+3. **Start:** Run `Ollama_Desktop.exe` directly from the extracted folder.
 
 ### 💻 Option 2: Setup Version (Installer)
-1. **Download:** Get the `Ollama_Desktop_Setup_x.x.x.x.zip` from the [Releases](https://github.com/barni007-pro/ollama_desktop_client/releases) page.
-2. **Extract:** Unzip the installer from the ZIP file.
-3. **Install:** Run the setup file and follow the instructions to install the application on your system.
-4. **Launch:** Start the application via the Start Menu or Desktop shortcut.
+1. **Download:** Download `Ollama_Desktop_Setup_x.x.x.x.zip` from the [Releases](https://github.com/barni007-pro/ollama_desktop_client/releases) page.
+2. **Extract:** Extract the installation file from the ZIP archive.
+3. **Install:** Run the setup file and follow the on-screen instructions.
+4. **Start:** Open the application after installation via the Start menu or the desktop shortcut.
 
 ---
 
 > [!IMPORTANT]
-> **Ollama Server:** Ensure that the Ollama server is running (Terminal: `ollama serve`) before launching the desktop client.
+> **Ollama Server:** Ensure that the Ollama server is running (Terminal: `ollama serve`) before starting the desktop client.
 
 ---
 
 ## 🖼️ UI Overview
 
 <details>
-  <summary><b>Click to expand: Screenshots of all Tabs (Click images to enlarge)</b></summary>
+  <summary><b>Click here: View screenshots of all tabs (Click images to enlarge)</b></summary>
 
 | Tab: Model Info | Tab: Model Parameter |
 | :---: | :---: |
@@ -73,14 +74,14 @@ You can choose between the **Portable** version (no installation required) and t
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Quickstart
 
-1.  **Start Ollama Server:** Run the Ollama server in the background (Terminal: `ollama serve`).
-2.  **Load LLM List:** Click **Get LLM List** in the top left corner of the app to load your installed models.
-3.  **Select a Model:** Choose a model from the dropdown menu (e.g., `llama3` or `gemma2`).
-4.  **Run a Prompt:** Enter your question and press the **Play button (▶)**.
+1.  **Start Ollama Server:** Start the Ollama server in the background (Terminal: `ollama serve`).
+2.  **Load LLM List:** Click on **Get LLM List** in the top left of the app to load your installed models.
+3.  **Select Model:** Choose a model from the dropdown menu (e.g., `llama3` or `gemma2`).
+4.  **Execute Prompt:** Enter your question and press the **Play Button (▶)**.
 
-*Tip: Ensure that the address in the top left is correct (Default: `127.0.0.1:11434`).*
+*Tip: Make sure the address in the top left is correct (Default: `127.0.0.1:11434`).*
 
 ---
 
@@ -89,71 +90,82 @@ You can choose between the **Portable** version (no installation required) and t
 You can control how the app communicates with the model via the **API** dropdown menu.
 
 ### 1. Generate Mode (Single Request)
-This mode is designed for one-shot tasks.
-* **Vision / Images:** This is the *only* mode where you can upload images (using the `+ File` or `+ Screenshot` buttons). Use vision-capable models like *llava* or *moondream*.
-* **Behavior:** Each request stands alone; the model "forgets" previous questions immediately.
+This mode is designed for one-off tasks (one-shot tasks).
+* **Vision / Images:** This is the *only* mode where you can upload images (via the `+ File` or `+ Screenshot` buttons). Use Vision-capable models like *llava* or *moondream* for this.
+* **Behavior:** Each request stands alone; the model immediately "forgets" previous questions.
 * **Context:** However, you can include context tokens in the next request to maintain a conversation even in Generate mode.
 
 ### 2. Chat Mode (Conversation)
-The entire conversation history is saved and sent with every new message.
-* **Model Switching:** You can **switch the LLM** in the middle of a conversation (e.g., from a fast 7B model to a smart 70B model) without losing the thread.
+The entire conversation history is saved and sent with each new message.
+* **Model Switching:** You can **switch the LLM mid-conversation** (e.g., from a fast 7B model to a smart 70B model) without losing the thread of the conversation.
 
 ### 🔀 The Bridge: "Generate > Chat"
 Since Chat mode cannot receive images directly, the app offers this workflow:
-1.  Select **Generate** and upload an image (e.g., "Describe this image").
-2.  Wait for the response.
-3.  Click the **Generate > Chat** button.
-*The analysis will be copied to the chat history, allowing you to ask follow-up questions in Chat mode.*
+1. Select **Generate** and upload an image (e.g., "Describe this image").
+2. Wait for the response.
+3. Click the **Generate > Chat** button.
+*The analysis is copied into the chat history, allowing you to ask follow-up questions in Chat mode.*
+
+---
+
+## 🤖 SSH Bot (Autonomous AI Agent) — 🌟 Unique Selling Proposition
+
+The integrated SSH Bot transforms Ollama Desktop into a **fully automated Linux system administrator**. Unlike other clients that only generate code, this app can connect directly to your server, analyze problems, and resolve them autonomously!
+
+* **Autonomous Execution:** Provide a goal (e.g., "Analyze the web server and fix the error"). The AI connects via SSH, executes commands, reads the terminal response (including intelligent RegEx detection for the prompt), and independently plans the next logical step.
+* **Sudo Support:** The app seamlessly intercepts password requests (`sudo`) and automatically submits the stored password without interrupting the agent's flow.
+* **Security Guardrails:** You maintain full control. Limit the maximum agent steps (infinite loop protection) and choose whether the bot can act **fully autonomously (Auto-Execute)** or if it should propose each command for manual approval first.
+* **Custom Roles:** Customize the Response and System Prompts to assign specific profiles to the bot (e.g., Security Auditor, Network Admin).
 
 ---
 
 ## 🛠 Model Parameters
 
 ### 1. System Prompt
-Define the "personality" of the AI (e.g., "You are an experienced C# developer"). Enable the **Use System Prompt** checkbox to send this instruction before every chat.
+Define the "personality" of the AI (e.g., "You are an experienced C# developer"). Check the **Use System Prompt** box to send this instruction before every chat.
 
 ### 2. Output Format (JSON Mode)
-Force the model to respond exactly in a defined **JSON Schema** format, which is ideal for developers needing structured data.
+Force the model to respond exactly in a defined **JSON Schema** format. This is ideal for developers who need structured data.
 
 ### 3. Content Prompt
-This prompt extends the input prompt with attached text-based files like **.txt**, **.json**, or **.pdf**.
+This prompt expands the input with attached text-based files like **.txt**, **.json**, or **.pdf**.
 
 ### 4. Options Parameters
 | Parameter | Description |
 | :--- | :--- |
 | `temperature` | **Creativity.** `0.0` is deterministic; `0.7-0.8` is natural (default); `1.2+` is experimental. |
 | `top_p` | **Nucleus Sampling.** Considers words that reach a cumulative probability `P`. |
-| `num_ctx` | **Context Window.** Sets tokens the model can process at once. `2048` is standard; `4096-8192` for documents. |
+| `num_ctx` | **Context Window.** Determines how many tokens the model can process simultaneously. `2048` is default; `4096-8192` for documents. |
 | `repeat_penalty` | Prevents the model from repeating words (recommended: `1.1-1.2`). |
-| `seed` | A fixed value (e.g., `42`) ensures the same prompt and parameters always yield the same answer. |
+| `seed` | A fixed value (e.g., `42`) ensures that the same prompt with the same parameters always returns the same answer. |
 
-*You can manually add custom parameters by clicking the empty row (marked with `*`) in the table.*
+*You can manually add custom parameters by clicking on the empty row (marked with `*`) in the table.*
 
 ---
 
 ## 🛠 Tools & Function Calling
-The **Tools** tab turns the LLM into an agent that can perform tasks like checking weather or running calculations automatically.
-* **Tool JSON:** Define your API interface here so the model knows which parameters to extract.
-* **Python Code:** Provide the logic to be executed locally. The app runs this code automatically when the model requests the tool.
+The **Tools** tab turns the LLM into an agent that can automatically perform tasks like weather queries or calculations.
+* **Tool JSON:** Define your API interface here so the model knows which parameters need to be extracted.
+* **Python Code:** Store the logic that should be executed locally. The app automatically executes this code when the model requests the tool.
 
 ---
 
 ## 📄 RAG Tool (Chat with Documents)
 Upload **.txt** or **.pdf** files to use them as a knowledge base.
-* **Workflow:** The app splits the file into sentences, extracts keywords/synonyms from your query, and provides matching text segments to the LLM as background knowledge.
+* **Workflow:** The app splits the file into sentences, extracts keywords/synonyms from your request, and provides the LLM with suitable text segments as background knowledge.
 * **Delta Parameter:** Controls how much context (0-9 sentences) around a hit is sent to the model.
 
 ---
 
 ## 💻 Code Generation & Execution
-Execute code in Python, PowerShell, Batch, or HTML/JavaScript directly within the app.
+Execute code in Python, PowerShell, Batch, or HTML/JavaScript directly in the app.
 * **Execute List:** Define your interpreter paths (e.g., `python.exe`) in the **Code Parameter** tab.
-* **ShellExecute:** Choose between running code in the background (output captured) or in an external window.
+* **ShellExecute:** Choose between executing code in the background (output is captured) or in an external window.
 
 ---
 
 ## ⚖️ Licenses & Third-Party Components
-* **Ollama_Desktop, Newtonsoft.Json, Scintilla5.NET:** MIT License.
+* **Ollama_Desktop, Newtonsoft.Json, Scintilla5.NET, SSH.NET:** MIT License.
 * **WebView2:** Microsoft Corporation.
 * **Markdig:** BSD-Clause 2.
 * **PdfPig:** Apache License 2.0.
@@ -162,8 +174,8 @@ Execute code in Python, PowerShell, Batch, or HTML/JavaScript directly within th
 ---
 
 ## ☕ Support
-Ollama Desktop is free and open source. If you'd like to support the development, you can donate via PayPal:
+Ollama Desktop is free and open-source. If you would like to support the development, you can donate via PayPal:
 
 **[Donate via PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=r.barnstorf@online.de&currency_code=EUR&source=url)**
 
-Empfänger: `r.barnstorf@online.de`
+Recipient: `r.barnstorf@online.de`

@@ -120,13 +120,30 @@
   <metadata name="ToolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <data name="SiticoneToggleSwitch_sshreinsert.ToolTipText" xml:space="preserve">
+    <value>Forces the system to append the System Prompt to the LLM during every single agent step. This prevents the AI from 'forgetting' its core rules when the context window fills up with massive console outputs.</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="TabPage_sshbot.TabImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
+        vAAADrwBlbxySQAAABl0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuODc7gF0AAAHBSURBVFhH1ZfP
+        K2ZhFMc/1laTjfzIQihqovzaWMhGlMzCxoIUy6lZjCz8ARZKsZYsZGVBykJiY8lusrGQNFLTNJGpaZpB
+        5+15dDoO7nvziFOf3sX5dO73/nie917IX6PAGXABfLbN1FUH/ANuAzdAm5VS1id18Mi4lVJWBXCtDv4X
+        aLBS6ppXAVZs8zVqVgVYss28NRjOZj0DxyrAqdP3WAWGgRJ7YKlp58FKxZw9+AfgjyOm4j9QowPIGrZS
+        anp1gE5HSE3/uwpwCeyGX9uz/Ab2gJ9OT5M5wAlQGbyqsOSsE/kR/iekyoBvjhO5D1ALbDhCZCyKoSYc
+        JzJl3AHHichVahFpy2lq6s3QRseJdBlXroJ1NAciHToNTZMZ+tFxIt3GLXccjdzeZwN8MUO/Ok5kxrgj
+        jqPJFECe5tYwsB345TgRWQE9wZVb9d1xNIUA207DIm88Mkx+bc9DXP3G9Bhy8oWkO04zNfv6Ne6pfSAV
+        mTciQZbLUJHIOrdzcgfY1HLGWnbmvN8AR8Bkkchts3NyB0jB2wrQ4Qip6dMBqovY5V6KZh1Aas2RUiF7
+        xINvg1JgATgHrhIhn/KL4TOgUHcChqCyHzKlFQAAAABJRU5ErkJggg==
+</value>
+  </data>
   <metadata name="MySiticoneLicenseSettings1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>115, 17</value>
   </metadata>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>52</value>
   </metadata>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         AAABAAcAEBAAAAAAIAC5AQAAdgAAABgYAAAAACAACwQAAC8CAAAgIAAAAAAgADEEAAA6BgAAMDAAAAAA

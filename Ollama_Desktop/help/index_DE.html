@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="de">
 <head>
     <meta charset="UTF-8">
@@ -183,6 +183,23 @@
             <div class="note">
                 <strong>Tipp:</strong> Stellen Sie sicher, dass die Adresse oben links korrekt ist (Standard: <code>127.0.0.1:11434</code>).
             </div>
+        </div>
+
+        <div class="card">
+            <h2>✍️ Der intelligente Eingabebereich (Prompt Area)</h2>
+            <p>Der untere Bereich der App ist darauf ausgelegt, Ihnen das Arbeiten mit komplexen Anfragen und vielen Dateien so leicht wie möglich zu machen.</p>
+
+            <h3>1. Automatische Größenanpassung</h3>
+            <p>Das Textfeld (Ihre Eingabe) denkt mit: Es vergrößert sich automatisch, wenn Sie längere Texte schreiben oder hineinkopieren. Sobald eine maximale Höhe erreicht ist, verwandelt es sich sanft in ein scrollbares Feld. So wird weder Ihr Platz auf dem Bildschirm verschwendet, noch verlieren Sie bei großen Code-Blöcken die Übersicht.</p>
+
+            <h3>2. Angehängte Dateien (File Panel)</h3>
+            <p>Wenn Sie über die Buttons (z.B. <code>+ File</code>) Dateien oder Bilder an Ihren Prompt anhängen, werden diese übersichtlich direkt über dem Textfeld aufgelistet. Die Benutzeroberfläche ordnet den Platz dynamisch neu an, sodass Sie immer genau sehen, welche Kontext-Dateien aktuell an das KI-Modell gesendet werden.</p>
+            
+            <h3>3. Schnelle Bedienung</h3>
+            <ul>
+                <li><strong>Shift + Enter:</strong> Fügt einen normalen Zeilenumbruch ein, damit Sie Ihren Text strukturieren können.</li>
+                <li>Klick auf den <strong>Play-Button (▶) oder Enter</strong>: Sendet Ihre fertige Anfrage (inklusive aller angehängten Dateien) an das Modell ab.</li>
+            </ul>
         </div>
 
         <div class="card">
@@ -407,11 +424,13 @@
                 <p><strong>Fehlt ein Parameter?</strong> Diese Liste ist nicht starr! Ollama und neue Modelle unterstützen oft weitere Parameter.</p>
                 <p>Sie können in der Tabelle einfach in die unterste leere Zeile (markiert mit einem Stern <code>*</code>) klicken und einen <strong>eigenen Parameternamen</strong> sowie den Wert eintragen. Solange das geladene Modell diesen Parameter unterstützt, wird er angewendet.</p>
             </div>
-        </div> <div class="card">
+        </div> 
+        
+        <div class="card">
             <h2>⏱ Timeout Einstellungen</h2>
             <p>Unten links finden Sie die Einstellung <strong>Timeout [s]</strong>.</p>
             <ul>
-                <li>Der Standardwert ist oft auf 300 Sekunden (5 Minuten) gesetzt.</li>
+                <li>Der Standardwert ist oft auf 600 Sekunden (10 Minuten) gesetzt.</li>
                 <li>Wenn Sie sehr große Modelle nutzen oder sehr lange Texte generieren lassen, kann es zum Abbruch kommen. Erhöhen Sie diesen Wert bei Bedarf.</li>
             </ul>
         </div>
@@ -559,15 +578,78 @@
         </div>
 
         <div class="card">
+            <h2 id="link_ssh_system">🤖 SSH Bot (Autonomer KI-Agent)</h2>
+            <p>Der SSH Bot verwandelt Ollama Desktop in einen automatisierten Linux-Systemadministrator. Sie geben ein Ziel vor, und die KI verbindet sich per SSH mit Ihrem Server, führt Befehle aus, analysiert deren Ausgabe und entscheidet selbstständig über die nächsten logischen Schritte.</p>
+
+            <div class="note">
+                <strong>Wichtig:</strong> Aktivieren Sie den Schalter <strong>Use SSH Bot</strong> ganz oben im Tab, um diesen Modus bereitzumachen.
+            </div>
+
+            <h3 id="link_ssh_response">1. Prompts & Anweisungen</h3>
+            <ul>
+                <li><strong>SSH Bot System Prompt:</strong> Hier definieren Sie die Rolle und die Grundregeln für die KI (z.B. "Du bist ein hochqualifizierter Linux-Systemadministrator...").</li>
+                <li><strong>SSH Bot Response Prompt:</strong> Hier definieren Sie, wie die <strong>Antwort des Linux-Servers</strong> (also der Output nach einem ausgeführten Befehl) formatiert und an das LLM zurückgesendet wird. So versteht die KI genau, was nach ihrer letzten Aktion auf dem Server passiert ist (z.B. durch Übergabe des Terminal-Outputs), um den nächsten logischen Schritt zu planen.</li>
+            </ul>
+
+            <h3 id="link_ssh_par">2. Verbindungsdaten</h3>
+            <p>Tragen Sie hier die Zugangsdaten für Ihren Zielserver ein:</p>
+            <ul>
+                <li><strong>SSH Host / IP:</strong> Die Netzwerk-Adresse Ihres Servers (z.B. 192.168.0.90).</li>
+                <li><strong>Username & Password:</strong> Ihre Anmeldedaten.</li>
+                <li><strong>Verwaltung:</strong> Nutzen Sie <code>Test</code>, um die Verbindung zu prüfen, sowie <code>Save SSH</code> / <code>Load SSH</code>, um verschiedene Server-Profile und alle anderen Einstellungen abzuspeichern.</li>
+            </ul>
+
+            <h3>3. Fortgeschrittene Parameter & Sicherheit</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th width="30%">Einstellung</th>
+                        <th>Beschreibung</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Terminal-Prompt RegEx</strong></td>
+                        <td>Ein regulärer Ausdruck, mit dem die App erkennt, wann der Server bereit für eine neue Eingabe ist (z.B. wenn <code>reimar@PI-OLLAMA-TEST:~ $</code> erscheint). Nur bei einem Match weiß die App, dass der vorherige Befehl abgeschlossen ist.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sudo-Prompt & Password</strong></td>
+                        <td>Sollte die KI Befehle mit <code>sudo</code> ausführen, fängt die App die Passwort-Abfrage (Sudo-Prompt) ab und übermittelt automatisch das hier hinterlegte Sudo-Password.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Max. Agent-Steps</strong></td>
+                        <td><strong>Sicherheitslimit:</strong> Begrenzt die maximale Anzahl an aufeinanderfolgenden Schritten, die der Bot für eine Aufgabe ausführen darf (z.B. 15), um teure Endlosschleifen zu vermeiden.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Auto Execute</strong></td>
+                        <td>
+                            ✅ <strong>Aktiviert:</strong> Der Bot agiert vollautonom und führt generierte Befehle sofort aus.<br>
+                            ⬜ <strong>Deaktiviert:</strong> Das Modell schlägt den Befehl nur vor, und Sie müssen die Ausführung manuell anstoßen.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Re Insert System</strong></td>
+                        <td>Wenn aktiviert, wird der System Prompt bei jedem einzelnen Agenten-Schritt erneut gesendet, damit das Modell seinen Fokus (die Administrator-Rolle) über längere Aufgaben hinweg nicht verliert.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="warn">
+                <strong>Sicherheitswarnung:</strong> Ein autonomer KI-Agent mit SSH-Zugang und Sudo-Rechten kann weitreichende Änderungen am System vornehmen. Nutzen Sie diese Funktion mit Vorsicht und idealerweise auf abgeschotteten Test-Systemen (wie virtuellen Maschinen oder Raspberry Pis).
+            </div>
+        </div>
+
+        <div class="card">
             <h2>⚖️ Lizenzen & Drittanbieter</h2>
             <p>Diese Software verwendet Open-Source-Komponenten und Bibliotheken von Drittanbietern. Nachfolgend finden Sie die Urheberrechtshinweise und Lizenzbedingungen:</p>
 
-            <h3>1. Ollama_Desktop, Newtonsoft.Json, Scintilla5.NET</h3>
+            <h3>1. Ollama_Desktop, Newtonsoft.Json, Scintilla5.NET, SSH.NET</h3>
             <p>Die folgenden Komponenten unterliegen der <strong>MIT-Lizenz</strong>:</p>
             <ul>
                 <li><strong>Ollama_Desktop</strong> (Urheber: 7soft)</li>
                 <li><strong>Newtonsoft.Json</strong> (Urheber: Newtonsoft)</li>
                 <li><strong>Scintilla5.NET</strong> (Urheber: Brandon Desjarlais)</li>
+                <li><strong>SSH.NET</strong> (Renci.SshNet)</li>
             </ul>
             <pre>
 Permission is hereby granted, free of charge, to any person obtaining a copy of 
@@ -582,8 +664,7 @@ copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE 
 SOFTWARE.</pre>

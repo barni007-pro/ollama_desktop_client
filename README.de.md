@@ -2,7 +2,7 @@
 
 ---
 
-> **Languages:** [English](README.md) | [Deutsch]
+> **Languages:** [English](README.md) | [Deutsch](README.de.md)
 
 ---
 
@@ -15,6 +15,7 @@
 ---
 
 ### ✨ Highlights
+* **🤖 SSH Bot (Autonomer KI-Agent):** Exklusives Feature! Verwandelt die App in einen autonomen Systemadministrator, der Server per SSH verwaltet, Befehle ausführt und selbstständig auf Terminal-Ausgaben reagiert.
 * **Vision-Unterstützung:** Bilder (.jpg,.png) hochladen und analysieren (z. B. mit llava) im Generate-Modus.
 * **Dateien einlesen:** Importieren von Textdateien (.pdf, .txt, .json), um deren Inhalte direkt in den Kontext einzubinden.
 * **RAG-Tool:** Chatten mit großen Dokumenten (.pdf/.txt) durch lokale Wissensextraktion.
@@ -90,7 +91,7 @@ Du hast die Wahl zwischen der **Portablen** Version (keine Installation erforder
 
 ### 1. Generate-Modus (Einzelanfrage)
 Dieser Modus ist für Einzelaufgaben (One-Shot-Tasks) konzipiert.
-* **Vision / Bilder:** Dies ist der *erinzige* Modus, in dem du Bilder hochladen kannst (über die Schaltflächen `+ File` oder `+ Screenshot`). Nutze dafür Vision-fähige Modelle wie *llava* oder *moondream*.
+* **Vision / Bilder:** Dies ist der *einzige* Modus, in dem du Bilder hochladen kannst (über die Schaltflächen `+ File` oder `+ Screenshot`). Nutze dafür Vision-fähige Modelle wie *llava* oder *moondream*.
 * **Verhalten:** Jede Anfrage steht für sich allein; das Modell "vergisst" vorherige Fragen sofort.
 * **Kontext:** Du kannst jedoch Kontext-Token in die nächste Anfrage einbeziehen, um auch im Generate-Modus eine Konversation aufrechtzuerhalten.
 
@@ -104,6 +105,17 @@ Da der Chat-Modus keine Bilder direkt empfangen kann, bietet die App diesen Work
 2. Warte auf die Antwort.
 3. Klicke auf die Schaltfläche **Generate > Chat**.
 *Die Analyse wird in den Chat-Verlauf kopiert, sodass du im Chat-Modus Folgefragen dazu stellen kannst.*
+
+---
+
+## 🤖 SSH Bot (Autonomer KI-Agent) — 🌟 Alleinstellungsmerkmal
+
+Der integrierte SSH Bot verwandelt Ollama Desktop in einen **vollautomatisierten Linux-Systemadministrator**. Im Gegensatz zu anderen Clients, die nur Code generieren, kann sich diese App direkt mit deinem Server verbinden, Probleme analysieren und autonom beheben!
+
+* **Autonome Ausführung:** Gib ein Ziel vor (z. B. "Analysiere den Webserver und behebe den Fehler"). Die KI verbindet sich via SSH, führt Befehle aus, liest die Terminal-Antwort (inkl. intelligenter RegEx-Erkennung für den Prompt) und plant selbstständig den nächsten logischen Schritt.
+* **Sudo-Support:** Die App fängt Passwort-Abfragen (`sudo`) nahtlos ab und übermittelt das hinterlegte Passwort automatisch, ohne den Agentenfluss zu unterbrechen.
+* **Sicherheits-Leitplanken:** Du behältst die volle Kontrolle. Begrenze die maximalen Agenten-Schritte (Endlosschleifen-Schutz) und wähle, ob der Bot **vollautonom (Auto-Execute)** agieren darf oder jeden Befehl erst zur manuellen Freigabe vorschlagen soll.
+* **Individuelle Rollen:** Passe den Response- und System-Prompt an, um dem Bot spezifische Profile (z. B. Security-Auditor, Netzwerk-Admin) zuzuweisen.
 
 ---
 
@@ -153,7 +165,7 @@ Führe Code in Python, PowerShell, Batch oder HTML/JavaScript direkt in der App 
 ---
 
 ## ⚖️ Lizenzen & Drittanbieter-Komponenten
-* **Ollama_Desktop, Newtonsoft.Json, Scintilla5.NET:** MIT-Lizenz.
+* **Ollama_Desktop, Newtonsoft.Json, Scintilla5.NET, SSH.NET:** MIT-Lizenz.
 * **WebView2:** Microsoft Corporation.
 * **Markdig:** BSD-Clause 2.
 * **PdfPig:** Apache-Lizenz 2.0.
