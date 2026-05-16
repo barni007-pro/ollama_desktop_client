@@ -193,6 +193,7 @@ Partial Class Form1
         SiticoneButton_HTMLtoPDF = New SiticoneNetCoreUI.SiticoneButton()
         SiticonePanel_prompt = New SiticoneNetCoreUI.SiticonePanel()
         SiticonePanel_prompt_action = New SiticoneNetCoreUI.SiticonePanel()
+        SiticoneButton_clear_prompt = New SiticoneNetCoreUI.SiticoneButton()
         SiticoneLabel_show_LLM = New SiticoneNetCoreUI.SiticoneLabel()
         SiticonePlayPauseButton_request = New SiticoneNetCoreUI.SiticonePlayPauseButton()
         SiticoneButton_screenshot = New SiticoneNetCoreUI.SiticoneButton()
@@ -542,7 +543,7 @@ Partial Class Form1
         SiticoneButton_file.TabIndex = 16
         SiticoneButton_file.TextAlign = ContentAlignment.MiddleCenter
         SiticoneButton_file.TextColor = Color.White
-        SiticoneButton_file.TooltipText = "Add File to Context"
+        SiticoneButton_file.TooltipText = "Add File to Prompt Content"
         SiticoneButton_file.UseAdvancedRendering = True
         SiticoneButton_file.UseParticles = False
         ' 
@@ -4432,7 +4433,7 @@ Partial Class Form1
         SiticoneSplitContainer_runcont.SnapDistance = 20
         SiticoneSplitContainer_runcont.SnapPositions = New Single() {0.25F, 0.5F, 0.75F}
         SiticoneSplitContainer_runcont.SplitterCursor = Cursors.HSplit
-        SiticoneSplitContainer_runcont.SplitterDistance = 523
+        SiticoneSplitContainer_runcont.SplitterDistance = 493
         SiticoneSplitContainer_runcont.SplitterHighlightColor = Color.DodgerBlue
         SiticoneSplitContainer_runcont.SplitterMoveable = True
         SiticoneSplitContainer_runcont.SplitterMoveLeftKey = Keys.Left
@@ -4453,7 +4454,7 @@ Partial Class Form1
         Scintilla_code_block.Location = New Point(0, 0)
         Scintilla_code_block.Name = "Scintilla_code_block"
         Scintilla_code_block.ScrollWidth = 70
-        Scintilla_code_block.Size = New Size(1409, 523)
+        Scintilla_code_block.Size = New Size(1409, 493)
         Scintilla_code_block.TabIndex = 59
         ' 
         ' SiticoneTextArea_run_output
@@ -4468,7 +4469,7 @@ Partial Class Form1
         SiticoneTextArea_run_output.Name = "SiticoneTextArea_run_output"
         SiticoneTextArea_run_output.PlaceholderText = "Wait for Output..."
         SiticoneTextArea_run_output.ScrollBars = ScrollBars.Vertical
-        SiticoneTextArea_run_output.Size = New Size(1409, 86)
+        SiticoneTextArea_run_output.Size = New Size(1409, 116)
         SiticoneTextArea_run_output.TabIndex = 2
         ' 
         ' SiticoneButton_code_run
@@ -6246,6 +6247,7 @@ Partial Class Form1
         SiticonePanel_prompt_action.BorderGradientEndColor = Color.Purple
         SiticonePanel_prompt_action.BorderGradientStartColor = Color.Blue
         SiticonePanel_prompt_action.BorderThickness = 2F
+        SiticonePanel_prompt_action.Controls.Add(SiticoneButton_clear_prompt)
         SiticonePanel_prompt_action.Controls.Add(SiticoneLabel_show_LLM)
         SiticonePanel_prompt_action.Controls.Add(SiticonePlayPauseButton_request)
         SiticonePanel_prompt_action.Controls.Add(SiticoneButton_file)
@@ -6283,15 +6285,92 @@ Partial Class Form1
         SiticonePanel_prompt_action.UsePatternTexture = False
         SiticonePanel_prompt_action.UseRadialGradient = False
         ' 
+        ' SiticoneButton_clear_prompt
+        ' 
+        SiticoneButton_clear_prompt.AccessibleDescription = "The default button control that accept input though the mouse, touch and keyboard"
+        SiticoneButton_clear_prompt.AccessibleName = ""
+        SiticoneButton_clear_prompt.AutoSizeBasedOnText = False
+        SiticoneButton_clear_prompt.BackColor = Color.Transparent
+        SiticoneButton_clear_prompt.BadgeBackColor = Color.Red
+        SiticoneButton_clear_prompt.BadgeFont = New Font("Segoe UI", 8F, FontStyle.Bold)
+        SiticoneButton_clear_prompt.BadgeValue = 0
+        SiticoneButton_clear_prompt.BadgeValueForeColor = Color.White
+        SiticoneButton_clear_prompt.BorderColor = Color.Transparent
+        SiticoneButton_clear_prompt.BorderWidth = 2
+        SiticoneButton_clear_prompt.ButtonBackColor = Color.Transparent
+        SiticoneButton_clear_prompt.ButtonImage = CType(resources.GetObject("SiticoneButton_clear_prompt.ButtonImage"), Image)
+        SiticoneButton_clear_prompt.ButtonTextLeftPadding = 0
+        SiticoneButton_clear_prompt.CanBeep = True
+        SiticoneButton_clear_prompt.CanGlow = False
+        SiticoneButton_clear_prompt.CanShake = True
+        SiticoneButton_clear_prompt.ContextMenuStripEx = Nothing
+        SiticoneButton_clear_prompt.CornerRadiusBottomLeft = 8
+        SiticoneButton_clear_prompt.CornerRadiusBottomRight = 8
+        SiticoneButton_clear_prompt.CornerRadiusTopLeft = 8
+        SiticoneButton_clear_prompt.CornerRadiusTopRight = 8
+        SiticoneButton_clear_prompt.CustomCursor = Cursors.Default
+        SiticoneButton_clear_prompt.DisabledTextColor = Color.Transparent
+        SiticoneButton_clear_prompt.EnableLongPress = False
+        SiticoneButton_clear_prompt.EnablePressAnimation = True
+        SiticoneButton_clear_prompt.EnableRippleEffect = True
+        SiticoneButton_clear_prompt.EnableShadow = False
+        SiticoneButton_clear_prompt.EnableTextWrapping = False
+        SiticoneButton_clear_prompt.Font = New Font("Segoe UI", 9F)
+        SiticoneButton_clear_prompt.ForeColor = Color.LightGray
+        SiticoneButton_clear_prompt.GlowColor = Color.FromArgb(CByte(30), CByte(110), CByte(178), CByte(230))
+        SiticoneButton_clear_prompt.GlowIntensity = 100
+        SiticoneButton_clear_prompt.GlowRadius = 20F
+        SiticoneButton_clear_prompt.GradientBackground = False
+        SiticoneButton_clear_prompt.GradientColor = Color.FromArgb(CByte(255), CByte(77), CByte(146))
+        SiticoneButton_clear_prompt.GradientMode = Drawing2D.LinearGradientMode.ForwardDiagonal
+        SiticoneButton_clear_prompt.HintText = Nothing
+        SiticoneButton_clear_prompt.HoverBackColor = SystemColors.ActiveCaption
+        SiticoneButton_clear_prompt.HoverFontStyle = FontStyle.Regular
+        SiticoneButton_clear_prompt.HoverTextColor = Color.White
+        SiticoneButton_clear_prompt.HoverTransitionDuration = 250
+        SiticoneButton_clear_prompt.ImageAlign = ContentAlignment.MiddleCenter
+        SiticoneButton_clear_prompt.ImagePadding = 5
+        SiticoneButton_clear_prompt.ImageSize = New Size(32, 32)
+        SiticoneButton_clear_prompt.IsRadial = False
+        SiticoneButton_clear_prompt.IsReadOnly = False
+        SiticoneButton_clear_prompt.IsToggleButton = False
+        SiticoneButton_clear_prompt.IsToggled = False
+        SiticoneButton_clear_prompt.Location = New Point(74, 1)
+        SiticoneButton_clear_prompt.LongPressDurationMS = 1000
+        SiticoneButton_clear_prompt.Name = "SiticoneButton_clear_prompt"
+        SiticoneButton_clear_prompt.NormalFontStyle = FontStyle.Regular
+        SiticoneButton_clear_prompt.ParticleColor = Color.FromArgb(CByte(200), CByte(200), CByte(200))
+        SiticoneButton_clear_prompt.ParticleCount = 15
+        SiticoneButton_clear_prompt.PressAnimationScale = 0.97F
+        SiticoneButton_clear_prompt.PressedBackColor = Color.FromArgb(CByte(16), CByte(100), CByte(220))
+        SiticoneButton_clear_prompt.PressedFontStyle = FontStyle.Regular
+        SiticoneButton_clear_prompt.PressTransitionDuration = 150
+        SiticoneButton_clear_prompt.ReadOnlyTextColor = Color.FromArgb(CByte(100), CByte(100), CByte(100))
+        SiticoneButton_clear_prompt.RippleColor = Color.White
+        SiticoneButton_clear_prompt.RippleOpacity = 0.2F
+        SiticoneButton_clear_prompt.RippleRadiusMultiplier = 0.6F
+        SiticoneButton_clear_prompt.ShadowBlur = 5
+        SiticoneButton_clear_prompt.ShadowColor = Color.FromArgb(CByte(50), CByte(0), CByte(64), CByte(128))
+        SiticoneButton_clear_prompt.ShadowOffset = New Point(0, 2)
+        SiticoneButton_clear_prompt.ShakeDuration = 500
+        SiticoneButton_clear_prompt.ShakeIntensity = 5
+        SiticoneButton_clear_prompt.Size = New Size(32, 32)
+        SiticoneButton_clear_prompt.TabIndex = 52
+        SiticoneButton_clear_prompt.TextAlign = ContentAlignment.MiddleCenter
+        SiticoneButton_clear_prompt.TextColor = Color.White
+        SiticoneButton_clear_prompt.TooltipText = "Clear all Prompt Text and Content"
+        SiticoneButton_clear_prompt.UseAdvancedRendering = True
+        SiticoneButton_clear_prompt.UseParticles = False
+        ' 
         ' SiticoneLabel_show_LLM
         ' 
         SiticoneLabel_show_LLM.Anchor = AnchorStyles.Top Or AnchorStyles.Left Or AnchorStyles.Right
         SiticoneLabel_show_LLM.BackColor = Color.Transparent
         SiticoneLabel_show_LLM.Font = New Font("Segoe UI Semibold", 14.25F, FontStyle.Bold Or FontStyle.Italic, GraphicsUnit.Point, CByte(0))
         SiticoneLabel_show_LLM.ForeColor = Color.FromArgb(CByte(26), CByte(115), CByte(232))
-        SiticoneLabel_show_LLM.Location = New Point(72, 5)
+        SiticoneLabel_show_LLM.Location = New Point(111, 5)
         SiticoneLabel_show_LLM.Name = "SiticoneLabel_show_LLM"
-        SiticoneLabel_show_LLM.Size = New Size(1235, 25)
+        SiticoneLabel_show_LLM.Size = New Size(1196, 25)
         SiticoneLabel_show_LLM.TabIndex = 51
         SiticoneLabel_show_LLM.Text = "no LLM selected"
         SiticoneLabel_show_LLM.TextAlign = ContentAlignment.MiddleRight
@@ -6402,7 +6481,7 @@ Partial Class Form1
         SiticoneButton_screenshot.TabIndex = 16
         SiticoneButton_screenshot.TextAlign = ContentAlignment.MiddleCenter
         SiticoneButton_screenshot.TextColor = Color.White
-        SiticoneButton_screenshot.TooltipText = "Add Screenshot to Context"
+        SiticoneButton_screenshot.TooltipText = "Add Screenshot to Prompt Content"
         SiticoneButton_screenshot.UseAdvancedRendering = True
         SiticoneButton_screenshot.UseParticles = False
         ' 
@@ -8031,5 +8110,6 @@ Partial Class Form1
     Friend WithEvents SiticoneLabel25 As SiticoneNetCoreUI.SiticoneLabel
     Friend WithEvents SiticoneButton_load_ssh As SiticoneNetCoreUI.SiticoneButton
     Friend WithEvents SiticoneButton_save_ssh As SiticoneNetCoreUI.SiticoneButton
+    Friend WithEvents SiticoneButton_clear_prompt As SiticoneNetCoreUI.SiticoneButton
 
 End Class

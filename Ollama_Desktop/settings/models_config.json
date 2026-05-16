@@ -26,6 +26,24 @@
     "context": 8,
     "description": "aya - Cohere - Mehrsprachiges Modell (101+ Sprachen), gut für Übersetzung und Multilingual-Tasks."
   },
+  "aya-expanse": {
+    "vision": false,
+    "tools": true,
+    "embedding": false,
+    "thinking": false,
+    "image": false,
+    "context": 8,
+    "description": "aya-expanse - Cohere - Weiterentwicklung von Aya, massiv mehrsprachig (23+ Sprachen) mit Fokus auf globale Zugänglichkeit."
+  },
+  "baichuan2": {
+    "vision": false,
+    "tools": false,
+    "embedding": false,
+    "thinking": false,
+    "image": false,
+    "context": 4,
+    "description": "baichuan2 - Baichuan Intelligent Technology - Führendes zweisprachiges (CN/EN) Basismodell, sehr stark im asiatischen Sprachraum."
+  },
   "bespoke-minicheck": {
     "vision": false,
     "tools": false,
@@ -97,6 +115,15 @@
     "image": false,
     "context": 128,
     "description": "command-r-xl - Cohere - XL-Version für lange Kontexte und komplexe Dialoge, optimiert für Business-Integration."
+  },
+  "command-r-plus": {
+    "vision": false,
+    "tools": true,
+    "embedding": false,
+    "thinking": false,
+    "image": false,
+    "context": 128,
+    "description": "command-r-plus - Cohere - Das leistungsstärkste offene RAG- und Tool-Calling-Modell von Cohere für komplexe Enterprise-Workflows."
   },
   "dbrx": {
     "vision": false,
@@ -341,6 +368,24 @@
     "context": 128,
     "description": "granite3.2-vision - IBM - Kompaktes Vision-Language Modell, gut für Dokument-Parsing und visuelle Dokumentenanalyse."
   },
+  "granite-code": {
+    "vision": false,
+    "tools": false,
+    "embedding": false,
+    "thinking": false,
+    "image": false,
+    "context": 8,
+    "description": "granite-code - IBM - Speziell auf Code-Generierung und -Verständnis trainierte Granite-Modellreihe für Entwickler."
+  },
+  "granite4.1": {
+    "vision": false,
+    "tools": true,
+    "embedding": false,
+    "thinking": false,
+    "image": false,
+    "context": 128,
+    "description": "granite4.1 - IBM - Foundation Models, die Mehrsprachigkeit, Programmierung, Retrieval-Augmented Generation (RAG), die Nutzung von Tools sowie strukturierte JSON-Ausgaben unterstützen."
+  },
   "grok-1.5": {
     "vision": false,
     "tools": false,
@@ -367,6 +412,15 @@
     "image": false,
     "context": 256,
     "description": "hunyuan-large - Tencent - Massives MoE Modell mit exzellenter Sprachabdeckung und langem Kontext."
+  },
+  "internlm3": {
+    "vision": false,
+    "tools": true,
+    "embedding": false,
+    "thinking": true,
+    "image": false,
+    "context": 32,
+    "description": "internlm3 - Shanghai AI Lab - Starkes chinesisch-englisches Open-Source-Modell mit exzellentem Reasoning und Tool-Support."
   },
   "jamba-1.5-large": {
     "vision": false,
@@ -503,6 +557,15 @@
     "context": 4,
     "description": "nemotron-mini - NVIDIA - Kleines, hocheffizientes 4B Modell. Optimiert für schnelle Antworten und Function-Calling auf Consumer-Hardware."
   },
+  "nemotron3": {
+    "vision": true,
+    "tools": true,
+    "embedding": false,
+    "thinking": true,
+    "image": false,
+    "context": 128,
+    "description": "nemotron3 - NVIDIA - Ist ein multimodales großes Sprachmodell, das das Verständnis von Video, Audio, Bild und Text vereint."
+  },
   "minicpm-v": {
     "vision": true,
     "tools": false,
@@ -556,6 +619,15 @@
     "image": false,
     "context": 128,
     "description": "mistral-small - Mistral AI - Mistral Small 3.1 mit Vision-Understanding, 128K Context, verbesserte Fehlerreduzierung."
+  },
+  "mistral-medium-3.5": {
+    "vision": true,
+    "tools": true,
+    "embedding": false,
+    "thinking": true,
+    "image": false,
+    "context": 256,
+    "description": "mistral-medium-3.5 - Mistral AI - Ist das erste Flaggschiffmodell von Mistral AI, das das Befolgen von Anweisungen, logisches Schlussfolgern und Programmieren vereint."
   },
   "mixtral": {
     "vision": false,
@@ -655,6 +727,15 @@
     "image": false,
     "context": 32,
     "description": "openthinker - Open Thoughts - Destillation von DeepSeek-R1 für Reasoning-Aufgaben."
+  },
+  "openhermes": {
+    "vision": false,
+    "tools": true,
+    "embedding": false,
+    "thinking": false,
+    "image": false,
+    "context": 32,
+    "description": "openhermes - Nous Research - Extrem populärer Fine-Tune für exzellente Chat- und Assistenz-Fähigkeiten."
   },
   "orca-mini": {
     "vision": false,
@@ -880,6 +961,15 @@
     "image": false,
     "context": 16,
     "description": "starcoder2 - BigCode - Weiterentwicklung von StarCoder (3B, 7B, 15B) mit verbessertem Codeverständnis, transparent trainiert."
+  },
+  "starling-lm": {
+    "vision": false,
+    "tools": false,
+    "embedding": false,
+    "thinking": false,
+    "image": false,
+    "context": 8,
+    "description": "starling-lm - Berkeley - RLHF-optimiertes Modell, das in Chatbots durch sehr natürliche und hilfreiche Antworten glänzt."
   },
   "tinyllama": {
     "vision": false,

@@ -57,3 +57,15 @@ V 1.5.0.25
   Exclusive feature! 
   Transforms the app into an autonomous system administrator that manages servers via SSH, 
   executes commands, and independently reacts to terminal outputs.
+V 1.5.1.26
+- add internlm3 to models_config.json
+- add baichuan2 to models_config.json
+- add command-r-plus to models_config.json
+- add aya-expanse to models_config.json
+- add openhermes to models_config.json
+- add starling-lm to models_config.json
+- add granite-code to models_config.json
+- add granite4.1 to models_config.json
+- add mistral-medium-3.5 to models_config.json
+- add nemotron3 to models_config.json
+- Clear Button for Prompt Input

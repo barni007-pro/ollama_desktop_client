@@ -324,6 +324,7 @@ Public Class Form1
         RegisterStateImages(SiticoneButton_timing, My.Resources.Resource_pic.statistics_32_blau, My.Resources.Resource_pic.statistics_32_grau)
         RegisterStateImages(SiticoneButton_show_thinking, My.Resources.Resource_pic.think_32_blau, My.Resources.Resource_pic.think_32_grau)
         RegisterStateImages(SiticoneButton_HTMLtoPDF, My.Resources.Resource_pic.save_32_blau, My.Resources.Resource_pic.save_32_grau)
+        RegisterStateImages(SiticoneButton_clear_prompt, My.Resources.Resource_pic.edit_clear_all_blau, My.Resources.Resource_pic.edit_clear_all_grau)
 
         'öffnet LLM API Setting Menü
         SiticonePanel_llm_setting.Visible = My.Settings.LLM_seting
@@ -3053,7 +3054,6 @@ Public Class Form1
         Return Nothing
     End Function
 
-
     Private Async Sub SiticoneButton_screenshot_Click(sender As Object, e As EventArgs) Handles SiticoneButton_screenshot.Click
         WindowState = FormWindowState.Minimized
         Try
@@ -3080,6 +3080,11 @@ Public Class Form1
         BringToFront()
         Application.DoEvents()
         UpdatePromptLayout()
+    End Sub
+
+    Private Sub SiticoneButton_clear_prompt_Click(sender As Object, e As EventArgs) Handles SiticoneButton_clear_prompt.Click
+        SiticoneTextArea_prompt.Clear()
+        ClearFileChips()
     End Sub
 
     Public Sub LoadModelConfig(filePath As String)
@@ -4051,7 +4056,6 @@ Public Class Form1
         ' Linux-Umbruch (LF) in Windows-Umbruch (CRLF) für die TextBox
         Return cleanOutput.Replace(vbLf, vbCrLf)
     End Function
-
 
 End Class
 
