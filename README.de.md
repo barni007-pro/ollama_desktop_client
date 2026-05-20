@@ -69,6 +69,8 @@ Du hast die Wahl zwischen der **Portablen** Version (keine Installation erforder
 | [![Response MarkDown](./screenshots/response_markdown.png)](./screenshots/response_markdown.png) | [![Response HTML](./screenshots/response_html.png)](./screenshots/response_html.png) |
 | **Tab: Code Parameter** | **Tab: Code Block** |
 | [![Code Parameter](./screenshots/code_parameter.png)](./screenshots/code_parameter.png) | [![Code Block](./screenshots/code_block.png)](./screenshots/code_block.png) |
+| **Tab: SSH Bot** | |
+| [![SSH Bot](./screenshots/ssh_bot.png)](./screenshots/ssh_bot.png) | |
 
 </details>
 
