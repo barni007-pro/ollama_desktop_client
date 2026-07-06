@@ -224,6 +224,7 @@ Partial Class Form1
         SiticoneBorderlessForm1 = New SiticoneNetCoreUI.SiticoneBorderlessForm(components)
         SiticonePanel_llm_setting = New SiticoneNetCoreUI.SiticonePanel()
         Timer_LLM_progress = New Timer(components)
+        SiticoneChip_model_info_Audio = New SiticoneNetCoreUI.SiticoneChip()
         CType(WebView21, ComponentModel.ISupportInitialize).BeginInit()
         SiticoneTabControl_tab.SuspendLayout()
         TabPage_modelinfo.SuspendLayout()
@@ -603,6 +604,7 @@ Partial Class Form1
         ' TabPage_modelinfo
         ' 
         TabPage_modelinfo.BackColor = Color.WhiteSmoke
+        TabPage_modelinfo.Controls.Add(SiticoneChip_model_info_Audio)
         TabPage_modelinfo.Controls.Add(SiticoneChip_model_info_Image)
         TabPage_modelinfo.Controls.Add(Scintilla_model_info)
         TabPage_modelinfo.Controls.Add(Scintilla_model_info_request)
@@ -655,7 +657,7 @@ Partial Class Form1
         SiticoneChip_model_info_Image.HoverColor = Color.FromArgb(CByte(255), CByte(192), CByte(192))
         SiticoneChip_model_info_Image.HoverTextColor = Color.Empty
         SiticoneChip_model_info_Image.IsSelected = False
-        SiticoneChip_model_info_Image.Location = New Point(630, 31)
+        SiticoneChip_model_info_Image.Location = New Point(786, 31)
         SiticoneChip_model_info_Image.Name = "SiticoneChip_model_info_Image"
         SiticoneChip_model_info_Image.Padding = New Padding(8, 4, 8, 4)
         SiticoneChip_model_info_Image.PressedColor = Color.FromArgb(CByte(224), CByte(224), CByte(224))
@@ -809,7 +811,7 @@ Partial Class Form1
         SiticoneChip_model_info_Context.HoverColor = Color.FromArgb(CByte(255), CByte(192), CByte(192))
         SiticoneChip_model_info_Context.HoverTextColor = Color.Empty
         SiticoneChip_model_info_Context.IsSelected = False
-        SiticoneChip_model_info_Context.Location = New Point(786, 31)
+        SiticoneChip_model_info_Context.Location = New Point(942, 31)
         SiticoneChip_model_info_Context.Name = "SiticoneChip_model_info_Context"
         SiticoneChip_model_info_Context.Padding = New Padding(8, 4, 8, 4)
         SiticoneChip_model_info_Context.PressedColor = Color.FromArgb(CByte(224), CByte(224), CByte(224))
@@ -861,7 +863,7 @@ Partial Class Form1
         SiticoneChip_model_info_Embedding.HoverColor = Color.FromArgb(CByte(255), CByte(192), CByte(192))
         SiticoneChip_model_info_Embedding.HoverTextColor = Color.Empty
         SiticoneChip_model_info_Embedding.IsSelected = False
-        SiticoneChip_model_info_Embedding.Location = New Point(474, 31)
+        SiticoneChip_model_info_Embedding.Location = New Point(630, 31)
         SiticoneChip_model_info_Embedding.Name = "SiticoneChip_model_info_Embedding"
         SiticoneChip_model_info_Embedding.Padding = New Padding(8, 4, 8, 4)
         SiticoneChip_model_info_Embedding.PressedColor = Color.FromArgb(CByte(224), CByte(224), CByte(224))
@@ -913,7 +915,7 @@ Partial Class Form1
         SiticoneChip_model_info_Thinking.HoverColor = Color.FromArgb(CByte(255), CByte(192), CByte(192))
         SiticoneChip_model_info_Thinking.HoverTextColor = Color.Empty
         SiticoneChip_model_info_Thinking.IsSelected = False
-        SiticoneChip_model_info_Thinking.Location = New Point(318, 31)
+        SiticoneChip_model_info_Thinking.Location = New Point(474, 31)
         SiticoneChip_model_info_Thinking.Name = "SiticoneChip_model_info_Thinking"
         SiticoneChip_model_info_Thinking.Padding = New Padding(8, 4, 8, 4)
         SiticoneChip_model_info_Thinking.PressedColor = Color.FromArgb(CByte(224), CByte(224), CByte(224))
@@ -965,7 +967,7 @@ Partial Class Form1
         SiticoneChip_model_info_Tools.HoverColor = Color.FromArgb(CByte(255), CByte(192), CByte(192))
         SiticoneChip_model_info_Tools.HoverTextColor = Color.Empty
         SiticoneChip_model_info_Tools.IsSelected = False
-        SiticoneChip_model_info_Tools.Location = New Point(162, 31)
+        SiticoneChip_model_info_Tools.Location = New Point(318, 31)
         SiticoneChip_model_info_Tools.Name = "SiticoneChip_model_info_Tools"
         SiticoneChip_model_info_Tools.Padding = New Padding(8, 4, 8, 4)
         SiticoneChip_model_info_Tools.PressedColor = Color.FromArgb(CByte(224), CByte(224), CByte(224))
@@ -7917,6 +7919,58 @@ Partial Class Form1
         ' Timer_LLM_progress
         ' 
         ' 
+        ' SiticoneChip_model_info_Audio
+        ' 
+        SiticoneChip_model_info_Audio.AccentColor = Color.FromArgb(CByte(0), CByte(122), CByte(204))
+        SiticoneChip_model_info_Audio.AutoDisposeOnClose = True
+        SiticoneChip_model_info_Audio.Avatar = Nothing
+        SiticoneChip_model_info_Audio.BackColor = Color.Transparent
+        SiticoneChip_model_info_Audio.BorderColor = Color.FromArgb(CByte(210), CByte(210), CByte(210))
+        SiticoneChip_model_info_Audio.BorderWidth = 1
+        SiticoneChip_model_info_Audio.BottomLeftRadius = 20F
+        SiticoneChip_model_info_Audio.BottomRightRadius = 20F
+        SiticoneChip_model_info_Audio.CheckmarkColor = Color.FromArgb(CByte(64), CByte(64), CByte(64))
+        SiticoneChip_model_info_Audio.CheckmarkPadding = New Padding(8, 8, 0, 8)
+        SiticoneChip_model_info_Audio.CheckmarkScale = 0.6F
+        SiticoneChip_model_info_Audio.CheckmarkThickness = 2F
+        SiticoneChip_model_info_Audio.CheckmarkWidth = 20
+        SiticoneChip_model_info_Audio.CloseButtonBorderColor = Color.FromArgb(CByte(128), CByte(128), CByte(128))
+        SiticoneChip_model_info_Audio.CloseButtonBorderThickness = 1F
+        SiticoneChip_model_info_Audio.CloseButtonHoverBackColor = Color.FromArgb(CByte(30), CByte(128), CByte(128), CByte(128))
+        SiticoneChip_model_info_Audio.CloseIconColor = Color.Black
+        SiticoneChip_model_info_Audio.CloseIconHoverColor = Color.FromArgb(CByte(64), CByte(64), CByte(64))
+        SiticoneChip_model_info_Audio.CloseIconInnerPadding = 4
+        SiticoneChip_model_info_Audio.CloseIconPadding = New Padding(8)
+        SiticoneChip_model_info_Audio.CloseIconSize = 20
+        SiticoneChip_model_info_Audio.CloseIconThickness = 1.5F
+        SiticoneChip_model_info_Audio.EnableHoverAnimation = True
+        SiticoneChip_model_info_Audio.EnableRipples = True
+        SiticoneChip_model_info_Audio.EnableSelection = False
+        SiticoneChip_model_info_Audio.FillColor = Color.FromArgb(CByte(255), CByte(192), CByte(192))
+        SiticoneChip_model_info_Audio.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
+        SiticoneChip_model_info_Audio.ForeColor = Color.FromArgb(CByte(20), CByte(20), CByte(20))
+        SiticoneChip_model_info_Audio.Group = ""
+        SiticoneChip_model_info_Audio.HoverColor = Color.FromArgb(CByte(255), CByte(192), CByte(192))
+        SiticoneChip_model_info_Audio.HoverTextColor = Color.Empty
+        SiticoneChip_model_info_Audio.IsSelected = False
+        SiticoneChip_model_info_Audio.Location = New Point(162, 31)
+        SiticoneChip_model_info_Audio.Name = "SiticoneChip_model_info_Audio"
+        SiticoneChip_model_info_Audio.Padding = New Padding(8, 4, 8, 4)
+        SiticoneChip_model_info_Audio.PressedColor = Color.FromArgb(CByte(224), CByte(224), CByte(224))
+        SiticoneChip_model_info_Audio.RippleColor = Color.Gray
+        SiticoneChip_model_info_Audio.RippleDurationMS = 500
+        SiticoneChip_model_info_Audio.RippleOpacity = 0.1F
+        SiticoneChip_model_info_Audio.SelectedFillColor = Color.FromArgb(CByte(192), CByte(255), CByte(192))
+        SiticoneChip_model_info_Audio.SelectedTextColor = Color.Empty
+        SiticoneChip_model_info_Audio.ShowCheckmark = True
+        SiticoneChip_model_info_Audio.ShowCloseButton = False
+        SiticoneChip_model_info_Audio.ShowCloseButtonBorder = False
+        SiticoneChip_model_info_Audio.Size = New Size(150, 29)
+        SiticoneChip_model_info_Audio.TabIndex = 51
+        SiticoneChip_model_info_Audio.Text = "audio"
+        SiticoneChip_model_info_Audio.TopLeftRadius = 20F
+        SiticoneChip_model_info_Audio.TopRightRadius = 20F
+        ' 
         ' Form1
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
@@ -8184,5 +8238,6 @@ Partial Class Form1
     Friend WithEvents SiticoneButton_save_ssh As SiticoneNetCoreUI.SiticoneButton
     Friend WithEvents SiticoneButton_clear_prompt As SiticoneNetCoreUI.SiticoneButton
     Friend WithEvents SiticoneButton_audio As SiticoneNetCoreUI.SiticoneButton
+    Friend WithEvents SiticoneChip_model_info_Audio As SiticoneNetCoreUI.SiticoneChip
 
 End Class

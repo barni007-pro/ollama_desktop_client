@@ -126,6 +126,7 @@ Public Class Form1
 
     Public Class ModelInfo
         Public Property vision As Boolean
+        Public Property audio As Boolean
         Public Property tools As Boolean
         Public Property thinking As Boolean
         Public Property embedding As Boolean
@@ -2144,6 +2145,7 @@ Public Class Form1
         If model_info_get IsNot Nothing Then
             SiticoneLabel1_model_info_description.Text = model_info_get.description
             SiticoneChip_model_info_Vision.IsSelected = model_info_get.vision
+            SiticoneChip_model_info_Audio.IsSelected = model_info_get.audio
             SiticoneChip_model_info_Tools.IsSelected = model_info_get.tools
             SiticoneChip_model_info_Thinking.IsSelected = model_info_get.thinking
             SiticoneChip_model_info_Embedding.IsSelected = model_info_get.embedding
@@ -2160,6 +2162,7 @@ Public Class Form1
         Else
             SiticoneLabel1_model_info_description.Text = "unknown"
             SiticoneChip_model_info_Vision.IsSelected = False
+            SiticoneChip_model_info_Audio.IsSelected = False
             SiticoneChip_model_info_Tools.IsSelected = False
             SiticoneChip_model_info_Thinking.IsSelected = False
             SiticoneChip_model_info_Embedding.IsSelected = False

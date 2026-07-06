@@ -1,6 +1,7 @@
 {
   "all-minilm": {
     "vision": false,
+    "audio": false,
     "tools": false,
     "embedding": true,
     "thinking": false,
@@ -10,6 +11,7 @@
   },
   "alpha-orionis-uncensored": {
     "vision": false,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": false,
@@ -19,6 +21,7 @@
   },
   "aya": {
     "vision": false,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": false,
@@ -28,6 +31,7 @@
   },
   "aya-expanse": {
     "vision": false,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": false,
@@ -37,6 +41,7 @@
   },
   "baichuan2": {
     "vision": false,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": false,
@@ -46,6 +51,7 @@
   },
   "bespoke-minicheck": {
     "vision": false,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": false,
@@ -55,6 +61,7 @@
   },
   "bitnet-b1.58": {
     "vision": false,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": false,
@@ -64,6 +71,7 @@
   },
   "codegeex4": {
     "vision": false,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": false,
@@ -73,6 +81,7 @@
   },
   "codegemma": {
     "vision": false,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": false,
@@ -82,6 +91,7 @@
   },
   "codellama": {
     "vision": false,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": false,
@@ -91,6 +101,7 @@
   },
   "codellama-instruct": {
     "vision": false,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": false,
@@ -100,6 +111,7 @@
   },
   "command-r": {
     "vision": false,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": false,
@@ -109,6 +121,7 @@
   },
   "command-r-xl": {
     "vision": false,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": false,
@@ -118,6 +131,7 @@
   },
   "command-r-plus": {
     "vision": false,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": false,
@@ -127,6 +141,7 @@
   },
   "dbrx": {
     "vision": false,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": false,
@@ -136,6 +151,7 @@
   },
   "deepcoder": {
     "vision": false,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": false,
@@ -145,6 +161,7 @@
   },
   "deepscaler": {
     "vision": false,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": true,
@@ -154,6 +171,7 @@
   },
   "deepseek-coder": {
     "vision": false,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": false,
@@ -163,6 +181,7 @@
   },
   "deepseek-coder-v2": {
     "vision": false,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": false,
@@ -172,6 +191,7 @@
   },
   "deepseek-ocr": {
     "vision": true,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": false,
@@ -181,6 +201,7 @@
   },
   "deepseek-r1": {
     "vision": false,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": true,
@@ -190,6 +211,7 @@
   },
   "deepseek-v3.1": {
     "vision": false,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": true,
@@ -199,6 +221,7 @@
   },
   "dolly": {
     "vision": false,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": false,
@@ -208,6 +231,7 @@
   },
   "dolly-v2": {
     "vision": false,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": false,
@@ -217,6 +241,7 @@
   },
   "dolphin": {
     "vision": false,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": false,
@@ -226,6 +251,7 @@
   },
   "embeddinggemma": {
     "vision": false,
+    "audio": false,
     "tools": false,
     "embedding": true,
     "thinking": false,
@@ -235,6 +261,7 @@
   },
   "everythinglm": {
     "vision": false,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": false,
@@ -244,6 +271,7 @@
   },
   "exaone": {
     "vision": false,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": false,
@@ -253,6 +281,7 @@
   },
   "falcon3": {
     "vision": false,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": false,
@@ -262,6 +291,7 @@
   },
   "x/flux2-klein": {
     "vision": false,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": false,
@@ -271,6 +301,7 @@
   },
   "gemma2": {
     "vision": false,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": false,
@@ -280,6 +311,7 @@
   },
   "gemma2-chat": {
     "vision": false,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": false,
@@ -289,6 +321,7 @@
   },
   "gemma2-vision": {
     "vision": true,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": false,
@@ -298,6 +331,7 @@
   },
   "gemma3": {
     "vision": true,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": false,
@@ -307,6 +341,7 @@
   },
   "gemma4": {
     "vision": true,
+    "audio": true,
     "tools": true,
     "embedding": false,
     "thinking": true,
@@ -316,6 +351,7 @@
   },
   "glm-ocr": {
     "vision": true,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": false,
@@ -325,6 +361,7 @@
   },
   "glm4": {
     "vision": false,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": true,
@@ -334,6 +371,7 @@
   },
   "glm-4.7-flash": {
     "vision": false,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": true,
@@ -343,6 +381,7 @@
   },
   "gpt-oss": {
     "vision": false,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": true,
@@ -352,6 +391,7 @@
   },
   "granite3.1": {
     "vision": false,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": false,
@@ -361,6 +401,7 @@
   },
   "granite3.2-vision": {
     "vision": true,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": false,
@@ -370,6 +411,7 @@
   },
   "granite-code": {
     "vision": false,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": false,
@@ -379,6 +421,7 @@
   },
   "granite4.1": {
     "vision": false,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": false,
@@ -388,6 +431,7 @@
   },
   "grok-1.5": {
     "vision": false,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": false,
@@ -397,6 +441,7 @@
   },
   "hermes3": {
     "vision": false,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": false,
@@ -406,6 +451,7 @@
   },
   "hunyuan-large": {
     "vision": false,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": false,
@@ -415,6 +461,7 @@
   },
   "internlm3": {
     "vision": false,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": true,
@@ -424,6 +471,7 @@
   },
   "jamba-1.5-large": {
     "vision": false,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": false,
@@ -433,6 +481,7 @@
   },
   "kimi-k2": {
     "vision": false,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": false,
@@ -442,6 +491,7 @@
   },
   "lfm2": {
     "vision": false,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": false,
@@ -451,6 +501,7 @@
   },
   "llama2": {
     "vision": false,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": false,
@@ -460,6 +511,7 @@
   },
   "llama2-chat": {
     "vision": false,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": false,
@@ -469,6 +521,7 @@
   },
   "llama2-uncensored": {
     "vision": false,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": false,
@@ -478,6 +531,7 @@
   },
   "llama3-gradient": {
     "vision": false,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": false,
@@ -487,6 +541,7 @@
   },
   "llama3.1": {
     "vision": false,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": false,
@@ -496,6 +551,7 @@
   },
   "llama3.2": {
     "vision": false,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": false,
@@ -505,6 +561,7 @@
   },
   "llama3.2-vision": {
     "vision": true,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": false,
@@ -514,6 +571,7 @@
   },
   "llama3.3": {
     "vision": false,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": false,
@@ -523,6 +581,7 @@
   },
   "llava": {
     "vision": true,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": false,
@@ -532,6 +591,7 @@
   },
   "marco-o1": {
     "vision": false,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": true,
@@ -541,6 +601,7 @@
   },
   "mathstral": {
     "vision": false,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": false,
@@ -550,6 +611,7 @@
   },
   "nemotron-mini": {
     "vision": false,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": false,
@@ -559,6 +621,7 @@
   },
   "nemotron3": {
     "vision": true,
+    "audio": true,
     "tools": true,
     "embedding": false,
     "thinking": true,
@@ -568,6 +631,7 @@
   },
   "minicpm-v": {
     "vision": true,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": false,
@@ -577,6 +641,7 @@
   },
   "ministral-3": {
     "vision": true,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": false,
@@ -586,6 +651,7 @@
   },
   "mistral": {
     "vision": false,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": false,
@@ -595,6 +661,7 @@
   },
   "mistral-large": {
     "vision": false,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": false,
@@ -604,6 +671,7 @@
   },
   "mistral-nemo": {
     "vision": false,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": false,
@@ -613,6 +681,7 @@
   },
   "mistral-small": {
     "vision": false,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": false,
@@ -622,6 +691,7 @@
   },
   "mistral-medium-3.5": {
     "vision": true,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": true,
@@ -631,6 +701,7 @@
   },
   "mixtral": {
     "vision": false,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": false,
@@ -640,6 +711,7 @@
   },
   "moondream": {
     "vision": true,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": false,
@@ -649,6 +721,7 @@
   },
   "mpt": {
     "vision": false,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": false,
@@ -658,6 +731,7 @@
   },
   "mpt-vision": {
     "vision": true,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": false,
@@ -667,6 +741,7 @@
   },
   "mxbai-embed-large": {
     "vision": false,
+    "audio": false,
     "tools": false,
     "embedding": true,
     "thinking": false,
@@ -676,6 +751,7 @@
   },
   "nemotron-4-340b": {
     "vision": false,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": false,
@@ -685,6 +761,7 @@
   },
   "nomic-embed-text": {
     "vision": false,
+    "audio": false,
     "tools": false,
     "embedding": true,
     "thinking": false,
@@ -694,6 +771,7 @@
   },
   "nous-hermes": {
     "vision": false,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": false,
@@ -703,6 +781,7 @@
   },
   "nova-pro": {
     "vision": true,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": false,
@@ -712,6 +791,7 @@
   },
   "olmo-3": {
     "vision": false,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": true,
@@ -721,6 +801,7 @@
   },
   "openthinker": {
     "vision": false,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": true,
@@ -730,6 +811,7 @@
   },
   "openhermes": {
     "vision": false,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": false,
@@ -739,6 +821,7 @@
   },
   "orca-mini": {
     "vision": false,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": false,
@@ -748,6 +831,7 @@
   },
   "ornith": {
     "vision": false,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": false,
@@ -757,6 +841,7 @@
   },
   "phi3-medium": {
     "vision": false,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": false,
@@ -766,6 +851,7 @@
   },
   "phi3-mini": {
     "vision": false,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": false,
@@ -775,6 +861,7 @@
   },
   "phi4": {
     "vision": false,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": false,
@@ -784,6 +871,7 @@
   },
   "phoenix": {
     "vision": false,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": false,
@@ -793,6 +881,7 @@
   },
   "phoenix-vl": {
     "vision": true,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": false,
@@ -802,6 +891,7 @@
   },
   "pixtral-12b": {
     "vision": true,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": false,
@@ -811,6 +901,7 @@
   },
   "qwen-chat": {
     "vision": false,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": false,
@@ -820,6 +911,7 @@
   },
   "qwen2": {
     "vision": false,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": false,
@@ -829,6 +921,7 @@
   },
   "qwen2.5": {
     "vision": false,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": false,
@@ -838,6 +931,7 @@
   },
   "qwen2.5-coder": {
     "vision": false,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": false,
@@ -847,6 +941,7 @@
   },
   "qwen3": {
     "vision": false,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": true,
@@ -856,6 +951,7 @@
   },
   "qwen3-coder": {
     "vision": false,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": false,
@@ -865,6 +961,7 @@
   },
   "qwen3-embedding": {
     "vision": false,
+    "audio": false,
     "tools": false,
     "embedding": true,
     "thinking": false,
@@ -874,6 +971,7 @@
   },
   "qwen3-vl": {
     "vision": true,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": false,
@@ -883,6 +981,7 @@
   },
   "qwen3.5": {
     "vision": true,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": true,
@@ -892,6 +991,7 @@
   },
   "qwen3.6": {
     "vision": true,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": true,
@@ -901,6 +1001,7 @@
   },
   "skywork-o1": {
     "vision": false,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": true,
@@ -910,6 +1011,7 @@
   },
   "smollm": {
     "vision": false,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": false,
@@ -919,6 +1021,7 @@
   },
   "smollm2": {
     "vision": false,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": false,
@@ -928,6 +1031,7 @@
   },
   "snowflake-arctic-embed": {
     "vision": false,
+    "audio": false,
     "tools": false,
     "embedding": true,
     "thinking": false,
@@ -937,6 +1041,7 @@
   },
   "solar-pro": {
     "vision": false,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": false,
@@ -946,6 +1051,7 @@
   },
   "stablelm-2": {
     "vision": false,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": false,
@@ -955,6 +1061,7 @@
   },
   "starcoder": {
     "vision": false,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": false,
@@ -964,6 +1071,7 @@
   },
   "starcoder-instruct": {
     "vision": false,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": false,
@@ -973,6 +1081,7 @@
   },
   "starcoder2": {
     "vision": false,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": false,
@@ -982,6 +1091,7 @@
   },
   "starling-lm": {
     "vision": false,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": false,
@@ -991,6 +1101,7 @@
   },
   "tinyllama": {
     "vision": false,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": false,
@@ -1000,6 +1111,7 @@
   },
   "translategemma": {
     "vision": true,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": false,
@@ -1009,6 +1121,7 @@
   },
   "vicuna": {
     "vision": false,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": false,
@@ -1018,6 +1131,7 @@
   },
   "wizard-vicuna": {
     "vision": false,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": false,
@@ -1027,6 +1141,7 @@
   },
   "wizardlm": {
     "vision": false,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": false,
@@ -1036,6 +1151,7 @@
   },
   "wizardlm2": {
     "vision": false,
+    "audio": false,
     "tools": true,
     "embedding": false,
     "thinking": false,
@@ -1045,6 +1161,7 @@
   },
   "yi": {
     "vision": false,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": false,
@@ -1054,6 +1171,7 @@
   },
   "yi-vision": {
     "vision": true,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": false,
@@ -1063,6 +1181,7 @@
   },
   "x/z-image-turbo": {
     "vision": false,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": false,
@@ -1072,6 +1191,7 @@
   },
   "zephyr": {
     "vision": false,
+    "audio": false,
     "tools": false,
     "embedding": false,
     "thinking": false,

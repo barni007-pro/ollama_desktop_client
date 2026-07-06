@@ -74,3 +74,5 @@ V 1.5.2.27
 - Audio Record Button (wav) (gemma4 feature ...)
 - add qwen3.6 to models_config.json
 - add ornith to models_config.json
+V 1.5.3.28
+- Audio Info at Model Info Tab
