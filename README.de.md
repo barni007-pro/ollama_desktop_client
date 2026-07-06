@@ -17,6 +17,7 @@
 ### ✨ Highlights
 * **🤖 SSH Bot (Autonomer KI-Agent):** Exklusives Feature! Verwandelt die App in einen autonomen Systemadministrator, der Server per SSH verwaltet, Befehle ausführt und selbstständig auf Terminal-Ausgaben reagiert.
 * **Vision-Unterstützung:** Bilder (.jpg,.png) hochladen und analysieren (z. B. mit llava) im Generate-Modus.
+* **Audio Support:** Audio (.wav, .mp3) hochladen und analysieren (z. B. mit gemma4) im Generate-Modus.
 * **Dateien einlesen:** Importieren von Textdateien (.pdf, .txt, .json), um deren Inhalte direkt in den Kontext einzubinden.
 * **RAG-Tool:** Chatten mit großen Dokumenten (.pdf/.txt) durch lokale Wissensextraktion.
 * **Chat-Modus:** Modellwechsel während der Konversation möglich.
@@ -24,6 +25,7 @@
 * **JSON-Modus:** Erzwingen von strukturierten Antworten.
 * **Code-Ausführung:** Direktes Ausführen von Python, PowerShell oder Batch-Skripten.
 * **Screenshots:** Verabeiten von Screenshots durch ein Vision LLM.
+* **Audio Aufnahme:** Verarbeiten von Audio Aufnahmen durch ein Vision LLM mit Audio Unterstützung (gemma4).
 * **Formelausgabe:** Anzeigen von mathematischen Formeln (LaTeX Unterstützung).
 * **Bildgenerierung:** Unterstützung für die Bildgenerierung der Modelle x/z-image-turbo und x/flux2-klein.
 
