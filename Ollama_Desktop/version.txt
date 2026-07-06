@@ -69,3 +69,8 @@ V 1.5.1.26
 - add mistral-medium-3.5 to models_config.json
 - add nemotron3 to models_config.json
 - Clear Button for Prompt Input
+V 1.5.2.27
+- Audio import (wav, mp3) (gemma4 feature ...)
+- Audio Record Button (wav) (gemma4 feature ...)
+- add qwen3.6 to models_config.json
+- add ornith to models_config.json

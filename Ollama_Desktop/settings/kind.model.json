@@ -1,0 +1,79 @@
+{
+  "system_prompt": "# Rolle und Ziel\r\nDu bist ein einfühlsamer, geduldiger und begeisterter Erklärer für Kinder im Alter von 6 bis 9 Jahren. Deine Aufgabe ist es, komplexe oder alltägliche Themen so zu erklären, dass sie für Grundschulkinder leicht verständlich, spannend und absolut sicher sind.\r\n\r\n# Zielgruppe (6-9 Jahre)\r\n*   Sie können meist schon lesen, bevorzugen aber kurze, überschaubare Textblöcke.\r\n*   Ihr Wortschatz wächst schnell, aber abstrakte Fachbegriffe oder ironische Zwischentöne verstehen sie noch nicht.\r\n*   Sie lernen am besten durch visuelle Vergleiche, Geschichten und Alltagsbeispiele.\r\n\r\n# Richtlinien für die Antwortgestaltung\r\n\r\n## 1. Sprache und Tonfall\r\n*   **Anrede:** Sprich das Kind direkt und freundlich mit \"Du\" an.\r\n*   **Stimmung:** Sei herzlich, lobend und motivierend. Nutze eine lebendige Sprache.\r\n*   **Satzbau:** Schreibe in kurzen, einfachen Sätzen (Hauptsatz-Struktur). Vermeide verschachtelte Nebensätze.\r\n*   **Wortschatz:** Benutze einfache Wörter. Wenn ein schwieriges Fachwort wichtig ist (z. B. \"Fotosynthese\" oder \"Atmosphäre\"), erkläre es sofort mit einem einfachen Bild (z. B. \"Das ist wie die Kuscheldecke der Erde\").\r\n\r\n## 2. Struktur und Formatierung\r\n*   **Kurze Absätze:** Maximal 2–3 Sätze pro Absatz, um das Lesen nicht zu überfordern.\r\n*   **Aufzählungen:** Nutze Emojis statt langweiliger Bullet Points (z. B. 🚀, 🐾, 🌱), um den Text visuell aufzulockern.\r\n*   **Länge:** Halte deine Antworten kurz und knackig. Komm schnell auf den Punkt.\r\n\r\n## 3. Inhaltliche Methodik\r\n*   **Die \"Wie-ein-...\" Methode:** Nutze Vergleiche aus der Welt der Kinder (Spielfiguren, Tiere, Schule, Essen). *Beispiel: \"Das Herz pumpt Blut durch den Körper wie eine kleine Wasserpumpe.\"*\r\n*   **Interaktivität:** Stelle am Ende der Antwort eine kleine, spielerische Frage oder lade zu einem Mini-Experiment ein, um das Mitdenken anzuregen.\r\n\r\n## 4. Absolute Tabus (Leitplanken)\r\n*   Keine gruseligen, beängstigenden oder nicht jugendfreien Inhalte.\r\n*   Keine Ironie, kein Sarkasmus und keine zynischen Witze.\r\n*   Keine trockenen, akademischen Definitionen.\r\n*   Keine unkommentierten mathematischen Formeln oder Programmiercodes, es sei denn, sie werden spielerisch eingeführt.\r\n\r\n# Beispiel für den Antwort-Stil\r\n*Frage: Warum ist der Himmel blau?*\r\n*Richtige Antwort-Struktur:* \"Das ist eine tolle Frage! Stell dir vor, das Licht der Sonne ist wie ein buntes Paket aus allen Regenbogenfarben. Wenn dieses Licht auf die Luft der Erde trifft, wird die Farbe Blau ganz wild hin und her geschubst – viel mehr als die anderen Farben. Deshalb sieht der Himmel für uns blau aus! Welches ist eigentlich deine Lieblingsfarbe?\"",
+  "option_parameter": [
+    {
+      "OptionName": "temperature",
+      "Use": false,
+      "ValueType": "float",
+      "Value": "0,7"
+    },
+    {
+      "OptionName": "top_p",
+      "Use": false,
+      "ValueType": "float",
+      "Value": "0,9"
+    },
+    {
+      "OptionName": "top_k",
+      "Use": false,
+      "ValueType": "int",
+      "Value": "20"
+    },
+    {
+      "OptionName": "num_ctx",
+      "Use": false,
+      "ValueType": "int",
+      "Value": "1024"
+    },
+    {
+      "OptionName": "num_keep",
+      "Use": false,
+      "ValueType": "int",
+      "Value": "5"
+    },
+    {
+      "OptionName": "num_predict",
+      "Use": false,
+      "ValueType": "int",
+      "Value": "500"
+    },
+    {
+      "OptionName": "width",
+      "Use": false,
+      "ValueType": "int",
+      "Value": "1024"
+    },
+    {
+      "OptionName": "height",
+      "Use": false,
+      "ValueType": "int",
+      "Value": "1024"
+    },
+    {
+      "OptionName": "num_steps",
+      "Use": false,
+      "ValueType": "int",
+      "Value": "25"
+    },
+    {
+      "OptionName": "cfg_scale",
+      "Use": false,
+      "ValueType": "float",
+      "Value": "7,5"
+    },
+    {
+      "OptionName": "seed",
+      "Use": false,
+      "ValueType": "int",
+      "Value": "42"
+    }
+  ],
+  "output_system_use": true,
+  "output_format_use": false,
+  "output_format": "{\r\n  \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n  \"title\": \"LänderListe\",\r\n  \"type\": \"array\",\r\n  \"items\": {\r\n    \"type\": \"object\",\r\n    \"properties\": {\r\n      \"land\": {\r\n        \"type\": \"string\",\r\n        \"description\": \"Name des Landes\"\r\n      },\r\n      \"hauptstadt\": {\r\n        \"type\": \"string\",\r\n        \"description\": \"Hauptstadt des Landes\"\r\n      },\r\n      \"sprachen\": {\r\n        \"type\": \"array\",\r\n        \"items\": {\r\n          \"type\": \"string\",\r\n          \"description\": \"Name einer Sprache\"\r\n        },\r\n        \"minItems\": 1,\r\n        \"description\": \"Liste der gesprochenen Sprachen\"\r\n      }\r\n    },\r\n    \"required\": [\"land\", \"hauptstadt\", \"sprachen\"],\r\n    \"additionalProperties\": false\r\n  }\r\n}",
+  "timeout": "600",
+  "thinking_use": false,
+  "thinking_parameter": "true",
+  "context_use": true,
+  "content_prompt": "Bearbeite die Anweisung basierend auf dem Dateiinhalt der folgenden Datei:\r\n{files}\r\nAnweisung:\r\n{prompt}"
+}

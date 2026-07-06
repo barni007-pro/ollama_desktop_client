@@ -413,5 +413,8 @@ Analysiere das Ergebnis. Wenn das Ziel erreicht ist, beginne deine Antwort ZWING
     <Setting Name="currentErrDenied" Type="System.String" Scope="User">
       <Value Profile="(Default)">[SYSTEM: Der Administrator hat diesen Befehl abgelehnt. Bitte schlage eine Alternative vor.]</Value>
     </Setting>
+    <Setting Name="AudioDevice" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

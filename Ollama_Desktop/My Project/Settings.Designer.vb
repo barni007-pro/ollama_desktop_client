@@ -668,6 +668,18 @@ Namespace My
                 Me("currentErrDenied") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("0")>  _
+        Public Property AudioDevice() As Integer
+            Get
+                Return CType(Me("AudioDevice"),Integer)
+            End Get
+            Set
+                Me("AudioDevice") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

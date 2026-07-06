@@ -193,6 +193,7 @@ Partial Class Form1
         SiticoneButton_HTMLtoPDF = New SiticoneNetCoreUI.SiticoneButton()
         SiticonePanel_prompt = New SiticoneNetCoreUI.SiticonePanel()
         SiticonePanel_prompt_action = New SiticoneNetCoreUI.SiticonePanel()
+        SiticoneButton_audio = New SiticoneNetCoreUI.SiticoneButton()
         SiticoneButton_clear_prompt = New SiticoneNetCoreUI.SiticoneButton()
         SiticoneLabel_show_LLM = New SiticoneNetCoreUI.SiticoneLabel()
         SiticonePlayPauseButton_request = New SiticoneNetCoreUI.SiticonePlayPauseButton()
@@ -501,7 +502,6 @@ Partial Class Form1
         SiticoneButton_file.EnableShadow = False
         SiticoneButton_file.EnableTextWrapping = False
         SiticoneButton_file.Font = New Font("Segoe UI", 9F)
-        SiticoneButton_file.ForeColor = Color.LightGray
         SiticoneButton_file.GlowColor = Color.FromArgb(CByte(30), CByte(110), CByte(178), CByte(230))
         SiticoneButton_file.GlowIntensity = 100
         SiticoneButton_file.GlowRadius = 20F
@@ -509,7 +509,7 @@ Partial Class Form1
         SiticoneButton_file.GradientColor = Color.FromArgb(CByte(255), CByte(77), CByte(146))
         SiticoneButton_file.GradientMode = Drawing2D.LinearGradientMode.ForwardDiagonal
         SiticoneButton_file.HintText = Nothing
-        SiticoneButton_file.HoverBackColor = SystemColors.ActiveCaption
+        SiticoneButton_file.HoverBackColor = Color.WhiteSmoke
         SiticoneButton_file.HoverFontStyle = FontStyle.Regular
         SiticoneButton_file.HoverTextColor = Color.White
         SiticoneButton_file.HoverTransitionDuration = 250
@@ -4433,7 +4433,7 @@ Partial Class Form1
         SiticoneSplitContainer_runcont.SnapDistance = 20
         SiticoneSplitContainer_runcont.SnapPositions = New Single() {0.25F, 0.5F, 0.75F}
         SiticoneSplitContainer_runcont.SplitterCursor = Cursors.HSplit
-        SiticoneSplitContainer_runcont.SplitterDistance = 493
+        SiticoneSplitContainer_runcont.SplitterDistance = 476
         SiticoneSplitContainer_runcont.SplitterHighlightColor = Color.DodgerBlue
         SiticoneSplitContainer_runcont.SplitterMoveable = True
         SiticoneSplitContainer_runcont.SplitterMoveLeftKey = Keys.Left
@@ -4454,7 +4454,7 @@ Partial Class Form1
         Scintilla_code_block.Location = New Point(0, 0)
         Scintilla_code_block.Name = "Scintilla_code_block"
         Scintilla_code_block.ScrollWidth = 70
-        Scintilla_code_block.Size = New Size(1409, 493)
+        Scintilla_code_block.Size = New Size(1409, 476)
         Scintilla_code_block.TabIndex = 59
         ' 
         ' SiticoneTextArea_run_output
@@ -4469,7 +4469,7 @@ Partial Class Form1
         SiticoneTextArea_run_output.Name = "SiticoneTextArea_run_output"
         SiticoneTextArea_run_output.PlaceholderText = "Wait for Output..."
         SiticoneTextArea_run_output.ScrollBars = ScrollBars.Vertical
-        SiticoneTextArea_run_output.Size = New Size(1409, 116)
+        SiticoneTextArea_run_output.Size = New Size(1409, 133)
         SiticoneTextArea_run_output.TabIndex = 2
         ' 
         ' SiticoneButton_code_run
@@ -6148,7 +6148,6 @@ Partial Class Form1
         SiticoneButton_HTMLtoPDF.EnableShadow = False
         SiticoneButton_HTMLtoPDF.EnableTextWrapping = False
         SiticoneButton_HTMLtoPDF.Font = New Font("Segoe UI", 9F)
-        SiticoneButton_HTMLtoPDF.ForeColor = Color.LightGray
         SiticoneButton_HTMLtoPDF.GlowColor = Color.FromArgb(CByte(30), CByte(110), CByte(178), CByte(230))
         SiticoneButton_HTMLtoPDF.GlowIntensity = 100
         SiticoneButton_HTMLtoPDF.GlowRadius = 20F
@@ -6156,7 +6155,7 @@ Partial Class Form1
         SiticoneButton_HTMLtoPDF.GradientColor = Color.FromArgb(CByte(255), CByte(77), CByte(146))
         SiticoneButton_HTMLtoPDF.GradientMode = Drawing2D.LinearGradientMode.ForwardDiagonal
         SiticoneButton_HTMLtoPDF.HintText = Nothing
-        SiticoneButton_HTMLtoPDF.HoverBackColor = SystemColors.ActiveCaption
+        SiticoneButton_HTMLtoPDF.HoverBackColor = Color.WhiteSmoke
         SiticoneButton_HTMLtoPDF.HoverFontStyle = FontStyle.Regular
         SiticoneButton_HTMLtoPDF.HoverTextColor = Color.White
         SiticoneButton_HTMLtoPDF.HoverTransitionDuration = 250
@@ -6247,6 +6246,7 @@ Partial Class Form1
         SiticonePanel_prompt_action.BorderGradientEndColor = Color.Purple
         SiticonePanel_prompt_action.BorderGradientStartColor = Color.Blue
         SiticonePanel_prompt_action.BorderThickness = 2F
+        SiticonePanel_prompt_action.Controls.Add(SiticoneButton_audio)
         SiticonePanel_prompt_action.Controls.Add(SiticoneButton_clear_prompt)
         SiticonePanel_prompt_action.Controls.Add(SiticoneLabel_show_LLM)
         SiticonePanel_prompt_action.Controls.Add(SiticonePlayPauseButton_request)
@@ -6285,6 +6285,82 @@ Partial Class Form1
         SiticonePanel_prompt_action.UsePatternTexture = False
         SiticonePanel_prompt_action.UseRadialGradient = False
         ' 
+        ' SiticoneButton_audio
+        ' 
+        SiticoneButton_audio.AccessibleDescription = "The default button control that accept input though the mouse, touch and keyboard"
+        SiticoneButton_audio.AccessibleName = ""
+        SiticoneButton_audio.AutoSizeBasedOnText = False
+        SiticoneButton_audio.BackColor = Color.Transparent
+        SiticoneButton_audio.BadgeBackColor = Color.Red
+        SiticoneButton_audio.BadgeFont = New Font("Segoe UI", 8F, FontStyle.Bold)
+        SiticoneButton_audio.BadgeValue = 0
+        SiticoneButton_audio.BadgeValueForeColor = Color.White
+        SiticoneButton_audio.BorderColor = Color.Transparent
+        SiticoneButton_audio.BorderWidth = 2
+        SiticoneButton_audio.ButtonBackColor = Color.Transparent
+        SiticoneButton_audio.ButtonImage = CType(resources.GetObject("SiticoneButton_audio.ButtonImage"), Image)
+        SiticoneButton_audio.ButtonTextLeftPadding = 0
+        SiticoneButton_audio.CanBeep = True
+        SiticoneButton_audio.CanGlow = False
+        SiticoneButton_audio.CanShake = True
+        SiticoneButton_audio.ContextMenuStripEx = Nothing
+        SiticoneButton_audio.CornerRadiusBottomLeft = 8
+        SiticoneButton_audio.CornerRadiusBottomRight = 8
+        SiticoneButton_audio.CornerRadiusTopLeft = 8
+        SiticoneButton_audio.CornerRadiusTopRight = 8
+        SiticoneButton_audio.CustomCursor = Cursors.Default
+        SiticoneButton_audio.DisabledTextColor = Color.Transparent
+        SiticoneButton_audio.EnableLongPress = False
+        SiticoneButton_audio.EnablePressAnimation = True
+        SiticoneButton_audio.EnableRippleEffect = True
+        SiticoneButton_audio.EnableShadow = False
+        SiticoneButton_audio.EnableTextWrapping = False
+        SiticoneButton_audio.Font = New Font("Segoe UI", 9F)
+        SiticoneButton_audio.GlowColor = Color.FromArgb(CByte(30), CByte(110), CByte(178), CByte(230))
+        SiticoneButton_audio.GlowIntensity = 100
+        SiticoneButton_audio.GlowRadius = 20F
+        SiticoneButton_audio.GradientBackground = False
+        SiticoneButton_audio.GradientColor = Color.FromArgb(CByte(255), CByte(77), CByte(146))
+        SiticoneButton_audio.GradientMode = Drawing2D.LinearGradientMode.ForwardDiagonal
+        SiticoneButton_audio.HintText = Nothing
+        SiticoneButton_audio.HoverBackColor = Color.WhiteSmoke
+        SiticoneButton_audio.HoverFontStyle = FontStyle.Regular
+        SiticoneButton_audio.HoverTextColor = Color.White
+        SiticoneButton_audio.HoverTransitionDuration = 250
+        SiticoneButton_audio.ImageAlign = ContentAlignment.MiddleCenter
+        SiticoneButton_audio.ImagePadding = 5
+        SiticoneButton_audio.ImageSize = New Size(32, 32)
+        SiticoneButton_audio.IsRadial = False
+        SiticoneButton_audio.IsReadOnly = False
+        SiticoneButton_audio.IsToggleButton = False
+        SiticoneButton_audio.IsToggled = False
+        SiticoneButton_audio.Location = New Point(73, 1)
+        SiticoneButton_audio.LongPressDurationMS = 1000
+        SiticoneButton_audio.Name = "SiticoneButton_audio"
+        SiticoneButton_audio.NormalFontStyle = FontStyle.Regular
+        SiticoneButton_audio.ParticleColor = Color.FromArgb(CByte(200), CByte(200), CByte(200))
+        SiticoneButton_audio.ParticleCount = 15
+        SiticoneButton_audio.PressAnimationScale = 0.97F
+        SiticoneButton_audio.PressedBackColor = Color.FromArgb(CByte(16), CByte(100), CByte(220))
+        SiticoneButton_audio.PressedFontStyle = FontStyle.Regular
+        SiticoneButton_audio.PressTransitionDuration = 150
+        SiticoneButton_audio.ReadOnlyTextColor = Color.FromArgb(CByte(100), CByte(100), CByte(100))
+        SiticoneButton_audio.RippleColor = Color.White
+        SiticoneButton_audio.RippleOpacity = 0.2F
+        SiticoneButton_audio.RippleRadiusMultiplier = 0.6F
+        SiticoneButton_audio.ShadowBlur = 5
+        SiticoneButton_audio.ShadowColor = Color.FromArgb(CByte(50), CByte(0), CByte(64), CByte(128))
+        SiticoneButton_audio.ShadowOffset = New Point(0, 2)
+        SiticoneButton_audio.ShakeDuration = 500
+        SiticoneButton_audio.ShakeIntensity = 5
+        SiticoneButton_audio.Size = New Size(32, 32)
+        SiticoneButton_audio.TabIndex = 53
+        SiticoneButton_audio.TextAlign = ContentAlignment.MiddleCenter
+        SiticoneButton_audio.TextColor = Color.White
+        SiticoneButton_audio.TooltipText = "Add Audio Record to Prompt Content"
+        SiticoneButton_audio.UseAdvancedRendering = True
+        SiticoneButton_audio.UseParticles = False
+        ' 
         ' SiticoneButton_clear_prompt
         ' 
         SiticoneButton_clear_prompt.AccessibleDescription = "The default button control that accept input though the mouse, touch and keyboard"
@@ -6316,7 +6392,6 @@ Partial Class Form1
         SiticoneButton_clear_prompt.EnableShadow = False
         SiticoneButton_clear_prompt.EnableTextWrapping = False
         SiticoneButton_clear_prompt.Font = New Font("Segoe UI", 9F)
-        SiticoneButton_clear_prompt.ForeColor = Color.LightGray
         SiticoneButton_clear_prompt.GlowColor = Color.FromArgb(CByte(30), CByte(110), CByte(178), CByte(230))
         SiticoneButton_clear_prompt.GlowIntensity = 100
         SiticoneButton_clear_prompt.GlowRadius = 20F
@@ -6324,7 +6399,7 @@ Partial Class Form1
         SiticoneButton_clear_prompt.GradientColor = Color.FromArgb(CByte(255), CByte(77), CByte(146))
         SiticoneButton_clear_prompt.GradientMode = Drawing2D.LinearGradientMode.ForwardDiagonal
         SiticoneButton_clear_prompt.HintText = Nothing
-        SiticoneButton_clear_prompt.HoverBackColor = SystemColors.ActiveCaption
+        SiticoneButton_clear_prompt.HoverBackColor = Color.WhiteSmoke
         SiticoneButton_clear_prompt.HoverFontStyle = FontStyle.Regular
         SiticoneButton_clear_prompt.HoverTextColor = Color.White
         SiticoneButton_clear_prompt.HoverTransitionDuration = 250
@@ -6335,7 +6410,7 @@ Partial Class Form1
         SiticoneButton_clear_prompt.IsReadOnly = False
         SiticoneButton_clear_prompt.IsToggleButton = False
         SiticoneButton_clear_prompt.IsToggled = False
-        SiticoneButton_clear_prompt.Location = New Point(74, 1)
+        SiticoneButton_clear_prompt.Location = New Point(111, 1)
         SiticoneButton_clear_prompt.LongPressDurationMS = 1000
         SiticoneButton_clear_prompt.Name = "SiticoneButton_clear_prompt"
         SiticoneButton_clear_prompt.NormalFontStyle = FontStyle.Regular
@@ -6368,9 +6443,9 @@ Partial Class Form1
         SiticoneLabel_show_LLM.BackColor = Color.Transparent
         SiticoneLabel_show_LLM.Font = New Font("Segoe UI Semibold", 14.25F, FontStyle.Bold Or FontStyle.Italic, GraphicsUnit.Point, CByte(0))
         SiticoneLabel_show_LLM.ForeColor = Color.FromArgb(CByte(26), CByte(115), CByte(232))
-        SiticoneLabel_show_LLM.Location = New Point(111, 5)
+        SiticoneLabel_show_LLM.Location = New Point(149, 5)
         SiticoneLabel_show_LLM.Name = "SiticoneLabel_show_LLM"
-        SiticoneLabel_show_LLM.Size = New Size(1196, 25)
+        SiticoneLabel_show_LLM.Size = New Size(1158, 25)
         SiticoneLabel_show_LLM.TabIndex = 51
         SiticoneLabel_show_LLM.Text = "no LLM selected"
         SiticoneLabel_show_LLM.TextAlign = ContentAlignment.MiddleRight
@@ -6439,7 +6514,6 @@ Partial Class Form1
         SiticoneButton_screenshot.EnableShadow = False
         SiticoneButton_screenshot.EnableTextWrapping = False
         SiticoneButton_screenshot.Font = New Font("Segoe UI", 9F)
-        SiticoneButton_screenshot.ForeColor = Color.LightGray
         SiticoneButton_screenshot.GlowColor = Color.FromArgb(CByte(30), CByte(110), CByte(178), CByte(230))
         SiticoneButton_screenshot.GlowIntensity = 100
         SiticoneButton_screenshot.GlowRadius = 20F
@@ -6447,7 +6521,7 @@ Partial Class Form1
         SiticoneButton_screenshot.GradientColor = Color.FromArgb(CByte(255), CByte(77), CByte(146))
         SiticoneButton_screenshot.GradientMode = Drawing2D.LinearGradientMode.ForwardDiagonal
         SiticoneButton_screenshot.HintText = Nothing
-        SiticoneButton_screenshot.HoverBackColor = SystemColors.ActiveCaption
+        SiticoneButton_screenshot.HoverBackColor = Color.WhiteSmoke
         SiticoneButton_screenshot.HoverFontStyle = FontStyle.Regular
         SiticoneButton_screenshot.HoverTextColor = Color.White
         SiticoneButton_screenshot.HoverTransitionDuration = 250
@@ -6518,7 +6592,6 @@ Partial Class Form1
         SiticoneButton_timing.EnableShadow = False
         SiticoneButton_timing.EnableTextWrapping = False
         SiticoneButton_timing.Font = New Font("Segoe UI", 9F)
-        SiticoneButton_timing.ForeColor = Color.LightGray
         SiticoneButton_timing.GlowColor = Color.FromArgb(CByte(30), CByte(110), CByte(178), CByte(230))
         SiticoneButton_timing.GlowIntensity = 100
         SiticoneButton_timing.GlowRadius = 20F
@@ -6526,7 +6599,7 @@ Partial Class Form1
         SiticoneButton_timing.GradientColor = Color.FromArgb(CByte(255), CByte(77), CByte(146))
         SiticoneButton_timing.GradientMode = Drawing2D.LinearGradientMode.ForwardDiagonal
         SiticoneButton_timing.HintText = Nothing
-        SiticoneButton_timing.HoverBackColor = SystemColors.ActiveCaption
+        SiticoneButton_timing.HoverBackColor = Color.WhiteSmoke
         SiticoneButton_timing.HoverFontStyle = FontStyle.Regular
         SiticoneButton_timing.HoverTextColor = Color.White
         SiticoneButton_timing.HoverTransitionDuration = 250
@@ -6597,7 +6670,6 @@ Partial Class Form1
         SiticoneButton_show_thinking.EnableShadow = False
         SiticoneButton_show_thinking.EnableTextWrapping = False
         SiticoneButton_show_thinking.Font = New Font("Segoe UI", 9F)
-        SiticoneButton_show_thinking.ForeColor = Color.LightGray
         SiticoneButton_show_thinking.GlowColor = Color.FromArgb(CByte(30), CByte(110), CByte(178), CByte(230))
         SiticoneButton_show_thinking.GlowIntensity = 100
         SiticoneButton_show_thinking.GlowRadius = 20F
@@ -6605,7 +6677,7 @@ Partial Class Form1
         SiticoneButton_show_thinking.GradientColor = Color.FromArgb(CByte(255), CByte(77), CByte(146))
         SiticoneButton_show_thinking.GradientMode = Drawing2D.LinearGradientMode.ForwardDiagonal
         SiticoneButton_show_thinking.HintText = Nothing
-        SiticoneButton_show_thinking.HoverBackColor = SystemColors.ActiveCaption
+        SiticoneButton_show_thinking.HoverBackColor = Color.WhiteSmoke
         SiticoneButton_show_thinking.HoverFontStyle = FontStyle.Regular
         SiticoneButton_show_thinking.HoverTextColor = Color.White
         SiticoneButton_show_thinking.HoverTransitionDuration = 250
@@ -8111,5 +8183,6 @@ Partial Class Form1
     Friend WithEvents SiticoneButton_load_ssh As SiticoneNetCoreUI.SiticoneButton
     Friend WithEvents SiticoneButton_save_ssh As SiticoneNetCoreUI.SiticoneButton
     Friend WithEvents SiticoneButton_clear_prompt As SiticoneNetCoreUI.SiticoneButton
+    Friend WithEvents SiticoneButton_audio As SiticoneNetCoreUI.SiticoneButton
 
 End Class

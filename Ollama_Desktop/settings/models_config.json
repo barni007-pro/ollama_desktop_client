@@ -746,6 +746,15 @@
     "context": 2,
     "description": "orca-mini - Microsoft - Kompakt (3B), für Einsteiger und ressourcenbeschränkte Systeme."
   },
+  "ornith": {
+    "vision": false,
+    "tools": false,
+    "embedding": false,
+    "thinking": false,
+    "image": false,
+    "context": 256,
+    "description": "ornith - DeepReinforce - Eine sich selbst verbessernde Familie von Open-Source-Modellen für agentische Programmierung."
+  },
   "phi3-medium": {
     "vision": false,
     "tools": false,
@@ -880,6 +889,15 @@
     "image": false,
     "context": 256,
     "description": "qwen3.5 - Alibaba - LLM mit Multimodalität und hocheffizienter Architektur für Bild- und Textdaten."
+  },
+  "qwen3.6": {
+    "vision": true,
+    "tools": true,
+    "embedding": false,
+    "thinking": true,
+    "image": false,
+    "context": 256,
+    "description": "qwen3.6 - Alibaba - LLM mit Multimodalität und hocheffizienter Architektur für Bild- und Textdaten."
   },
   "skywork-o1": {
     "vision": false,

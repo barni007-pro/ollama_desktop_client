@@ -29,6 +29,7 @@ Imports UglyToad.PdfPig
 Imports Renci.SshNet
 Imports Renci.SshNet.Common
 Imports System.Text.Json.Nodes
+Imports NAudio.Wave
 
 Public Class Form1
     'Public fileContent As String = ""
@@ -52,6 +53,14 @@ Public Class Form1
     End Class
 
     Dim image_contents As New List(Of image_content_def)
+
+    Public Class audio_content_def
+        Public Property base64String As String
+        Public Property fileName As String
+        Public Property fileExtension As String
+    End Class
+
+    Dim audio_contents As New List(Of audio_content_def)
 
     ' Datenklasse für einen Satz mit Trefferanzahl
     Public Class SentenceData
@@ -158,6 +167,18 @@ Public Class Form1
     Private currentErrMultiline As String
     Private currentErrFormat As String
     Private currentErrDenied As String
+
+    '' Windows Multimedia API für die native Audio-Aufnahme
+    '<DllImport("winmm.dll", EntryPoint:="mciSendStringA", CharSet:=CharSet.Ansi)>
+    'Private Shared Function mciSendString(ByVal lpstrCommand As String, ByVal lpstrReturnString As StringBuilder, ByVal uReturnLength As Integer, ByVal hwndCallback As IntPtr) As Integer
+    'End Function
+
+    Private WithEvents waveIn As WaveInEvent = Nothing
+    Private waveWriter As WaveFileWriter = Nothing
+
+    Private isRecordingAudio As Boolean = False
+    Private audioTempPath As String = ""
+    Private selectedAudioDeviceIndex As Integer = My.Settings.AudioDevice
 
     Private Async Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         ' --- Log-Datei bei jedem Programmstart leeren ---
@@ -325,6 +346,7 @@ Public Class Form1
         RegisterStateImages(SiticoneButton_show_thinking, My.Resources.Resource_pic.think_32_blau, My.Resources.Resource_pic.think_32_grau)
         RegisterStateImages(SiticoneButton_HTMLtoPDF, My.Resources.Resource_pic.save_32_blau, My.Resources.Resource_pic.save_32_grau)
         RegisterStateImages(SiticoneButton_clear_prompt, My.Resources.Resource_pic.edit_clear_all_blau, My.Resources.Resource_pic.edit_clear_all_grau)
+        RegisterStateImages(SiticoneButton_audio, My.Resources.Resource_pic.mic_32_blau, My.Resources.Resource_pic.mic_32_grau)
 
         'öffnet LLM API Setting Menü
         SiticonePanel_llm_setting.Visible = My.Settings.LLM_seting
@@ -396,6 +418,7 @@ Public Class Form1
             SiticoneNavbar_tab.Items.Add(navItem)
             SiticoneNavbar_tab.SelectedIndex = SiticoneTabControl_tab.SelectedIndex
         Next
+        SiticoneTextArea_prompt.Focus()
     End Sub
 
     Private Sub Form1_FormClosed(sender As Object, e As FormClosedEventArgs) Handles MyBase.FormClosed
@@ -482,12 +505,6 @@ Public Class Form1
         ' Temporären Pfad erstellen
         Dim tempPath As String = Path.Combine(Path.GetTempPath(), $"Screenshot_{DateTime.Now:HHmmss}.png")
         img.Save(tempPath, System.Drawing.Imaging.ImageFormat.Png)
-
-        ' Alte Inhalte löschen (wie in deinem Original-Code gewünscht)
-        ' Falls du mehrere Anhänge erlauben willst, entferne diese .Clear() Zeilen
-        'text_contents.Clear()
-        'image_contents.Clear()
-        'SiticoneFlowPanel_prompt_filecontent.Controls.Clear()
 
         ' In Base64 Liste für die API speichern
         Dim imageBytes() As Byte = File.ReadAllBytes(tempPath)
@@ -744,6 +761,7 @@ Public Class Form1
                 SiticonePlayPauseButton_request.IsPlaying = False
             End If
             isRequestRunning = False
+            SiticoneTextArea_prompt.Focus()
         End Try
     End Sub
 
@@ -856,7 +874,7 @@ Public Class Form1
             request_mem = prompt
 
             AppLog("[DEBUG-MainAsync] Warte auf QueryOllamaAsync...")
-            Dim response As String = Await QueryOllamaAsync(model, prompt, image_contents, text_contents, My.Settings.option_list, system, format, tools, think, think_level, context, extractedContext, cancellationTokenSource.Token)
+            Dim response As String = Await QueryOllamaAsync(model, prompt, image_contents, audio_contents, text_contents, My.Settings.option_list, system, format, tools, think, think_level, context, extractedContext, cancellationTokenSource.Token)
             AppLog("[DEBUG-MainAsync] QueryOllamaAsync hat geantwortet!")
 
             response_mem = response
@@ -971,7 +989,7 @@ Public Class Form1
             prompt = prompt.Replace(vbCr, "") 'nur noch("/n") im prompt'
 
             'Dim response As String = Await QueryOllamaAsync(model, prompt, imageContent, system, temperature, num_ctx, top_p, top_k, num_keep, num_predict)
-            Dim response As String = Await QueryOllamaAsync(model, prompt, image_contents, text_contents, My.Settings.option_list, system, format, tools, think, think_level, context, extractedContext, cancellationTokenSource.Token)
+            Dim response As String = Await QueryOllamaAsync(model, prompt, image_contents, audio_contents, text_contents, My.Settings.option_list, system, format, tools, think, think_level, context, extractedContext, cancellationTokenSource.Token)
             response_mem = response
             If extractedThinking <> "" Then
                 SiticoneButton_show_thinking.Enabled = True
@@ -1309,6 +1327,7 @@ Public Class Form1
     Private Async Function QueryOllamaAsync(model As String,
                                             prompt As String,
                                             image_list As List(Of image_content_def),
+                                            audio_list As List(Of audio_content_def),
                                             text_list As List(Of text_content_def),
                                             option_list As System.Collections.Specialized.StringCollection,
                                             Optional system As String = "",
@@ -1324,6 +1343,15 @@ Public Class Form1
 
         Dim apiUrl As String = ""
         Dim requestBody As String = ""
+
+        If image_contents.Count > 0 And prompt = "" Then
+            prompt = "Analyse Image"
+        End If
+
+        If audio_contents.Count > 0 And prompt = "" Then
+            prompt = "Analyse Audio"
+        End If
+
 
         ' =====================================================================
         ' PAYLOAD GENERIERUNG
@@ -1353,6 +1381,15 @@ Public Class Form1
                 AppLog($"[DEBUG-QueryOllama] Füge {image_list.Count} Bild(er) zum Payload hinzu.")
                 Dim base64Images As New List(Of String)
                 For Each imgObj In image_list
+                    base64Images.Add(imgObj.base64String)
+                Next
+                payload("images") = base64Images
+            End If
+
+            If audio_list.Count > 0 Then
+                AppLog($"[DEBUG-QueryOllama] Füge {audio_list.Count} Audio(s) zum Payload hinzu.")
+                Dim base64Images As New List(Of String)
+                For Each imgObj In audio_list
                     base64Images.Add(imgObj.base64String)
                 Next
                 payload("images") = base64Images
@@ -1840,7 +1877,7 @@ Public Class Form1
 
         ' Filter-Logik basierend auf der API-Auswahl
         If SiticoneDropdown_API.SelectedIndex = 0 Then
-            openFileDialog.Filter = "Text Dateien (*.txt)|*.txt|PDF Datei (*.pdf)|*.pdf|JSON Datei (*.json)|*.json|Bild (*.jpg)|*.jpg|Bild (*.png)|*.png|Alle Dateien (*.*)|*.*"
+            openFileDialog.Filter = "Text Dateien (*.txt)|*.txt|PDF Datei (*.pdf)|*.pdf|JSON Datei (*.json)|*.json|Audio Dateien (*.wav;*.mp3)|*.wav;*.mp3|Bild (*.jpg)|*.jpg|Bild (*.png)|*.png|Alle Dateien (*.*)|*.*"
         Else
             openFileDialog.Filter = "Text Dateien (*.txt)|*.txt|PDF Datei (*.pdf)|*.pdf|Alle Dateien (*.*)|*.*"
         End If
@@ -1857,13 +1894,21 @@ Public Class Form1
                         Case "jpg", "png"
                             ' --- BILDER HINZUFÜGEN ---
                             Dim imageBytes = File.ReadAllBytes(filePath)
-
                             Dim iContent As New image_content_def With {
                                 .base64String = Convert.ToBase64String(imageBytes),
                                 .fileName = fileName,
                                 .fileExtension = fileExtension
                             }
                             image_contents.Add(iContent)
+
+                        Case "wav", "mp3"
+                            Dim audioBytes = File.ReadAllBytes(filePath)
+                            Dim aContent As New audio_content_def With {
+                                .base64String = Convert.ToBase64String(audioBytes),
+                                .fileName = fileName,
+                                .fileExtension = fileExtension
+                            }
+                            audio_contents.Add(aContent)
 
                         Case "txt"
                             ' --- TEXT DATEIEN HINZUFÜGEN ---
@@ -1935,6 +1980,7 @@ Public Class Form1
         ' Alles leeren
         text_contents.Clear()
         image_contents.Clear()
+        audio_contents.Clear()
         SiticoneFlowPanel_prompt_filecontent.Controls.Clear()
         SiticoneFlowPanel_prompt_filecontent.Visible = False
         SiticoneTextArea_prompt_TextChanged(Nothing, Nothing)
@@ -1966,6 +2012,7 @@ Public Class Form1
                 Case "txt" : .Image = Resource_pic.icon_txt
                 Case "pdf" : .Image = Resource_pic.icon_pdf
                 Case "json" : .Image = Resource_pic.icon_json
+                Case "wav" : .Image = Resource_pic.icon_wav
                 Case "jpg", "png", "jpeg"
                     Try
                         Using fs As New FileStream(filePath, FileMode.Open, FileAccess.Read)
@@ -2034,6 +2081,12 @@ Public Class Form1
                                             'MessageBox.Show("Bild erfolgreich aus dem Speicher entfernt!")
                                         End If
 
+                                        ' 2a. Spezifisches Audio aus der Liste löschen ===
+                                        Dim audioToRemove = audio_contents.FirstOrDefault(Function(a) a.fileName = deletedFileName)
+                                        If audioToRemove IsNot Nothing Then
+                                            audio_contents.Remove(audioToRemove)
+                                        End If
+
                                         ' 3. Spezifischen Text aus der Liste löschen
                                         Dim textToRemove = text_contents.FirstOrDefault(Function(t) t.fileName = deletedFileName)
                                         If textToRemove IsNot Nothing Then
@@ -2060,6 +2113,9 @@ Public Class Form1
 
                                         ' 6. Layout neu berechnen
                                         UpdatePromptLayout()
+
+                                        ' Triggert die Überprüfung, um den Button ggf. wieder zu sperren
+                                        SiticoneTextArea_prompt_TextChanged(Nothing, Nothing)
                                     End Sub
         ' --- ZUSAMMENBAUEN & HINZUFÜGEN ---
         chip.Controls.Add(picIcon)
@@ -2455,12 +2511,14 @@ Public Class Form1
     End Sub
 
     Private Sub SiticoneTextArea_prompt_TextChanged(sender As Object, e As EventArgs) Handles SiticoneTextArea_prompt.TextChanged
-        'UpdatePromptLayout()
+        ' Layout asynchron aktualisieren
         Me.BeginInvoke(Sub() UpdatePromptLayout())
-        If SiticoneTextArea_prompt.TextLength = 0 Then
-            SiticonePlayPauseButton_request.Enabled = False
-        Else
+
+        ' --- ANPASSUNG: Freigabe auch bei vorhandenen Anhängen (Bilder oder Audios) ---
+        If SiticoneTextArea_prompt.TextLength > 0 OrElse image_contents.Count > 0 OrElse audio_contents.Count > 0 Then
             SiticonePlayPauseButton_request.Enabled = True
+        Else
+            SiticonePlayPauseButton_request.Enabled = False
         End If
     End Sub
 
@@ -2965,13 +3023,13 @@ Public Class Form1
 
     Private Sub load_ssh(setting_path As String)
         If File.Exists(setting_path) Then
-            ' Read the JSON from the selected file
-            Dim json = File.ReadAllText(setting_path)
-
-            ' Deserialize the JSON to an object
-            Dim data = JObject.Parse(json)
-
             Try
+                ' Read the JSON from the selected file
+                Dim json = File.ReadAllText(setting_path)
+
+                ' Deserialize the JSON to an object (Jetzt sicher im Try-Block)
+                Dim data = JObject.Parse(json)
+
                 ' Load the content into the controls (Safe Loading)
                 If data.ContainsKey("ssh_system") Then SiticoneTextArea_ssh_system.Text = data("ssh_system").ToString()
                 If data.ContainsKey("ssh_response") Then SiticoneTextArea_ssh_response.Text = data("ssh_response").ToString()
@@ -2984,12 +3042,15 @@ Public Class Form1
                 If data.ContainsKey("ssh_sudopw") Then SiticoneTextBox_ssh_sudopw.Text = data("ssh_sudopw").ToString()
                 If data.ContainsKey("ssh_timeout") Then SiticoneTextBox_ssh_timeout.Text = data("ssh_timeout").ToString()
                 If data.ContainsKey("ssh_maxi") Then SiticoneTextBox_ssh_maxi.Text = data("ssh_maxi").ToString()
+
                 ' Load the error messages into the global variables (Safe Loading)
                 If data.ContainsKey("ssh_err_multiline") Then currentErrMultiline = data("ssh_err_multiline").ToString()
                 If data.ContainsKey("ssh_err_format") Then currentErrFormat = data("ssh_err_format").ToString()
                 If data.ContainsKey("ssh_err_denied") Then currentErrDenied = data("ssh_err_denied").ToString()
+
             Catch ex As Exception
-                MessageBox.Show("Error loading parameters: " & ex.Message)
+                ' Fängt Parser-Fehler, Lese-Fehler und fehlende Keys sauber ab
+                MessageBox.Show("Fehler beim Laden der SSH-Parameter: " & ex.Message, "Ladefehler", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Try
         End If
     End Sub
@@ -3591,10 +3652,12 @@ Public Class Form1
 
     Private Sub SiticoneNavbar_tab_SelectedItemChanged(sender As Object, e As SiticoneNavbar.NavBarSelectionEventArgs) Handles SiticoneNavbar_tab.SelectedItemChanged
         SiticoneTabControl_tab.SelectedIndex = SiticoneNavbar_tab.SelectedIndex
+        SiticoneTextArea_prompt.Focus()
     End Sub
 
     Private Sub SiticoneTabControl_tab_SelectedIndexChanged(sender As Object, e As EventArgs) Handles SiticoneTabControl_tab.SelectedIndexChanged
         SiticoneNavbar_tab.SelectedIndex = SiticoneTabControl_tab.SelectedIndex
+        SiticoneTextArea_prompt.Focus()
     End Sub
 
     Private Sub SiticoneButton4_close1_Click(sender As Object, e As EventArgs) Handles SiticoneButton4_close1.Click
@@ -4056,6 +4119,157 @@ Public Class Form1
         ' Linux-Umbruch (LF) in Windows-Umbruch (CRLF) für die TextBox
         Return cleanOutput.Replace(vbLf, vbCrLf)
     End Function
+
+    Private Sub SiticoneButton_audio_Click(sender As Object, e As EventArgs) Handles SiticoneButton_audio.Click
+        ' Linksklick-Prüfung beibehalten (Rechtsklick öffnet das Device-Menü)
+        Dim mouseEv As MouseEventArgs = TryCast(e, MouseEventArgs)
+        If mouseEv IsNot Nothing AndAlso mouseEv.Button = MouseButtons.Right Then Exit Sub
+
+        If Not isRecordingAudio Then
+            ' ==========================================
+            ' AUFNAHME STARTEN
+            ' ==========================================
+            Try
+                audioTempPath = Path.Combine(Path.GetTempPath(), $"Voice_{DateTime.Now:yyyyMMdd_HHmmss}.wav")
+
+                ' Sicherheitheitsprüfung: Ist das gespeicherte Gerät noch eingesteckt?
+                If selectedAudioDeviceIndex >= waveIn.DeviceCount Then
+                    AppLog($"[AUDIO] Warnung: Gespeichertes Gerät (Index {selectedAudioDeviceIndex}) nicht mehr verfügbar. Fallback auf Windows-Standard (0).")
+                    selectedAudioDeviceIndex = 0
+                End If
+
+                waveIn = New WaveInEvent()
+                waveIn.DeviceNumber = selectedAudioDeviceIndex
+                waveIn.WaveFormat = New WaveFormat(16000, 1) ' 44.1 kHz, Mono
+
+                waveWriter = New WaveFileWriter(audioTempPath, waveIn.WaveFormat)
+
+                ' Daten-Puffer schreiben
+                AddHandler waveIn.DataAvailable, Sub(s, waveArgs)
+                                                     waveWriter?.Write(waveArgs.Buffer, 0, waveArgs.BytesRecorded)
+                                                 End Sub
+
+                ' === HIER DER FIX: Die Weiterverarbeitung passiert ERST WENN HIER GESTOPPT WURDE ===
+                AddHandler waveIn.RecordingStopped, Sub(s, waveArgs)
+                                                        ' 1. Streams sauber schließen und freigeben
+                                                        waveWriter?.Dispose()
+                                                        waveWriter = Nothing
+                                                        waveIn?.Dispose()
+                                                        waveIn = Nothing
+
+                                                        ' 2. Da dieses Event in einem Hintergrundthread laufen kann, 
+                                                        '    wechseln wir für die UI-Aktionen sicherheitshalber auf den Hauptthread (Invoke)
+                                                        Me.BeginInvoke(Sub()
+                                                                           Try
+                                                                               If File.Exists(audioTempPath) Then
+                                                                                   ' Jetzt ist die Datei garantiert frei!
+                                                                                   Dim audioBytes() As Byte = File.ReadAllBytes(audioTempPath)
+                                                                                   Dim aContent As New audio_content_def With {
+                                                                                       .base64String = Convert.ToBase64String(audioBytes),
+                                                                                       .fileName = Path.GetFileName(audioTempPath),
+                                                                                       .fileExtension = "wav"
+                                                                                   }
+                                                                                   audio_contents.Add(aContent)
+                                                                                   AppLog("[AUDIO] Datei erfolgreich geladen und Base64 generiert.")
+                                                                               End If
+
+                                                                               ' UI-Chips und Layout aktualisieren
+                                                                               AddFileChip(audioTempPath, "wav")
+                                                                               SiticoneFlowPanel_prompt_filecontent.Visible = True
+                                                                               UpdatePromptLayout()
+                                                                               SiticoneTextArea_prompt_TextChanged(Nothing, Nothing)
+
+                                                                           Catch ex As Exception
+                                                                               MessageBox.Show("Fehler beim Verarbeiten der Audiodatei: " & ex.Message, "Audio Fehler", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                                                                           End Try
+                                                                       End Sub)
+                                                    End Sub
+
+                ' Aufnahme starten
+                waveIn.StartRecording()
+                isRecordingAudio = True
+
+                ' UI auf Aufnahme-Design setzen
+                Dim recordColor As Color = Color.FromArgb(239, 83, 80)
+                SiticoneButton_audio.ButtonBackColor = recordColor
+                SiticoneButton_audio.HoverBackColor = recordColor
+
+                AppLog($"[AUDIO] Aufnahme gestartet mit Gerät Index: {selectedAudioDeviceIndex}")
+            Catch ex As Exception
+                MessageBox.Show("Fehler beim Starten der NAudio-Aufnahme: " & ex.Message, "Audio Fehler", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Try
+        Else
+            ' ==========================================
+            ' AUFNAHME STOPPEN
+            ' ==========================================
+            Try
+                isRecordingAudio = False
+
+                ' UI sofort zurücksetzen
+                SiticoneButton_audio.ButtonBackColor = Color.Transparent
+                SiticoneButton_audio.HoverBackColor = Color.FromArgb(220, 225, 230)
+
+                ' Stoppt die Aufnahme asynchron. Der restliche Code wird nun oben 
+                ' im "RecordingStopped"-Event ausgeführt, sobald die Datei freigegeben ist.
+                waveIn?.StopRecording()
+
+                AppLog("[AUDIO] Stop-Signal gesendet, warte auf Dateifreigabe...")
+            Catch ex As Exception
+                MessageBox.Show("Fehler beim Stoppen der Audioaufnahme: " & ex.Message, "Audio Fehler", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Try
+        End If
+    End Sub
+
+    Private Sub SiticoneButton_audio_MouseClick(sender As Object, e As MouseEventArgs) Handles SiticoneButton_audio.MouseClick
+        ' Nur reagieren, wenn mit RECHTS geklickt wurde und gerade KEINE Aufnahme läuft
+        If e.Button = MouseButtons.Right AndAlso Not isRecordingAudio Then
+
+            ' Neues Kontextmenü erstellen
+            Dim audioMenu As New ContextMenuStrip()
+
+            Try
+                Dim deviceCount As Integer = WaveIn.DeviceCount
+
+                If deviceCount = 0 Then
+                    audioMenu.Items.Add("Keine Mikrofone gefunden").Enabled = False
+                Else
+                    ' Alle verfügbaren Aufnahmegeräte durchlaufen
+                    For i As Integer = 0 To deviceCount - 1
+                        Dim capabilities = WaveIn.GetCapabilities(i)
+                        Dim itemName As String = capabilities.ProductName
+
+                        ' Menüeintrag erstellen
+                        Dim menuItem As New ToolStripMenuItem(itemName)
+                        menuItem.Tag = i ' Index im Tag speichern
+
+                        ' Haken setzen beim aktuell ausgewählten Gerät
+                        If i = selectedAudioDeviceIndex Then
+                            menuItem.Checked = True
+                        End If
+
+                        ' Klick-Event für den Menüeintrag hinzufügen
+                        AddHandler menuItem.Click, Sub(menuSender As Object, menuE As EventArgs)
+                                                       Dim clickedItem = CType(menuSender, ToolStripMenuItem)
+                                                       selectedAudioDeviceIndex = CType(clickedItem.Tag, Integer)
+
+                                                       ' In Config speichern 
+                                                       My.Settings.AudioDevice = selectedAudioDeviceIndex
+                                                       My.Settings.Save() ' Schreibt die Änderung sofort auf die Festplatte
+
+                                                       AppLog($"[AUDIO] Eingabegerät geändert auf: {clickedItem.Text} (Index: {selectedAudioDeviceIndex})")
+                                                   End Sub
+
+                        audioMenu.Items.Add(menuItem)
+                    Next
+                End If
+            Catch ex As Exception
+                audioMenu.Items.Add($"Fehler beim Laden: {ex.Message}").Enabled = False
+            End Try
+
+            ' Menü direkt an der aktuellen Mausposition anzeigen
+            audioMenu.Show(SiticoneButton_audio, e.Location)
+        End If
+    End Sub
 
 End Class
 
