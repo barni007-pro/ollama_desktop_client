@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="de">
 <head>
     <meta charset="UTF-8">
@@ -181,8 +181,44 @@
                 </li>
             </ol>
             <div class="note">
-                <strong>Tipp:</strong> Stellen Sie sicher, dass die Adresse oben links korrekt ist (Standard: <code>127.0.0.1:11434</code>).
+                <strong>Tipp:</strong> Stellen Sie sicher, dass die Adresse oben links korrekt ist (Standard: <code>127.0.0.1:11434</code>). Platzieren Sie für die Echtzeit-Sprachdiktatfunktion die mehrsprachige Modelldatei (z. B. <code>ggml-base.bin</code>) direkt im Startverzeichnis der Anwendung.
             </div>
+        </div>
+
+        <div class="card">
+            <h2>✍️ Der intelligente Eingabebereich (Prompt Area)</h2>
+            <p>Der untere Bereich der App ist darauf ausgelegt, Ihnen das Arbeiten mit komplexen Anfragen und vielen Dateien so leicht wie möglich zu machen.</p>
+
+            <h3>1. Automatische Größenanpassung</h3>
+            <p>Das Textfeld (Ihre Eingabe) denkt mit: Es vergrößert sich automatisch, wenn Sie längere Texte schreiben oder hineinkopieren. Sobald eine maximale Höhe erreicht ist, verwandelt es sich sanft in ein scrollbares Feld. So wird weder Ihr Platz auf dem Bildschirm verschwendet, noch verlieren Sie bei großen Code-Blöcken die Übersicht.</p>
+
+            <h3>2. Angehältne Dateien (File Panel)</h3>
+            <p>Wenn Sie über die Buttons (z.B. <code>+ File</code>) Dateien oder Bilder an Ihren Prompt anhängen, werden diese übersichtlich direkt über dem Textfeld aufgelistet. Die Benutzeroberfläche ordnet den Platz dynamisch neu an, sodass Sie immer genau sehen, welche Kontext-Dateien aktuell an das KI-Modell gesendet werden.</p>
+
+            <h3>3. Schnelle Bedienung</h3>
+            <ul>
+                <li><strong>Shift + Enter:</strong> Fügt einen normalen Zeilenumbruch ein, damit Sie Ihren Text strukturieren können.</li>
+                <li>Klick auf den <strong>Play-Button (▶) oder Enter</strong>: Sendet Ihre fertige Anfrage (inklusive aller angehängten Dateien) an das Modell ab.</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>🎙️ Live-Sprachtranskription (Whisper AI)</h2>
+            <p>Über das Steuerelement <code>Add Live Audio Transcript to Prompt Content</code> können Sie Text barrierefrei und offline per Stimme direkt in das Prompt-Feld diktieren. Dieses Modul verbindet lokale Audiomessung mit einer automatisierten Datenbereinigung.</p>
+
+            <h3>1. Dynamische Farbsignale</h3>
+            <p>Der Button wechselt je nach Aktivitätszustand der Hintergrundanalyse seine Farbe im Hauptfenster:</p>
+            <ul>
+                <li><strong>🟢 Hellgrün:</strong> Die Anwendung befindet sich im Warte-Modus/Leerlauf. Reines Umgebungsrauschen oder Tastaturgeklapper werden blockiert und sofort verworfen.</li>
+                <li><strong>🔴 Rot:</strong> Aktive Sprache (VAD) wurde registriert. Das System zeichnet den aktuellen Satzblock für Whisper im Arbeitsspeicher auf.</li>
+            </ul>
+
+            <h3>2. Sprachauswahl & Smart Trimming</h3>
+            <ul>
+                <li><strong>SiticoneDropdown_wisperlang:</strong> Nutzen Sie diese Dropdown-Liste, um die Erkennungssprache direkt auf der Oberfläche zu wählen. Ihre Konfiguration wird persistent in den Benutzereinstellungen gesichert.</li>
+                <li><strong>Puffer-Kürzung:</strong> Sobald Sie eine Sprechpause machen, schneidet die App die stummen Millisekunden am Ende mathematisch ab, bevor das Audio an Whisper geht. Dies eliminiert Halluzinationen (wie ungewollte <code>[Musik]</code>-Einträge) fast vollständig.</li>
+                <li><strong>Geräte-Auswahl:</strong> Per Rechtsklick auf den Button öffnet sich eine Liste aller Windows-Eingabegeräte, um das aktive Mikrofon bei Bedarf direkt umzuschalten.</li>
+            </ul>
         </div>
 
         <div class="card">
@@ -192,7 +228,7 @@
             <h3>1. Generate Modus (Einzel-Anfrage)</h3>
             <p>Dieser Modus ist für einmalige Aufgaben gedacht ("One-Shot").</p>
             <ul>
-                <li><strong>Vision / Bilder:</strong> Dies ist der <em>einzige</em> Modus, in dem Sie Bilder hochladen können (Buttons <code>+ File</code> oder <code>+ Screenshot</code> unten links). Nutzen Sie dafür Vision-Modelle wie <em>llava</em> oder <em>moondream</em>.</li>
+                <li><strong>Vision / Bilder:</strong> Dies ist der <em>einzige</em> Modus, in dem Sie Bilder hochladen können (Buttons <code>+ File</code> oder <code>+ Screenshot</code> unten links). Nutzen Sie dafür Vision-Modelle wie <em>llava</em> oder *moondream*.</li>
                 <li><strong>Verhalten:</strong> Jede Anfrage steht für sich allein. Das Modell "vergisst" die vorherige Frage sofort.</li>
                 <li><strong>Context:</strong> Es besteht jedoch die Möglichkeit, die Context Token in die nächste Anfrage einzubeziehen. So kann auch im Generate Modus ein Gespräch geführt werden.</li>
             </ul>
@@ -226,7 +262,7 @@
             <h3 id="link_content_prompt">3. Content Prompt</h3>
             <p>Dieser Prompt erweitert den Eingabe Prompt um angehängte Dateien. Das sind im allgemeinen Dateien die einen Text enthalten (<strong>.txt</strong>, <strong>.json</strong>, <strong>.pdf</strong>...). Bilder werden gesondert behandelt und dem LLM über einen Image-Parameter übergeben. </p>
 
-            <h3 id="link_options_parameter">4. Options-Parameter Details</h3>
+            <h3>4. Options-Parameter Details</h3>
             <p>In der Tabelle "Options Parameter" können Sie das Antwortverhalten der KI exakt steuern. Hier finden Sie die Bedeutung der Standard-Einstellungen:</p>
 
             <table>
@@ -303,7 +339,7 @@
                         <td><code>min_p</code></td>
                         <td>
                             <strong>Mindestwahrscheinlichkeit.</strong><br>
-                            Alternative zu <code>top_p</code>. Ein Wort muss eine Mindestwahrscheinlichkeit relativ zum wahrscheinlichsten Wort haben.<br>
+                            Alternative to <code>top_p</code>. Ein Wort muss eine Mindestwahrscheinlichkeit relativ zum wahrscheinlichsten Wort haben.<br>
                             Beispiel: <code>0.05</code> entfernt unwahrscheinliche "Ausreißer" oft effizienter und natürlicher als <code>top_p</code>.
                         </td>
                     </tr>
@@ -352,19 +388,68 @@
                             Reduziert den Einfluss von sehr unwahrscheinlichen Wörtern am Ende der Wahrscheinlichkeitsliste ("Tail"). Ähnlich wie <code>top_p</code>, gewichtet aber die Struktur der Wahrscheinlichkeitsverteilung stärker.
                         </td>
                     </tr>
+                    <tr>
+                        <td><code>width</code></td>
+                        <td>
+                            <strong>Bildbreite.</strong><br>
+                            Die Breite des generierten Bildes in Pixeln.<br>
+                            Sollte idealerweise zum Modell passen (z. B. <code>512</code> für SD 1.5, <code>1024</code> für SDXL/Flux).<br>
+                            <em>Hinweis: Werte sollten durch 8 oder 64 teilbar sein.</em>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>height</code></td>
+                        <td>
+                            <strong>Bildhöhe.</strong><br>
+                            Die Höhe des generierten Bildes in Pixeln.<br>
+                            Zusammen mit der Breite bestimmt dies das Seitenverhältnis (Aspect Ratio).<br>
+                            Höhere Werte benötigen signifikant mehr VRAM.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>num_steps</code></td>
+                        <td>
+                            <strong>Entrauschungs-Schritte (Steps).</strong><br>
+                            Anzahl der Durchläufe, um das Bild aus dem Rauschen zu entwickeln.<br>
+                            <code>1-10</code>: Schnell, aber oft unscharf oder fehlerhaft.<br>
+                            <code>20-30</code>: Guter Standard für Qualität und Geschwindigkeit.<br>
+                            <code>50+</code>: Höhere Details, aber sinkender Nutzen bei doppelter Wartezeit.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>cfg_scale</code></td>
+                        <td>
+                            <strong>CFG Scale (Prompt-Treue).</strong><br>
+                            Bestimmt, wie strikt sich das Modell als Text-Prompt hält.<br>
+                            <code>< 5</code>: Sehr kreativ, das Modell "träumt" freier.<br>
+                            <code>7.0 - 8.0</code>: Der Standardwert. Gute Balance zwischen Prompt und Bildqualität.<br>
+                            <code>> 15</code>: Zwingt das Modell starr in den Prompt, führt oft zu Artefakten oder "überschärften" Bildern.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>seed</code></td>
+                        <td>
+                            <strong>Reproduzierbarkeit (Seed).</strong><br>
+                            Der Startwert für das initiale Bildrauschen.<br>
+                            Gleicher Seed + Gleicher Prompt + Gleiche Einstellungen = <strong>Exakt das gleiche Bild.</strong><br>
+                            Nutze dies, um ein Bild leicht zu verändern (z. B. Farbe ändern), ohne die Komposition komplett neu zu würfeln.
+                        </td>
+                    </tr>
                 </tbody>
             </table>
 
             <div class="note">
                 <h3>➕ Liste erweitern</h3>
-                <p><strong>Fehlt ein Parameter?</strong> Diese Liste ist nicht starr! Ollama und neue Modelle unterstützen oft weitere Parameter.</p>
+                <p><strong>Fehlt ein Parameter?</strong> Diese Liste ist nicht starr! Ollama und new Modelle unterstützen oft weitere Parameter.</p>
                 <p>Sie können in der Tabelle einfach in die unterste leere Zeile (markiert mit einem Stern <code>*</code>) klicken und einen <strong>eigenen Parameternamen</strong> sowie den Wert eintragen. Solange das geladene Modell diesen Parameter unterstützt, wird er angewendet.</p>
             </div>
-        </div> <div class="card">
+        </div>
+
+        <div class="card">
             <h2>⏱ Timeout Einstellungen</h2>
             <p>Unten links finden Sie die Einstellung <strong>Timeout [s]</strong>.</p>
             <ul>
-                <li>Der Standardwert ist oft auf 300 Sekunden (5 Minuten) gesetzt.</li>
+                <li>Der Standardwert ist oft auf 600 Sekunden (10 Minuten) gesetzt.</li>
                 <li>Wenn Sie sehr große Modelle nutzen oder sehr lange Texte generieren lassen, kann es zum Abbruch kommen. Erhöhen Sie diesen Wert bei Bedarf.</li>
             </ul>
         </div>
@@ -444,7 +529,7 @@
             </table>
 
             <h3>⚙️ Hintergrund-Info</h3>
-            <p>Die Logik zur Keyword-Ermittlung ("Keyword Extraction Assistant") ist in den RAG-Tool Einstellungen hinterlegt. Das System sucht intelligent nicht nur nach Ihrem Wort, sondern auch nach logischen Verwandten (z.B. Suche nach "Auto" findet auch "PKW" oder "Fahrzeug").</p>
+            <p>Die Logik zur Keyword-Ermittlung ("Keyword Extraction Assistant") is in den RAG-Tool Einstellungen hinterlegt. Das System sucht intelligent nicht nur nach Ihrem Wort, sondern auch nach logischen Verwandten (z.B. Suche nach "Auto" findet auch "PKW" oder "Fahrzeug").</p>
 
             <h3 id="link_rag_tool_system_prompt">1. RAG Tool System Prompt</h3>
             <p>Dies ist die "Regieanweisung" für das Modell. Sie wird in zwei Phasen verwendet:</p>
@@ -495,7 +580,7 @@
 
             <h4>Die Steuerelemente:</h4>
             <ul>
-                <li><strong>Sprach-Auswahl (Dropdown):</strong> Falls das LLM mehrere Code-Blöcke generiert hat (z.B. erst Python, dann SQL), wählen Sie hier den gewünschten Block aus.</li>
+                <li><strong>Sprach-Auswahl (Dropdown):</strong> Falls das LLM mehrere Code-Blöcken generiert hat (z.B. erst Python, dann SQL), wählen Sie hier den gewünschten Block aus.</li>
                 <li><strong>Run:</strong> Speichert den Code in die temporäre Datei und führt ihn mit dem konfigurierten Interpreter aus. Das Ergebnis erscheint im Fenster "Output".</li>
                 <li>
                     <strong>UseShellExecute:</strong>
@@ -512,15 +597,80 @@
         </div>
 
         <div class="card">
+            <h2 id="link_ssh_system">🤖 SSH Bot (Autonomer KI-Agent)</h2>
+            <p>Der SSH Bot verwandelt Ollama Desktop in einen automatisierten Linux-Systemadministrator. Sie geben ein Ziel vor, und die KI verbindet sich per SSH mit Ihrem Server, führt Befehle aus, analysiert deren Ausgabe und entscheidet selbstständig über die nächsten logischen Schritte.</p>
+
+            <div class="note">
+                <strong>Wichtig:</strong> Aktivieren Sie den Schalter <strong>Use SSH Bot</strong> ganz oben im Tab, um diesen Modus bereitzumachen.
+            </div>
+
+            <h3 id="link_ssh_response">1. Prompts & Anweisungen</h3>
+            <ul>
+                <li><strong>SSH Bot System Prompt:</strong> Hier definieren Sie die Rolle und die Grundregeln für die KI (z.B. "Du bist ein hochqualifizierter Linux-Systemadministrator...").</li>
+                <li><strong>SSH Bot Response Prompt:</strong> Hier definieren Sie, wie die <strong>Antwort des Linux-Servers</strong> (also der Output nach einem ausgeführten Befehl) formatiert und an das LLM zurückgesendet wird. So versteht die KI genau, was nach ihrer letzten Aktion auf dem Server passiert ist (z.B. durch Übergabe des Terminal-Outputs), um den nächsten logischen Schritt zu planen.</li>
+            </ul>
+
+            <h3 id="link_ssh_par">2. Verbindungsdaten</h3>
+            <p>Tragen Sie hier die Zugangsdaten für Ihren Zielserver ein:</p>
+            <ul>
+                <li><strong>SSH Host / IP:</strong> Die Netzwerk-Adresse Ihres Servers (z.B. 192.168.0.90).</li>
+                <li><strong>Username & Password:</strong> Ihre Anmeldedaten.</li>
+                <li><strong>Verwaltung:</strong> Nutzen Sie <code>Test</code>, um die Verbindung zu prüfen, sowie <code>Save SSH</code> / <code>Load SSH</code>, um verschiedene Server-Profile und alle anderen Einstellungen abzuspeichern.</li>
+            </ul>
+
+            <h3>3. Fortgeschrittene Parameter & Sicherheit</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th width="30%">Einstellung</th>
+                        <th>Beschreibung</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Terminal-Prompt RegEx</strong></td>
+                        <td>Ein regulärer Ausdruck, mit dem die App erkennt, wann der Server bereit für eine neue Eingabe ist (z.B. wenn <code>reimar@PI-OLLAMA-TEST:~ $</code> erscheint). Nur bei einem Match weiß die App, dass der vorherige Befehl abgeschlossen ist.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sudo-Prompt & Password</strong></td>
+                        <td>Sollte die KI Befehle mit <code>sudo</code> ausführen, fängt die App die Passwort-Abfrage (Sudo-Prompt) ab und übermittelt automatisch das hier hinterlegte Sudo-Password.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Max. Agent-Steps</strong></td>
+                        <td><strong>Sicherheitslimit:</strong> Begrenzt die maximale Anzahl an aufeinanderfolgenden Schritten, die der Bot für eine Aufgabe ausführen darf (z.B. 15), um teure Endlosschleifen zu vermeiden.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Auto Execute</strong></td>
+                        <td>
+                            ✅ <strong>Aktiviert:</strong> Der Bot agiert vollautonom und führt generierte Befehle sofort aus.<br>
+                            ⬜ <strong>Deaktiviert:</strong> Das Modell schlägt den Befehl nur vor, und Sie müssen die Ausführung manuell anstoßen.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Re Insert System</strong></td>
+                        <td>Wenn aktiviert, wird der System Prompt bei jedem einzelnen Agenten-Schritt erneut gesendet, damit das Modell seinen Fokus (die Administrator-Rolle) über längere Aufgaben hinweg nicht verliert.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="warn">
+                <strong>Sicherheitswarnung:</strong> Ein autonomer KI-Agent mit SSH-Zugang und Sudo-Rechten kann weitreichende Änderungen am System vornehmen. Nutzen Sie diese Funktion mit Vorsicht und idealerweise auf abgeschotteten Test-Systemen (wie virtuellen Maschinen oder Raspberry Pis).
+            </div>
+        </div>
+
+        <div class="card">
             <h2>⚖️ Lizenzen & Drittanbieter</h2>
             <p>Diese Software verwendet Open-Source-Komponenten und Bibliotheken von Drittanbietern. Nachfolgend finden Sie die Urheberrechtshinweise und Lizenzbedingungen:</p>
 
-            <h3>1. Ollama_Desktop, Newtonsoft.Json, Scintilla5.NET</h3>
-            <p>Die folgenden Komponenten unterliegen der <strong>MIT-Lizenz</strong>:</p>
+            <h3>1. Open-Source Komponenten-Auflistung (MIT-Lizenz)</h3>
+            <p>Die nachfolgend aufgeführten Module unterliegen individuell den Bedingungen der <strong>MIT-Lizenz</strong>:</p>
             <ul>
                 <li><strong>Ollama_Desktop</strong> (Urheber: 7soft)</li>
                 <li><strong>Newtonsoft.Json</strong> (Urheber: Newtonsoft)</li>
                 <li><strong>Scintilla5.NET</strong> (Urheber: Brandon Desjarlais)</li>
+                <li><strong>SSH.NET</strong> (Renci.SshNet)</li>
+                <li><strong>Whisper.net & Whisper.net.Runtime</strong> (Sandro Hanea - MIT-Lizenz Wrapper für whisper.cpp)</li>
+                <li><strong>NAudio</strong> (Mark Heath & Mitwirkende - Open-Source Audio-Bibliothek für .NET)</li>
             </ul>
             <pre>
 Permission is hereby granted, free of charge, to any person obtaining a copy of 
@@ -535,8 +685,7 @@ copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE 
 SOFTWARE.</pre>

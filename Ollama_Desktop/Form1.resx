@@ -120,20 +120,72 @@
   <metadata name="ToolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <data name="SiticoneToggleSwitch_sshreinsert.ToolTipText" xml:space="preserve">
+    <value>Forces the system to append the System Prompt to the LLM during every single agent step. This prevents the AI from 'forgetting' its core rules when the context window fills up with massive console outputs.</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="TabPage_sshbot.TabImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
+        vAAADrwBlbxySQAAABl0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuODc7gF0AAAHBSURBVFhH1ZfP
+        K2ZhFMc/1laTjfzIQihqovzaWMhGlMzCxoIUy6lZjCz8ARZKsZYsZGVBykJiY8lusrGQNFLTNJGpaZpB
+        5+15dDoO7nvziFOf3sX5dO73/nie917IX6PAGXABfLbN1FUH/ANuAzdAm5VS1id18Mi4lVJWBXCtDv4X
+        aLBS6ppXAVZs8zVqVgVYss28NRjOZj0DxyrAqdP3WAWGgRJ7YKlp58FKxZw9+AfgjyOm4j9QowPIGrZS
+        anp1gE5HSE3/uwpwCeyGX9uz/Ab2gJ9OT5M5wAlQGbyqsOSsE/kR/iekyoBvjhO5D1ALbDhCZCyKoSYc
+        JzJl3AHHichVahFpy2lq6s3QRseJdBlXroJ1NAciHToNTZMZ+tFxIt3GLXccjdzeZwN8MUO/Ok5kxrgj
+        jqPJFECe5tYwsB345TgRWQE9wZVb9d1xNIUA207DIm88Mkx+bc9DXP3G9Bhy8oWkO04zNfv6Ne6pfSAV
+        mTciQZbLUJHIOrdzcgfY1HLGWnbmvN8AR8Bkkchts3NyB0jB2wrQ4Qip6dMBqovY5V6KZh1Aas2RUiF7
+        xINvg1JgATgHrhIhn/KL4TOgUHcChqCyHzKlFQAAAABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="SiticoneButton_wisper.ButtonImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAAStJREFUWEft
+        loENwjAMBD0KozAKmzAKozAKo4BeqtHr6zR2a5CQOMkStI39cWInZn2czOyctHbuZvYs2GMR3MItCJAx
+        iGgBjtR51lqWQ51W7C/gNwSgXK7Lbo9KR51WbCoAH/AA7HgdpE4rpr5W6AAYmg5zpAyjjL7BSx0A0wZy
+        Cb7JmE5kxUgATL/DHqm0Y51ESFZABhaXCg46BZSDgy4BvkdKwUGXAPSPcnDQJWC620d0CZjCgThVWQGj
+        5yXYCXenqLZR8w43od2pBhwITh1vMlFwwNcx/N4NzyS6MOp/oAfV9GDZAgH4UIlEMHjHWTuUfkcPFYhA
+        ylmILknL7JnIuYvRZ+3BHV3bkUWXkzaQaixJVIZ4xpXycbjUvhrY+QvAfsBmg231hl28APoyWJhiCFbX
+        AAAAAElFTkSuQmCC
+</value>
+  </data>
+  <data name="SiticoneButton_audio.ButtonImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAJ
+        zwAACc8B3PAPGAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAIwSURBVFhHxZa7
+        alVREIY/UUELTZ7AS7qoMTG2okQiBG0CEiJ5g4hYhYCCoI1WdmKl2Eh6CaRVA4IoPoAQtBDLeEmaqOAJ
+        A+vAMLNmzzo2Fh/s9f9z22fvs/ai1+vxLwBHgSuFI9ZvxQkZwAngNSALzUtg1MZnOKELYAz4UWne5ztw
+        0uZ14YQugDeq2TtgEbgOvFf6us3rwgkRwIhq8hbYp7z9ZaC+f8zmRzghArisGtyo+DeVP2P9CCdEAHOq
+        wdygfoQTIrIGmR/hhIisQeZHOCEia5D5EU6IyBpkfoQTIrIGmR/hhIisQeZHOCEia5D5EU6IyBpkfoQT
+        VEHZXh8A92XbzRpY3+bb+JYBZlRB2YavqvV8Jf6a8iVWzgn9dbg1O0EVnFIF5Kt3Xq3vVuLvKf+cfC/U
+        +oKNbxnguCrwFDgIbJX1pv7uA6eAb8X7CRwAnqn88MTkBDPEhmo4BNxRRX8Dr8rpSK77+m1guBxOZP3R
+        1h1kgFuq8CNgL7CiNMvzEvNYacu27iADHAa+qmJLwB5godz9dnksch6Ul1C8ZRX/BThk6zYPUIa4CPxR
+        RV8ApytxE8CqipOcKRtncUKN8rf6ZX7uT8BaQa61twPM2jo1nBABjAMfTKMackAds/kRTuiiPONL5W/5
+        WTWV6yfAtMTYvC6c0Irdeq3fihNa+a8DAJPAQzWAXE/auBackAGcBf5WXj7Rztj4DCdklLuPBpiw8RlO
+        aEHutLwDmoGbC7uHHQFg8/0fUwAAAABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="SiticoneButton_clear_prompt.ButtonImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6
+        JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAACXBIWXMAAdeDAAHXgwHwW8LfAAAAB3RJ
+        TUUH5QIKEwwGxJZkhQAAABl0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuODc7gF0AAAHjSURBVFhH
+        xZbJSlxBFIY/iRoFTcguxOmNFLIXTCCJARGHhYIIKm5cCDEOBLIN5AGyyiJ7H8CF7gQFcac448gPVVAc
+        qm+XfW91fjib7nPPd4aaoHq9BuaBP8Bn4KV1yKku4BtwCzwCZ8AE0GYdc+gV8D2AezsHJnMnIfh6BB4m
+        MZ0riXrwrEmkwrMk0Q2sAXcRUJEpiXGgxQZ8jjw8tXJre8A7GzRVZeGyHeCtDZyiWlvtOXYCfLSBU+Th
+        mrmC/AMuIoAi03dfgRc2eD1Z+JgbxTJwFQHFrGG4QILfA0fAcBCkA1gEriPA0E7LwP1WOwSGrAPQCSwV
+        dELw0Srgg9YhkDqxEEmiYbhm7uHHwHvrEJGu3RXgoSzcz9wvuJHEU+sN8KssXNJZrQWnIFrtKUH0CPkZ
+        fNcwXB/9dlX8dd2oJ41rqwq41yfgxh0ys3VuLiW46cYl+JeycEkrWm867W3dXDM1klDlGwG8dOWhtLdV
+        vbaVOjEHtAf/+7ZngXupEz6JS3fiaavZtmeBe9kkVoEfzYJ7hUlopeugaRrcS0lMAfvALvABaLVOuaVq
+        +91TKuVkbEiqqgcYcDBrvUBf5PcUU0zFLuycHLbd7XdQsSmmYotRU/89AbVHM7btq8oUu3AETdcTPSwV
+        L5seELYAAAAASUVORK5CYII=
+</value>
+  </data>
   <metadata name="MySiticoneLicenseSettings1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>115, 17</value>
   </metadata>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="NavBarItem1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAAIpJREFUWEft
-        l9EJgDAMRG8UR3EzR3EUR3EU5cBCCVqpcPGj9+BAopBHqhCB7ywA9iu8nuIDStjwCGEtjdi8JA2OPTZn
-        LY3fj4Cs1STSm5sxmQFsN28/a7wn5+7bryXktAQYORxzSyIdC1jAAhawgAXGE3jaiGJkG1JrF4iRbEg9
-        ApLftLeNqKTrCE4xlJsgzaW5XwAAAABJRU5ErkJggg==
-</value>
-  </data>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>25</value>
+    <value>52</value>
   </metadata>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -448,4 +500,10 @@
         /w/PCP8DQahzGgAAAABJRU5ErkJggg==
 </value>
   </data>
+  <metadata name="SiticoneBorderlessForm1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>315, 17</value>
+  </metadata>
+  <metadata name="Timer_LLM_progress.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>499, 17</value>
+  </metadata>
 </root>

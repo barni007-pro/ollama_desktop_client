@@ -157,6 +157,16 @@ Namespace My.Resources
         '''<summary>
         '''  Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
         '''</summary>
+        Friend Shared ReadOnly Property SSH_Bot() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("SSH_Bot", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        '''</summary>
         Friend Shared ReadOnly Property Tools() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("Tools", resourceCulture)

@@ -6,8 +6,8 @@
     <StartupObject>Ollama_Desktop.My.MyApplication</StartupObject>
     <UseWindowsForms>true</UseWindowsForms>
     <MyType>WindowsForms</MyType>
-    <AssemblyVersion>1.2.1.16</AssemblyVersion>
-    <FileVersion>1.2.1.16</FileVersion>
+    <AssemblyVersion>1.5.4.29</AssemblyVersion>
+    <FileVersion>1.5.4.29</FileVersion>
     <PackageIcon>315878_ai_document_file_icon (2).png</PackageIcon>
     <ApplicationIcon>pic\app_icon_hq.ico</ApplicationIcon>
     <Copyright>7soft</Copyright>
@@ -27,10 +27,14 @@
   <ItemGroup>
     <PackageReference Include="Markdig" Version="0.44.0" />
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3650.58" />
+    <PackageReference Include="NAudio" Version="2.3.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="PdfPig" Version="0.1.12" />
     <PackageReference Include="Scintilla5.NET" Version="6.1.1" />
     <PackageReference Include="Siticone.NetCore.UI" Version="2026.1.20.1" />
+    <PackageReference Include="SSH.NET" Version="2025.1.0" />
+    <PackageReference Include="Whisper.net" Version="1.9.1" />
+    <PackageReference Include="Whisper.net.Runtime" Version="1.9.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -80,6 +84,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="ggml-base.bin">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="help\index_DE.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -101,6 +108,9 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
+    <None Update="ro.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="settings\default_DE.code.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -108,6 +118,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="settings\default_DE.rag.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="settings\default_DE.ssh.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="settings\default_DE.tools.json">
@@ -122,6 +135,9 @@
     <None Update="settings\default_GB.rag.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="settings\default_GB.ssh.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="settings\default_GB.tools.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -131,7 +147,19 @@
     <None Update="settings\settings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="terminal.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="version.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="xterm\xterm-addon-fit.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="xterm\xterm.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="xterm\xterm.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

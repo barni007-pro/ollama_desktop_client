@@ -1,5 +1,5 @@
 {
-  "system_prompt": "Always respond in detail and with examples. Group the response into sections. Always answer in English and never in German.",
+  "system_prompt": "Always respond in detail and with examples. Group the response into sections. Always answer in English",
   "option_parameter": [
     {
       "OptionName": "temperature",
@@ -38,6 +38,30 @@
       "Value": "500"
     },
     {
+      "OptionName": "width",
+      "Use": false,
+      "ValueType": "int",
+      "Value": "1024"
+    },
+    {
+      "OptionName": "height",
+      "Use": false,
+      "ValueType": "int",
+      "Value": "1024"
+    },
+    {
+      "OptionName": "num_steps",
+      "Use": false,
+      "ValueType": "int",
+      "Value": "25"
+    },
+    {
+      "OptionName": "cfg_scale",
+      "Use": false,
+      "ValueType": "float",
+      "Value": "7,5"
+    },
+    {
       "OptionName": "seed",
       "Use": false,
       "ValueType": "int",
@@ -50,6 +74,6 @@
   "timeout": "600",
   "thinking_use": false,
   "thinking_parameter": "false",
-  "context_use": false,
+  "context_use": true,
   "content_prompt": "Process the instruction based on the content of the following file(s):\r\n{files}\r\nInstruction:\r\n{prompt}"
 }
