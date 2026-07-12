@@ -99,8 +99,12 @@ Namespace My
             "p_p&lt;|&gt;false&lt;|&gt;float&lt;|&gt;0,9</string>"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"  <string>top_k&lt;|&gt;fa"& _ 
             "lse&lt;|&gt;int&lt;|&gt;20</string>"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"  <string>num_ctx&lt;|&gt;false&lt;|&gt;int"& _ 
             "&lt;|&gt;1024</string>"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"  <string>num_keep&lt;|&gt;false&lt;|&gt;int&lt;|&gt;5</"& _ 
-            "string>"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"  <string>num_predict&lt;|&gt;false&lt;|&gt;int&lt;|&gt;500</string>"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"<"& _ 
-            "/ArrayOfString>")>  _
+            "string>"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"  <string>num_predict&lt;|&gt;false&lt;|&gt;int&lt;|&gt;500</string>"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&" "& _ 
+            " <string>width&lt;|&gt;false&lt;|&gt;int&lt;|&gt;1024</string>"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"  <string>height"& _ 
+            "&lt;|&gt;false&lt;|&gt;int&lt;|&gt;1024</string>"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"  <string>num_steps&lt;|&gt;fa"& _ 
+            "lse&lt;|&gt;int&lt;|&gt;25</string>"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"  <string>cfg_scale&lt;|&gt;false&lt;|&gt;f"& _ 
+            "loat&lt;|&gt;7,5</string>"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"  <string>seed&lt;|&gt;false&lt;|&gt;int&lt;|&gt;42</"& _ 
+            "string>"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"</ArrayOfString>")>  _
         Public Property option_list() As Global.System.Collections.Specialized.StringCollection
             Get
                 Return CType(Me("option_list"),Global.System.Collections.Specialized.StringCollection)
@@ -433,6 +437,259 @@ Namespace My
             End Get
             Set
                 Me("show_menue") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public ReadOnly Property test_response() As String
+            Get
+                Return CType(Me("test_response"),String)
+            End Get
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute(" Unknown")>  _
+        Public Property serv_ver() As String
+            Get
+                Return CType(Me("serv_ver"),String)
+            End Get
+            Set
+                Me("serv_ver") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property context_use() As Boolean
+            Get
+                Return CType(Me("context_use"),Boolean)
+            End Get
+            Set
+                Me("context_use") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("Du bist ein hochqualifizierter Linux-Systemadministrator und agierst als autonome"& _ 
+            "r KI-Agent. Du bist über eine SSH-Verbindung mit einem Linux-Server verbunden."&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)& _ 
+            "Deine Aufgabe:"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"Der User gibt dir ein Ziel vor oder sendet dir den Konsolen-Outp"& _ 
+            "ut deines letzten Befehls. Du analysierst die Situation und entscheidest über de"& _ 
+            "n nächsten, logischen Schritt."&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"WICHTIGE REGELN FÜR DEINE ANTWORT:"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"1. Wenn du e"& _ 
+            "inen Befehl auf dem Server ausführen möchtest, MUSST du diesen exakt in einen Ma"& _ 
+            "rkdown-Code-Block mit der Sprache bash schreiben."&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"2. ABSOLUTES VERBOT VON MEHRZ"& _ 
+            "EILIGEN BLÖCKEN: Du darfst pro Antwort strengstens nur EINE EINZIGE Zeile Code s"& _ 
+            "enden. Wenn du mehrere Befehle brauchst, MUSST du sie mit && verketten."&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"3. Verz"& _ 
+            "ichte auf unnötige Erklärungen vor oder nach dem Code-Block, es sei denn, du ben"& _ 
+            "ötigst eine Entscheidung des Users."&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"4. Wenn du Administrator-Rechte benötigst, "& _ 
+            "verwende sudo. (Das System regelt das Passwort)."&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"5. Erfinde niemals Konsolen-Ou"& _ 
+            "tputs. Warte immer auf die echte Rückmeldung des Systems."&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"6. Informationsausgab"& _ 
+            "e: Wenn das Ziel des Users darin besteht, Informationen zu sammeln (z.B. durch S"& _ 
+            "cans, das Lesen von Logs oder Status-Abfragen), MUSST du die gefundenen Daten am"& _ 
+            " Ende der Aufgabe übersichtlich, strukturiert und gut lesbar für den User auflis"& _ 
+            "ten (z.B. als Markdown-Tabelle oder Liste). Behalte solche Daten niemals für dic"& _ 
+            "h."&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"7. Sudo bei Befehlsketten: Wenn du Root-Rechte benötigst und mehrere Befehle"& _ 
+            " mit && verkettest, MUSST du das sudo vor JEDEN einzelnen Befehl schreiben. (FAL"& _ 
+            "SCH: sudo cmd1 && cmd2 | KORREKT: sudo cmd1 && sudo cmd2)."&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"8. Dateien erstellen"& _ 
+            " (Einzeiler-Pflicht): Die Nutzung von Here-Docs (cat << EOF) ist strengstens ver"& _ 
+            "boten! Um mehrzeilige Skripte als Einzeiler zu schreiben und Quote-Fehler zu ver"& _ 
+            "meiden, nutze aufeinanderfolgende echo-Befehle. Schreibe die erste Zeile mit > u"& _ 
+            "nd alle weiteren mit >> in die Datei. Nutze für den äußeren echo-Befehl IMMER ei"& _ 
+            "nfache Anführungszeichen ('...'). Wenn du im Text selbst ein einfaches Anführung"& _ 
+            "szeichen brauchst, maskiere es mit '\''. Beispiel: echo '#!/bin/bash' > script.s"& _ 
+            "h && echo 'echo '\''Hallo!'\''' >> script.sh && chmod +x script.sh"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"9. Sonderzei"& _ 
+            "chen und Quoting (History Expansion Falle): Das Ausrufezeichen (!) führt in Bash"& _ 
+            " innerhalb von doppelten Anführungszeichen zu einem ""event not found"" Fehler. We"& _ 
+            "nn du Texte mit Ausrufezeichen oder komplexen Sonderzeichen schreibst (z. B. mit"& _ 
+            " echo), MUSST du einfache Anführungszeichen ('...') verwenden. Beispiel FALSCH: "& _ 
+            "echo ""Hallo!"" Beispiel KORREKT: echo 'Hallo!'"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))>  _
+        Public Property ssh_system() As String
+            Get
+                Return CType(Me("ssh_system"),String)
+            End Get
+            Set
+                Me("ssh_system") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("URSPRÜNGLICHES ZIEL:"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"{original_prompt}"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"Zuletzt ausgeführter Befehl:"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"{command}"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"Ergebnis der letzten Aktion:"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"{response}"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"Analysiere das Ergebnis. Wenn das Zie"& _ 
+            "l erreicht ist, beginne deine Antwort ZWINGEND mit [ZIEL ERREICHT], erkläre kurz"& _ 
+            " was gemacht wurde UND präsentiere die gefundenen Informationen/Daten übersichtl"& _ 
+            "ich für den User (ohne bash-Block). Wenn nicht, schreibe den nächsten Befehl ZWI"& _ 
+            "NGEND in einen ```bash Code-Block.")>  _
+        Public Property ssh_response() As String
+            Get
+                Return CType(Me("ssh_response"),String)
+            End Get
+            Set
+                Me("ssh_response") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("192.168.0.90")>  _
+        Public Property ssh_address() As String
+            Get
+                Return CType(Me("ssh_address"),String)
+            End Get
+            Set
+                Me("ssh_address") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("reimar")>  _
+        Public Property ssh_user() As String
+            Get
+                Return CType(Me("ssh_user"),String)
+            End Get
+            Set
+                Me("ssh_user") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property ssh_pw() As String
+            Get
+                Return CType(Me("ssh_pw"),String)
+            End Get
+            Set
+                Me("ssh_pw") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("[\w\.-]+@[\w\.-]+:.*?[\$#]\s*$")>  _
+        Public Property ssh_regex() As String
+            Get
+                Return CType(Me("ssh_regex"),String)
+            End Get
+            Set
+                Me("ssh_regex") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("Password:")>  _
+        Public Property ssh_pwrequest() As String
+            Get
+                Return CType(Me("ssh_pwrequest"),String)
+            End Get
+            Set
+                Me("ssh_pwrequest") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property ssh_sudopw() As String
+            Get
+                Return CType(Me("ssh_sudopw"),String)
+            End Get
+            Set
+                Me("ssh_sudopw") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("600")>  _
+        Public Property ssh_timeout() As String
+            Get
+                Return CType(Me("ssh_timeout"),String)
+            End Get
+            Set
+                Me("ssh_timeout") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("15")>  _
+        Public Property ssh_maxi() As String
+            Get
+                Return CType(Me("ssh_maxi"),String)
+            End Get
+            Set
+                Me("ssh_maxi") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("[SYSTEM-FEHLER: REGELVERSTOSS! Du hast mehrere Zeilen in deinem bash-Block gesend"& _ 
+            "et. Das System akzeptiert pro Antwort strikt nur EINE Zeile Code. Bitte verbinde"& _ 
+            " deine Befehle mit && und sende sie noch einmal.]")>  _
+        Public Property currentErrMultiline() As String
+            Get
+                Return CType(Me("currentErrMultiline"),String)
+            End Get
+            Set
+                Me("currentErrMultiline") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("[SYSTEM-FEHLER: REGELVERSTOSS! Du hast weder einen ```bash Code-Block gesendet, n"& _ 
+            "och deine Antwort mit [ZIEL ERREICHT] begonnen. Bitte generiere deine Antwort er"& _ 
+            "neut und halte dich strikt an die Formatierungsregeln.]")>  _
+        Public Property currentErrFormat() As String
+            Get
+                Return CType(Me("currentErrFormat"),String)
+            End Get
+            Set
+                Me("currentErrFormat") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("[SYSTEM: Der Administrator hat diesen Befehl abgelehnt. Bitte schlage eine Altern"& _ 
+            "ative vor.]")>  _
+        Public Property currentErrDenied() As String
+            Get
+                Return CType(Me("currentErrDenied"),String)
+            End Get
+            Set
+                Me("currentErrDenied") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("0")>  _
+        Public Property AudioDevice() As Integer
+            Get
+                Return CType(Me("AudioDevice"),Integer)
+            End Get
+            Set
+                Me("AudioDevice") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("de")>  _
+        Public Property WhisperLanguage() As String
+            Get
+                Return CType(Me("WhisperLanguage"),String)
+            End Get
+            Set
+                Me("WhisperLanguage") = value
             End Set
         End Property
     End Class

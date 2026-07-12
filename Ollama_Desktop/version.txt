@@ -30,3 +30,51 @@ V 1.2.0.15
 - new GUI Menue (Top Menue is now a Sidebar)
 V 1.2.1.16
 - Bugfix: GUI
+V 1.3.1.18
+- Image generation support for x/z-image-turbo and x/flux2-klein models
+- Now we wait for Linux and Windows image genaration support by ollama, MAC already supported
+V 1.4.0.19
+- models_config - new models added
+- GUI - new Header design
+V 1.4.1.20
+- add qwen3.5 to models_config.json
+V 1.4.2.21
+- Navigation buttons added. (response JSON are included -> Context repeat for new Promt)
+V 1.4.3.22
+- Navigation buttons code refactoring and optimization
+V 1.4.4.23
+- Navigation Buttons with history and token deletion
+- Ollama API Control via window top bar Button
+- new revised Ollama communication process layer
+- Debug Output with Shift F12
+- new Prompt Start and Stop Button
+- new Sound prozessing when the API communication is complete
+- add lfm2 to models_config.json
+V 1.4.5.24
+- add gemma4 to models_config.json
+V 1.5.0.25
+- SSH Bot (Autonomous AI Agent)
+  Exclusive feature! 
+  Transforms the app into an autonomous system administrator that manages servers via SSH, 
+  executes commands, and independently reacts to terminal outputs.
+V 1.5.1.26
+- add internlm3 to models_config.json
+- add baichuan2 to models_config.json
+- add command-r-plus to models_config.json
+- add aya-expanse to models_config.json
+- add openhermes to models_config.json
+- add starling-lm to models_config.json
+- add granite-code to models_config.json
+- add granite4.1 to models_config.json
+- add mistral-medium-3.5 to models_config.json
+- add nemotron3 to models_config.json
+- Clear Button for Prompt Input
+V 1.5.2.27
+- Audio import (wav, mp3) (gemma4 feature ...)
+- Audio Record Button (wav) (gemma4 feature ...)
+- add qwen3.6 to models_config.json
+- add ornith to models_config.json
+V 1.5.3.28
+- Audio Info at Model Info Tab
+V 1.5.4.29
+- Whisper Audio Model Support (Live Audio Transcription)

@@ -97,9 +97,69 @@ Namespace My.Resources
         '''<summary>
         '''  Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
         '''</summary>
+        Friend Shared ReadOnly Property audio_32() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("audio_32", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        '''</summary>
+        Friend Shared ReadOnly Property audio_32_blau() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("audio_32_blau", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        '''</summary>
+        Friend Shared ReadOnly Property audio_32_grau() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("audio_32_grau", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        '''</summary>
         Friend Shared ReadOnly Property customize() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("customize", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        '''</summary>
+        Friend Shared ReadOnly Property edit_clear_all_black() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("edit_clear_all_black", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        '''</summary>
+        Friend Shared ReadOnly Property edit_clear_all_blau() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("edit_clear_all_blau", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        '''</summary>
+        Friend Shared ReadOnly Property edit_clear_all_grau() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("edit_clear_all_grau", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
@@ -187,6 +247,16 @@ Namespace My.Resources
         '''<summary>
         '''  Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
         '''</summary>
+        Friend Shared ReadOnly Property icon_wav() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("icon_wav", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        '''</summary>
         Friend Shared ReadOnly Property json_file() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("json-file", resourceCulture)
@@ -200,6 +270,36 @@ Namespace My.Resources
         Friend Shared ReadOnly Property md_file() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("md-file", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        '''</summary>
+        Friend Shared ReadOnly Property mic_32() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("mic_32", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        '''</summary>
+        Friend Shared ReadOnly Property mic_32_blau() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("mic_32_blau", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        '''</summary>
+        Friend Shared ReadOnly Property mic_32_grau() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("mic_32_grau", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
@@ -300,6 +400,36 @@ Namespace My.Resources
         Friend Shared ReadOnly Property screenshot_32_grau() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("screenshot_32_grau", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        '''</summary>
+        Friend Shared ReadOnly Property speech_32() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("speech_32", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        '''</summary>
+        Friend Shared ReadOnly Property speech_32_blau() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("speech_32_blau", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        '''</summary>
+        Friend Shared ReadOnly Property speech_32_grau() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("speech_32_grau", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property

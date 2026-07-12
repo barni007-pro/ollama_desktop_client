@@ -1,0 +1,109 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="xterm/xterm.css" />
+    <script src="xterm/xterm.js"></script>
+    <script src="xterm/xterm-addon-fit.js"></script>
+    <style>
+        body {
+            margin: 0;
+            background-color: #000;
+            overflow: hidden;
+        }
+
+        #terminal {
+            height: 100vh;
+            width: 100vw;
+            padding: 5px;
+            box-sizing: border-box;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: #333;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div id="terminal"></div>
+    <script>
+        //const term = new Terminal({
+        //    theme: { background: '#000000' },
+        //    cursorBlink: true
+        //});
+        const term = new Terminal({
+            cursorBlink: true,
+            fontFamily: 'Consolas, "Courier New", monospace', // Optional: Eine schönere Schriftart
+            theme: {
+                background: '#1e1e1e', // Ein sanftes Dunkelgrau statt Tiefschwarz
+                foreground: '#cccccc', // Standard-Textfarbe
+                cursor: '#ffffff',
+
+                // Die 8 Standard-ANSI-Farben weicher machen
+                black: '#000000',
+                red: '#cd3131',
+                green: '#0dbc79',     // Ein angenehmeres, dunkleres Grün
+                yellow: '#e5e510',
+                blue: '#2472c8',      // Ein helleres Blau, das man auch auf Schwarz/Grün lesen kann
+                magenta: '#bc3fbc',
+                cyan: '#11a8cd',
+                white: '#e5e5e5',
+
+                // Die 8 hellen (Bright) ANSI-Farben anpassen
+                brightBlack: '#666666',
+                brightRed: '#f14c4c',
+                brightGreen: '#23d18b', // Hier wird das grelle Hintergrund-Grün abgedämpft
+                brightYellow: '#f5f543',
+                brightBlue: '#3b8eea',
+                brightMagenta: '#d670d6',
+                brightCyan: '#29b8db',
+                brightWhite: '#ffffff'
+            }
+        });
+
+        // Fit-Addon laden
+        const fitAddon = new FitAddon.FitAddon();
+        term.loadAddon(fitAddon);
+        term.open(document.getElementById('terminal'));
+
+        // Funktion zum Senden der neuen Größe an VB.NET
+        function updateTerminalSize() {
+            fitAddon.fit();
+            window.chrome.webview.postMessage(JSON.stringify({
+                type: 'resize',
+                cols: term.cols,
+                rows: term.rows
+            }));
+        }
+
+        // Wenn das Fenster (oder WebView) die Größe ändert, neu berechnen
+        window.addEventListener('resize', updateTerminalSize);
+
+        // Initial einmal die Größe anpassen
+        setTimeout(updateTerminalSize, 100);
+
+        // User tippt -> Daten an VB.NET senden (jetzt auch als JSON)
+        term.onData(data => {
+            window.chrome.webview.postMessage(JSON.stringify({
+                type: 'input',
+                data: data
+            }));
+        });
+
+        window.writeFromDotNet = function (base64Data) {
+            const binaryString = atob(base64Data);
+            const bytes = new Uint8Array(binaryString.length);
+            for (let i = 0; i < binaryString.length; i++) {
+                bytes[i] = binaryString.charCodeAt(i);
+            }
+            const decoder = new TextDecoder('utf-8');
+            term.write(decoder.decode(bytes));
+        };
+    </script>
+</body>
+</html>

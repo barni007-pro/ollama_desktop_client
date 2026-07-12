@@ -363,3 +363,13 @@ MigrationBackup/
 FodyWeavers.xsd
 /arbeit
 /Setup
+
+# Whisper Modell ausschließen
+Ollama_Desktop/ggml-base.bin
+
+# Inno Setup Ausgaben ausschließen
+inno setup/Output/
+/Ollama_Desktop/ggml-base.bin
+/inno setup/Output/Ollama Desktop Setup.exe
+/inno setup/Output/Ollama_Desktop_Setup_1.5.4.zip
+/Ollama_Desktop/whisper_model/ggml-base.bin

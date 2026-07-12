@@ -4,12 +4,14 @@ Diese Software verwendet Komponenten von Drittanbietern. Nachfolgend finden Sie 
 vollständigen Urheberrechtshinweise und Lizenztexte für die verwendeten Pakete:
 
 --------------------------------------------------------------------------------
-1. Ollama_Desktop, Newtonsoft.Json, Scintilla5.NET (MIT-Lizenz)
+1. Ollama_Desktop, Newtonsoft.Json, Scintilla5.NET, NAudio, Whisper.net (MIT-Lizenz)
 --------------------------------------------------------------------------------
 Die folgenden Komponenten unterliegen der MIT-Lizenz:
 - Ollama_Desktop (Urheber: 7soft)
 - Newtonsoft.Json (Urheber: Newtonsoft)
 - Scintilla5.NET (Urheber: Brandon Desjarlais)
+- NAudio (Urheber: Mark Heath)
+- Whisper.net (Urheber: Sandro Hanea / whisper.cpp von Georgi Gerganov)
 
 LIZENZTEXT:
 Permission is hereby granted, free of charge, to any person obtaining a copy of 

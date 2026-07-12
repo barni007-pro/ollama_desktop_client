@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>Ollama Desktop</title>
+            <style>
+/* From extension vscode.github */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+.vscode-dark img[src$=\#gh-light-mode-only],
+.vscode-light img[src$=\#gh-dark-mode-only],
+.vscode-high-contrast:not(.vscode-high-contrast-light) img[src$=\#gh-light-mode-only],
+.vscode-high-contrast-light img[src$=\#gh-dark-mode-only] {
+	display: none;
+}
+
+</style>
+            
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+<style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        <style>
+.task-list-item {
+    list-style-type: none;
+}
+
+.task-list-item-checkbox {
+    margin-left: -20px;
+    vertical-align: middle;
+    pointer-events: none;
+}
+</style>
+<style>
+:root {
+  --color-note: #0969da;
+  --color-tip: #1a7f37;
+  --color-warning: #9a6700;
+  --color-severe: #bc4c00;
+  --color-caution: #d1242f;
+  --color-important: #8250df;
+}
+
+</style>
+<style>
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-note: #2f81f7;
+    --color-tip: #3fb950;
+    --color-warning: #d29922;
+    --color-severe: #db6d28;
+    --color-caution: #f85149;
+    --color-important: #a371f7;
+  }
+}
+
+</style>
+<style>
+.markdown-alert {
+  padding: 0.5rem 1rem;
+  margin-bottom: 16px;
+  color: inherit;
+  border-left: .25em solid #888;
+}
+
+.markdown-alert>:first-child {
+  margin-top: 0
+}
+
+.markdown-alert>:last-child {
+  margin-bottom: 0
+}
+
+.markdown-alert .markdown-alert-title {
+  display: flex;
+  font-weight: 500;
+  align-items: center;
+  line-height: 1
+}
+
+.markdown-alert .markdown-alert-title .octicon {
+  margin-right: 0.5rem;
+  display: inline-block;
+  overflow: visible !important;
+  vertical-align: text-bottom;
+  fill: currentColor;
+}
+
+.markdown-alert.markdown-alert-note {
+  border-left-color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-note .markdown-alert-title {
+  color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-important {
+  border-left-color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-important .markdown-alert-title {
+  color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-warning {
+  border-left-color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-warning .markdown-alert-title {
+  color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-tip {
+  border-left-color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-tip .markdown-alert-title {
+  color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-caution {
+  border-left-color: var(--color-caution);
+}
+
+.markdown-alert.markdown-alert-caution .markdown-alert-title {
+  color: var(--color-caution);
+}
+
+</style>
+        
+        </head>
+        <body class="vscode-body vscode-light">
+            <h1 id="ollama-desktop">Ollama Desktop</h1>
+<hr>
+<blockquote>
+<p><strong>Languages:</strong> <a href="README.html">English</a> | [Deutsch]</p>
+</blockquote>
+<hr>
+<p><strong>Ollama Desktop</strong> ist eine grafische Benutzeroberfläche (GUI) für <strong>Ollama</strong>. Sie ermöglicht es dir, lokal installierte KI-Modelle komfortabel zu steuern, Parameter fein abzustimmen und strukturierte JSON-Antworten zu erzwingen.</p>
+<hr>
+<p><img src="file:///f:\Ollama_Desktop\screenshots\response_html.png" alt="Ollama Desktop Screenshot"></p>
+<hr>
+<h3 id="-highlights">✨ Highlights</h3>
+<ul>
+<li><strong>Vision-Unterstützung:</strong> Bilder (.jpg,.png) hochladen und analysieren (z. B. mit llava) im Generate-Modus.</li>
+<li><strong>Dateien einlesen:</strong> Importieren von Textdateien (.pdf, .txt, .json), um deren Inhalte direkt in den Kontext einzubinden.</li>
+<li><strong>RAG-Tool:</strong> Chatten mit großen Dokumenten (.pdf/.txt) durch lokale Wissensextraktion.</li>
+<li><strong>Chat-Modus:</strong> Modellwechsel während der Konversation möglich.</li>
+<li><strong>Tools &amp; Functions:</strong> Lokale Python-Code-Ausführung durch das Modell.</li>
+<li><strong>JSON-Modus:</strong> Erzwingen von strukturierten Antworten.</li>
+<li><strong>Code-Ausführung:</strong> Direktes Ausführen von Python, PowerShell oder Batch-Skripten.</li>
+<li><strong>Screenshots:</strong> Verabeiten von Screenshots durch ein Vision LLM.</li>
+<li><strong>Formelausgabe:</strong> Anzeigen von mathematischen Formeln (LaTeX Unterstützung).</li>
+<li><strong>Bildgenerierung:</strong> Unterstützung für die Bildgenerierung der Modelle x/z-image-turbo und x/flux2-klein.</li>
+</ul>
+<hr>
+<h3 id="-neueste-version-herunterladen">📥 <a href="https://github.com/barni007-pro/ollama_desktop_client/releases/latest">Neueste Version herunterladen</a></h3>
+<p>Du hast die Wahl zwischen der <strong>Portablen</strong> Version (keine Installation erforderlich) und der <strong>Setup</strong>-Version (Standard-Installation).</p>
+<h2 id="-installation--einrichtung">📦 Installation &amp; Einrichtung</h2>
+<h3 id="-option-1-portable-version">🚀 Option 1: Portable Version</h3>
+<ol>
+<li><strong>Download:</strong> Lade die <code>Ollama_Desktop_Portable_x.x.x.x.zip</code> von der <a href="https://github.com/barni007-pro/ollama_desktop_client/releases">Releases</a>-Seite herunter.</li>
+<li><strong>Entpacken:</strong> Entpacke das Archiv in einen Ordner deiner Wahl.</li>
+<li><strong>Starten:</strong> Führe die <code>Ollama_Desktop.exe</code> direkt aus dem entpackten Ordner aus.</li>
+</ol>
+<h3 id="-option-2-setup-version-installer">💻 Option 2: Setup-Version (Installer)</h3>
+<ol>
+<li><strong>Download:</strong> Lade die <code>Ollama_Desktop_Setup_x.x.x.x.zip</code> von der <a href="https://github.com/barni007-pro/ollama_desktop_client/releases">Releases</a>-Seite herunter.</li>
+<li><strong>Entpacken:</strong> Entpacke die Installationsdatei aus dem ZIP-Archiv.</li>
+<li><strong>Installieren:</strong> Starte die Setup-Datei und folge den Anweisungen auf dem Bildschirm.</li>
+<li><strong>Starten:</strong> Öffne die Anwendung nach der Installation über das Startmenü oder die Desktop-Verknüpfung.</li>
+</ol>
+<hr>
+<div class="markdown-alert markdown-alert-important"><p class="markdown-alert-title"><svg class="octicon octicon-report mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p><p><strong>Ollama Server:</strong> Stelle sicher, dass der Ollama-Server läuft (Terminal: <code>ollama serve</code>), bevor du den Desktop-Client startest.</p>
+</div>
+<hr>
+<h2 id="️-ui-übersicht">🖼️ UI-Übersicht</h2>
+<details>
+  <summary><b>Hier klicken: Screenshots aller Tabs anzeigen (Bilder zum Vergrößern anklicken)</b></summary>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Tab: Model Info</th>
+<th style="text-align:center">Tab: Model Parameter</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><a href="./screenshots/model_info.png"><img src="file:///f:\Ollama_Desktop\screenshots\model_info.png" alt="Model Info"></a></td>
+<td style="text-align:center"><a href="./screenshots/model_parameter.png"><img src="file:///f:\Ollama_Desktop\screenshots\model_parameter.png" alt="Model Parameter"></a></td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>Tab: Tools</strong></td>
+<td style="text-align:center"><strong>Tab: RAG Tool</strong></td>
+</tr>
+<tr>
+<td style="text-align:center"><a href="./screenshots/tools.png"><img src="file:///f:\Ollama_Desktop\screenshots\tools.png" alt="Tools"></a></td>
+<td style="text-align:center"><a href="./screenshots/rag_tool.png"><img src="file:///f:\Ollama_Desktop\screenshots\rag_tool.png" alt="RAG Tool"></a></td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>Tab: Request JSON</strong></td>
+<td style="text-align:center"><strong>Tab: Response JSON</strong></td>
+</tr>
+<tr>
+<td style="text-align:center"><a href="./screenshots/request_json.png"><img src="file:///f:\Ollama_Desktop\screenshots\request_json.png" alt="Request JSON"></a></td>
+<td style="text-align:center"><a href="./screenshots/response_json.png"><img src="file:///f:\Ollama_Desktop\screenshots\response_json.png" alt="Response JSON"></a></td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>Tab: Response MarkDown</strong></td>
+<td style="text-align:center"><strong>Tab: Response HTML</strong></td>
+</tr>
+<tr>
+<td style="text-align:center"><a href="./screenshots/response_markdown.png"><img src="file:///f:\Ollama_Desktop\screenshots\response_markdown.png" alt="Response MarkDown"></a></td>
+<td style="text-align:center"><a href="./screenshots/response_html.png"><img src="file:///f:\Ollama_Desktop\screenshots\response_html.png" alt="Response HTML"></a></td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>Tab: Code Parameter</strong></td>
+<td style="text-align:center"><strong>Tab: Code Block</strong></td>
+</tr>
+<tr>
+<td style="text-align:center"><a href="./screenshots/code_parameter.png"><img src="file:///f:\Ollama_Desktop\screenshots\code_parameter.png" alt="Code Parameter"></a></td>
+<td style="text-align:center"><a href="./screenshots/code_block.png"><img src="file:///f:\Ollama_Desktop\screenshots\code_block.png" alt="Code Block"></a></td>
+</tr>
+</tbody>
+</table>
+</details>
+<hr>
+<h2 id="-schnellstart">🚀 Schnellstart</h2>
+<ol>
+<li><strong>Ollama-Server starten:</strong> Starte den Ollama-Server im Hintergrund (Terminal: <code>ollama serve</code>).</li>
+<li><strong>LLM-Liste laden:</strong> Klicke oben links in der App auf <strong>Get LLM List</strong>, um deine installierten Modelle zu laden.</li>
+<li><strong>Modell auswählen:</strong> Wähle ein Modell aus dem Dropdown-Menü (z. B. <code>llama3</code> oder <code>gemma2</code>).</li>
+<li><strong>Prompt ausführen:</strong> Gib deine Frage ein und drücke den <strong>Play-Button (▶)</strong>.</li>
+</ol>
+<p><em>Tipp: Stelle sicher, dass die Adresse oben links korrekt ist (Standard: <code>127.0.0.1:11434</code>).</em></p>
+<hr>
+<h2 id="-betriebsmodi--vision-unterstützung">🔄 Betriebsmodi &amp; Vision-Unterstützung</h2>
+<p>Über das <strong>API</strong>-Dropdown-Menü kannst du steuern, wie die App mit dem Modell kommuniziert.</p>
+<h3 id="1-generate-modus-einzelanfrage">1. Generate-Modus (Einzelanfrage)</h3>
+<p>Dieser Modus ist für Einzelaufgaben (One-Shot-Tasks) konzipiert.</p>
+<ul>
+<li><strong>Vision / Bilder:</strong> Dies ist der <em>erinzige</em> Modus, in dem du Bilder hochladen kannst (über die Schaltflächen <code>+ File</code> oder <code>+ Screenshot</code>). Nutze dafür Vision-fähige Modelle wie <em>llava</em> oder <em>moondream</em>.</li>
+<li><strong>Verhalten:</strong> Jede Anfrage steht für sich allein; das Modell &quot;vergisst&quot; vorherige Fragen sofort.</li>
+<li><strong>Kontext:</strong> Du kannst jedoch Kontext-Token in die nächste Anfrage einbeziehen, um auch im Generate-Modus eine Konversation aufrechtzuerhalten.</li>
+</ul>
+<h3 id="2-chat-modus-konversation">2. Chat-Modus (Konversation)</h3>
+<p>Der gesamte Konversationsverlauf wird gespeichert und mit jeder neuen Nachricht gesendet.</p>
+<ul>
+<li><strong>Modellwechsel:</strong> Du kannst das <strong>LLM mitten in einer Konversation wechseln</strong> (z. B. von einem schnellen 7B-Modell zu einem intelligenten 70B-Modell), ohne den roten Faden zu verlieren.</li>
+</ul>
+<h3 id="-die-brücke-generate--chat">🔀 Die Brücke: „Generate &gt; Chat“</h3>
+<p>Da der Chat-Modus keine Bilder direkt empfangen kann, bietet die App diesen Workflow an:</p>
+<ol>
+<li>Wähle <strong>Generate</strong> und lade ein Bild hoch (z. B. „Beschreibe dieses Bild“).</li>
+<li>Warte auf die Antwort.</li>
+<li>Klicke auf die Schaltfläche <strong>Generate &gt; Chat</strong>.
+<em>Die Analyse wird in den Chat-Verlauf kopiert, sodass du im Chat-Modus Folgefragen dazu stellen kannst.</em></li>
+</ol>
+<hr>
+<h2 id="-modell-parameter">🛠 Modell-Parameter</h2>
+<h3 id="1-system-prompt">1. System-Prompt</h3>
+<p>Definiere die „Persönlichkeit“ der KI (z. B. „Du bist ein erfahrener C#-Entwickler“). Aktiviere das Kontrollkästchen <strong>Use System Prompt</strong>, um diese Anweisung vor jedem Chat zu senden.</p>
+<h3 id="2-ausgabeformat-json-modus">2. Ausgabeformat (JSON-Modus)</h3>
+<p>Zwinge das Modell dazu, exakt in einem definierten <strong>JSON-Schema</strong>-Format zu antworten. Dies ist ideal für Entwickler, die strukturierte Daten benötigen.</p>
+<h3 id="3-content-prompt">3. Content-Prompt</h3>
+<p>Dieser Prompt erweitert die Eingabe um angehängte textbasierte Dateien wie <strong>.txt</strong>, <strong>.json</strong> oder <strong>.pdf</strong>.</p>
+<h3 id="4-options-parameter">4. Options-Parameter</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Parameter</th>
+<th style="text-align:left">Beschreibung</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>temperature</code></td>
+<td style="text-align:left"><strong>Kreativität.</strong> <code>0.0</code> ist deterministisch; <code>0.7-0.8</code> ist natürlich (Standard); <code>1.2+</code> ist experimentell.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>top_p</code></td>
+<td style="text-align:left"><strong>Nucleus Sampling.</strong> Berücksichtigt Wörter, die eine kumulative Wahrscheinlichkeit <code>P</code> erreichen.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>num_ctx</code></td>
+<td style="text-align:left"><strong>Kontextfenster.</strong> Legt fest, wie viele Token das Modell gleichzeitig verarbeiten kann. <code>2048</code> ist Standard; <code>4096-8192</code> für Dokumente.</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>repeat_penalty</code></td>
+<td style="text-align:left">Verhindert, dass das Modell Wörter wiederholt (empfohlen: <code>1.1-1.2</code>).</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>seed</code></td>
+<td style="text-align:left">Ein fester Wert (z. B. <code>42</code>) stellt sicher, dass derselbe Prompt mit denselben Parametern immer die gleiche Antwort liefert.</td>
+</tr>
+</tbody>
+</table>
+<p><em>Du kannst manuell benutzerdefinierte Parameter hinzufügen, indem du auf die leere Zeile (markiert mit <code>*</code>) in der Tabelle klickst.</em></p>
+<hr>
+<h2 id="-tools--funktionsaufrufe-function-calling">🛠 Tools &amp; Funktionsaufrufe (Function Calling)</h2>
+<p>Der Reiter <strong>Tools</strong> macht das LLM zu einem Agenten, der Aufgaben wie Wetterabfragen oder Berechnungen automatisch ausführen kann.</p>
+<ul>
+<li><strong>Tool JSON:</strong> Definiere hier deine API-Schnittstelle, damit das Modell weiß, welche Parameter extrahiert werden müssen.</li>
+<li><strong>Python-Code:</strong> Hinterlege die Logik, die lokal ausgeführt werden soll. Die App führt diesen Code automatisch aus, wenn das Modell das Tool anfordert.</li>
+</ul>
+<hr>
+<h2 id="-rag-tool-chat-mit-dokumenten">📄 RAG-Tool (Chat mit Dokumenten)</h2>
+<p>Lade <strong>.txt</strong>- oder <strong>.pdf</strong>-Dateien hoch, um sie als Wissensdatenbank zu nutzen.</p>
+<ul>
+<li><strong>Workflow:</strong> Die App zerlegt die Datei in Sätze, extrahiert Schlüsselwörter/Synonyme aus deiner Anfrage und stellt dem LLM passende Textsegmente als Hintergrundwissen zur Verfügung.</li>
+<li><strong>Delta-Parameter:</strong> Steuert, wie viel Kontext (0-9 Sätze) um einen Treffer herum an das Modell gesendet wird.</li>
+</ul>
+<hr>
+<h2 id="-code-generierung--ausführung">💻 Code-Generierung &amp; Ausführung</h2>
+<p>Führe Code in Python, PowerShell, Batch oder HTML/JavaScript direkt in der App aus.</p>
+<ul>
+<li><strong>Execute List:</strong> Definiere deine Interpreter-Pfade (z. B. <code>python.exe</code>) im Reiter <strong>Code Parameter</strong>.</li>
+<li><strong>ShellExecute:</strong> Wähle zwischen der Code-Ausführung im Hintergrund (Ausgabe wird erfasst) oder in einem externen Fenster.</li>
+</ul>
+<hr>
+<h2 id="️-lizenzen--drittanbieter-komponenten">⚖️ Lizenzen &amp; Drittanbieter-Komponenten</h2>
+<ul>
+<li><strong>Ollama_Desktop, Newtonsoft.Json, <a href="http://Scintilla5.NET">Scintilla5.NET</a>:</strong> MIT-Lizenz.</li>
+<li><strong>WebView2:</strong> Microsoft Corporation.</li>
+<li><strong>Markdig:</strong> BSD-Clause 2.</li>
+<li><strong>PdfPig:</strong> Apache-Lizenz 2.0.</li>
+<li><strong>Siticone.NetCore.UI:</strong> Proprietäre Lizenz.</li>
+</ul>
+<hr>
+<h2 id="-unterstützung">☕ Unterstützung</h2>
+<p>Ollama Desktop ist kostenlos und quelloffen. Wenn du die Entwicklung unterstützen möchtest, kannst du via PayPal spenden:</p>
+<p><strong><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&amp;business=r.barnstorf@online.de&amp;currency_code=EUR&amp;source=url">Über PayPal spenden</a></strong></p>
+<p>Empfänger: <code>r.barnstorf@online.de</code></p>
+
+            
+            
+        </body>
+        </html>
