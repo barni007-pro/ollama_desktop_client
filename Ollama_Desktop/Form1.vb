@@ -1108,6 +1108,13 @@ Public Class Form1
             response_sub = "```json" & vbLf & response_sub & vbLf & "```"
         End If
 
+        ' UNGESCHLOSSENE CODE-BLÖCKE AM ENDE REPARIEREN ---
+        ' Wir zählen die Vorkommen von "```". Ist die Anzahl ungerade, fehlt das Ende.
+        Dim backtickCount As Integer = Regex.Matches(response_sub, "```").Count
+        If backtickCount Mod 2 <> 0 Then
+            response_sub &= vbLf & "```"
+        End If
+
         Scintilla_response.Text = response_sub.Replace(vbLf, vbCrLf)
         ' 1. Markdig-Pipeline mit Tabellen- und Mathe-Unterstützung
         If SiticoneDropdown_API.SelectedIndex = 0 Then
@@ -1148,13 +1155,23 @@ Public Class Form1
                 SiticoneTextBox_request_answer.Text = ToolsCodeBlockJson
             End If
             SiticoneButton_code_run.Enabled = False
+
+            ' --- GEÄNDERTER BEREICH: Durchnummerierung und Unknown-Schutz ---
             If CodeBlock_List.Count >= 1 Then
-                For Each CodeBlock In CodeBlock_List
-                    SiticoneDropdown_language.Items.Add(CodeBlock.Language)
+                For i As Integer = 0 To CodeBlock_List.Count - 1
+                    Dim block As CodeBlock = CodeBlock_List(i)
+
+                    ' Wenn keine Sprache angegeben ist, weichen wir auf "unknown" aus
+                    Dim displayLanguage As String = If(String.IsNullOrWhiteSpace(block.Language), "unknown", block.Language)
+
+                    ' Durchnummeriert hinzufügen (z.B. "1. python" oder "2. unknown")
+                    SiticoneDropdown_language.Items.Add($"{i + 1}. {displayLanguage}")
                 Next
                 SiticoneDropdown_language.SelectedIndex = 0
                 change_language()
             End If
+            ' -----------------------------------------------------------------
+
         Catch ex As Exception
             Scintilla_Response_JSON.Text = Response_JSON
         End Try
@@ -2287,6 +2304,20 @@ Public Class Form1
                 currentCode.Add(line)
             End If
         Next
+
+        ' OFFENEN BLOCK BEIM ENDE DER SCHLEIFE ABFANGEN
+        If inCodeBlock AndAlso currentCode.Count > 0 Then
+            codeBlocks.Add(New CodeBlock With {
+                .Language = currentLanguage,
+                .Code = DeleteSpaces(String.Join(Environment.NewLine, currentCode))
+            })
+            If currentLanguage = "json" And (DeleteSpaces(String.Join(Environment.NewLine, currentCode)).Contains("""name"":") Or DeleteSpaces(String.Join(Environment.NewLine, currentCode)).Contains("""tool"":")) And (SiticoneToggleSwitch_tools.Checked = True Or SiticoneToggleSwitch_ragtools.Checked = True) Then
+                ToolsCodeBlockJson = DeleteSpaces(String.Join(Environment.NewLine, currentCode))
+                Dim parsedJson As JObject = JObject.Parse(ToolsCodeBlockJson)
+                ToolsCodeBlockJson = JsonConvert.SerializeObject(parsedJson, Formatting.None)
+            End If
+        End If
+
         Return codeBlocks
     End Function
 

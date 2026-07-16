@@ -78,3 +78,7 @@ V 1.5.3.28
 - Audio Info at Model Info Tab
 V 1.5.4.29
 - Whisper Audio Model Support (Live Audio Transcription)
+V 1.5.5.30
+- Bug: Code blocks at the end of a Markdown file are not processed (fixed)
+- Code block dropdown items are now numbered
+- Added tooltips for the LLM controls
