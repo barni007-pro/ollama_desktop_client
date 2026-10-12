@@ -22,7 +22,8 @@
 * **🎵 Audio Support:** Upload and analyze audio files (.wav, .mp3) (e.g., with gemma4) in Generate mode.
 * **📄 Read Files:** Import text files (.pdf, .txt, .json) to include their contents directly into the context.
 * **📚 RAG Tool:** Chat with large documents (.pdf/.txt) through local knowledge extraction.
-* **💬 Chat Mode:** Model switching during conversation is possible.
+* **🎯 Decision Tools (`/v1/systemone`):** Support for structured decision evaluation payloads (`questions` JSON schema) against state inputs or vision models.
+* **🔀 Chat History Navigation & Branching:** Easily step back and forward (`<-` / `->`) through conversation turns. Submitting a new prompt from an earlier turn automatically branches the conversation, purging subsequent turns, restoring exact historical context tokens, and keeping original model titles.
 * **🛠️ Tools & Functions:** Local Python code execution by the model.
 * **📦 JSON Mode:** Enforce structured responses.
 * **💻 Code Execution:** Direct execution of Python, PowerShell, or Batch scripts.
@@ -194,5 +195,8 @@ Ollama Desktop is free and open-source. If you would like to support the develop
 **[Donate via PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=r.barnstorf@online.de&currency_code=EUR&source=url)**
 
 Recipient: `r.barnstorf@online.de`
+
+Hier ist die Aufschlüsselung der Komponenten, einzeln aufgelistet für deine Dokumentation oder den Lizenzbereich in der `README.md`:
+
 
 Hier ist die Aufschlüsselung der Komponenten, einzeln aufgelistet für deine Dokumentation oder den Lizenzbereich in der `README.md`:
