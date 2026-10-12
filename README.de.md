@@ -22,7 +22,8 @@
 * **🎵 Audio-Unterstützung:** Hochladen und Analysieren von Audiodateien (.wav, .mp3) (z. B. mit gemma4) im Generate-Modus.
 * **📄 Dateien einlesen:** Importieren von Textdateien (.pdf, .txt, .json), um deren Inhalt direkt in den Kontext einzubinden.
 * **📚 RAG-Tool:** Chatten mit großen Dokumenten (.pdf/.txt) durch lokale Wissensextraktion.
-* **💬 Chat-Modus:** Modellwechsel während der laufenden Konversation möglich.
+* **🎯 Decision Tools (`/v1/systemone`):** Unterstützung für strukturierte Auswertungs-Payloads (`questions` JSON-Schema) auf Basis von Status-Eingaben oder Vision-Modellen.
+* **🔀 Chat-Verlauf-Navigation & Verzweigung (Branching):** Einfaches Vor- und Zurückspringen (`<-` / `->`) durch die einzelnen Chat-Schritte. Das Absenden eines neuen Prompts von einem früheren Schritt verzweigt die Unterhaltung automatisch: nachfolgende Schritte werden entfernt, die exakten historischen Kontext-Tokens wiederhergestellt und die ursprünglichen Modellnamen beibehalten.
 * **🛠️ Tools & Funktionen:** Lokale Ausführung von Python-Code durch das Modell.
 * **📦 JSON-Modus:** Erzwingen von strukturierten Antworten.
 * **💻 Code-Ausführung:** Direkte Ausführung von Python-, PowerShell- oder Batch-Skripten.
