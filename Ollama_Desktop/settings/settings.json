@@ -5,6 +5,7 @@
     "code_path": "settings\\default_DE.code.json",
     "tools_path": "settings\\default_DE.tools.json",
     "rag_path": "settings\\default_DE.rag.json",
+    "decision_path": "settings\\default_DE.decision.json",
     "ssh_path": "settings\\default_DE.ssh.json"
   },
   "english": {
@@ -13,6 +14,7 @@
     "code_path": "settings\\default_GB.code.json",
     "tools_path": "settings\\default_GB.tools.json",
     "rag_path": "settings\\default_GB.rag.json",
+    "decision_path": "settings\\default_GB.decision.json",
     "ssh_path": "settings\\default_GB.ssh.json"
   }    
 }

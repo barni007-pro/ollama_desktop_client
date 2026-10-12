@@ -222,31 +222,21 @@
         </div>
 
         <div class="card">
-            <h2>🔄 Operating Modes & Vision Support</h2>
-            <p>You can control how the app communicates with the model via the <strong>API</strong> dropdown menu (top center). There are two modes:</p>
+            <h2>💬 Generate Mode & Chat Functionality</h2>
+            <p>All chat functionality is fully integrated into <strong>Generate Mode</strong>. This unlocks expanded capabilities during continuous multi-turn conversations and multimodal requests.</p>
 
-            <h3>1. Generate Mode (Single Request)</h3>
-            <p>This mode is designed for one-off tasks ("One-Shot").</p>
+            <h3>1. Integrated Conversation History & Context Memory</h3>
+            <p>When <strong>Use Last Context</strong> is enabled, the model's context from the previous turn is carried forward with each new prompt. The HTML response window displays the full conversation history, rendering user inputs as <strong>speech bubbles</strong> for clear visual structure.</p>
+
+            <h3>2. Multimodal Features (Vision & Audio)</h3>
+            <p>Because Generate Mode grants complete access to the model interface, you can work directly with multimodal inputs during an ongoing dialogue:</p>
             <ul>
-                <li><strong>Vision / Images:</strong> This is the <em>only</em> mode where you can upload images (Buttons <code>+ File</code> or <code>+ Screenshot</code> bottom left). Use Vision models like *llava* or *moondream* for this.</li>
-                <li><strong>Behavior:</strong> Each request stands alone. The model immediately "forgets" the previous question.</li>
-                <li><strong>Context:</strong> However, it is possible to include the Context Tokens in the next request. This allows for a conversation even in Generate Mode.</li>
+                <li><strong>Images (Vision):</strong> Attach images using <code>+ File</code> or <code>+ Screenshot</code>. With a vision-capable LLM (e.g., <em>llava</em>), you can ask questions about images or refer back to them as the conversation progresses.</li>
+                <li><strong>Audio / Voice Dictation:</strong> Audio transcripts and spoken prompts can be seamlessly inserted into the ongoing context.</li>
             </ul>
 
-            <h3>2. Chat Mode (Conversation)</h3>
-            <p>Here, the entire conversation history is saved and sent along with every new message.</p>
-            <ul>
-                <li><strong>Model Switching:</strong> A highlight of this mode is its flexibility. You can switch the <strong>LLM mid-conversation</strong> (e.g., from a fast 7B model to a smart 70B model) without losing the thread of the chat.</li>
-            </ul>
-
-            <h3>🔀 The Bridge: "Generate > Chat"</h3>
-            <p>Since the Chat mode cannot receive images directly, the app offers an intelligent workflow:</p>
-            <ol>
-                <li>Select <strong>Generate</strong> and upload an image (e.g., "Describe this image").</li>
-                <li>Wait for the model's response.</li>
-                <li>Now click the <strong>Generate > Chat</strong> button at the top.</li>
-            </ol>
-            <p><strong>Result:</strong> The image analysis (Question + Answer) is copied into the Chat history. You can now seamlessly ask follow-up questions about the image in <strong>Chat Mode</strong>, as the model now "knows" the context.</p>
+            <h3>3. Switching Models Mid-Session</h3>
+            <p>Please note that the <code>context</code> array returned by Ollama is architecture-specific and cannot be passed across different models. When switching to a new LLM from the dropdown menu, generation starts with a fresh context state for that model.</p>
         </div>
 
         <div class="card">
@@ -304,9 +294,9 @@
                         <td>
                             <strong>Context Window (Input + Output).</strong><br>
                             Determines how many tokens (word pieces) the model can process at once.<br>
-                            <code>1024</code>: Low VRAM usage, only for short chats.<br>
+                            <code>1024</code>: Low VRAM usage, only for short requests.<br>
                             <code>2048</code>: Standard for simple tasks.<br>
-                            <code>4096</code> - <code>8192</code>: Recommended for document analysis.<br>
+                            <code>4096</code> - <code>8192</code>: Recommended for document analysis and longer conversation histories.<br>
                             <em>Note: Higher values massively increase VRAM consumption.</em>
                         </td>
                     </tr>
@@ -421,9 +411,9 @@
                         <td>
                             <strong>CFG Scale (Prompt Adherence).</strong><br>
                             Determines how strictly the model adheres to your text prompt.<br>
-                            <code>< 5</code>: Very creative, the model "dreams" more freely.<br>
+                            <code>&lt; 5</code>: Very creative, the model "dreams" more freely.<br>
                             <code>7.0 - 8.0</code>: Standard value. Good balance between prompt and image quality.<br>
-                            <code>> 15</code>: Forces the model rigidly into the prompt, often leads to artifacts or "oversharpened" images.
+                            <code>&gt; 15</code>: Forces the model rigidly into the prompt, often leads to artifacts or "oversharpened" images.
                         </td>
                     </tr>
                     <tr>
@@ -540,6 +530,59 @@
 
             <h3 id="link_rag_tool_json">2. RAG Tool JSON (Schema)</h3>
             <p>Here you define the interface (API) of the RAG tool in JSON format. The model reads this JSON schema to know which parameters it needs to extract from the user request (e.g., <code>"words":["apple pie","recipe","cake","apple","baking"]</code>).</p>
+        </div>
+
+        <div class="card">
+            <h2 id="link_decision_tool_json">🎯 Decision Tool (Specialized Decision Models)</h2>
+            <p>The <strong>Decision Tool</strong> enables direct integration of specialized classification and decision models (e.g., <code>tev1</code>, <code>clef</code>, <code>clef-flash</code>, <code>nimble</code>, <code>laya</code>). Using the dedicated API endpoint (<code>/v1/systemone</code>), these models convert a base state along with a schema of predefined questions into structured, typed decisions.</p>
+
+            <div class="note">
+                <strong>Important:</strong> Enable the <strong>Use Decision Tools</strong> switch to activate this query mode. In Decision mode, the response is displayed as formatted JSON in the <em>Response JSON</em> and <em>Response HTML</em> tabs.
+            </div>
+
+            <h3>1. State and Questions Input</h3>
+            <ul>
+                <li><strong>State (Prompt Input):</strong> Your standard main prompt (from the text area) serves as the base state (<code>"state"</code>) to be evaluated—such as a sentence, free text, or extracted document content. If you attach images, they will automatically be included in the <code>"images"</code> array for vision-capable decision models (e.g., <em>clef-flash</em>).</li>
+                <li><strong>Questions JSON:</strong> In the Decision Editor, enter your question schema in JSON format. You can paste either the <code>questions</code> object directly or a complete JSON snippet.</li>
+            </ul>
+
+            <h3>2. The JSON Question &amp; Supported 'type' Options</h3>
+            <p>Each question in the <code>questions</code> object requires a unique key, instructions (<code>instructions</code>), and type definitions (<code>type</code>) that guide how the model calculates its decision.</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th width="20%">Type (type)</th>
+                        <th>Description &amp; Structure</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>noul</code></td>
+                        <td>
+                            <strong>Binary / Boolean Classification (Yes/No / True/False).</strong><br>
+                            Returns a continuous probability score for a Yes/No statement. Labels for <code>true</code> and <code>false</code> can be defined in the <code>criteria</code> sub-object.<br>
+                            <em>Example Use Case:</em> Checking if text contains a greeting or verifying if all required fields in a form are filled.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>choice</code></td>
+                        <td>
+                            <strong>Multiple Choice / Categorization (Multi-Option Selection).</strong><br>
+                            Categorizes the state into exactly one of several predefined options. Options are defined as keys in the <code>criteria</code> sub-object (e.g., <code>{"invoice": null, "receipt": null, "contract": null, "other": null}</code>).<br>
+                            <em>Example Use Case:</em> Automatic document classification or customer request intent detection.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>score</code></td>
+                        <td>
+                            <strong>Numerical Rating / Scaling.</strong><br>
+                            Evaluates the state on a continuous or discrete scale (e.g., quality score, urgency, or sentiment).<br>
+                            <em>Example Use Case:</em> Tone analysis, support ticket prioritization, or risk assessment.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
         <div class="card">
@@ -662,7 +705,7 @@
             <h2>⚖️ Licenses & Third-Party Providers</h2>
             <p>This software uses open-source components and third-party libraries. Below you will find the copyright notices and license terms:</p>
 
-            <h3>1. Open-Source Component Aufschlüsselung (MIT License)</h3>
+            <h3>1. Open-Source Component Breakdown (MIT License)</h3>
             <p>The following software elements are individually bound to the <strong>MIT License</strong> conditions:</p>
             <ul>
                 <li><strong>Ollama_Desktop</strong> (Creator: 7soft)</li>

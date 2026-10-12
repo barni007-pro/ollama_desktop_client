@@ -82,3 +82,21 @@ V 1.5.5.30
 - Bug: Code blocks at the end of a Markdown file are not processed (fixed)
 - Code block dropdown items are now numbered
 - Added tooltips for the LLM controls
+V 1.6.0.31
+- Removal of Chat Mode from the application
+  The chat functionality has been fully integrated into Generate Mode.
+  This opens up many more possibilities (e.g. vision and audio are now supported while chatting in Generate Mode)
+- The application now supports Decesion Models. These models can be used to make decisions based on the given question JSON and user prompt.
+- User prompts are now displayed as speech bubbles in the HTML output.
+- When context memory is enabled ("Use Last Context"), the HTML output now contains the full conversation history.
+- add tev1 to models_config.json
+- add embeddinggemma-2 to models_config.json
+- add nimble to models_config.json
+- add clef-flash to models_config.json
+- add clef to models_config.json
+- add laya to models_config.json
+- add qwen3.8 to models_config.json
+- add ornith-1.5 to models_config.json
+- add granite4.2 to models_config.json
+- add medgemma to models_config.json
+- add medgemma1.5 to models_config.json
