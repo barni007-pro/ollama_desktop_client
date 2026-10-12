@@ -192,7 +192,7 @@
             <h3>1. Automatische Größenanpassung</h3>
             <p>Das Textfeld (Ihre Eingabe) denkt mit: Es vergrößert sich automatisch, wenn Sie längere Texte schreiben oder hineinkopieren. Sobald eine maximale Höhe erreicht ist, verwandelt es sich sanft in ein scrollbares Feld. So wird weder Ihr Platz auf dem Bildschirm verschwendet, noch verlieren Sie bei großen Code-Blöcken die Übersicht.</p>
 
-            <h3>2. Angehältne Dateien (File Panel)</h3>
+            <h3>2. Angehängte Dateien (File Panel)</h3>
             <p>Wenn Sie über die Buttons (z.B. <code>+ File</code>) Dateien oder Bilder an Ihren Prompt anhängen, werden diese übersichtlich direkt über dem Textfeld aufgelistet. Die Benutzeroberfläche ordnet den Platz dynamisch neu an, sodass Sie immer genau sehen, welche Kontext-Dateien aktuell an das KI-Modell gesendet werden.</p>
 
             <h3>3. Schnelle Bedienung</h3>
@@ -222,45 +222,35 @@
         </div>
 
         <div class="card">
-            <h2>🔄 Betriebsmodi & Vision Support</h2>
-            <p>Über das Dropdown-Menü <strong>API</strong> (oben mittig) steuern Sie, wie die App mit dem Modell kommuniziert. Es gibt zwei Modi:</p>
+            <h2>💬 Generate-Mode & Chat-Funktionalität</h2>
+            <p>Die gesamte Chat-Funktionalität ist vollständig im <strong>Generate-Mode</strong> integriert. Dadurch ergeben sich erweiterte Möglichkeiten bei kontinuierlichen Unterhaltungen und multimodalen Anfragen.</p>
 
-            <h3>1. Generate Modus (Einzel-Anfrage)</h3>
-            <p>Dieser Modus ist für einmalige Aufgaben gedacht ("One-Shot").</p>
+            <h3>1. Integrierter Gesprächsverlauf & Context Speicher</h3>
+            <p>Wenn die Option <strong>Use Last Context</strong> aktiv ist, wird der interne Modell-Kontext der letzten Antwort bei der nächsten Anfrage wieder mitgesendet. Die HTML-Ausgabe zeigt den gesamten Gesprächsverlauf übersichtlich an – eigene Eingaben (User-Prompts) werden dabei als <strong>Sprechblasen</strong> hervorgehoben.</p>
+
+            <h3>2. Multimodale Features (Vision & Audio)</h3>
+            <p>Da der Generate-Mode die vollständige Kontrolle über die Modellschnittstelle bietet, können Sie direkt im laufenden Gespräch multimodale Inhalte nutzen:</p>
             <ul>
-                <li><strong>Vision / Bilder:</strong> Dies ist der <em>einzige</em> Modus, in dem Sie Bilder hochladen können (Buttons <code>+ File</code> oder <code>+ Screenshot</code> unten links). Nutzen Sie dafür Vision-Modelle wie <em>llava</em> oder *moondream*.</li>
-                <li><strong>Verhalten:</strong> Jede Anfrage steht für sich allein. Das Modell "vergisst" die vorherige Frage sofort.</li>
-                <li><strong>Context:</strong> Es besteht jedoch die Möglichkeit, die Context Token in die nächste Anfrage einzubeziehen. So kann auch im Generate Modus ein Gespräch geführt werden.</li>
+                <li><strong>Bilder (Vision):</strong> Hängen Sie einfach über <code>+ File</code> oder <code>+ Screenshot</code> ein Bild an. Mit einem kompatiblen Vision-Modell (z. B. <em>llava</em>) können Sie direkt Fragen zum Bild stellen oder im Verlauf darauf Bezug nehmen.</li>
+                <li><strong>Audio / Sprachdiktat:</strong> Audiosignale und Sprachtranskripte können direkt in den laufenden Dialog integriert werden.</li>
             </ul>
 
-            <h3>2. Chat Modus (Gespräch)</h3>
-            <p>Hier wird der gesamte Gesprächsverlauf (History) gespeichert und bei jeder neuen Nachricht mitgesendet.</p>
-            <ul>
-                <li><strong>Modell-Wechsel:</strong> Ein Highlight dieses Modus ist die Flexibilität. Sie können mitten in einer Unterhaltung das <strong>LLM wechseln</strong> (z.B. von einem schnellen 7B-Modell auf ein schlaues 70B-Modell), ohne dass der Gesprächsfaden verloren geht.</li>
-            </ul>
-
-            <h3>🔀 Die Brücke: "Generate > Chat"</h3>
-            <p>Da der Chat-Modus keine Bilder direkt empfangen kann, bietet die App einen intelligenten Workflow:</p>
-            <ol>
-                <li>Wählen Sie <strong>Generate</strong> und laden Sie ein Bild hoch (z.B. "Beschreibe dieses Bild").</li>
-                <li>Warten Sie auf die Antwort des Modells.</li>
-                <li>Klicken Sie nun oben auf den Button <strong>Generate > Chat</strong>.</li>
-            </ol>
-            <p><strong>Ergebnis:</strong> Die Bild-Analyse (Frage + Antwort) wird in den Chat-Verlauf kopiert. Sie können nun im <strong>Chat-Modus</strong> nahtlos Rückfragen zum Bild stellen, da das Modell den Kontext nun "kennt".</p>
+            <h3>3. Modell-Wechsel beachten</h3>
+            <p>Da der von Ollama zurückgelieferte <code>context</code>-Speicher modellspezifisch ist, kann er bei einem Modellwechsel nicht auf ein anderes LLM übertragen werden. Bei der Auswahl eines neuen Modells startet die Generierung mit neuem Modell-Kontext.</p>
         </div>
 
         <div class="card">
             <h2>🛠 Modell Parameter</h2>
 
             <h3 id="link_system_prompt">1. System Prompt</h3>
-            <p>Hier definieren Sie die "Persönlichkeit" der KI. Aktivieren Sie die Checkbox <strong>Use System Prompt</strong>, um diese Anweisung vor jedem Chat zu senden.</p>
+            <p>Hier definieren Sie die "Persönlichkeit" der KI. Aktivieren Sie die Checkbox <strong>Use System Prompt</strong>, um diese Anweisung vor jeder Anfrage zu senden.</p>
             <p><em>Beispiel: "Du bist ein erfahrener C# Entwickler. Antworte kurz und präzise."</em></p>
 
             <h3 id="link_output_format">2. Output Format (JSON Mode)</h3>
             <p>Besonders nützlich für Entwickler: Wenn Sie strukturierte Daten benötigen, können Sie hier ein <strong>JSON Schema</strong> definieren. Das Modell wird gezwungen, exakt in diesem Format zu antworten.</p>
 
             <h3 id="link_content_prompt">3. Content Prompt</h3>
-            <p>Dieser Prompt erweitert den Eingabe Prompt um angehängte Dateien. Das sind im allgemeinen Dateien die einen Text enthalten (<strong>.txt</strong>, <strong>.json</strong>, <strong>.pdf</strong>...). Bilder werden gesondert behandelt und dem LLM über einen Image-Parameter übergeben. </p>
+            <p>Dieser Prompt erweitert den Eingabe Prompt um angehängte Dateien. Das sind im Allgemeinen Dateien, die Text enthalten (<strong>.txt</strong>, <strong>.json</strong>, <strong>.pdf</strong>...). Bilder werden gesondert behandelt und dem LLM über einen Image-Parameter übergeben.</p>
 
             <h3>4. Options-Parameter Details</h3>
             <p>In der Tabelle "Options Parameter" können Sie das Antwortverhalten der KI exakt steuern. Hier finden Sie die Bedeutung der Standard-Einstellungen:</p>
@@ -304,9 +294,9 @@
                         <td>
                             <strong>Kontext-Fenster (Eingabe + Ausgabe).</strong><br>
                             Legt fest, wie viele Tokens (Wortteile) das Modell gleichzeitig verarbeiten kann.<br>
-                            <code>1024</code>: Wenig VRAM-Verbrauch, nur für kurze Chats.<br>
+                            <code>1024</code>: Wenig VRAM-Verbrauch, nur für kurze Anfragen.<br>
                             <code>2048</code>: Standard für einfache Aufgaben.<br>
-                            <code>4096</code> - <code>8192</code>: Empfohlen für Dokumentanalysen.<br>
+                            <code>4096</code> - <code>8192</code>: Empfohlen für Dokumentanalysen und längere Verläufe.<br>
                             <em>Hinweis: Höhere Werte erhöhen den VRAM-Verbrauch massiv.</em>
                         </td>
                     </tr>
@@ -339,7 +329,7 @@
                         <td><code>min_p</code></td>
                         <td>
                             <strong>Mindestwahrscheinlichkeit.</strong><br>
-                            Alternative to <code>top_p</code>. Ein Wort muss eine Mindestwahrscheinlichkeit relativ zum wahrscheinlichsten Wort haben.<br>
+                            Alternative zu <code>top_p</code>. Ein Wort muss eine Mindestwahrscheinlichkeit relativ zum wahrscheinlichsten Wort haben.<br>
                             Beispiel: <code>0.05</code> entfernt unwahrscheinliche "Ausreißer" oft effizienter und natürlicher als <code>top_p</code>.
                         </td>
                     </tr>
@@ -385,7 +375,7 @@
                         <td><code>tfs_z</code></td>
                         <td>
                             <strong>Tail Free Sampling.</strong><br>
-                            Reduziert den Einfluss von sehr unwahrscheinlichen Wörtern am Ende der Wahrscheinlichkeitsliste ("Tail"). Ähnlich wie <code>top_p</code>, gewichtet aber die Struktur der Wahrscheinlichkeitsverteilung stärker.
+                            Reduziert den Einfluss von sehr unwahrscheinlichen Wörtern am Ende der Wahrscheinlichkeitsliste ("Tail"). Ähnlich wie <code>top_p</code>, gewichtet aber die Struktur der Wahrscheinlichkeitsverteilung stäker.
                         </td>
                     </tr>
                     <tr>
@@ -420,10 +410,10 @@
                         <td><code>cfg_scale</code></td>
                         <td>
                             <strong>CFG Scale (Prompt-Treue).</strong><br>
-                            Bestimmt, wie strikt sich das Modell als Text-Prompt hält.<br>
-                            <code>< 5</code>: Sehr kreativ, das Modell "träumt" freier.<br>
+                            Bestimmt, wie strikt sich das Modell an den Text-Prompt hält.<br>
+                            <code>&lt; 5</code>: Sehr kreativ, das Modell "träumt" freier.<br>
                             <code>7.0 - 8.0</code>: Der Standardwert. Gute Balance zwischen Prompt und Bildqualität.<br>
-                            <code>> 15</code>: Zwingt das Modell starr in den Prompt, führt oft zu Artefakten oder "überschärften" Bildern.
+                            <code>&gt; 15</code>: Zwingt das Modell starr in den Prompt, führt oft zu Artefakten oder "überschärften" Bildern.
                         </td>
                     </tr>
                     <tr>
@@ -440,7 +430,7 @@
 
             <div class="note">
                 <h3>➕ Liste erweitern</h3>
-                <p><strong>Fehlt ein Parameter?</strong> Diese Liste ist nicht starr! Ollama und new Modelle unterstützen oft weitere Parameter.</p>
+                <p><strong>Fehlt ein Parameter?</strong> Diese Liste ist nicht starr! Ollama und neue Modelle unterstützen oft weitere Parameter.</p>
                 <p>Sie können in der Tabelle einfach in die unterste leere Zeile (markiert mit einem Stern <code>*</code>) klicken und einen <strong>eigenen Parameternamen</strong> sowie den Wert eintragen. Solange das geladene Modell diesen Parameter unterstützt, wird er angewendet.</p>
             </div>
         </div>
@@ -529,17 +519,70 @@
             </table>
 
             <h3>⚙️ Hintergrund-Info</h3>
-            <p>Die Logik zur Keyword-Ermittlung ("Keyword Extraction Assistant") is in den RAG-Tool Einstellungen hinterlegt. Das System sucht intelligent nicht nur nach Ihrem Wort, sondern auch nach logischen Verwandten (z.B. Suche nach "Auto" findet auch "PKW" oder "Fahrzeug").</p>
+            <p>Die Logik zur Keyword-Ermittlung ("Keyword Extraction Assistant") ist in den RAG-Tool Einstellungen hinterlegt. Das System sucht intelligent nicht nur nach Ihrem Wort, sondern auch nach logischen Verwandten (z.B. Suche nach "Auto" findet auch "PKW" oder "Fahrzeug").</p>
 
             <h3 id="link_rag_tool_system_prompt">1. RAG Tool System Prompt</h3>
             <p>Dies ist die "Regieanweisung" für das Modell. Sie wird in zwei Phasen verwendet:</p>
             <ol>
                 <li><strong>Entscheidung:</strong> Das Modell nutzt diesen Prompt, um zu verstehen, wann es das RAG-Tool aufrufen soll, und wie die Suchwörter ermittelt werden sollen.</li>
-                <li><strong>Verarbeitung:</strong> Nachdem das RAG-Tool ausgeführt wurde, nutzt das Modell den Benutzer Prompt und den Modell System Prompt, um die gefilterten Text-Ergebnise korrekt in die Anfrage einzubauen.</li>
+                <li><strong>Verarbeitung:</strong> Nachdem das RAG-Tool ausgeführt wurde, nutzt das Modell den Benutzer Prompt und den Modell System Prompt, um die gefilterten Text-Ergebnisse korrekt in die Anfrage einzubauen.</li>
             </ol>
 
             <h3 id="link_rag_tool_json">2. RAG Tool JSON (Schema)</h3>
             <p>Hier definieren Sie die Schnittstelle (API) des RAG-Tools im JSON-Format. Das Modell liest dieses JSON-Schema, um zu wissen, welche Parameter es aus der User-Anfrage extrahieren muss (z.B. <code>"words":["apple pie","recipe","cake","apple","baking"]</code>).</p>
+        </div>
+
+        <div class="card">
+            <h2 id="link_decision_tool_json">🎯 Decision Tool (Spezialisierte Entscheidungsmodelle)</h2>
+            <p>Das <strong>Decision Tool</strong> ermöglicht die direkte Anbindung von spezialisierten Klassifizierungs- und Entscheidungsmodellen (z.&nbsp;B. <code>tev1</code>, <code>clef</code>, <code>clef-flash</code>, <code>nimble</code>, <code>laya</code>). Über den dedizierten API-Endpunkt (<code>/v1/systemone</code>) wandeln diese Modelle einen Ausgangszustand (State) sowie ein Schema vordefinierter Fragen in strukturierte, typisierte Entscheidungen um.</p>
+
+            <div class="note">
+                <strong>Wichtig:</strong> Aktivieren Sie den Schalter <strong>Use Decision Tools</strong>, um diesen Abfragetyp zu aktivieren. Im Decision-Modus wird die Antwort als formatiertes JSON im Tab <em>Response JSON</em> sowie im <em>Response HTML</em> dargestellt.
+            </div>
+
+            <h3>1. Eingabe von State und Questions</h3>
+            <ul>
+                <li><strong>State (Prompt-Eingabe):</strong> Der normale Haupt-Prompt (aus dem Textfeld) bildet den zu bewertenden Ausgangszustand (<code>"state"</code>), z.&nbsp;B. ein Satz, ein Freitext oder der extrahierte Inhalt eines Dokuments. Wenn Sie zusätzlich Bilder anhängen, werden diese bei Vision-fähigen Decision-Modellen (z.&nbsp;B. <em>clef-flash</em>) automatisch im <code>"images"</code>-Array mit übergeben.</li>
+                <li><strong>Questions JSON:</strong> Im Decision-Editor hinterlegen Sie das Fragenschema im JSON-Format. Sie können entweder direkt das <code>questions</code>-Objekt oder das vollständige JSON-Beispiel einfügen.</li>
+            </ul>
+
+            <h3>2. Die JSON Question &amp; unterstützte 'type'-Typen</h3>
+            <p>Jede Frage im <code>questions</code>-Objekt erhält einen eindeutigen Schlüssel sowie Anweisungen (<code>instructions</code>) und Typdefinitionen (<code>type</code>), nach denen das Modell die Entscheidung berechnet.</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th width="20%">Typ (type)</th>
+                        <th>Beschreibung &amp; Struktur</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>noul</code></td>
+                        <td>
+                            <strong>Binär- / Wahrheitswert-Klassifizierung (Yes/No / True/False).</strong><br>
+                            Liefert eine kontinuierliche Wahrscheinlichkeit (Score) für eine Ja/Nein-Aussage zurück. Über das Unterobjekt <code>criteria</code> können Bezeichnungen für <code>true</code> und <code>false</code> definiert werden.<br>
+                            <em>Beispiel-Anwendung:</em> Überprüfung, ob ein Text eine Begrüßung enthält oder ob alle Pflichtfelder in einem Formular ausgefüllt sind.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>choice</code></td>
+                        <td>
+                            <strong>Mehrfachauswahl / Kategorisierung (Multi-Option Selection).</strong><br>
+                            Ordnet den Zustand genau einer von mehreren vorgegebenen Kategorien zu. Im Unterobjekt <code>criteria</code> werden die möglichen Auswahlinstanzen als Schlüssel definiert (z.&nbsp;B. <code>{"invoice": null, "receipt": null, "contract": null, "other": null}</code>).<br>
+                            <em>Beispiel-Anwendung:</em> Automatische Dokumentenklassifizierung oder Intent-Erkennung bei Kundenanfragen.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>score</code></td>
+                        <td>
+                            <strong>Numerische Bewertung / Skalierung.</strong><br>
+                            Bewertet einen Zustand auf einer kontinuierlichen oder diskreten Skala (z.&nbsp;B. Qualitätsbewertung, Dringlichkeit oder Sentiment-Score).<br>
+                            <em>Beispiel-Anwendung:</em> Tonalitätsanalyse, Priorisierung von Support-Tickets oder Risikobewertungen.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
         <div class="card">
@@ -580,7 +623,7 @@
 
             <h4>Die Steuerelemente:</h4>
             <ul>
-                <li><strong>Sprach-Auswahl (Dropdown):</strong> Falls das LLM mehrere Code-Blöcken generiert hat (z.B. erst Python, dann SQL), wählen Sie hier den gewünschten Block aus.</li>
+                <li><strong>Sprach-Auswahl (Dropdown):</strong> Falls das LLM mehrere Code-Blöcke generiert hat (z.B. erst Python, dann SQL), wählen Sie hier den gewünschten Block aus.</li>
                 <li><strong>Run:</strong> Speichert den Code in die temporäre Datei und führt ihn mit dem konfigurierten Interpreter aus. Das Ergebnis erscheint im Fenster "Output".</li>
                 <li>
                     <strong>UseShellExecute:</strong>

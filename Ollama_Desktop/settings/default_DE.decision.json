@@ -1,0 +1,4 @@
+{
+  "decision_use": false,
+  "decision_json": "{\r\n  \"question1\": {\r\n    \"type\": \"noul\",\r\n    \"instructions\": \"Enthält der State Text eine Begrüßung?\",\r\n    \"criteria\": {\r\n      \"true\": \"Der State Text enthält eine Begrüßung.\",\r\n      \"false\": \"Der State Text enthält keine Begrüßung.\"\r\n    }\r\n  }\r\n}"
+}
