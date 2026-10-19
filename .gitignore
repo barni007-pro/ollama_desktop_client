@@ -372,3 +372,5 @@ FodyWeavers.xsd
 /Ollama_Desktop/help/2026-07-15 07-47-59_cut_1280.gif
 /Ollama_Desktop/help/2026-07-15 08-48-45_cut_1280.gif
 /Ollama_Desktop/help/forum_publish.md
+*.zip
+inno setup/Output/
