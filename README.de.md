@@ -195,3 +195,5 @@ Ollama Desktop ist kostenlos und Open-Source. Wenn du die Entwicklung unterstüt
 **[Über PayPal spenden](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=r.barnstorf@online.de&currency_code=EUR&source=url)**
 
 Empfänger: `r.barnstorf@online.de`
+
+

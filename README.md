@@ -196,7 +196,3 @@ Ollama Desktop is free and open-source. If you would like to support the develop
 
 Recipient: `r.barnstorf@online.de`
 
-Hier ist die Aufschlüsselung der Komponenten, einzeln aufgelistet für deine Dokumentation oder den Lizenzbereich in der `README.md`:
-
-
-Hier ist die Aufschlüsselung der Komponenten, einzeln aufgelistet für deine Dokumentation oder den Lizenzbereich in der `README.md`:
