@@ -3,7 +3,7 @@
 ; Non-commercial use only
 
 #define MyAppName "Ollama Desktop"
-#define MyAppVersion "1.5.4"
+#define MyAppVersion "1.6.1"
 #define MyAppPublisher "7soft"
 #define MyAppURL "https://github.com/barni007-pro/ollama_desktop_client"
 #define MyAppExeName "Ollama_Desktop.exe"

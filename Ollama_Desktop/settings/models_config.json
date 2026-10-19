@@ -65,6 +65,28 @@
     "context": 32,
     "description": "bespoke-minicheck - Bespoke Labs - Spezialisiertes Modell zur Überprüfung von Fakten (Fact-Checking) und Vermeidung von Halluzinationen in RAG-Pipelines."
   },
+  "bge-m3": {
+    "vision": false,
+    "audio": false,
+    "tools": false,
+    "embedding": true,
+    "thinking": false,
+    "image": false,
+    "decision": false,
+    "context": 8,
+    "description": "bge-m3 - BAAI - Vielseitiges Embedding-Modell für multilinguale, lexikalische und semantische Retrieval-Aufgaben."
+  },
+  "bonsai-2": {
+    "vision": false,
+    "audio": false,
+    "tools": true,
+    "embedding": false,
+    "thinking": true,
+    "image": false,
+    "decision": false,
+    "context": 128,
+    "description": "bonsai-2 - Custom - Kompaktes Open-Weight-Modell mit Fokus auf hocheffizientes logisches Denken und schnelle Tool-Ausführung."
+  },
   "bitnet-b1.58": {
     "vision": false,
     "audio": false,
@@ -142,6 +164,17 @@
     "context": 16,
     "description": "codellama-instruct - Meta - Instruction-tuned Varianten von CodeLlama für bessere Befehlsbefolgung."
   },
+  "codestral": {
+    "vision": false,
+    "audio": false,
+    "tools": true,
+    "embedding": false,
+    "thinking": false,
+    "image": false,
+    "decision": false,
+    "context": 256,
+    "description": "codestral - Mistral AI - Erstklassiges 22B-Code-Modell von Mistral mit 256K Kontext, unterstützt 80+ Programmiersprachen."
+  },
   "command-r": {
     "vision": false,
     "audio": false,
@@ -174,6 +207,28 @@
     "decision": false,
     "context": 128,
     "description": "command-r-plus - Cohere - Das leistungsstärkste offene RAG- und Tool-Calling-Modell von Cohere für komplexe Enterprise-Workflows."
+  },
+  "d1": {
+    "vision": false,
+    "audio": false,
+    "tools": true,
+    "embedding": false,
+    "thinking": true,
+    "image": false,
+    "decision": false,
+    "context": 128,
+    "description": "d1 - DeepSeek / Custom - Ein aufgabenoptimiertes Reasoning-Modell für strukturierte Problemlösungen und präzise Analysen."
+  },
+  "d1-omni": {
+    "vision": true,
+    "audio": true,
+    "tools": true,
+    "embedding": false,
+    "thinking": true,
+    "image": false,
+    "decision": false,
+    "context": 128,
+    "description": "d1-omni - Custom - Multimodales Allround-Modell mit integrierter Sprach-, Bild- und Textverarbeitung sowie erweitertem Reasoning."
   },
   "dbrx": {
     "vision": false,
@@ -262,6 +317,17 @@
     "decision": false,
     "context": 128,
     "description": "deepseek-v3.1-terminus - DeepSeek - Hybrid-Modell (685B, 37B aktiv) mit Thinking- und Non-Thinking-Modus, verbesserte Version von V3."
+  },
+  "devstral": {
+    "vision": false,
+    "audio": false,
+    "tools": true,
+    "embedding": false,
+    "thinking": true,
+    "image": false,
+    "decision": false,
+    "context": 128,
+    "description": "devstral - Mistral AI - 24B Agenten- und Coding-Modell (Apache 2.0) mit hervorragenden SWE-Bench-Werten."
   },
   "dolly": {
     "vision": false,
@@ -769,6 +835,17 @@
     "context": 128,
     "description": "nemotron3 - NVIDIA - Ist ein multimodales großes Sprachmodell, das das Verständnis von Video, Audio, Bild und Text vereint."
   },
+  "nemotron-3.5-lightning": {
+    "vision": false,
+    "audio": false,
+    "tools": true,
+    "embedding": false,
+    "thinking": true,
+    "image": false,
+    "decision": false,
+    "context": 256,
+    "description": "nemotron-3.5-lightning - NVIDIA - 30B MoE-Modell (3B aktiv) mit großem Kontext, speziell optimiert für Always-on-Agenten."
+  },
   "nimble": {
     "vision": false,
     "audio": false,
@@ -1088,6 +1165,17 @@
     "context": 128,
     "description": "pixtral-12b - Mistral AI - Erstes natives multimodales Modell von Mistral. Exzellentes Bildverständnis bei moderater Modellgröße."
   },
+  "pplx-decider": {
+    "vision": false,
+    "audio": false,
+    "tools": true,
+    "embedding": false,
+    "thinking": false,
+    "image": false,
+    "decision": true,
+    "context": 128,
+    "description": "pplx-decider - Perplexity / Custom - Spezialisiertes Entscheidungs- und Routing-Modell zur automatisierten Steuerung von Agenten-Workflows."
+  },
   "qwen-chat": {
     "vision": false,
     "audio": false,
@@ -1186,6 +1274,17 @@
     "decision": false,
     "context": 256,
     "description": "qwen3.5 - Alibaba - LLM mit Multimodalität und hocheffizienter Architektur für Bild- und Textdaten."
+  },
+  "qwen3.6": {
+    "vision": true,
+    "audio": false,
+    "tools": true,
+    "embedding": false,
+    "thinking": true,
+    "image": false,
+    "decision": false,
+    "context": 256,
+    "description": "qwen3.6 - Alibaba - Fortgeschrittenes Qwen-Modell mit optimierten Coding- und Reasoning-Fähigkeiten."
   },
   "qwen3.8": {
     "vision": true,

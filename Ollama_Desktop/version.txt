@@ -100,3 +100,22 @@ V 1.6.0.31
 - add granite4.2 to models_config.json
 - add medgemma to models_config.json
 - add medgemma1.5 to models_config.json
+V 1.6.1.32
+- Implemented a universal and highly accurate VRAM Calculator based on deep GGUF tensor metadata (`/api/show`):
+  Architecture-aware KV cache calculation supporting hybrid models (Gemma 3/4 sliding windows and Qwen 3.5 SSM/recurrent layers).
+  Dynamic compute-graph and attention-workspace memory allocation.
+- Added a configurable and persistent VRAM Base system overhead setting (`vram_base`) supporting headless systems, standard desktops, and multi-monitor setups.
+- Completely overhauled the VRAM usage visualization:
+  - Strictly separates constant model weights and base load from dynamic context usage.
+  - Provides precise text overlays and visual overflow warnings for system RAM offload.
+- Added bidirectional synchronization between the context size dropdown (`calc_ctx`) and the `num_ctx` parameter table (`dgv_option`).
+- Expanded drop-down lists for VRAM capacities (up to 1024 GB) and fine-grained context window sizes (up to 2M tokens).
+- add codestral to models_config.json
+- add devstral to models_config.json
+- add nemotron-3.5-lightning to models_config.json
+- add qwen3.6 to models_config.json
+- add bge-m3 to models_config.json
+- add bonsai-2 to models_config.json
+- add d1 to models_config.json
+- add pplx-decider to models_config.json
+- add d1-omni to models_config.json

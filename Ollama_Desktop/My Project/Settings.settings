@@ -431,5 +431,11 @@ Analysiere das Ergebnis. Wenn das Ziel erreicht ist, beginne deine Antwort ZWING
   }
 }</Value>
     </Setting>
+    <Setting Name="UserVRAM" Type="System.String" Scope="User">
+      <Value Profile="(Default)">16 GB</Value>
+    </Setting>
+    <Setting Name="BaseSystemOverheadGB" Type="System.String" Scope="User">
+      <Value Profile="(Default)">1.6 GB (Standard)</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

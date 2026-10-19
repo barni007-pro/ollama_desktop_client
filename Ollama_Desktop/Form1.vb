@@ -199,6 +199,20 @@ Public Class Form1
     Private chatHistory As New List(Of ChatTurn)()
     Private currentTurnIndex As Integer = -1
 
+    ' Model VRAM Berechnung
+    Public Class VramCalculationResult
+        Public Property TotalVramGB As Double
+        Public Property ModelWeightsGB As Double
+        Public Property BaseOverheadGB As Double ' <-- NEU: Speichert die dynamische Grundlast
+        Public Property KvCacheGB As Double
+        Public Property TotalUsedGB As Double
+        Public Property FreeVramGB As Double
+        Public Property OverlapRamGB As Double
+        Public Property MaxTokensInVram As Integer
+    End Class
+
+    Private currentVramResult As VramCalculationResult = Nothing
+
     Private Async Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         isAppReady = False
 
@@ -439,6 +453,26 @@ Public Class Form1
         ' Whisper-Modell laden
         InitWhisper()
 
+        ' 1. Speichereinstellung für VRAM laden
+        Dim savedVram As String = My.Settings.UserVRAM
+        If Not String.IsNullOrWhiteSpace(savedVram) AndAlso SiticoneDropdown_vram.Items.Contains(savedVram) Then
+            SiticoneDropdown_vram.SelectedItem = savedVram
+        Else
+            SiticoneDropdown_vram.SelectedItem = "16 GB" ' Fallback
+        End If
+
+        ' 2. Speichereinstellung für VRAM Base laden
+        Dim savedVramBase As String = My.Settings.BaseSystemOverheadGB
+        If Not String.IsNullOrWhiteSpace(savedVramBase) AndAlso SiticoneDropdown_vram_base.Items.Contains(savedVramBase) Then
+            SiticoneDropdown_vram_base.SelectedItem = savedVramBase
+        Else
+            SiticoneDropdown_vram_base.SelectedItem = "1.6 GB (Standard)" ' Fallback
+        End If
+
+        ' Speichereinstellung für VRAM-Base sauber über Hilfsmethode synchronisieren
+        SyncCalcCtxDropdownFromDgv()
+        UpdateVramCalculationUI()
+
         isAppReady = True
 
         SiticoneTextArea_prompt.Focus()
@@ -483,6 +517,13 @@ Public Class Form1
         My.Settings.LLM_model_index = SiticoneDropdown_model.SelectedIndex
 
         My.Settings.show_menue = SiticoneNavbar_tab.Visible
+        If SiticoneDropdown_vram.SelectedItem IsNot Nothing Then
+            My.Settings.UserVRAM = SiticoneDropdown_vram.SelectedItem.ToString()
+        End If
+        If SiticoneDropdown_vram_base.SelectedItem IsNot Nothing Then
+            My.Settings.BaseSystemOverheadGB = SiticoneDropdown_vram_base.SelectedItem.ToString()
+        End If
+
         My.Settings.serv_ver = Ollama_ver
     End Sub
 
@@ -1581,6 +1622,7 @@ Public Class Form1
 
     Private Async Function LoadModelsAsync() As Task
         Me.Cursor = Cursors.WaitCursor
+        Scintilla_model_info_request.Text = "" ' Alte Metadaten vorab leeren
         Try
             Dim apiUrl As String = "http://" & SiticoneTextBox_host.Text & "/api/tags"
             Using client As New HttpClient()
@@ -1612,6 +1654,9 @@ Public Class Form1
         Catch ex As Exception
             MessageBox.Show("Error retrieving models: " & ex.Message)
         End Try
+        extractedContext.Clear()
+        UpdateMemoryUI()
+        UpdateVramCalculationUI()
         Me.Cursor = Cursors.Default
     End Function
 
@@ -1926,6 +1971,7 @@ Public Class Form1
         End Try
         extractedContext.Clear()
         UpdateMemoryUI()
+        UpdateVramCalculationUI()
     End Sub
 
     Public Function ExtractCodeBlocks(markdownContent As String) As List(Of CodeBlock)
@@ -2980,12 +3026,12 @@ Public Class Form1
     End Sub
 
     Private Async Sub SiticoneDropdown_default_SelectedIndexChanged(sender As Object, e As EventArgs) Handles SiticoneDropdown_default.SelectedIndexChanged
-        Me.Cursor = Cursors.WaitCursor
+        Cursor = Cursors.WaitCursor
         Application.DoEvents()
-        Dim key As String = SiticoneDropdown_default.SelectedItem
+        Dim key = SiticoneDropdown_default.SelectedItem
         Dim val = SettingsInfo_dic(key)
-        Dim appPath As String = AppContext.BaseDirectory
-        My.Settings.help_path = val.help_path
+        Dim appPath = AppContext.BaseDirectory
+        Settings.help_path = val.help_path
         Await InitializeWebView2()
         load_model(Path.Combine(appPath, val.model_path))
         load_execute(Path.Combine(appPath, val.code_path))
@@ -2993,7 +3039,7 @@ Public Class Form1
         load_rag(Path.Combine(appPath, val.rag_path))
         load_decision(Path.Combine(appPath, val.decision_path))
         load_ssh(Path.Combine(appPath, val.ssh_path))
-        Me.Cursor = Cursors.Default
+        Cursor = Cursors.Default
     End Sub
 
     Private Async Sub SiticoneButton_link_options_parameter_Click(sender As Object, e As EventArgs) Handles SiticoneButton_link_options_parameter.Click
@@ -4020,6 +4066,295 @@ Public Class Form1
         If activeSwitch IsNot SiticoneToggleSwitch_decisiontools Then SiticoneToggleSwitch_decisiontools.Checked = False
     End Sub
 
+    ' Extrahiert die gewählte VRAM-Größe in GB aus dem Dropdown (z. B. "16 GB" -> 16.0).
+    Private Function GetSelectedVramGb() As Double
+        If SiticoneDropdown_vram.SelectedItem Is Nothing Then Return 16.0 ' Fallback
+        Dim selectedStr As String = SiticoneDropdown_vram.SelectedItem.ToString()
+        Dim match = System.Text.RegularExpressions.Regex.Match(selectedStr, "(\d+)")
+        If match.Success Then
+            Dim val As Double
+            If Double.TryParse(match.Groups(1).Value, val) Then Return val
+        End If
+        Return 16.0
+    End Function
+
+    ' Extrahiert die Ziel-Kontextgröße in Tokens aus dem Dropdown (z. B. "8192" -> 8192).
+    Private Function GetSelectedCtxTokens() As Integer
+        If SiticoneDropdown_calc_ctx.SelectedItem Is Nothing Then Return 8192 ' Fallback
+        Dim selectedStr As String = SiticoneDropdown_calc_ctx.SelectedItem.ToString()
+        Dim val As Integer
+        If Integer.TryParse(selectedStr, val) Then Return val
+        Return 8192
+    End Function
+
+    ' Berechnet die Belegung neu und löst das Neuzeichnen des Panels aus.
+    Public Sub UpdateVramCalculationUI()
+        If SiticoneDropdown_model Is Nothing OrElse SiticoneDropdown_model.SelectedIndex < 0 OrElse model_info Is Nothing OrElse model_info.Count <= SiticoneDropdown_model.SelectedIndex Then
+            currentVramResult = Nothing
+            PictureBox_vram_bar.Invalidate()
+            Return
+        End If
+
+        Try
+            ' 1. Kurz-JSON aus /api/tags (für Dateigröße & Parameter-String)
+            Dim rawTagsJson As String = model_info(SiticoneDropdown_model.SelectedIndex)
+            Dim jObj As JObject = JObject.Parse(rawTagsJson)
+
+            Dim fileSize As Long = jObj.SelectToken("size")?.Value(Of Long)()
+            Dim paramSize As String = jObj.SelectToken("details.parameter_size")?.ToString()
+
+            ' 2. Tiefes Metadaten-JSON aus /api/show (falls bereits geladen in Scintilla_model_info_request)
+            Dim rawShowJson As String = ""
+            If Scintilla_model_info_request IsNot Nothing AndAlso Not String.IsNullOrWhiteSpace(Scintilla_model_info_request.Text) Then
+                rawShowJson = Scintilla_model_info_request.Text
+            End If
+
+            ' Falls /api/show vorhanden ist, dieses für die Architektur-Metadaten nutzen, sonst /api/tags
+            Dim metadataJson As String = If(Not String.IsNullOrWhiteSpace(rawShowJson), rawShowJson, rawTagsJson)
+
+            ' 3. Werte aus den Dropdowns abrufen
+            Dim userVramGB As Double = GetSelectedVramGb()
+            Dim targetCtx As Integer = GetSelectedCtxTokens()
+            Dim baseOverheadGB As Double = GetSelectedBaseOverheadGb()
+
+            AppLog($"[VRAM-CALC-TRACE] Werte ermittelt -> FileSize: {fileSize} Bytes, Param: {paramSize}, UserVRAM: {userVramGB}GB, Base: {baseOverheadGB}GB, Ctx: {targetCtx}, ShowJsonLoaded: {Not String.IsNullOrWhiteSpace(rawShowJson)}")
+
+            ' 4. Berechnen
+            currentVramResult = VramCalculator.CalculateVram(fileSize, paramSize, metadataJson, targetCtx, userVramGB, baseOverheadGB, AddressOf AppLog)
+
+            ' 5. Neu zeichnen
+            PictureBox_vram_bar.Invalidate()
+
+        Catch ex As Exception
+            AppLog("[VRAM-CALC] Fehler bei der Berechnungs-Vorbereitung: " & ex.Message)
+        End Try
+    End Sub
+
+    ' Zeichnet die VRAM-Verteilung grafisch mit Beschriftung im PictureBox_vram_bar.
+    Private Sub PictureBox_vram_bar_Paint(sender As Object, e As PaintEventArgs) Handles PictureBox_vram_bar.Paint
+        Dim g As System.Drawing.Graphics = e.Graphics
+        g.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
+        g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit
+
+        Dim rect As Rectangle = PictureBox_vram_bar.ClientRectangle
+        g.Clear(Color.FromArgb(28, 28, 30))
+
+        If currentVramResult Is Nothing OrElse currentVramResult.TotalVramGB <= 0 Then
+            Using sf As New StringFormat With {.Alignment = StringAlignment.Center, .LineAlignment = StringAlignment.Center}
+                Using font As New Font("Segoe UI", 9, FontStyle.Italic)
+                    Using brush As New SolidBrush(Color.Gray)
+                        g.DrawString("Keine Modell- oder VRAM-Daten verfügbar", font, brush, rect, sf)
+                    End Using
+                End Using
+            End Using
+            Return
+        End If
+
+        Dim totalPx As Integer = rect.Width
+        Dim totalVram As Double = currentVramResult.TotalVramGB
+
+        ' 1. Fester Modell-Anteil & Base-System-Overhead (Blauer Balken)
+        Dim baseOverheadGB As Double = currentVramResult.BaseOverheadGB
+        Dim modelBaseGB As Double = currentVramResult.ModelWeightsGB + baseOverheadGB
+
+        ' 2. Dynamischer Kontext-Bedarf (Grüner/Roter Balken - exakt identisch mit KvCacheGB!)
+        Dim totalCtxNeedGB As Double = currentVramResult.KvCacheGB
+        Dim totalUsedGB As Double = currentVramResult.TotalUsedGB
+
+        ' Farbpalette
+        Dim colorModel As Color = Color.FromArgb(0, 122, 204)          ' Blau (Modell & Base-Load)
+        Dim colorKvNormal As Color = Color.FromArgb(46, 204, 113)       ' Grün (CTX ok)
+        Dim colorWarningRed As Color = Color.FromArgb(231, 76, 60)      ' Rot (CTX-Überlauf)
+        Dim colorModelOverflow As Color = Color.FromArgb(192, 57, 43)    ' Dunkelrot (Modell zu groß)
+        Dim colorFreeSpace As Color = Color.FromArgb(50, 50, 52)         ' Dunkelgrau (Freier VRAM)
+
+        ' --- GRAPHISCHE DARSTELLUNG ---
+
+        If modelBaseGB > totalVram Then
+            Using b As New SolidBrush(colorModelOverflow)
+                g.FillRectangle(b, 0, 0, totalPx, rect.Height)
+            End Using
+
+        ElseIf totalUsedGB > totalVram Then
+            Dim modelPct As Double = Math.Min(1.0, modelBaseGB / totalVram)
+            Dim modelWidth As Integer = CInt(totalPx * modelPct)
+
+            If modelWidth > 0 Then
+                Using b As New SolidBrush(colorModel)
+                    g.FillRectangle(b, 0, 0, modelWidth, rect.Height)
+                End Using
+            End If
+
+            Dim kvWidth As Integer = totalPx - modelWidth
+            If kvWidth > 0 Then
+                Using b As New SolidBrush(colorWarningRed)
+                    g.FillRectangle(b, modelWidth, 0, kvWidth, rect.Height)
+                End Using
+            End If
+
+        Else
+            Dim modelPct As Double = modelBaseGB / totalVram
+            Dim ctxPct As Double = totalCtxNeedGB / totalVram
+
+            Dim modelWidth As Integer = CInt(totalPx * modelPct)
+            Dim ctxWidth As Integer = CInt(totalPx * ctxPct)
+            Dim freeWidth As Integer = totalPx - modelWidth - ctxWidth
+
+            If modelWidth > 0 Then
+                Using b As New SolidBrush(colorModel)
+                    g.FillRectangle(b, 0, 0, modelWidth, rect.Height)
+                End Using
+            End If
+
+            If ctxWidth > 0 Then
+                Using b As New SolidBrush(colorKvNormal)
+                    g.FillRectangle(b, modelWidth, 0, ctxWidth, rect.Height)
+                End Using
+            End If
+
+            If freeWidth > 0 Then
+                Using b As New SolidBrush(colorFreeSpace)
+                    g.FillRectangle(b, modelWidth + ctxWidth, 0, freeWidth, rect.Height)
+                End Using
+            End If
+        End If
+
+        ' --- TEXT-OVERLAY ---
+
+        Dim statusText As String = ""
+        If modelBaseGB > totalVram Then
+            statusText = $"⚠️ Modell zu groß! Model: {currentVramResult.ModelWeightsGB:F1} GB | Base: {baseOverheadGB:F1} GB | System RAM Offload: +{currentVramResult.OverlapRamGB:F1} GB"
+        ElseIf currentVramResult.OverlapRamGB > 0 Then
+            statusText = $"Model: {currentVramResult.ModelWeightsGB:F1} GB | Base: {baseOverheadGB:F1} GB | KV Cache: {currentVramResult.KvCacheGB:F1} GB | ⚠️ System RAM Offload: +{currentVramResult.OverlapRamGB:F1} GB"
+        Else
+            statusText = $"Model: {currentVramResult.ModelWeightsGB:F1} GB | Base: {baseOverheadGB:F1} GB | KV Cache: {currentVramResult.KvCacheGB:F1} GB | Free VRAM: {currentVramResult.FreeVramGB:F1} GB / {currentVramResult.TotalVramGB:F0} GB"
+        End If
+
+        Using font As New Font("Segoe UI", 9, FontStyle.Bold)
+            Using sf As New StringFormat With {.Alignment = StringAlignment.Center, .LineAlignment = StringAlignment.Center}
+                Using shadowBrush As New SolidBrush(Color.FromArgb(200, 0, 0, 0))
+                    g.DrawString(statusText, font, shadowBrush, New Rectangle(rect.X + 1, rect.Y + 1, rect.Width, rect.Height), sf)
+                End Using
+                Using textBrush As New SolidBrush(Color.White)
+                    g.DrawString(statusText, font, textBrush, rect, sf)
+                End Using
+            End Using
+        End Using
+
+        Using p As New Pen(Color.FromArgb(70, 70, 75), 1)
+            g.DrawRectangle(p, 0, 0, rect.Width - 1, rect.Height - 1)
+        End Using
+    End Sub
+
+    ' Liest den in dgv_option hinterlegten 'num_ctx'-Wert aus und synchronisiert ihn mit dem Dropdown.
+    Public Sub SyncCalcCtxDropdownFromDgv()
+        If dgv_option Is Nothing OrElse dgv_option.Rows.Count = 0 Then Return
+
+        For Each row As DataGridViewRow In dgv_option.Rows
+            If Not row.IsNewRow AndAlso row.Cells(0).Value IsNot Nothing Then
+                Dim paramName As String = row.Cells(0).Value.ToString().Trim()
+
+                If String.Equals(paramName, "num_ctx", StringComparison.OrdinalIgnoreCase) Then
+                    If row.Cells(3).Value IsNot Nothing Then
+                        Dim ctxValueStr As String = row.Cells(3).Value.ToString().Trim()
+                        If SiticoneDropdown_calc_ctx.Items.Contains(ctxValueStr) Then
+                            SiticoneDropdown_calc_ctx.SelectedItem = ctxValueStr
+                        End If
+                    End If
+                    Exit For
+                End If
+            End If
+        Next
+    End Sub
+
+    ' Liest den gewählten Base-System-Overhead als Double aus dem Dropdown SiticoneDropdown_vram_base aus.
+    Private Function GetSelectedBaseOverheadGb() As Double
+        If SiticoneDropdown_vram_base Is Nothing OrElse SiticoneDropdown_vram_base.SelectedItem Is Nothing Then
+            Return 1.6 ' Standard Fallback
+        End If
+
+        Dim selectedStr As String = SiticoneDropdown_vram_base.SelectedItem.ToString()
+        Dim match As System.Text.RegularExpressions.Match = System.Text.RegularExpressions.Regex.Match(selectedStr, "([\d\.]+)\s*GB", System.Text.RegularExpressions.RegexOptions.IgnoreCase)
+
+        If match.Success Then
+            Dim val As Double
+            If Double.TryParse(match.Groups(1).Value, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, val) Then
+                Return val
+            End If
+        End If
+
+        Return 1.6
+    End Function
+
+    Private Sub SiticoneDropdown_vram_SelectedIndexChanged(sender As Object, e As EventArgs) Handles SiticoneDropdown_vram.SelectedIndexChanged
+        If SiticoneDropdown_vram.SelectedItem IsNot Nothing Then
+            My.Settings.UserVRAM = SiticoneDropdown_vram.SelectedItem.ToString()
+            My.Settings.Save()
+        End If
+        UpdateVramCalculationUI()
+    End Sub
+
+    Private Sub SiticoneDropdown_vram_base_SelectedIndexChanged(sender As Object, e As EventArgs) Handles SiticoneDropdown_vram_base.SelectedIndexChanged
+        If isAppReady Then
+            Try
+                My.Settings.BaseSystemOverheadGB = GetSelectedBaseOverheadGb()
+                My.Settings.Save()
+            Catch ex As Exception
+                AppLog("[SETTINGS] Fehler beim Speichern von BaseSystemOverheadGB: " & ex.Message)
+            End Try
+        End If
+
+        UpdateVramCalculationUI()
+    End Sub
+
+    Private Sub SiticoneDropdown_calc_ctx_SelectedIndexChanged(sender As Object, e As EventArgs) Handles SiticoneDropdown_calc_ctx.SelectedIndexChanged
+        UpdateVramCalculationUI()
+    End Sub
+
+    Private Sub SiticoneButton_set_num_ctx_Click(sender As Object, e As EventArgs) Handles SiticoneButton_set_num_ctx.Click
+        If SiticoneDropdown_calc_ctx.SelectedItem Is Nothing Then Return
+
+        Dim selectedCtx As String = SiticoneDropdown_calc_ctx.SelectedItem.ToString().Trim()
+        Dim found As Boolean = False
+
+        For Each row As DataGridViewRow In dgv_option.Rows
+            If Not row.IsNewRow AndAlso row.Cells("OptionName").Value IsNot Nothing Then
+                Dim paramName As String = row.Cells("OptionName").Value.ToString().Trim()
+
+                If String.Equals(paramName, "num_ctx", StringComparison.OrdinalIgnoreCase) Then
+                    row.Cells("Use").Value = True
+                    row.Cells("ValueType").Value = "int"
+                    row.Cells("Value").Value = selectedCtx
+                    found = True
+                    Exit For
+                End If
+            End If
+        Next
+
+        If Not found Then
+            dgv_option.Rows.Add("num_ctx", True, "int", selectedCtx)
+        End If
+
+        Dim newOptionList As New Specialized.StringCollection()
+        For Each row As DataGridViewRow In dgv_option.Rows
+            If Not row.IsNewRow Then
+                Try
+                    Dim optionName = If(row.Cells("OptionName").Value?.ToString(), String.Empty)
+                    Dim use = If(row.Cells("Use").Value IsNot Nothing, CType(row.Cells("Use").Value, Boolean), False)
+                    Dim valueType = If(row.Cells("ValueType").Value?.ToString(), String.Empty)
+                    Dim value = If(row.Cells("Value").Value?.ToString(), String.Empty)
+                    Dim optionString = $"{optionName}<|>{use}<|>{valueType}<|>{value}"
+                    newOptionList.Add(optionString)
+                Catch ex As Exception
+                End Try
+            End If
+        Next
+
+        My.Settings.option_list = newOptionList
+        My.Settings.Save()
+
+        UpdateVramCalculationUI()
+    End Sub
 End Class
 
 Public Class DocumentIndex
@@ -4148,3 +4483,359 @@ Public Class DocumentIndex
     End Function
 
 End Class
+
+Public Module VramCalculator
+
+    ''' <summary>
+    ''' Berechnet den VRAM-Bedarf universell anhand der echten GGUF-Metadaten aus /api/show
+    ''' (inkl. SWA-Layer-Arrays für Gemma 4 sowie SSM/Recurrent-Intervallen für Qwen 3.5).
+    ''' </summary>
+    Public Function CalculateVram(fileSizeBytes As Long,
+                             parameterSizeStr As String,
+                             rawModelInfoJson As String,
+                             targetCtxTokens As Integer,
+                             userVramGB As Double,
+                             Optional baseSystemOverheadGB As Double = 1.6,
+                             Optional logCallback As Action(Of String) = Nothing) As VramCalculationResult
+
+        Dim res As New VramCalculationResult()
+        res.TotalVramGB = userVramGB
+
+        ' 1. Modellgewichte in GB
+        Dim rawModelGB As Double = fileSizeBytes / (1024.0 * 1024.0 * 1024.0)
+        res.ModelWeightsGB = rawModelGB
+
+        ' 2. Feste Grundlast (System/Display-Base + 3% CUDA-Model-Init) -> Blauer Balken
+        Dim baseCudaOverheadGB As Double = baseSystemOverheadGB + (rawModelGB * 0.03)
+        res.BaseOverheadGB = baseCudaOverheadGB
+
+        ' 3. KV-Cache & Compute-Graph-Puffer berechnen -> Grüner Balken
+        Dim totalKvCacheMB As Double = 0
+        Dim usedMetadata As Boolean = False
+
+        If Not String.IsNullOrEmpty(rawModelInfoJson) Then
+            Try
+                Dim jObj As JObject = JObject.Parse(rawModelInfoJson)
+                totalKvCacheMB = CalculateKvCacheFromMetadata(jObj, targetCtxTokens, rawModelGB, logCallback)
+                If totalKvCacheMB > 0 Then usedMetadata = True
+            Catch ex As Exception
+                If logCallback IsNot Nothing Then logCallback($"[VRAM-CALC] JSON-Parse-Fehler: {ex.Message}")
+            End Try
+        End If
+
+        ' 4. Fallback, falls /api/show noch nicht geladen ist (z. B. Offline-Start)
+        If Not usedMetadata Then
+            Dim paramBillions As Double = ParseParameterSize(parameterSizeStr)
+            Dim factorPer1B As Double = 4.5
+            Dim fixedContextOverheadMB As Double = 0
+
+            If Not String.IsNullOrEmpty(rawModelInfoJson) Then
+                Dim jsonLower As String = rawModelInfoJson.ToLower()
+                If jsonLower.Contains("ministral") OrElse jsonLower.Contains("mistral") OrElse jsonLower.Contains("mixtral") Then
+                    factorPer1B = 17.5
+                ElseIf jsonLower.Contains("qwen35") OrElse jsonLower.Contains("qwen3.5") Then
+                    ' Qwen 3.5 Hybrid (nur 25% Full-Attention Layer)
+                    fixedContextOverheadMB = 650.0
+                    factorPer1B = 3.5
+                ElseIf jsonLower.Contains("gemma4") OrElse jsonLower.Contains("gemma3") Then
+                    fixedContextOverheadMB = 1100.0
+                    factorPer1B = 2.4
+                ElseIf jsonLower.Contains("gemma") OrElse jsonLower.Contains("qwen") Then
+                    factorPer1B = 3.2
+                End If
+            End If
+
+            totalKvCacheMB = fixedContextOverheadMB + ((targetCtxTokens / 1000.0) * (paramBillions * factorPer1B))
+            If logCallback IsNot Nothing Then
+                logCallback($"[VRAM-CALC] Fallback aktiv ({paramBillions:F1}B x {factorPer1B} MB/1k) -> Context: {totalKvCacheMB / 1024.0:F2} GB")
+            End If
+        End If
+
+        ' Gesamter Kontextbedarf (KV-Cache + Compute-Graph-Puffer) in KvCacheGB speichern
+        res.KvCacheGB = totalKvCacheMB / 1024.0
+        res.TotalUsedGB = res.ModelWeightsGB + res.BaseOverheadGB + res.KvCacheGB
+
+        ' 5. VRAM-Grenzen und RAM-Offload berechnen
+        If res.TotalUsedGB <= userVramGB Then
+            res.FreeVramGB = userVramGB - res.TotalUsedGB
+            res.OverlapRamGB = 0
+        Else
+            res.FreeVramGB = 0
+            res.OverlapRamGB = res.TotalUsedGB - userVramGB
+        End If
+
+        ' 6. Maximale Tokens im freien VRAM abschätzen
+        Dim availableForCtxGB As Double = userVramGB - (res.ModelWeightsGB + res.BaseOverheadGB)
+        If availableForCtxGB > 0 AndAlso res.KvCacheGB > 0 Then
+            Dim gbPerToken As Double = res.KvCacheGB / Math.Max(1, targetCtxTokens)
+            res.MaxTokensInVram = CInt(Math.Floor(availableForCtxGB / gbPerToken))
+        Else
+            res.MaxTokensInVram = 0
+        End If
+
+        If logCallback IsNot Nothing Then
+            logCallback($"[VRAM-CALC] Gesamt -> Model: {res.ModelWeightsGB:F2}GB | Base: {res.BaseOverheadGB:F2}GB | Context (KV+Graph): {res.KvCacheGB:F2}GB | Total: {res.TotalUsedGB:F2}GB | Free: {res.FreeVramGB:F2}GB | Offload: {res.OverlapRamGB:F2}GB")
+        End If
+
+        Return res
+    End Function
+
+    ''' <summary>
+    ''' Berechnet den exakten KV-Cache Layer für Layer (inkl. SWA-Layern, Recurrent/SSM-Layern und Compute-Graph).
+    ''' </summary>
+    Private Function CalculateKvCacheFromMetadata(jObj As JObject, targetCtxTokens As Integer, rawModelGB As Double, logCallback As Action(Of String)) As Double
+        Dim modelInfoObj As JObject = TryCast(jObj("model_info"), JObject)
+        If modelInfoObj Is Nothing Then modelInfoObj = jObj
+
+        Dim blockCount As Double = GetMetadataDouble(modelInfoObj, "block_count")
+        If blockCount <= 0 Then
+            If logCallback IsNot Nothing Then logCallback("[VRAM-CALC] 'block_count' nicht im JSON enthalten.")
+            Return 0
+        End If
+
+        Dim arch As String = GetMetadataString(modelInfoObj, "architecture").ToLower()
+        Dim totalLayers As Integer = CInt(blockCount)
+
+        ' Geteilte KV-Layer abziehen (z. B. Gemma 4 E2B/E4B)
+        Dim sharedKvLayers As Integer = CInt(GetMetadataDouble(modelInfoObj, "shared_kv_layers"))
+        Dim activeKvLayers As Integer = Math.Max(1, totalLayers - sharedKvLayers)
+
+        Dim headCount As Double = GetMetadataDouble(modelInfoObj, "head_count")
+        Dim headCountKvFallback As Double = GetMetadataDouble(modelInfoObj, "head_count_kv")
+        Dim embedLen As Double = GetMetadataDouble(modelInfoObj, "embedding_length")
+
+        ' Globale Key/Value-Dimensionen
+        Dim keyLenGlobal As Double = GetMetadataDouble(modelInfoObj, "key_length")
+        Dim valLenGlobal As Double = GetMetadataDouble(modelInfoObj, "value_length")
+
+        If keyLenGlobal <= 0 AndAlso headCount > 0 AndAlso embedLen > 0 Then
+            keyLenGlobal = Math.Round(embedLen / headCount)
+        End If
+        If keyLenGlobal <= 0 Then keyLenGlobal = 128
+        If valLenGlobal <= 0 Then valLenGlobal = keyLenGlobal
+        If headCountKvFallback <= 0 Then headCountKvFallback = If(headCount > 0, headCount, 8)
+
+        ' Spezifische Sliding-Window Key/Value-Dimensionen (z. B. Gemma 4)
+        Dim keyLenSwa As Double = GetMetadataDouble(modelInfoObj, "key_length_swa")
+        Dim valLenSwa As Double = GetMetadataDouble(modelInfoObj, "value_length_swa")
+        If keyLenSwa <= 0 Then keyLenSwa = keyLenGlobal
+        If valLenSwa <= 0 Then valLenSwa = valLenGlobal
+
+        Dim slidingWindow As Double = GetMetadataDouble(modelInfoObj, "sliding_window")
+
+        ' Recurrent / Linear-Attention / SSM Parameter (z. B. Qwen 3.5: full_attention_interval = 4)
+        Dim fullAttnInterval As Integer = CInt(GetMetadataDouble(modelInfoObj, "full_attention_interval"))
+        Dim ssmStateSize As Double = GetMetadataDouble(modelInfoObj, "state_size")
+
+        ' Layer-Arrays auslesen
+        Dim kvHeadsArray As List(Of Double) = GetMetadataDoubleArray(modelInfoObj, "head_count_kv")
+        Dim swaPatternArray As List(Of Boolean) = GetMetadataBoolArray(modelInfoObj, "sliding_window_pattern")
+        Dim recurrentArray As List(Of Boolean) = GetMetadataBoolArray(modelInfoObj, "recurrent_layers")
+
+        Dim totalKvBytes As Double = 0
+        Dim swaLayerCount As Integer = 0
+        Dim globalLayerCount As Integer = 0
+        Dim recurrentLayerCount As Integer = 0
+
+        For i As Integer = 0 To activeKvLayers - 1
+            ' 1. Prüfen, ob dieser Layer ein rekurrenter SSM / Linear-Attention Layer ist (wie bei Qwen 3.5)
+            Dim isRecurrentLayer As Boolean = False
+            If recurrentArray.Count > i Then
+                isRecurrentLayer = recurrentArray(i)
+            ElseIf fullAttnInterval > 1 Then
+                ' Nur jeder N-te Layer (z. B. 4., 8., 12. ...) ist Full-Attention, alle anderen sind Recurrent/GDN
+                isRecurrentLayer = ((i + 1) Mod fullAttnInterval <> 0)
+            ElseIf arch.Contains("qwen35") OrElse arch.Contains("qwen3.5") Then
+                ' Sicherheits-Fallback für Qwen 3.5: 3 von 4 Layern sind GDN (Linear Attention)
+                isRecurrentLayer = ((i + 1) Mod 4 <> 0)
+            End If
+
+            If isRecurrentLayer Then
+                recurrentLayerCount += 1
+                ' Rekurrente SSM/GDN-Layer haben keinen mit num_ctx wachsenden KV-Cache,
+                ' sondern nur einen festen State-Puffer (~1.5 MB pro Layer für Conv1D + SSM-State)
+                totalKvBytes += 1.5 * 1024.0 * 1024.0
+                Continue For
+            End If
+
+            ' 2. Prüfen, ob dieser Layer ein lokaler Sliding-Window-Layer (SWA) ist
+            Dim isSwaLayer As Boolean = False
+            If swaPatternArray.Count > i Then
+                isSwaLayer = swaPatternArray(i)
+            ElseIf arch.Contains("gemma3") OrElse arch.Contains("gemma4") Then
+                isSwaLayer = ((i + 1) Mod 6 <> 0)
+                If slidingWindow <= 0 Then slidingWindow = 1024
+            ElseIf arch.Contains("gemma2") AndAlso slidingWindow > 0 Then
+                isSwaLayer = (i Mod 2 = 0)
+            End If
+
+            ' 3. KV-Heads für genau diesen Layer ermitteln
+            Dim layerKvHeads As Double = headCountKvFallback
+            If kvHeadsArray.Count > i Then
+                layerKvHeads = kvHeadsArray(i)
+            ElseIf kvHeadsArray.Count > 0 Then
+                layerKvHeads = kvHeadsArray(0)
+            End If
+
+            ' 4. Key/Value-Länge und Zellanzahl für diesen Layer bestimmen
+            Dim layerKeyLen As Double
+            Dim layerValLen As Double
+            Dim layerCells As Double
+
+            If isSwaLayer AndAlso slidingWindow > 0 Then
+                swaLayerCount += 1
+                layerKeyLen = keyLenSwa
+                layerValLen = valLenSwa
+                layerCells = Math.Min(CDbl(targetCtxTokens), slidingWindow * 2.0)
+            Else
+                globalLayerCount += 1
+                layerKeyLen = keyLenGlobal
+                layerValLen = valLenGlobal
+                layerCells = CDbl(targetCtxTokens)
+            End If
+
+            ' FP16 KV-Cache für diesen Layer: KV-Heads * (KeyLen + ValLen) * 2 Bytes (FP16) * Cells
+            totalKvBytes += layerKvHeads * (layerKeyLen + layerValLen) * 2.0 * layerCells
+        Next
+
+        Dim rawKvCacheMB As Double = totalKvBytes / (1024.0 * 1024.0)
+
+        ' 5. llama.cpp Compute-Buffer (sched_reserve) + CUDA-Workspace
+        ' Bei Hybrid-SSM-Modellen (recurrentLayerCount > 0) fällt der Attention-Compute-Graph deutlich kompakter aus
+        Dim computeGraphMB As Double
+        If recurrentLayerCount > 0 Then
+            computeGraphMB = 300.0 + (rawModelGB * 45.0) + ((targetCtxTokens / 1000.0) * 2.5)
+        Else
+            computeGraphMB = 450.0 + (rawModelGB * 80.0) + ((targetCtxTokens / 1000.0) * 5.0)
+        End If
+
+        Dim totalContextMB As Double = rawKvCacheMB + computeGraphMB
+
+        If logCallback IsNot Nothing Then
+            logCallback($"[VRAM-CALC] Exakte Metadaten ({arch}) -> Layer: {activeKvLayers} (Global: {globalLayerCount}, SWA: {swaLayerCount}, Recurrent/SSM: {recurrentLayerCount}), Key/Val: {keyLenGlobal}/{valLenGlobal} -> KV: {rawKvCacheMB / 1024.0:F2} GB + Compute: {computeGraphMB / 1024.0:F2} GB = {totalContextMB / 1024.0:F2} GB")
+        End If
+
+        Return totalContextMB
+    End Function
+
+    Private Function GetMetadataDouble(containerObj As JObject, keySuffix As String) As Double
+        If containerObj Is Nothing Then Return 0
+        For Each prop As JProperty In containerObj.Properties()
+            Dim propNameLower As String = prop.Name.ToLower()
+
+            If propNameLower.Contains(".vision.") OrElse propNameLower.Contains(".audio.") OrElse propNameLower.Contains("projector") Then
+                Continue For
+            End If
+
+            If propNameLower.EndsWith("." & keySuffix.ToLower()) OrElse propNameLower = keySuffix.ToLower() Then
+                If prop.Value.Type = JTokenType.Integer OrElse prop.Value.Type = JTokenType.Float Then
+                    Return CDbl(prop.Value)
+                ElseIf prop.Value.Type = JTokenType.Array Then
+                    Dim arr As JArray = CType(prop.Value, JArray)
+                    If arr.Count > 0 Then
+                        Dim sum As Double = 0
+                        Dim validCount As Integer = 0
+                        For Each item As JToken In arr
+                            Dim d As Double
+                            If Double.TryParse(item.ToString(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, d) AndAlso d > 0 Then
+                                sum += d
+                                validCount += 1
+                            End If
+                        Next
+                        If validCount > 0 Then Return sum / validCount
+                    End If
+                Else
+                    Dim val As Double
+                    If Double.TryParse(prop.Value.ToString(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, val) Then
+                        Return val
+                    End If
+                End If
+            End If
+
+            If prop.Value.Type = JTokenType.Object Then
+                Dim subVal As Long = CLng(GetMetadataDouble(CType(prop.Value, JObject), keySuffix))
+                If subVal > 0 Then Return subVal
+            End If
+        Next
+        Return 0
+    End Function
+
+    Private Function GetMetadataDoubleArray(containerObj As JObject, keySuffix As String) As List(Of Double)
+        Dim result As New List(Of Double)()
+        If containerObj Is Nothing Then Return result
+
+        For Each prop As JProperty In containerObj.Properties()
+            Dim propNameLower As String = prop.Name.ToLower()
+            If propNameLower.Contains(".vision.") OrElse propNameLower.Contains(".audio.") OrElse propNameLower.Contains("projector") Then
+                Continue For
+            End If
+
+            If propNameLower.EndsWith("." & keySuffix.ToLower()) OrElse propNameLower = keySuffix.ToLower() Then
+                If prop.Value.Type = JTokenType.Array Then
+                    For Each item As JToken In CType(prop.Value, JArray)
+                        Dim d As Double
+                        If Double.TryParse(item.ToString(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, d) Then
+                            result.Add(d)
+                        End If
+                    Next
+                    Return result
+                Else
+                    Dim d As Double
+                    If Double.TryParse(prop.Value.ToString(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, d) Then
+                        result.Add(d)
+                        Return result
+                    End If
+                End If
+            End If
+        Next
+        Return result
+    End Function
+
+    Private Function GetMetadataBoolArray(containerObj As JObject, keySuffix As String) As List(Of Boolean)
+        Dim result As New List(Of Boolean)()
+        If containerObj Is Nothing Then Return result
+
+        For Each prop As JProperty In containerObj.Properties()
+            Dim propNameLower As String = prop.Name.ToLower()
+            If propNameLower.Contains(".vision.") OrElse propNameLower.Contains(".audio.") OrElse propNameLower.Contains("projector") Then
+                Continue For
+            End If
+
+            If propNameLower.EndsWith("." & keySuffix.ToLower()) OrElse propNameLower = keySuffix.ToLower() Then
+                If prop.Value.Type = JTokenType.Array Then
+                    For Each item As JToken In CType(prop.Value, JArray)
+                        Dim b As Boolean
+                        If Boolean.TryParse(item.ToString(), b) Then
+                            result.Add(b)
+                        End If
+                    Next
+                    Return result
+                End If
+            End If
+        Next
+        Return result
+    End Function
+
+    Private Function GetMetadataString(containerObj As JObject, keySuffix As String) As String
+        If containerObj Is Nothing Then Return ""
+        For Each prop As JProperty In containerObj.Properties()
+            If prop.Name.EndsWith("." & keySuffix, StringComparison.OrdinalIgnoreCase) OrElse
+               String.Equals(prop.Name, keySuffix, StringComparison.OrdinalIgnoreCase) Then
+                Return prop.Value.ToString()
+            End If
+        Next
+        Return ""
+    End Function
+
+    Private Function ParseParameterSize(paramStr As String) As Double
+        If String.IsNullOrWhiteSpace(paramStr) Then Return 8.0
+        Dim match = System.Text.RegularExpressions.Regex.Match(paramStr, "([\d\.]+)\s*B", System.Text.RegularExpressions.RegexOptions.IgnoreCase)
+        If match.Success Then
+            Dim val As Double
+            If Double.TryParse(match.Groups(1).Value, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, val) Then
+                Return val
+            End If
+        End If
+        Return 8.0
+    End Function
+End Module

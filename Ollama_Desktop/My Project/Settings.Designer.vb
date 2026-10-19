@@ -707,6 +707,30 @@ Namespace My
                 Me("decision_json") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("16 GB")>  _
+        Public Property UserVRAM() As String
+            Get
+                Return CType(Me("UserVRAM"),String)
+            End Get
+            Set
+                Me("UserVRAM") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("1.6 GB (Standard)")>  _
+        Public Property BaseSystemOverheadGB() As String
+            Get
+                Return CType(Me("BaseSystemOverheadGB"),String)
+            End Get
+            Set
+                Me("BaseSystemOverheadGB") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

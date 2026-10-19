@@ -34,6 +34,14 @@ Partial Class Form1
         SiticoneButton_file = New SiticoneNetCoreUI.SiticoneButton()
         SiticoneTabControl_tab = New SiticoneNetCoreUI.SiticoneTabControl()
         TabPage_modelinfo = New TabPage()
+        SiticoneLabel_vram_base = New SiticoneNetCoreUI.SiticoneLabel()
+        SiticoneDropdown_vram_base = New SiticoneNetCoreUI.SiticoneDropdown()
+        SiticoneLabel_num_ctx = New SiticoneNetCoreUI.SiticoneLabel()
+        SiticoneLabel_vram = New SiticoneNetCoreUI.SiticoneLabel()
+        SiticoneButton_set_num_ctx = New SiticoneNetCoreUI.SiticoneButton()
+        PictureBox_vram_bar = New PictureBox()
+        SiticoneDropdown_calc_ctx = New SiticoneNetCoreUI.SiticoneDropdown()
+        SiticoneDropdown_vram = New SiticoneNetCoreUI.SiticoneDropdown()
         SiticoneChip_model_info_Decision = New SiticoneNetCoreUI.SiticoneChip()
         SiticoneChip_model_info_Audio = New SiticoneNetCoreUI.SiticoneChip()
         SiticoneChip_model_info_Image = New SiticoneNetCoreUI.SiticoneChip()
@@ -235,6 +243,7 @@ Partial Class Form1
         CType(WebView21, ComponentModel.ISupportInitialize).BeginInit()
         SiticoneTabControl_tab.SuspendLayout()
         TabPage_modelinfo.SuspendLayout()
+        CType(PictureBox_vram_bar, ComponentModel.ISupportInitialize).BeginInit()
         TabPage_modelparameter.SuspendLayout()
         SiticoneFlatPanel_trenn3.SuspendLayout()
         SiticoneFlatPanel_thinking_use.SuspendLayout()
@@ -617,6 +626,14 @@ Partial Class Form1
         ' TabPage_modelinfo
         ' 
         TabPage_modelinfo.BackColor = Color.WhiteSmoke
+        TabPage_modelinfo.Controls.Add(SiticoneLabel_vram_base)
+        TabPage_modelinfo.Controls.Add(SiticoneDropdown_vram_base)
+        TabPage_modelinfo.Controls.Add(SiticoneLabel_num_ctx)
+        TabPage_modelinfo.Controls.Add(SiticoneLabel_vram)
+        TabPage_modelinfo.Controls.Add(SiticoneButton_set_num_ctx)
+        TabPage_modelinfo.Controls.Add(PictureBox_vram_bar)
+        TabPage_modelinfo.Controls.Add(SiticoneDropdown_calc_ctx)
+        TabPage_modelinfo.Controls.Add(SiticoneDropdown_vram)
         TabPage_modelinfo.Controls.Add(SiticoneChip_model_info_Decision)
         TabPage_modelinfo.Controls.Add(SiticoneChip_model_info_Audio)
         TabPage_modelinfo.Controls.Add(SiticoneChip_model_info_Image)
@@ -636,6 +653,257 @@ Partial Class Form1
         SiticoneTabControl_tab.SetTabImage(TabPage_modelinfo, My.Resources.Resource_svg.Model_Info)
         TabPage_modelinfo.TabIndex = 5
         TabPage_modelinfo.Text = "Model Info"
+        ' 
+        ' SiticoneLabel_vram_base
+        ' 
+        SiticoneLabel_vram_base.BackColor = Color.Transparent
+        SiticoneLabel_vram_base.Font = New Font("Segoe UI", 10F)
+        SiticoneLabel_vram_base.Location = New Point(315, 72)
+        SiticoneLabel_vram_base.Name = "SiticoneLabel_vram_base"
+        SiticoneLabel_vram_base.Size = New Size(84, 21)
+        SiticoneLabel_vram_base.TabIndex = 61
+        SiticoneLabel_vram_base.Text = "VRAM Base:"
+        ' 
+        ' SiticoneDropdown_vram_base
+        ' 
+        SiticoneDropdown_vram_base.AllowMultipleSelection = False
+        SiticoneDropdown_vram_base.BackColor = Color.FromArgb(CByte(209), CByte(232), CByte(255))
+        SiticoneDropdown_vram_base.BorderColor = Color.Gray
+        SiticoneDropdown_vram_base.BorderSize = 2
+        SiticoneDropdown_vram_base.CanBeep = False
+        SiticoneDropdown_vram_base.CanShake = True
+        SiticoneDropdown_vram_base.CornerRadius = 8
+        SiticoneDropdown_vram_base.DataSource = Nothing
+        SiticoneDropdown_vram_base.DisplayMember = Nothing
+        SiticoneDropdown_vram_base.DropdownBackColor = Color.White
+        SiticoneDropdown_vram_base.DropdownCornerRadius = 8
+        SiticoneDropdown_vram_base.DropdownWidth = 0
+        SiticoneDropdown_vram_base.DropShadowEnabled = False
+        SiticoneDropdown_vram_base.Font = New Font("Segoe UI", 10F)
+        SiticoneDropdown_vram_base.ForeColor = Color.DimGray
+        SiticoneDropdown_vram_base.HoveredItemBackColor = Color.LightGray
+        SiticoneDropdown_vram_base.HoveredItemTextColor = Color.Black
+        SiticoneDropdown_vram_base.IsReadonly = False
+        SiticoneDropdown_vram_base.ItemHeight = 30
+        SiticoneDropdown_vram_base.Items.AddRange(New String() {"0 GB", "0.5 GB (Dedicated / Headless)", "1.0 GB", "1.2 GB", "1.4 GB", "1.6 GB (Standard)", "1.8 GB", "2.0 GB", "2.2 GB (Multi-Monitor / 4K)"})
+        SiticoneDropdown_vram_base.Location = New Point(405, 66)
+        SiticoneDropdown_vram_base.MaxDropDownItems = 8
+        SiticoneDropdown_vram_base.Name = "SiticoneDropdown_vram_base"
+        SiticoneDropdown_vram_base.NotFoundBackColor = Color.Transparent
+        SiticoneDropdown_vram_base.NotFoundFont = Nothing
+        SiticoneDropdown_vram_base.NotFoundTextColor = Color.Gray
+        SiticoneDropdown_vram_base.PlaceholderColor = Color.Gray
+        SiticoneDropdown_vram_base.PlaceholderDisappearsOnFocus = False
+        SiticoneDropdown_vram_base.PlaceholderText = "Select VRAM Size "
+        SiticoneDropdown_vram_base.SearchTextColor = Color.DimGray
+        SiticoneDropdown_vram_base.SearchTextFont = Nothing
+        SiticoneDropdown_vram_base.SelectedIndex = -1
+        SiticoneDropdown_vram_base.SelectedItem = Nothing
+        SiticoneDropdown_vram_base.SelectedItemBackColor = Color.LightBlue
+        SiticoneDropdown_vram_base.SelectedItemTextColor = Color.Black
+        SiticoneDropdown_vram_base.SelectedValue = Nothing
+        SiticoneDropdown_vram_base.Size = New Size(231, 30)
+        SiticoneDropdown_vram_base.TabIndex = 60
+        ToolTip1.SetToolTip(SiticoneDropdown_vram_base, "Select the base VRAM overhead reserved by the OS, display output, and CUDA runtime (e.g., 0.5 GB for headless GPUs, 1.6 GB for standard desktop use).")
+        SiticoneDropdown_vram_base.UnselectedItemTextColor = Color.Black
+        SiticoneDropdown_vram_base.ValueMember = Nothing
+        ' 
+        ' SiticoneLabel_num_ctx
+        ' 
+        SiticoneLabel_num_ctx.Anchor = AnchorStyles.Top Or AnchorStyles.Right
+        SiticoneLabel_num_ctx.BackColor = Color.Transparent
+        SiticoneLabel_num_ctx.Font = New Font("Segoe UI", 10F)
+        SiticoneLabel_num_ctx.Location = New Point(973, 72)
+        SiticoneLabel_num_ctx.Name = "SiticoneLabel_num_ctx"
+        SiticoneLabel_num_ctx.Size = New Size(150, 21)
+        SiticoneLabel_num_ctx.TabIndex = 59
+        SiticoneLabel_num_ctx.Text = "Context Size (num_ctx):"
+        ' 
+        ' SiticoneLabel_vram
+        ' 
+        SiticoneLabel_vram.BackColor = Color.Transparent
+        SiticoneLabel_vram.Font = New Font("Segoe UI", 10F)
+        SiticoneLabel_vram.Location = New Point(7, 72)
+        SiticoneLabel_vram.Name = "SiticoneLabel_vram"
+        SiticoneLabel_vram.Size = New Size(52, 21)
+        SiticoneLabel_vram.TabIndex = 58
+        SiticoneLabel_vram.Text = "VRAM:"
+        ' 
+        ' SiticoneButton_set_num_ctx
+        ' 
+        SiticoneButton_set_num_ctx.AccessibleDescription = "The default button control that accept input though the mouse, touch and keyboard"
+        SiticoneButton_set_num_ctx.AccessibleName = "Set this to num_ctx"
+        SiticoneButton_set_num_ctx.Anchor = AnchorStyles.Top Or AnchorStyles.Right
+        SiticoneButton_set_num_ctx.AutoSizeBasedOnText = False
+        SiticoneButton_set_num_ctx.BackColor = Color.Transparent
+        SiticoneButton_set_num_ctx.BadgeBackColor = Color.Red
+        SiticoneButton_set_num_ctx.BadgeFont = New Font("Segoe UI", 8F, FontStyle.Bold)
+        SiticoneButton_set_num_ctx.BadgeValue = 0
+        SiticoneButton_set_num_ctx.BadgeValueForeColor = Color.White
+        SiticoneButton_set_num_ctx.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
+        SiticoneButton_set_num_ctx.BorderWidth = 2
+        SiticoneButton_set_num_ctx.ButtonBackColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
+        SiticoneButton_set_num_ctx.ButtonImage = Nothing
+        SiticoneButton_set_num_ctx.ButtonTextLeftPadding = 0
+        SiticoneButton_set_num_ctx.CanBeep = True
+        SiticoneButton_set_num_ctx.CanGlow = False
+        SiticoneButton_set_num_ctx.CanShake = True
+        SiticoneButton_set_num_ctx.ContextMenuStripEx = Nothing
+        SiticoneButton_set_num_ctx.CornerRadiusBottomLeft = 8
+        SiticoneButton_set_num_ctx.CornerRadiusBottomRight = 8
+        SiticoneButton_set_num_ctx.CornerRadiusTopLeft = 8
+        SiticoneButton_set_num_ctx.CornerRadiusTopRight = 8
+        SiticoneButton_set_num_ctx.CustomCursor = Cursors.Default
+        SiticoneButton_set_num_ctx.DisabledTextColor = Color.FromArgb(CByte(150), CByte(150), CByte(150))
+        SiticoneButton_set_num_ctx.EnableLongPress = False
+        SiticoneButton_set_num_ctx.EnablePressAnimation = True
+        SiticoneButton_set_num_ctx.EnableRippleEffect = True
+        SiticoneButton_set_num_ctx.EnableShadow = False
+        SiticoneButton_set_num_ctx.EnableTextWrapping = False
+        SiticoneButton_set_num_ctx.Font = New Font("Segoe UI", 9F)
+        SiticoneButton_set_num_ctx.GlowColor = Color.FromArgb(CByte(100), CByte(255), CByte(255), CByte(255))
+        SiticoneButton_set_num_ctx.GlowIntensity = 100
+        SiticoneButton_set_num_ctx.GlowRadius = 20F
+        SiticoneButton_set_num_ctx.GradientBackground = False
+        SiticoneButton_set_num_ctx.GradientColor = Color.FromArgb(CByte(114), CByte(168), CByte(255))
+        SiticoneButton_set_num_ctx.GradientMode = Drawing2D.LinearGradientMode.Vertical
+        SiticoneButton_set_num_ctx.HintText = Nothing
+        SiticoneButton_set_num_ctx.HoverBackColor = Color.FromArgb(CByte(114), CByte(168), CByte(255))
+        SiticoneButton_set_num_ctx.HoverFontStyle = FontStyle.Regular
+        SiticoneButton_set_num_ctx.HoverTextColor = Color.White
+        SiticoneButton_set_num_ctx.HoverTransitionDuration = 250
+        SiticoneButton_set_num_ctx.ImageAlign = ContentAlignment.MiddleLeft
+        SiticoneButton_set_num_ctx.ImagePadding = 5
+        SiticoneButton_set_num_ctx.ImageSize = New Size(16, 16)
+        SiticoneButton_set_num_ctx.IsRadial = False
+        SiticoneButton_set_num_ctx.IsReadOnly = False
+        SiticoneButton_set_num_ctx.IsToggleButton = False
+        SiticoneButton_set_num_ctx.IsToggled = False
+        SiticoneButton_set_num_ctx.Location = New Point(1278, 70)
+        SiticoneButton_set_num_ctx.LongPressDurationMS = 1000
+        SiticoneButton_set_num_ctx.Name = "SiticoneButton_set_num_ctx"
+        SiticoneButton_set_num_ctx.NormalFontStyle = FontStyle.Regular
+        SiticoneButton_set_num_ctx.ParticleColor = Color.FromArgb(CByte(200), CByte(200), CByte(200))
+        SiticoneButton_set_num_ctx.ParticleCount = 15
+        SiticoneButton_set_num_ctx.PressAnimationScale = 0.97F
+        SiticoneButton_set_num_ctx.PressedBackColor = Color.FromArgb(CByte(74), CByte(128), CByte(235))
+        SiticoneButton_set_num_ctx.PressedFontStyle = FontStyle.Regular
+        SiticoneButton_set_num_ctx.PressTransitionDuration = 150
+        SiticoneButton_set_num_ctx.ReadOnlyTextColor = Color.FromArgb(CByte(100), CByte(100), CByte(100))
+        SiticoneButton_set_num_ctx.RippleColor = Color.FromArgb(CByte(255), CByte(255), CByte(255))
+        SiticoneButton_set_num_ctx.RippleOpacity = 0.3F
+        SiticoneButton_set_num_ctx.RippleRadiusMultiplier = 0.6F
+        SiticoneButton_set_num_ctx.ShadowBlur = 5
+        SiticoneButton_set_num_ctx.ShadowColor = Color.FromArgb(CByte(100), CByte(0), CByte(0), CByte(0))
+        SiticoneButton_set_num_ctx.ShadowOffset = New Point(2, 2)
+        SiticoneButton_set_num_ctx.ShakeDuration = 500
+        SiticoneButton_set_num_ctx.ShakeIntensity = 5
+        SiticoneButton_set_num_ctx.Size = New Size(133, 24)
+        SiticoneButton_set_num_ctx.TabIndex = 57
+        SiticoneButton_set_num_ctx.Text = "Set this to num_ctx"
+        SiticoneButton_set_num_ctx.TextAlign = ContentAlignment.MiddleCenter
+        SiticoneButton_set_num_ctx.TextColor = Color.White
+        ToolTip1.SetToolTip(SiticoneButton_set_num_ctx, "Apply the selected context size to the 'num_ctx' model parameter and enable it for requests.")
+        SiticoneButton_set_num_ctx.TooltipText = Nothing
+        SiticoneButton_set_num_ctx.UseAdvancedRendering = True
+        SiticoneButton_set_num_ctx.UseParticles = False
+        ' 
+        ' PictureBox_vram_bar
+        ' 
+        PictureBox_vram_bar.Location = New Point(8, 102)
+        PictureBox_vram_bar.Name = "PictureBox_vram_bar"
+        PictureBox_vram_bar.Size = New Size(1403, 33)
+        PictureBox_vram_bar.TabIndex = 56
+        PictureBox_vram_bar.TabStop = False
+        ' 
+        ' SiticoneDropdown_calc_ctx
+        ' 
+        SiticoneDropdown_calc_ctx.AllowMultipleSelection = False
+        SiticoneDropdown_calc_ctx.Anchor = AnchorStyles.Top Or AnchorStyles.Right
+        SiticoneDropdown_calc_ctx.BackColor = Color.FromArgb(CByte(209), CByte(232), CByte(255))
+        SiticoneDropdown_calc_ctx.BorderColor = Color.Gray
+        SiticoneDropdown_calc_ctx.BorderSize = 2
+        SiticoneDropdown_calc_ctx.CanBeep = False
+        SiticoneDropdown_calc_ctx.CanShake = True
+        SiticoneDropdown_calc_ctx.CornerRadius = 8
+        SiticoneDropdown_calc_ctx.DataSource = Nothing
+        SiticoneDropdown_calc_ctx.DisplayMember = Nothing
+        SiticoneDropdown_calc_ctx.DropdownBackColor = Color.White
+        SiticoneDropdown_calc_ctx.DropdownCornerRadius = 8
+        SiticoneDropdown_calc_ctx.DropdownWidth = 0
+        SiticoneDropdown_calc_ctx.DropShadowEnabled = False
+        SiticoneDropdown_calc_ctx.Font = New Font("Segoe UI", 10F)
+        SiticoneDropdown_calc_ctx.ForeColor = Color.DimGray
+        SiticoneDropdown_calc_ctx.HoveredItemBackColor = Color.LightGray
+        SiticoneDropdown_calc_ctx.HoveredItemTextColor = Color.Black
+        SiticoneDropdown_calc_ctx.IsReadonly = False
+        SiticoneDropdown_calc_ctx.ItemHeight = 30
+        SiticoneDropdown_calc_ctx.Items.AddRange(New String() {"512", "1024", "2048", "4096", "8192", "12288", "16384", "24576", "32768", "49152", "65536", "98304", "131072", "262144", "524288", "1048576", "2097152"})
+        SiticoneDropdown_calc_ctx.Location = New Point(1129, 67)
+        SiticoneDropdown_calc_ctx.MaxDropDownItems = 8
+        SiticoneDropdown_calc_ctx.Name = "SiticoneDropdown_calc_ctx"
+        SiticoneDropdown_calc_ctx.NotFoundBackColor = Color.Transparent
+        SiticoneDropdown_calc_ctx.NotFoundFont = Nothing
+        SiticoneDropdown_calc_ctx.NotFoundTextColor = Color.Gray
+        SiticoneDropdown_calc_ctx.PlaceholderColor = Color.Gray
+        SiticoneDropdown_calc_ctx.PlaceholderDisappearsOnFocus = False
+        SiticoneDropdown_calc_ctx.PlaceholderText = "Select num_ctx"
+        SiticoneDropdown_calc_ctx.SearchTextColor = Color.DimGray
+        SiticoneDropdown_calc_ctx.SearchTextFont = Nothing
+        SiticoneDropdown_calc_ctx.SelectedIndex = -1
+        SiticoneDropdown_calc_ctx.SelectedItem = Nothing
+        SiticoneDropdown_calc_ctx.SelectedItemBackColor = Color.LightBlue
+        SiticoneDropdown_calc_ctx.SelectedItemTextColor = Color.Black
+        SiticoneDropdown_calc_ctx.SelectedValue = Nothing
+        SiticoneDropdown_calc_ctx.Size = New Size(135, 30)
+        SiticoneDropdown_calc_ctx.TabIndex = 55
+        ToolTip1.SetToolTip(SiticoneDropdown_calc_ctx, "Select the target context window size (in tokens) to preview the estimated KV cache and VRAM usage.")
+        SiticoneDropdown_calc_ctx.UnselectedItemTextColor = Color.Black
+        SiticoneDropdown_calc_ctx.ValueMember = Nothing
+        ' 
+        ' SiticoneDropdown_vram
+        ' 
+        SiticoneDropdown_vram.AllowMultipleSelection = False
+        SiticoneDropdown_vram.BackColor = Color.FromArgb(CByte(209), CByte(232), CByte(255))
+        SiticoneDropdown_vram.BorderColor = Color.Gray
+        SiticoneDropdown_vram.BorderSize = 2
+        SiticoneDropdown_vram.CanBeep = False
+        SiticoneDropdown_vram.CanShake = True
+        SiticoneDropdown_vram.CornerRadius = 8
+        SiticoneDropdown_vram.DataSource = Nothing
+        SiticoneDropdown_vram.DisplayMember = Nothing
+        SiticoneDropdown_vram.DropdownBackColor = Color.White
+        SiticoneDropdown_vram.DropdownCornerRadius = 8
+        SiticoneDropdown_vram.DropdownWidth = 0
+        SiticoneDropdown_vram.DropShadowEnabled = False
+        SiticoneDropdown_vram.Font = New Font("Segoe UI", 10F)
+        SiticoneDropdown_vram.ForeColor = Color.DimGray
+        SiticoneDropdown_vram.HoveredItemBackColor = Color.LightGray
+        SiticoneDropdown_vram.HoveredItemTextColor = Color.Black
+        SiticoneDropdown_vram.IsReadonly = False
+        SiticoneDropdown_vram.ItemHeight = 30
+        SiticoneDropdown_vram.Items.AddRange(New String() {"1 GB", "2 GB", "3 GB", "4 GB", "6 GB", "8 GB", "10 GB", "11 GB", "12 GB", "16 GB", "18 GB", "20 GB", "24 GB", "32 GB", "36 GB", "40 GB", "48 GB", "64 GB", "72 GB", "80 GB", "96 GB", "120 GB", "128 GB", "144 GB", "192 GB", "256 GB", "512 GB", "1024 GB"})
+        SiticoneDropdown_vram.Location = New Point(65, 66)
+        SiticoneDropdown_vram.MaxDropDownItems = 8
+        SiticoneDropdown_vram.Name = "SiticoneDropdown_vram"
+        SiticoneDropdown_vram.NotFoundBackColor = Color.Transparent
+        SiticoneDropdown_vram.NotFoundFont = Nothing
+        SiticoneDropdown_vram.NotFoundTextColor = Color.Gray
+        SiticoneDropdown_vram.PlaceholderColor = Color.Gray
+        SiticoneDropdown_vram.PlaceholderDisappearsOnFocus = False
+        SiticoneDropdown_vram.PlaceholderText = "Select VRAM Size "
+        SiticoneDropdown_vram.SearchTextColor = Color.DimGray
+        SiticoneDropdown_vram.SearchTextFont = Nothing
+        SiticoneDropdown_vram.SelectedIndex = -1
+        SiticoneDropdown_vram.SelectedItem = Nothing
+        SiticoneDropdown_vram.SelectedItemBackColor = Color.LightBlue
+        SiticoneDropdown_vram.SelectedItemTextColor = Color.Black
+        SiticoneDropdown_vram.SelectedValue = Nothing
+        SiticoneDropdown_vram.Size = New Size(231, 30)
+        SiticoneDropdown_vram.TabIndex = 54
+        ToolTip1.SetToolTip(SiticoneDropdown_vram, "Select the total available VRAM (video memory) of your GPU or unified memory system.")
+        SiticoneDropdown_vram.UnselectedItemTextColor = Color.Black
+        SiticoneDropdown_vram.ValueMember = Nothing
         ' 
         ' SiticoneChip_model_info_Decision
         ' 
@@ -799,10 +1067,10 @@ Partial Class Form1
         Scintilla_model_info.AutocompleteListSelectedBackColor = Color.FromArgb(CByte(0), CByte(120), CByte(215))
         Scintilla_model_info.Font = New Font("Consolas", 10F)
         Scintilla_model_info.LexerName = "json"
-        Scintilla_model_info.Location = New Point(8, 66)
+        Scintilla_model_info.Location = New Point(6, 141)
         Scintilla_model_info.Name = "Scintilla_model_info"
         Scintilla_model_info.ScrollWidth = 70
-        Scintilla_model_info.Size = New Size(1403, 264)
+        Scintilla_model_info.Size = New Size(1403, 296)
         Scintilla_model_info.TabIndex = 49
         ' 
         ' Scintilla_model_info_request
@@ -811,10 +1079,10 @@ Partial Class Form1
         Scintilla_model_info_request.AutocompleteListSelectedBackColor = Color.FromArgb(CByte(0), CByte(120), CByte(215))
         Scintilla_model_info_request.Font = New Font("Consolas", 10F)
         Scintilla_model_info_request.LexerName = "json"
-        Scintilla_model_info_request.Location = New Point(8, 336)
+        Scintilla_model_info_request.Location = New Point(8, 443)
         Scintilla_model_info_request.Name = "Scintilla_model_info_request"
         Scintilla_model_info_request.ScrollWidth = 70
-        Scintilla_model_info_request.Size = New Size(1403, 276)
+        Scintilla_model_info_request.Size = New Size(1403, 170)
         Scintilla_model_info_request.TabIndex = 48
         ' 
         ' SiticoneButton_show_licence
@@ -4814,7 +5082,7 @@ Partial Class Form1
         SiticoneSplitContainer_runcont.SnapDistance = 20
         SiticoneSplitContainer_runcont.SnapPositions = New Single() {0.25F, 0.5F, 0.75F}
         SiticoneSplitContainer_runcont.SplitterCursor = Cursors.HSplit
-        SiticoneSplitContainer_runcont.SplitterDistance = 512
+        SiticoneSplitContainer_runcont.SplitterDistance = 529
         SiticoneSplitContainer_runcont.SplitterHighlightColor = Color.DodgerBlue
         SiticoneSplitContainer_runcont.SplitterMoveable = True
         SiticoneSplitContainer_runcont.SplitterMoveLeftKey = Keys.Left
@@ -4835,7 +5103,7 @@ Partial Class Form1
         Scintilla_code_block.Location = New Point(0, 0)
         Scintilla_code_block.Name = "Scintilla_code_block"
         Scintilla_code_block.ScrollWidth = 70
-        Scintilla_code_block.Size = New Size(1409, 512)
+        Scintilla_code_block.Size = New Size(1409, 529)
         Scintilla_code_block.TabIndex = 59
         ' 
         ' SiticoneTextArea_run_output
@@ -4850,7 +5118,7 @@ Partial Class Form1
         SiticoneTextArea_run_output.Name = "SiticoneTextArea_run_output"
         SiticoneTextArea_run_output.PlaceholderText = "Wait for Output..."
         SiticoneTextArea_run_output.ScrollBars = ScrollBars.Vertical
-        SiticoneTextArea_run_output.Size = New Size(1409, 97)
+        SiticoneTextArea_run_output.Size = New Size(1409, 80)
         SiticoneTextArea_run_output.TabIndex = 2
         ' 
         ' SiticoneButton_code_run
@@ -8230,6 +8498,7 @@ Partial Class Form1
         CType(WebView21, ComponentModel.ISupportInitialize).EndInit()
         SiticoneTabControl_tab.ResumeLayout(False)
         TabPage_modelinfo.ResumeLayout(False)
+        CType(PictureBox_vram_bar, ComponentModel.ISupportInitialize).EndInit()
         TabPage_modelparameter.ResumeLayout(False)
         TabPage_modelparameter.PerformLayout()
         SiticoneFlatPanel_trenn3.ResumeLayout(False)
@@ -8488,5 +8757,13 @@ Partial Class Form1
     Friend WithEvents SiticoneButton_link_decition_tool As SiticoneNetCoreUI.SiticoneButton
     Friend WithEvents SiticoneButton_load_decision As SiticoneNetCoreUI.SiticoneButton
     Friend WithEvents SiticoneButton_save_decision As SiticoneNetCoreUI.SiticoneButton
+    Friend WithEvents SiticoneDropdown_vram As SiticoneNetCoreUI.SiticoneDropdown
+    Friend WithEvents SiticoneDropdown_calc_ctx As SiticoneNetCoreUI.SiticoneDropdown
+    Friend WithEvents PictureBox_vram_bar As PictureBox
+    Friend WithEvents SiticoneButton_set_num_ctx As SiticoneNetCoreUI.SiticoneButton
+    Friend WithEvents SiticoneLabel_num_ctx As SiticoneNetCoreUI.SiticoneLabel
+    Friend WithEvents SiticoneLabel_vram As SiticoneNetCoreUI.SiticoneLabel
+    Friend WithEvents SiticoneLabel_vram_base As SiticoneNetCoreUI.SiticoneLabel
+    Friend WithEvents SiticoneDropdown_vram_base As SiticoneNetCoreUI.SiticoneDropdown
 
 End Class
