@@ -713,7 +713,7 @@ Partial Class Form1
         SiticoneLabel_num_ctx.Anchor = AnchorStyles.Top Or AnchorStyles.Right
         SiticoneLabel_num_ctx.BackColor = Color.Transparent
         SiticoneLabel_num_ctx.Font = New Font("Segoe UI", 10F)
-        SiticoneLabel_num_ctx.Location = New Point(973, 72)
+        SiticoneLabel_num_ctx.Location = New Point(972, 72)
         SiticoneLabel_num_ctx.Name = "SiticoneLabel_num_ctx"
         SiticoneLabel_num_ctx.Size = New Size(150, 21)
         SiticoneLabel_num_ctx.TabIndex = 59
