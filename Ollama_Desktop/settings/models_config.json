@@ -84,7 +84,7 @@
     "thinking": true,
     "image": false,
     "decision": false,
-    "context": 128,
+    "context": 256,
     "description": "bonsai-2 - Custom - Kompaktes Open-Weight-Modell mit Fokus auf hocheffizientes logisches Denken und schnelle Tool-Ausführung."
   },
   "bitnet-b1.58": {
@@ -226,7 +226,7 @@
     "embedding": false,
     "thinking": true,
     "image": false,
-    "decision": false,
+    "decision": true,
     "context": 128,
     "description": "d1-omni - Custom - Multimodales Allround-Modell mit integrierter Sprach-, Bild- und Textverarbeitung sowie erweitertem Reasoning."
   },

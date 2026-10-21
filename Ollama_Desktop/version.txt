@@ -119,4 +119,12 @@ V 1.6.1.32
 - add d1 to models_config.json
 - add pplx-decider to models_config.json
 - add d1-omni to models_config.json
+V 1.6.2.33
+- Automatically detects and displays model capabilities (such as vision, tools, thinking, embedding, and more) directly from Ollama's model metadata and API.
+- Dynamic context window size (context_length) parsing and automatic chip status updates for selected models.
+- Added a new non-modal Ollama Processes window (/api/ps) accessible from the Ollama-LLM panel.
+- Real-time tabular monitoring of active models loaded in memory, including VRAM allocation status and expiration timers.
+- edit d1-omni in models_config.json
+- edit bonsai-2 in models_config.json
+
 

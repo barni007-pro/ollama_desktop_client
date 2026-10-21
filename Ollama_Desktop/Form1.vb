@@ -822,6 +822,10 @@ Public Class Form1
 
     Private Async Function MainAsync() As Task
         AppLog("[DEBUG-MainAsync] MainAsync gestartet.")
+
+        ' Erzwingt das Speichern von evtl. noch in Bearbeitung befindlichen Zellen im DataGridView
+        dgv_option.EndEdit()
+
         Try
             cancellationTokenSource = New CancellationTokenSource()
             LLM_progress(True)
@@ -1623,6 +1627,7 @@ Public Class Form1
     Private Async Function LoadModelsAsync() As Task
         Me.Cursor = Cursors.WaitCursor
         Scintilla_model_info_request.Text = "" ' Alte Metadaten vorab leeren
+
         Try
             Dim apiUrl As String = "http://" & SiticoneTextBox_host.Text & "/api/tags"
             Using client As New HttpClient()
@@ -1635,17 +1640,33 @@ Public Class Form1
 
                     Dim sortedModels = modelsArray.OrderBy(Function(m) m("name").ToString()).ToList()
 
-                    SiticoneDropdown_model.Items.Clear()
-                    model_info.Clear()
+                    ' Wichtig: Temporär das Event-Handling oder unerwünschte Trigger entkoppeln,
+                    ' indem wir die Liste erst füllen, wenn sie komplett bereit ist.
+                    Dim tempDropdownItems As New List(Of String)()
+                    Dim tempModelInfoList As New List(Of String)()
 
                     For Each model In sortedModels
                         Dim modelName As String = model("name").ToString()
-                        SiticoneDropdown_model.Items.Add(modelName)
-                        model_info.Add(model.ToString)
+                        tempDropdownItems.Add(modelName)
+                        tempModelInfoList.Add(model.ToString())
                     Next
 
+                    ' Dropdown und Listen in einem Rutsch aktualisieren
+                    SiticoneDropdown_model.Items.Clear()
+                    model_info.Clear()
+
+                    For i As Integer = 0 To tempDropdownItems.Count - 1
+                        SiticoneDropdown_model.Items.Add(tempDropdownItems(i))
+                        model_info.Add(tempModelInfoList(i))
+                    Next
+
+                    ' Erst ganz am Ende den Index sauber setzen (löst genau einmal das Event kontrolliert aus)
                     If SiticoneDropdown_model.Items.Count > 0 Then
                         SiticoneDropdown_model.SelectedIndex = 0
+                    Else
+                        ' Falls keine Modelle vorhanden sind, UI-Felder leeren
+                        Scintilla_model_info.Text = ""
+                        SiticoneLabel1_model_info_description.Text = "No models available"
                     End If
                 Else
                     MessageBox.Show("Error loading models: " & response.ReasonPhrase)
@@ -1654,6 +1675,7 @@ Public Class Form1
         Catch ex As Exception
             MessageBox.Show("Error retrieving models: " & ex.Message)
         End Try
+
         extractedContext.Clear()
         UpdateMemoryUI()
         UpdateVramCalculationUI()
@@ -1909,45 +1931,51 @@ Public Class Form1
     End Sub
 
     Private Async Sub SiticoneDropdown_model_SelectedIndexChanged(sender As Object, e As EventArgs) Handles SiticoneDropdown_model.SelectedIndexChanged
-        Scintilla_model_info.Text = model_info.Item(SiticoneDropdown_model.SelectedIndex)
+        Dim rawSelectedModelJson As String = model_info.Item(SiticoneDropdown_model.SelectedIndex)
+        Scintilla_model_info.Text = rawSelectedModelJson
+
         If APP_Start = False Then
             SiticoneTabControl_tab.SelectedTab = TabPage_modelinfo
         End If
-        Dim model_name = SiticoneDropdown_model.SelectedItem
-        SiticoneLabel_show_LLM.Text = model_name
-        Dim model_info_get As ModelInfo = GetModelInfo(model_name)
-        If model_info_get IsNot Nothing Then
-            SiticoneLabel1_model_info_description.Text = model_info_get.description
-            SiticoneChip_model_info_Vision.IsSelected = model_info_get.vision
-            SiticoneChip_model_info_Audio.IsSelected = model_info_get.audio
-            SiticoneChip_model_info_Tools.IsSelected = model_info_get.tools
-            SiticoneChip_model_info_Thinking.IsSelected = model_info_get.thinking
-            SiticoneChip_model_info_Embedding.IsSelected = model_info_get.embedding
-            SiticoneChip_model_info_Image.IsSelected = model_info_get.image
-            SiticoneChip_model_info_Decision.IsSelected = model_info_get.decision
 
-            If model_info_get.context > 0 Then
-                SiticoneChip_model_info_Context.IsSelected = True
-                SiticoneChip_model_info_Context.Text = "context: " & model_info_get.context.ToString & "k"
-                SiticoneChip_model_info_Context.Refresh()
-            Else
-                SiticoneChip_model_info_Context.IsSelected = False
-                SiticoneChip_model_info_Context.Text = "context: ?"
-                SiticoneChip_model_info_Context.Refresh()
-            End If
+        Dim model_name = SiticoneDropdown_model.SelectedItem.ToString()
+        SiticoneLabel_show_LLM.Text = model_name
+
+        ' 1. Alle Chips standardmäßig erst einmal zurücksetzen
+        SiticoneChip_model_info_Completion.IsSelected = False
+        SiticoneChip_model_info_Vision.IsSelected = False
+        SiticoneChip_model_info_Diffusion.IsSelected = False
+        SiticoneChip_model_info_Audio.IsSelected = False
+        SiticoneChip_model_info_Tools.IsSelected = False
+        SiticoneChip_model_info_Thinking.IsSelected = False
+        SiticoneChip_model_info_Embedding.IsSelected = False
+        SiticoneChip_model_info_Rerank.IsSelected = False
+        SiticoneChip_model_info_Decision.IsSelected = False
+        SiticoneChip_model_info_insert.IsSelected = False
+
+        SiticoneChip_model_info_Context.IsSelected = False
+        SiticoneChip_model_info_Context.Text = "context: ?"
+        SiticoneChip_model_info_Context.Refresh()
+
+        ' 2. Beschreibung aus models_config.json holen (falls vorhanden)
+        Dim model_info_get As ModelInfo = GetModelInfo(model_name)
+        If model_info_get IsNot Nothing AndAlso Not String.IsNullOrWhiteSpace(model_info_get.description) Then
+            SiticoneLabel1_model_info_description.Text = model_info_get.description
         Else
             SiticoneLabel1_model_info_description.Text = "unknown"
-            SiticoneChip_model_info_Vision.IsSelected = False
-            SiticoneChip_model_info_Audio.IsSelected = False
-            SiticoneChip_model_info_Tools.IsSelected = False
-            SiticoneChip_model_info_Thinking.IsSelected = False
-            SiticoneChip_model_info_Embedding.IsSelected = False
-            SiticoneChip_model_info_Image.IsSelected = False
-            SiticoneChip_model_info_Decision.IsSelected = False
-            SiticoneChip_model_info_Context.IsSelected = False
-            SiticoneChip_model_info_Context.Text = "context: ?"
-            SiticoneChip_model_info_Context.Refresh()
         End If
+
+        ' 3. Versuchen, Capabilities & Context direkt aus model_info.Item(...) zu lesen
+        Dim capabilitiesSet As Boolean = False
+        Dim contextSet As Boolean = False
+        Try
+            Dim tagsJsonObj As JObject = JObject.Parse(rawSelectedModelJson)
+            capabilitiesSet = TryApplyCapabilitiesFromJson(tagsJsonObj)
+            contextSet = TryApplyContextLengthFromJson(tagsJsonObj)
+        Catch
+        End Try
+
+        ' 4. /api/show abfragen (enthält "capabilities", "model_info" mit context_length & Lizenz)
         Try
             Dim apiUrl As String = "http://" & SiticoneTextBox_host.Text & "/api/show"
             Using client As New HttpClient()
@@ -1957,11 +1985,20 @@ Public Class Form1
 
                 If response.IsSuccessStatusCode Then
                     Dim minifiedJson As String = Await response.Content.ReadAsStringAsync()
-                    Dim jsonObject = JsonConvert.DeserializeObject(minifiedJson)
-                    Dim prettyJson As String = JsonConvert.SerializeObject(jsonObject, Formatting.Indented)
+                    Dim showJsonObj As JObject = JObject.Parse(minifiedJson)
+                    Dim prettyJson As String = showJsonObj.ToString(Formatting.Indented)
+
                     Scintilla_model_info_request.Text = prettyJson
-                    extractedLicense = jsonObject.SelectToken("license")?.ToString()
+                    extractedLicense = showJsonObj.SelectToken("license")?.ToString()
                     SiticoneButton_preload.Enabled = True
+
+                    ' Falls noch nicht gesetzt, jetzt aus /api/show übernehmen
+                    If Not capabilitiesSet Then
+                        capabilitiesSet = TryApplyCapabilitiesFromJson(showJsonObj)
+                    End If
+                    If Not contextSet Then
+                        contextSet = TryApplyContextLengthFromJson(showJsonObj)
+                    End If
                 Else
                     MessageBox.Show("Error loading model information: " & response.ReasonPhrase)
                 End If
@@ -1969,6 +2006,26 @@ Public Class Form1
         Catch ex As Exception
             MessageBox.Show("Error loading model information: " & ex.Message)
         End Try
+
+        ' 5. Fallback auf models_config.json, falls die API-Daten nicht vorlagen (z.B. Offline)
+        If model_info_get IsNot Nothing Then
+            If Not capabilitiesSet Then
+                SiticoneChip_model_info_Vision.IsSelected = model_info_get.vision
+                SiticoneChip_model_info_Audio.IsSelected = model_info_get.audio
+                SiticoneChip_model_info_Tools.IsSelected = model_info_get.tools
+                SiticoneChip_model_info_Thinking.IsSelected = model_info_get.thinking
+                SiticoneChip_model_info_Embedding.IsSelected = model_info_get.embedding
+                SiticoneChip_model_info_Diffusion.IsSelected = model_info_get.image
+                SiticoneChip_model_info_Decision.IsSelected = model_info_get.decision
+            End If
+
+            If Not contextSet AndAlso model_info_get.context > 0 Then
+                SiticoneChip_model_info_Context.IsSelected = True
+                SiticoneChip_model_info_Context.Text = "context: " & model_info_get.context.ToString() & "k"
+                SiticoneChip_model_info_Context.Refresh()
+            End If
+        End If
+
         extractedContext.Clear()
         UpdateMemoryUI()
         UpdateVramCalculationUI()
@@ -4355,6 +4412,71 @@ Public Class Form1
 
         UpdateVramCalculationUI()
     End Sub
+
+    Private Function TryApplyCapabilitiesFromJson(jsonObj As JObject) As Boolean
+        If jsonObj Is Nothing OrElse jsonObj("capabilities") Is Nothing OrElse jsonObj("capabilities").Type <> JTokenType.Array Then
+            Return False
+        End If
+
+        ' Alle Fähigkeiten aus dem JSON-Array (kleingeschrieben) in ein HashSet laden
+        Dim caps As New HashSet(Of String)(StringComparer.OrdinalIgnoreCase)
+        For Each cap In CType(jsonObj("capabilities"), JArray)
+            caps.Add(cap.ToString().Trim())
+        Next
+
+        ' Alle 10 SiticoneChips setzen
+        SiticoneChip_model_info_Completion.IsSelected = caps.Contains("completion")
+        SiticoneChip_model_info_Vision.IsSelected = caps.Contains("vision")
+        SiticoneChip_model_info_Diffusion.IsSelected = caps.Contains("diffusion") OrElse caps.Contains("image")
+        SiticoneChip_model_info_Audio.IsSelected = caps.Contains("audio")
+        SiticoneChip_model_info_Tools.IsSelected = caps.Contains("tools")
+        SiticoneChip_model_info_Thinking.IsSelected = caps.Contains("thinking")
+        SiticoneChip_model_info_Embedding.IsSelected = caps.Contains("embedding")
+        SiticoneChip_model_info_Rerank.IsSelected = caps.Contains("rerank")
+        SiticoneChip_model_info_Decision.IsSelected = caps.Contains("decision")
+        SiticoneChip_model_info_insert.IsSelected = caps.Contains("insert")
+
+        Return True
+    End Function
+
+    Private Function TryApplyContextLengthFromJson(jsonObj As JObject) As Boolean
+        If jsonObj Is Nothing Then Return False
+
+        ' Falls "model_info" als Unterobjekt existiert (wie bei /api/show), darin suchen, sonst im Hauptobjekt
+        Dim modelInfoObj As JObject = TryCast(jsonObj("model_info"), JObject)
+        If modelInfoObj Is Nothing Then modelInfoObj = jsonObj
+
+        For Each prop As JProperty In modelInfoObj.Properties()
+            Dim propNameLower As String = prop.Name.ToLower()
+
+            ' Vision/Audio-Submodule ignorieren, wir wollen das Haupt-LLM
+            If propNameLower.Contains(".vision.") OrElse propNameLower.Contains(".audio.") OrElse propNameLower.Contains("projector") Then
+                Continue For
+            End If
+
+            If propNameLower.EndsWith(".context_length") OrElse propNameLower = "context_length" Then
+                Dim ctxTokens As Long = 0
+                If Long.TryParse(prop.Value.ToString(), ctxTokens) AndAlso ctxTokens > 0 Then
+                    ' Umrechnung in "k" (z.B. 131072 -> 128k, 8192 -> 8k)
+                    Dim ctxK As Integer = CInt(Math.Round(ctxTokens / 1024.0))
+                    If ctxK <= 0 Then ctxK = 1
+
+                    SiticoneChip_model_info_Context.IsSelected = True
+                    SiticoneChip_model_info_Context.Text = "context: " & ctxK.ToString() & "k"
+                    SiticoneChip_model_info_Context.Refresh()
+                    Return True
+                End If
+            End If
+        Next
+
+        Return False
+    End Function
+
+    Private Sub SiticoneButton_show_ollama_ps_Click(sender As Object, e As EventArgs) Handles SiticoneButton_show_ollama_ps.Click
+        Dim psForm As New FrmOllamaPs(SiticoneTextBox_host.Text)
+        psForm.Show(Me) ' Öffnet das Fenster nicht-mortal (blockiert Hauptform nicht)
+    End Sub
+
 End Class
 
 Public Class DocumentIndex
