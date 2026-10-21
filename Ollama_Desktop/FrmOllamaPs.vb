@@ -21,7 +21,9 @@ Public Class FrmOllamaPs
 
             DataGridView_ps.Columns.Add(New DataGridViewTextBoxColumn() With {.Name = "Model", .HeaderText = "Model", .Width = 220})
             DataGridView_ps.Columns.Add(New DataGridViewTextBoxColumn() With {.Name = "Name", .HeaderText = "Process Name", .Width = 150})
-            DataGridView_ps.Columns.Add(New DataGridViewTextBoxColumn() With {.Name = "Size", .HeaderText = "Size (GB)", .Width = 100})
+            DataGridView_ps.Columns.Add(New DataGridViewTextBoxColumn() With {.Name = "Context", .HeaderText = "Context Length", .Width = 120})
+            DataGridView_ps.Columns.Add(New DataGridViewTextBoxColumn() With {.Name = "ModelSize", .HeaderText = "Model Size", .Width = 120})
+            DataGridView_ps.Columns.Add(New DataGridViewTextBoxColumn() With {.Name = "MemoryUsage", .HeaderText = "Memory Usage", .Width = 120})
             DataGridView_ps.Columns.Add(New DataGridViewTextBoxColumn() With {.Name = "Processor", .HeaderText = "VRAM / Offload", .Width = 150})
             DataGridView_ps.Columns.Add(New DataGridViewTextBoxColumn() With {.Name = "ExpiresAt", .HeaderText = "Expires At", .Width = 150})
         End If
@@ -32,13 +34,47 @@ Public Class FrmOllamaPs
 
     Private Async Function LoadOllamaPsDataAsync() As Task
         Try
-            Dim apiUrl As String = "http://" & hostUrl & "/api/ps"
             Using client As New HttpClient()
                 client.Timeout = TimeSpan.FromSeconds(5)
-                Dim response = Await client.GetAsync(apiUrl)
 
-                If response.IsSuccessStatusCode Then
-                    Dim jsonResponse = Await response.Content.ReadAsStringAsync()
+                ' 1. Alle auf dem Server installierten Modelle via /api/tags abfragen
+                Dim modelSizesDic As New Dictionary(Of String, Long)(StringComparer.OrdinalIgnoreCase)
+                Try
+                    Dim tagsUrl As String = "http://" & hostUrl & "/api/tags"
+                    Dim tagsResponse = Await client.GetAsync(tagsUrl)
+                    If tagsResponse.IsSuccessStatusCode Then
+                        Dim tagsJsonStr = Await tagsResponse.Content.ReadAsStringAsync()
+                        Dim tagsObj = JObject.Parse(tagsJsonStr)
+                        Dim tagModels = CType(tagsObj("models"), JArray)
+
+                        If tagModels IsNot Nothing Then
+                            For Each tm In tagModels
+                                Dim tName As String = tm("name")?.ToString()
+                                Dim tModel As String = tm("model")?.ToString()
+                                Dim tSize As Long = 0
+                                If tm("size") IsNot Nothing Then
+                                    Long.TryParse(tm("size").ToString(), tSize)
+                                End If
+
+                                If Not String.IsNullOrEmpty(tName) AndAlso Not modelSizesDic.ContainsKey(tName) Then
+                                    modelSizesDic(tName) = tSize
+                                End If
+                                If Not String.IsNullOrEmpty(tModel) AndAlso Not modelSizesDic.ContainsKey(tModel) Then
+                                    modelSizesDic(tModel) = tSize
+                                End If
+                            Next
+                        End If
+                    End If
+                Catch ex As Exception
+                    ' Falls /api/tags fehlschlägt, läuft die Prozessanzeige trotzdem weiter
+                End Try
+
+                ' 2. Aktive Prozesse via /api/ps abfragen
+                Dim psUrl As String = "http://" & hostUrl & "/api/ps"
+                Dim psResponse = Await client.GetAsync(psUrl)
+
+                If psResponse.IsSuccessStatusCode Then
+                    Dim jsonResponse = Await psResponse.Content.ReadAsStringAsync()
                     Dim jsonObj = JObject.Parse(jsonResponse)
                     Dim modelsArray = CType(jsonObj("models"), JArray)
 
@@ -49,46 +85,65 @@ Public Class FrmOllamaPs
                             Dim modelName As String = If(m("name")?.ToString(), "Unknown")
                             Dim processName As String = If(m("model")?.ToString(), "Unknown")
 
-                            ' Gesamtgröße des Modells auslesen und in GB umrechnen
-                            Dim sizeBytes As Long = 0
+                            ' 3. context_length direkt aus /api/ps
+                            Dim contextLengthStr As String = "-"
+                            Dim rawCtx As Long = 0
+                            If m("context_length") IsNot Nothing AndAlso Long.TryParse(m("context_length").ToString(), rawCtx) AndAlso rawCtx > 0 Then
+                                Dim ctxK As Integer = CInt(Math.Round(rawCtx / 1024.0))
+                                contextLengthStr = $"{rawCtx:N0} ({ctxK}k)"
+                            End If
+
+                            ' 4. Echte Dateigröße (Model Size) aus dem /api/tags Dictionary ermitteln
+                            Dim fileSizeBytes As Long = 0
+                            If modelSizesDic.ContainsKey(modelName) Then
+                                fileSizeBytes = modelSizesDic(modelName)
+                            ElseIf modelSizesDic.ContainsKey(processName) Then
+                                fileSizeBytes = modelSizesDic(processName)
+                            End If
+                            Dim modelSizeStr As String = If(fileSizeBytes > 0, $"{Math.Round(fileSizeBytes / (1024.0 * 1024.0 * 1024.0), 2):F2} GB", "-")
+
+                            ' 5. Belegter Prozess-Speicher (Memory Usage) aus /api/ps
+                            Dim memBytes As Long = 0
                             If m("size") IsNot Nothing Then
-                                Long.TryParse(m("size").ToString(), sizeBytes)
+                                Long.TryParse(m("size").ToString(), memBytes)
                             End If
-                            Dim sizeGb As Double = Math.Round(sizeBytes / (1024.0 * 1024.0 * 1024.0), 2)
+                            Dim memGb As Double = Math.Round(memBytes / (1024.0 * 1024.0 * 1024.0), 2)
+                            Dim memoryUsageStr As String = $"{memGb:F2} GB"
 
-                            ' VRAM-Anteil auslesen und in GB umrechnen
-                            Dim sizeVramBytes As Long = 0
+                            ' 6. VRAM / Offload Status berechnen
+                            Dim vramBytes As Long = 0
                             If m("size_vram") IsNot Nothing Then
-                                Long.TryParse(m("size_vram").ToString(), sizeVramBytes)
+                                Long.TryParse(m("size_vram").ToString(), vramBytes)
                             End If
-                            Dim sizeVramGb As Double = Math.Round(sizeVramBytes / (1024.0 * 1024.0 * 1024.0), 2)
 
-                            ' Klarer Status für VRAM / Offload berechnen
                             Dim processorType As String
-                            If sizeBytes <= 0 Then
+                            If memBytes <= 0 Then
                                 processorType = "Unknown"
-                            ElseIf sizeVramBytes >= sizeBytes Then
+                            ElseIf vramBytes >= memBytes Then
                                 processorType = "100% GPU"
-                            ElseIf sizeVramBytes <= 0 Then
+                            ElseIf vramBytes <= 0 Then
                                 processorType = "0% GPU (100% CPU/RAM)"
                             Else
-                                Dim gpuPercent As Integer = CInt(Math.Round((sizeVramBytes / CDbl(sizeBytes)) * 100.0))
-                                Dim offloadRamGb As Double = Math.Round((sizeBytes - sizeVramBytes) / (1024.0 * 1024.0 * 1024.0), 2)
+                                Dim gpuPercent As Integer = CInt(Math.Round((vramBytes / CDbl(memBytes)) * 100.0))
+                                Dim offloadRamGb As Double = Math.Round((memBytes - vramBytes) / (1024.0 * 1024.0 * 1024.0), 2)
                                 processorType = $"{gpuPercent}% GPU (+{offloadRamGb:F2} GB RAM)"
                             End If
 
-                            ' Ablaufzeitpunkt formatieren
-                            Dim expiresAt As String = If(m("expires_at")?.ToString(), "-")
-                            Dim parsedDate As DateTime
-                            If DateTime.TryParse(expiresAt, Nothing, Globalization.DateTimeStyles.RoundtripKind, parsedDate) Then
-                                expiresAt = parsedDate.ToLocalTime().ToString("HH:mm:ss dd.MM.yyyy")
+                            ' 7. Ablaufzeitpunkt exakt in Lokalzeit
+                            Dim expiresAtRaw As String = If(m("expires_at")?.ToString(), "")
+                            Dim expiresAtLocal As String = "-"
+                            If Not String.IsNullOrWhiteSpace(expiresAtRaw) Then
+                                Dim dto As DateTimeOffset
+                                If DateTimeOffset.TryParse(expiresAtRaw, dto) Then
+                                    expiresAtLocal = dto.ToLocalTime().ToString("HH:mm:ss dd.MM.yyyy")
+                                End If
                             End If
 
-                            ' Zeile zum DataGridView hinzufügen
-                            Dim rowIndex As Integer = DataGridView_ps.Rows.Add(modelName, processName, sizeGb.ToString("F2") & " GB", processorType, expiresAt)
+                            ' 8. Zeile hinzufügen
+                            Dim rowIndex As Integer = DataGridView_ps.Rows.Add(modelName, processName, contextLengthStr, modelSizeStr, memoryUsageStr, processorType, expiresAtLocal)
 
-                            ' Optional: Farbliche Kennzeichnung bei RAM-Offload
-                            If sizeBytes > 0 AndAlso sizeVramBytes < sizeBytes Then
+                            ' Farbliche Kennzeichnung bei RAM-Offload
+                            If memBytes > 0 AndAlso vramBytes < memBytes Then
                                 DataGridView_ps.Rows(rowIndex).Cells("Processor").Style.ForeColor = Color.OrangeRed
                             Else
                                 DataGridView_ps.Rows(rowIndex).Cells("Processor").Style.ForeColor = Color.DarkGreen
@@ -98,7 +153,7 @@ Public Class FrmOllamaPs
                 End If
             End Using
         Catch ex As Exception
-            ' Fehler abfangen, damit der Hintergrund-Timer nicht abstürzt
+            ' Fehler abfangen
         End Try
     End Function
 

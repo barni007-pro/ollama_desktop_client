@@ -126,5 +126,8 @@ V 1.6.2.33
 - Real-time tabular monitoring of active models loaded in memory, including VRAM allocation status and expiration timers.
 - edit d1-omni in models_config.json
 - edit bonsai-2 in models_config.json
-
-
+V 1.6.3.34
+- Bugfix: Resolved an issue where model expiration timestamps were displayed in raw UTC instead of the user's local timezone.
+- Displays active models loaded in memory, including dynamically allocated memory usage and GPU/VRAM offload percentage.
+- Fetches actual model file sizes independently via /api/tags to ensure visibility across third-party clients and remote sessions.
+- Shows active context length (context_length) and local expiration timestamps.

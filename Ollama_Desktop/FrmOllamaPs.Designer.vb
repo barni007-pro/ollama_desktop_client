@@ -34,7 +34,7 @@ Partial Class FrmOllamaPs
         DataGridView_ps.Dock = DockStyle.Fill
         DataGridView_ps.Location = New Point(0, 0)
         DataGridView_ps.Name = "DataGridView_ps"
-        DataGridView_ps.Size = New Size(833, 450)
+        DataGridView_ps.Size = New Size(1088, 450)
         DataGridView_ps.TabIndex = 0
         ' 
         ' Timer_refresh
@@ -45,7 +45,7 @@ Partial Class FrmOllamaPs
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
-        ClientSize = New Size(833, 450)
+        ClientSize = New Size(1088, 450)
         Controls.Add(DataGridView_ps)
         FormBorderStyle = FormBorderStyle.FixedDialog
         MaximizeBox = False
