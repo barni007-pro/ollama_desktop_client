@@ -131,3 +131,13 @@ V 1.6.3.34
 - Displays active models loaded in memory, including dynamically allocated memory usage and GPU/VRAM offload percentage.
 - Fetches actual model file sizes independently via /api/tags to ensure visibility across third-party clients and remote sessions.
 - Shows active context length (context_length) and local expiration timestamps.
+V 1.6.4.35
+- Unified Multimodal Payload: 
+  Combined audio and image inputs into the standard "images" payload array for /api/generate requests, ensuring seamless processing by multimodal models.
+- Optimized Request Logging: 
+  Updated the JSON request preview parser to cleanly truncate large base64 media and audio strings, preventing UI lag in the Request JSON view.
+- Model Capability Flag Validation: 
+  Introduced intelligent evaluation and validation of model flags (completion, vision, audio, diffusion, tools, thinking, rerank, decision, insert) 
+  to verify active toggles and media attachments against model capabilities, warning users when features are unsupported.
+- add nemotron-3.5-bolt to models_config.json
+- add flint to models_config.json

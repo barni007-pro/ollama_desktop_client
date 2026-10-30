@@ -213,6 +213,8 @@ Public Class Form1
 
     Private currentVramResult As VramCalculationResult = Nothing
 
+    Private isLoadingParameters As Boolean = False
+
     Private Async Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         isAppReady = False
 
@@ -557,6 +559,7 @@ Public Class Form1
     End Sub
 
     Private Sub import_clp_image()
+        If Not CheckMediaCapability("vision") Then Exit Sub
         Dim img As Image = Clipboard.GetImage()
         If img Is Nothing Then Return
 
@@ -1362,25 +1365,18 @@ Public Class Form1
                 payload("images") = base64Images
             End If
 
-            If audio_list.Count > 0 Then
-                Dim base64Audio As New List(Of String)
-                For Each audObj In audio_list
-                    base64Audio.Add(audObj.base64String)
+            If image_list.Count > 0 OrElse audio_list.Count > 0 Then
+                Dim base64Media As New List(Of String)
+
+                For Each imgObj In image_list
+                    base64Media.Add(imgObj.base64String)
                 Next
-                payload("audio") = base64Audio
-            End If
 
-            If Not String.IsNullOrEmpty(system) Then
-                payload("system") = system
-            End If
+                For Each audObj In audio_list
+                    base64Media.Add(audObj.base64String)
+                Next
 
-            If Not String.IsNullOrEmpty(tools) Then
-                Dim raw = tools.Trim()
-                Try
-                    payload("tools") = JToken.Parse(raw)
-                Catch ex As Exception
-                    payload("tools") = raw
-                End Try
+                payload("images") = base64Media
             End If
 
             If think Then
@@ -1729,6 +1725,7 @@ Public Class Form1
                 Try
                     Select Case fileExtension
                         Case "jpg", "png"
+                            If Not CheckMediaCapability("vision") Then Continue For
                             Dim imageBytes = File.ReadAllBytes(filePath)
                             Dim iContent As New image_content_def With {
                                 .base64String = Convert.ToBase64String(imageBytes),
@@ -1738,6 +1735,7 @@ Public Class Form1
                             image_contents.Add(iContent)
 
                         Case "wav", "mp3"
+                            If Not CheckMediaCapability("audio") Then Continue For
                             Dim audioBytes = File.ReadAllBytes(filePath)
                             Dim aContent As New audio_content_def With {
                                 .base64String = Convert.ToBase64String(audioBytes),
@@ -2028,6 +2026,7 @@ Public Class Form1
 
         extractedContext.Clear()
         UpdateMemoryUI()
+        CheckActiveSwitchesAgainstModelCapabilities()
         UpdateVramCalculationUI()
     End Sub
 
@@ -2841,6 +2840,7 @@ Public Class Form1
     End Function
 
     Private Async Sub SiticoneButton_screenshot_Click(sender As Object, e As EventArgs) Handles SiticoneButton_screenshot.Click
+        If Not CheckMediaCapability("vision") Then Exit Sub
         WindowState = FormWindowState.Minimized
         Try
             Clipboard.Clear()
@@ -3668,6 +3668,7 @@ Public Class Form1
         If mouseEv IsNot Nothing AndAlso mouseEv.Button = MouseButtons.Right Then Exit Sub
 
         If Not isRecordingAudio Then
+            If Not CheckMediaCapability("audio") Then Exit Sub
             Try
                 audioTempPath = Path.Combine(Path.GetTempPath(), $"Voice_{DateTime.Now:yyyyMMdd_HHmmss}.wav")
 
@@ -4116,7 +4117,50 @@ Public Class Form1
         ' Wenn der Schalter ausgeschaltet wurde, müssen die anderen nicht angefasst werden
         If activeSwitch Is Nothing OrElse Not activeSwitch.Checked Then Exit Sub
 
-        ' Alle anderen Schalter ausschalten
+        ' --- Modell-Capabilities prüfen (nur wenn App fertig geladen und kein Profil-Import läuft) ---
+        If isAppReady AndAlso Not isLoadingParameters Then
+            Dim modelName As String = If(SiticoneDropdown_model.SelectedItem?.ToString(), "Unknown")
+            Dim warningMsg As String = ""
+
+            If activeSwitch Is SiticoneToggleSwitch_tools AndAlso Not SiticoneChip_model_info_Tools.IsSelected Then
+                warningMsg = $"The model '{modelName}' does not support tool calling ('tools' flag missing)." & vbCrLf &
+                             "Enabling Tools with this model might not work as expected."
+
+            ElseIf activeSwitch Is SiticoneToggleSwitch_ragtools AndAlso Not SiticoneChip_model_info_Tools.IsSelected Then
+                warningMsg = $"The model '{modelName}' does not support tool calling ('tools' flag missing)." & vbCrLf &
+                             "Since local RAG search relies on tool calls, it might not work with this model."
+
+            ElseIf activeSwitch Is SiticoneToggleSwitch_decisiontools AndAlso Not SiticoneChip_model_info_Decision.IsSelected Then
+                warningMsg = $"The model '{modelName}' does not have the 'decision' flag (SystemOne API)." & vbCrLf &
+                             "Enabling Decision Tools on standard models will likely result in errors."
+
+            ElseIf activeSwitch Is SiticoneToggleSwitch_sshbot Then
+                If Not SiticoneChip_model_info_Completion.IsSelected OrElse
+                   SiticoneChip_model_info_Embedding.IsSelected OrElse
+                   SiticoneChip_model_info_Rerank.IsSelected OrElse
+                   SiticoneChip_model_info_Diffusion.IsSelected Then
+
+                    warningMsg = $"The model '{modelName}' does not appear to be a standard text/chat model ('completion' flag missing, or it is an Embedding, Rerank, or Diffusion model)." & vbCrLf &
+                                 "The SSH Bot requires a model capable of generating Bash commands."
+                End If
+            End If
+
+            ' Wenn eine Warnung vorliegt, User auf Englisch fragen
+            If Not String.IsNullOrEmpty(warningMsg) Then
+                Dim res = MessageBox.Show(
+                    warningMsg & vbCrLf & vbCrLf & "Do you want to enable this feature anyway?",
+                    "Model Compatibility Warning",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Warning)
+
+                If res = DialogResult.No Then
+                    activeSwitch.Checked = False
+                    Exit Sub
+                End If
+            End If
+        End If
+
+        ' Alle anderen exklusiven Schalter ausschalten
         If activeSwitch IsNot SiticoneToggleSwitch_sshbot Then SiticoneToggleSwitch_sshbot.Checked = False
         If activeSwitch IsNot SiticoneToggleSwitch_tools Then SiticoneToggleSwitch_tools.Checked = False
         If activeSwitch IsNot SiticoneToggleSwitch_ragtools Then SiticoneToggleSwitch_ragtools.Checked = False
@@ -4476,6 +4520,127 @@ Public Class Form1
         Dim psForm As New FrmOllamaPs(SiticoneTextBox_host.Text)
         psForm.Show(Me) ' Öffnet das Fenster nicht-mortal (blockiert Hauptform nicht)
     End Sub
+
+    Private Sub SiticoneToggleSwitch_thinking_use_CheckedChanged(sender As Object, e As EventArgs) Handles SiticoneToggleSwitch_thinking_use.CheckedChanged
+        If Not isAppReady OrElse isLoadingParameters Then Exit Sub
+
+        If SiticoneToggleSwitch_thinking_use.Checked Then
+            If Not SiticoneChip_model_info_Thinking.IsSelected Then
+                Dim res = MessageBox.Show(
+                    $"The selected model '{SiticoneDropdown_model.SelectedItem}' does not support the 'thinking' capability according to its metadata." & vbCrLf & vbCrLf &
+                    "Enabling 'Use Thinking' with this model may cause an API error or have no effect." & vbCrLf & vbCrLf &
+                    "Do you want to keep it enabled anyway?",
+                    "Unsupported Capability: Thinking",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Warning)
+
+                If res = DialogResult.No Then
+                    SiticoneToggleSwitch_thinking_use.Checked = False
+                End If
+            End If
+        End If
+    End Sub
+
+    Private Sub CheckActiveSwitchesAgainstModelCapabilities()
+        If Not isAppReady OrElse APP_Start Then Exit Sub
+
+        Dim modelName As String = If(SiticoneDropdown_model.SelectedItem?.ToString(), "Unknown")
+        Dim unsupportedList As New List(Of String)()
+
+        ' 1. Reine Embedding- oder Rerank-Modelle abfangen
+        If SiticoneChip_model_info_Embedding.IsSelected OrElse SiticoneChip_model_info_Rerank.IsSelected Then
+            MessageBox.Show(
+                $"Note: '{modelName}' is a dedicated Embedding or Rerank model and does not support standard text generation ('completion').",
+                "Specialized Model Selected",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information)
+        End If
+
+        ' 2. Aktive Schalter gegen die neuen Modell-Flags prüfen
+        If SiticoneToggleSwitch_thinking_use.Checked AndAlso Not SiticoneChip_model_info_Thinking.IsSelected Then
+            unsupportedList.Add("• Use Thinking ('thinking' flag missing)")
+        End If
+
+        If SiticoneToggleSwitch_tools.Checked AndAlso Not SiticoneChip_model_info_Tools.IsSelected Then
+            unsupportedList.Add("• Use Tools ('tools' flag missing)")
+        End If
+
+        If SiticoneToggleSwitch_ragtools.Checked AndAlso Not SiticoneChip_model_info_Tools.IsSelected Then
+            unsupportedList.Add("• Use RAG Tools ('tools' flag missing)")
+        End If
+
+        If SiticoneToggleSwitch_decisiontools.Checked AndAlso Not SiticoneChip_model_info_Decision.IsSelected Then
+            unsupportedList.Add("• Decision Tools ('decision' flag missing)")
+        End If
+
+        If SiticoneToggleSwitch_sshbot.Checked AndAlso (Not SiticoneChip_model_info_Completion.IsSelected OrElse SiticoneChip_model_info_Embedding.IsSelected OrElse SiticoneChip_model_info_Rerank.IsSelected OrElse SiticoneChip_model_info_Diffusion.IsSelected) Then
+            unsupportedList.Add("• SSH Bot ('completion' flag missing)")
+        End If
+
+        ' 3. Bereits angehängte Bilder/Audios im Prompt-Panel prüfen
+        If image_contents.Count > 0 AndAlso Not SiticoneChip_model_info_Vision.IsSelected Then
+            unsupportedList.Add("• Attached Images ('vision' flag missing)")
+        End If
+
+        If audio_contents.Count > 0 AndAlso Not SiticoneChip_model_info_Audio.IsSelected Then
+            unsupportedList.Add("• Attached Audio Files ('audio' flag missing)")
+        End If
+
+        ' Wenn Inkompatibilitäten gefunden wurden -> fragen, ob Schalter deaktiviert werden sollen
+        If unsupportedList.Count > 0 Then
+            Dim msg As String = $"The newly selected model '{modelName}' does not support the following currently active features:" & vbCrLf & vbCrLf &
+                                String.Join(vbCrLf, unsupportedList) & vbCrLf & vbCrLf &
+                                "Would you like to automatically disable the unsupported switches?"
+
+            If MessageBox.Show(msg, "Incompatible Settings Detected", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) = DialogResult.Yes Then
+                isLoadingParameters = True
+                Try
+                    If SiticoneToggleSwitch_thinking_use.Checked AndAlso Not SiticoneChip_model_info_Thinking.IsSelected Then
+                        SiticoneToggleSwitch_thinking_use.Checked = False
+                    End If
+                    If SiticoneToggleSwitch_tools.Checked AndAlso Not SiticoneChip_model_info_Tools.IsSelected Then
+                        SiticoneToggleSwitch_tools.Checked = False
+                    End If
+                    If SiticoneToggleSwitch_ragtools.Checked AndAlso Not SiticoneChip_model_info_Tools.IsSelected Then
+                        SiticoneToggleSwitch_ragtools.Checked = False
+                    End If
+                    If SiticoneToggleSwitch_decisiontools.Checked AndAlso Not SiticoneChip_model_info_Decision.IsSelected Then
+                        SiticoneToggleSwitch_decisiontools.Checked = False
+                    End If
+                    If SiticoneToggleSwitch_sshbot.Checked AndAlso (Not SiticoneChip_model_info_Completion.IsSelected OrElse SiticoneChip_model_info_Embedding.IsSelected OrElse SiticoneChip_model_info_Rerank.IsSelected OrElse SiticoneChip_model_info_Diffusion.IsSelected) Then
+                        SiticoneToggleSwitch_sshbot.Checked = False
+                    End If
+                Finally
+                    isLoadingParameters = False
+                End Try
+            End If
+        End If
+    End Sub
+
+    Private Function CheckMediaCapability(requiredCap As String) As Boolean
+        Dim modelName As String = If(SiticoneDropdown_model.SelectedItem?.ToString(), "Unknown")
+
+        If requiredCap.ToLower() = "vision" AndAlso Not SiticoneChip_model_info_Vision.IsSelected Then
+            Dim res = MessageBox.Show(
+                $"The current model '{modelName}' does not have the 'vision' flag and may not be able to process images." & vbCrLf & vbCrLf &
+                "Do you want to add the image anyway?",
+                "Unsupported Capability: Vision",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning)
+            Return (res = DialogResult.Yes)
+
+        ElseIf requiredCap.ToLower() = "audio" AndAlso Not SiticoneChip_model_info_Audio.IsSelected Then
+            Dim res = MessageBox.Show(
+                $"The current model '{modelName}' does not have the 'audio' flag and may not be able to process audio files directly (consider using the Whisper button for Speech-to-Text instead)." & vbCrLf & vbCrLf &
+                "Do you want to proceed anyway?",
+                "Unsupported Capability: Audio",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning)
+            Return (res = DialogResult.Yes)
+        End If
+
+        Return True
+    End Function
 
 End Class
 

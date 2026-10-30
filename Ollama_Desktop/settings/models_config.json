@@ -417,6 +417,17 @@
     "context": 32,
     "description": "falcon3 - TII (UAE) - Open-Source-Modelle (1B-10B, auch 40B/180B), Apache 2.0 Lizenz, mehrere Varianten."
   },
+  "flint": {
+    "vision": false,
+    "audio": false,
+    "tools": true,
+    "embedding": false,
+    "thinking": true,
+    "image": false,
+    "decision": false,
+    "context": 256,
+    "description": "Flint 40B - Recursive - MoE coding agent model with reasoning and multi-turn tool support."
+  },
   "x/flux2-klein": {
     "vision": false,
     "audio": false,
@@ -812,6 +823,17 @@
     "decision": false,
     "context": 128,
     "description": "medgemma1.5 - GOOGLE - MedGemma 1.5 4B bietet erweiterte Unterstützung für verschiedene neue medizinische Bildverarbeitungs- und Datenanalyse-Anwendungen."
+  },
+  "nemotron-3.5-bolt": {
+    "vision": true,
+    "audio": true,
+    "tools": true,
+    "embedding": false,
+    "thinking": true,
+    "image": false,
+    "decision": false,
+    "context": 64,
+    "description": "Nemotron 3.5 Bolt - NVIDIA - Ultraschnelles multimodales Modell mit Audio-, Vision-, Reasoning- und Tool-Unterstützung."
   },
   "nemotron-mini": {
     "vision": false,
