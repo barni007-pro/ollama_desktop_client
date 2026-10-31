@@ -116,14 +116,7 @@ Public Class Form1
     Private cancellationTokenSource As CancellationTokenSource
 
     Public Class ModelInfo
-        Public Property vision As Boolean
-        Public Property audio As Boolean
-        Public Property tools As Boolean
-        Public Property thinking As Boolean
-        Public Property embedding As Boolean
-        Public Property image As Boolean
-        Public Property decision As Boolean
-        Public Property context As Integer
+        Public Property manufacturer As String
         Public Property description As String
     End Class
     Public ModelInfo_dic As Dictionary(Of String, ModelInfo)
@@ -1248,25 +1241,32 @@ Public Class Form1
     End Function
 
     Private Async Function QueryOllamaAsync(model As String,
-                                        prompt As String,
-                                        image_list As List(Of image_content_def),
-                                        audio_list As List(Of audio_content_def),
-                                        text_list As List(Of text_content_def),
-                                        option_list As System.Collections.Specialized.StringCollection,
-                                        Optional system As String = "",
-                                        Optional format As String = "",
-                                        Optional tools As String = "",
-                                        Optional think As Boolean = False,
-                                        Optional think_level As String = "false",
-                                        Optional context As Boolean = False,
-                                        Optional last_context As List(Of Integer) = Nothing,
-                                        Optional ct As CancellationToken = Nothing) As Task(Of String)
+                                            prompt As String,
+                                            image_list As List(Of image_content_def),
+                                            audio_list As List(Of audio_content_def),
+                                            text_list As List(Of text_content_def),
+                                            option_list As System.Collections.Specialized.StringCollection,
+                                            Optional system As String = "",
+                                            Optional format As String = "",
+                                            Optional tools As String = "",
+                                            Optional think As Boolean = False,
+                                            Optional think_level As String = "false",
+                                            Optional context As Boolean = False,
+                                            Optional last_context As List(Of Integer) = Nothing,
+                                            Optional ct As CancellationToken = Nothing) As Task(Of String)
 
         AppLog($"[DEBUG-QueryOllama] ---> QueryOllamaAsync gestartet. Model: '{model}'")
 
+        ' Prüfen, ob das Modell Sprachausgabe (Text-to-Speech) unterstützt
+        Dim isSpeechMode As Boolean = (SiticoneChip_model_info_Speech IsNot Nothing AndAlso SiticoneChip_model_info_Speech.IsSelected)
+        ' Gewählte Stimme aus dem Dropdown ermitteln (Fallback auf "default")
+        Dim selectedVoice As String = If(SiticoneDropdown_voice.SelectedItem IsNot Nothing, SiticoneDropdown_voice.SelectedItem.ToString().Trim(), "default")
+
         ' 1. API-Endpunkt dynamisch wählen
         Dim apiUrl As String
-        If SiticoneToggleSwitch_decisiontools.Checked Then
+        If isSpeechMode Then
+            apiUrl = "http://" & SiticoneTextBox_host.Text & "/v1/audio/speech"
+        ElseIf SiticoneToggleSwitch_decisiontools.Checked Then
             apiUrl = "http://" & SiticoneTextBox_host.Text & "/v1/systemone"
         Else
             apiUrl = "http://" & SiticoneTextBox_host.Text & "/api/generate"
@@ -1282,7 +1282,7 @@ Public Class Form1
             prompt = "Analyse Audio"
         End If
 
-        ' Options-Dictionary für normalen Modus vorbereiten
+        ' Options-Dictionary vorbereiten
         Dim options As New Dictionary(Of String, Object)
         For Each optionString As String In My.Settings.option_list
             Dim values() As String = optionString.Split(New String() {"<|>"}, StringSplitOptions.None)
@@ -1301,14 +1301,36 @@ Public Class Form1
         Next
 
         ' 2. PAYLOAD GENERIERUNG
-        If SiticoneToggleSwitch_decisiontools.Checked Then
+        If isSpeechMode Then
+            AppLog($"[DEBUG-QueryOllama] Modus: Speech / Text-to-Audio ({apiUrl})")
+
+            ' Bereinigung des Textes vor der Sprachgenerierung
+            Dim cleanText As String = Regex.Replace(prompt, "<think>.*?</think>", "", RegexOptions.Singleline)
+            cleanText = Regex.Replace(cleanText, "```.*?```", "", RegexOptions.Singleline)
+            cleanText = Regex.Replace(cleanText, "[#*`_>\[\]]", "").Trim()
+
+            ' Ausgewählte Stimme aus dem Dropdown ermitteln (Fallback auf "default")
+
+            If SiticoneDropdown_voice.SelectedItem IsNot Nothing Then
+                selectedVoice = SiticoneDropdown_voice.SelectedItem.ToString().Trim()
+            End If
+
+            Dim payload As New JObject()
+            payload("model") = model
+            payload("input") = If(String.IsNullOrWhiteSpace(cleanText), prompt, cleanText)
+            payload("voice") = selectedVoice
+
+            requestBody = payload.ToString(Newtonsoft.Json.Formatting.None)
+            AppLog($"[DEBUG-QueryOllama] Speech Payload erstellt mit Stimme: '{selectedVoice}'")
+
+        ElseIf SiticoneToggleSwitch_decisiontools.Checked Then
             AppLog($"[DEBUG-QueryOllama] Modus: Decision Tools ({apiUrl})")
 
             Dim payload As New JObject()
             payload("model") = model
             payload("state") = prompt
 
-            ' Bilder für Vision-fähige Decision Modelle (z.B. clef-flash) hinzufügen
+            ' Bilder für Decision Modelle hinzufügen
             If image_list.Count > 0 Then
                 AppLog($"[DEBUG-QueryOllama] Füge {image_list.Count} Bild(er) zum Decision-Payload hinzu.")
                 Dim base64Images As New List(Of String)
@@ -1323,8 +1345,6 @@ Public Class Form1
             Try
                 If Not String.IsNullOrEmpty(rawQuestions) Then
                     Dim parsedJson As JToken = JToken.Parse(rawQuestions)
-
-                    ' Falls der User das komplette JSON inkl. "questions"-Key eingefügt hat:
                     If parsedJson.Type = JTokenType.Object AndAlso parsedJson("questions") IsNot Nothing Then
                         payload("questions") = parsedJson("questions")
                     Else
@@ -1339,14 +1359,15 @@ Public Class Form1
             End Try
 
             requestBody = payload.ToString(Newtonsoft.Json.Formatting.None)
+
         Else
             AppLog($"[DEBUG-QueryOllama] Modus: Normal ({apiUrl})")
 
             Dim payload As New Dictionary(Of String, Object) From {
-            {"model", model},
-            {"prompt", prompt},
-            {"stream", False}
-        }
+                {"model", model},
+                {"prompt", prompt},
+                {"stream", False}
+            }
 
             If Not String.IsNullOrEmpty(format) Then
                 Dim raw = format.Trim()
@@ -1357,14 +1378,7 @@ Public Class Form1
                 End Try
             End If
 
-            If image_list.Count > 0 Then
-                Dim base64Images As New List(Of String)
-                For Each imgObj In image_list
-                    base64Images.Add(imgObj.base64String)
-                Next
-                payload("images") = base64Images
-            End If
-
+            ' Multimodale Binärdaten (Bilder UND Audio) zusammen in das "images"-Array legen
             If image_list.Count > 0 OrElse audio_list.Count > 0 Then
                 Dim base64Media As New List(Of String)
 
@@ -1377,6 +1391,20 @@ Public Class Form1
                 Next
 
                 payload("images") = base64Media
+                AppLog($"[DEBUG-QueryOllama] Multimodale Nutzlast: {image_list.Count} Bild(er) und {audio_list.Count} Audio-Datei(en) an 'images' übergeben.")
+            End If
+
+            If Not String.IsNullOrEmpty(system) Then
+                payload("system") = system
+            End If
+
+            If Not String.IsNullOrEmpty(tools) Then
+                Dim raw = tools.Trim()
+                Try
+                    payload("tools") = JToken.Parse(raw)
+                Catch ex As Exception
+                    payload("tools") = raw
+                End Try
             End If
 
             If think Then
@@ -1398,11 +1426,11 @@ Public Class Form1
             requestBody = JsonConvert.SerializeObject(payload)
         End If
 
-        ' 3. UI Request_JSON vorbereiten (Bilder für Log/Anzeige einkürzen)
+        ' 3. UI Request_JSON vorbereiten (Große Mediendaten für Log/Anzeige einkürzen)
         Try
             Dim jsonObj As JObject = JObject.Parse(requestBody)
             If jsonObj("images") IsNot Nothing Then
-                jsonObj("images") = JArray.Parse("[""<... Base64 Image Data Truncated ...>""]")
+                jsonObj("images") = JArray.Parse("[""<... Base64 Media Data Truncated ...>""]")
             End If
             Request_JSON = jsonObj.ToString()
             AppLog("[DEBUG-QueryOllama] JSON für UI erfolgreich generiert.")
@@ -1439,6 +1467,30 @@ Public Class Form1
                     AppLog($"[DEBUG-QueryOllama] Antwort erhalten. StatusCode: {response.StatusCode}")
 
                     If response.IsSuccessStatusCode Then
+
+                        ' --- Fall 1: Sprachgenerierung (/v1/audio/speech liefert einen binären WAV-Stream) ---
+                        If isSpeechMode Then
+                            Dim audioBytes As Byte() = Await response.Content.ReadAsByteArrayAsync()
+                            Dim fileName As String = $"ollama_speech_{DateTime.Now:yyyyMMdd_HHmmss}_{Guid.NewGuid().ToString().Substring(0, 5)}.wav"
+                            Dim tempFilePath As String = IO.Path.Combine(IO.Path.GetTempPath(), fileName)
+
+                            IO.File.WriteAllBytes(tempFilePath, audioBytes)
+                            AppLog($"[DEBUG-QueryOllama] Speech-WAV empfangen und gespeichert: {tempFilePath} ({audioBytes.Length} Bytes)")
+
+                            ' HTML5-Audio-Player mit Autoplay für WebView2 vorbereiten (inklusive Modell und Stimme)
+                            Dim virtualUrl As String = $"https://ollama.local/{fileName}"
+                            Dim audioPlayerHtml As String = $"<div style='margin: 15px 0; padding: 12px; background-color: #252526; border-radius: 8px; border: 1px solid #3e3e42;'>" &
+                                                            $"<div style='font-size: 0.9em; font-weight: bold; color: #569cd6; margin-bottom: 8px;'>🔊 Generated speech output ({model} | Voice: {selectedVoice}):</div>" &
+                                                            $"<div style='font-style: italic; color: #cccccc; margin-bottom: 10px;'>""{prompt}""</div>" &
+                                                            $"<audio controls autoplay src='{virtualUrl}' style='width: 100%; height: 35px;'></audio>" &
+                                                            $"</div>"
+
+                            Response_JSON = $"{{ ""model"": ""{model}"", ""voice"": ""{selectedVoice}"", ""status"": ""audio_generated"", ""bytes"": {audioBytes.Length}, ""file"": ""{fileName}"" }}"
+                            AppLog("[DEBUG-QueryOllama] <--- Speech-Generierung erfolgreich abgeschlossen.")
+                            Return audioPlayerHtml
+                        End If
+
+                        ' --- Fall 2: Standard-Antwort (JSON aus /api/generate oder /v1/systemone) ---
                         Dim responseBody As String = Await response.Content.ReadAsStringAsync()
 
                         If My.Settings.test_response <> "" Then
@@ -1450,12 +1502,12 @@ Public Class Form1
                         Dim json As JObject = JObject.Parse(responseBody)
                         Dim extractedResponse As String = json.SelectToken("response")?.ToString()
 
-                        ' Fallback: Falls die Antwort kein "response"-Feld besitzt (sondern z.B. direkt ein Decision-JSON ist):
+                        ' Fallback für Decision-Modelle ohne "response"-Feld
                         If String.IsNullOrEmpty(extractedResponse) Then
                             extractedResponse = responseBody
                         End If
 
-                        ' Bildverarbeitung
+                        ' Generiertes Bild aus /api/generate verarbeiten
                         Dim imageBase64 As String = json.SelectToken("image")?.ToString()
                         If Not String.IsNullOrEmpty(imageBase64) Then
                             AppLog("[DEBUG-QueryOllama] Bild in Antwort gefunden. Starte Speicherung...")
@@ -1629,6 +1681,9 @@ Public Class Form1
             Using client As New HttpClient()
                 Dim response As HttpResponseMessage = Await client.GetAsync(apiUrl)
                 If response.IsSuccessStatusCode Then
+
+
+
                     Dim responseBody As String = Await response.Content.ReadAsStringAsync()
 
                     Dim json As JObject = JObject.Parse(responseBody)
@@ -1943,6 +1998,7 @@ Public Class Form1
         SiticoneChip_model_info_Completion.IsSelected = False
         SiticoneChip_model_info_Vision.IsSelected = False
         SiticoneChip_model_info_Diffusion.IsSelected = False
+        SiticoneChip_model_info_Speech.IsSelected = False
         SiticoneChip_model_info_Audio.IsSelected = False
         SiticoneChip_model_info_Tools.IsSelected = False
         SiticoneChip_model_info_Thinking.IsSelected = False
@@ -1950,17 +2006,24 @@ Public Class Form1
         SiticoneChip_model_info_Rerank.IsSelected = False
         SiticoneChip_model_info_Decision.IsSelected = False
         SiticoneChip_model_info_insert.IsSelected = False
-
         SiticoneChip_model_info_Context.IsSelected = False
         SiticoneChip_model_info_Context.Text = "context: ?"
         SiticoneChip_model_info_Context.Refresh()
 
         ' 2. Beschreibung aus models_config.json holen (falls vorhanden)
         Dim model_info_get As ModelInfo = GetModelInfo(model_name)
-        If model_info_get IsNot Nothing AndAlso Not String.IsNullOrWhiteSpace(model_info_get.description) Then
-            SiticoneLabel1_model_info_description.Text = model_info_get.description
+
+
+        Dim baseModelName As String = If(Not String.IsNullOrEmpty(model_name), model_name.Split(":"c)(0), "")
+
+        If model_info_get IsNot Nothing Then
+            Dim manufacturer As String = If(Not String.IsNullOrWhiteSpace(model_info_get.manufacturer), model_info_get.manufacturer, "unknown")
+            Dim description As String = If(Not String.IsNullOrWhiteSpace(model_info_get.description), model_info_get.description, "No description available")
+
+            SiticoneLabel1_model_info_description.Text = $"{baseModelName} - {manufacturer} - {description}"
         Else
-            SiticoneLabel1_model_info_description.Text = "unknown"
+            ' Fallback, falls das Modell nicht in der models_config.json gefunden wurde
+            SiticoneLabel1_model_info_description.Text = $"{baseModelName} - unknown"
         End If
 
         ' 3. Versuchen, Capabilities & Context direkt aus model_info.Item(...) zu lesen
@@ -1990,6 +2053,33 @@ Public Class Form1
                     extractedLicense = showJsonObj.SelectToken("license")?.ToString()
                     SiticoneButton_preload.Enabled = True
 
+                    ' Stimmen in SiticoneDropdown_voice laden
+                    Dim currentVoice As String = If(SiticoneDropdown_voice.SelectedItem IsNot Nothing, SiticoneDropdown_voice.SelectedItem.ToString(), "default")
+                    SiticoneDropdown_voice.Items.Clear()
+
+                    Dim voicesToken As JToken = showJsonObj.SelectToken("voices")
+                    If voicesToken IsNot Nothing AndAlso voicesToken.Type = JTokenType.Array AndAlso voicesToken.HasValues Then
+                        For Each v In voicesToken
+                            SiticoneDropdown_voice.Items.Add(v.ToString())
+                        Next
+
+                        ' Zuvor gewählte Stimme wiederherstellen, andernfalls "default" oder erstes Element wählen
+                        If SiticoneDropdown_voice.Items.Contains(currentVoice) Then
+                            SiticoneDropdown_voice.SelectedItem = currentVoice
+                        ElseIf SiticoneDropdown_voice.Items.Contains("default") Then
+                            SiticoneDropdown_voice.SelectedItem = "default"
+                        ElseIf SiticoneDropdown_voice.Items.Count > 0 Then
+                            SiticoneDropdown_voice.SelectedIndex = 0
+                        End If
+
+                        SiticoneDropdown_voice.Enabled = True
+                    Else
+                        ' Fallback für Modelle ohne deklarierte Stimmen
+                        SiticoneDropdown_voice.Items.Add("default")
+                        SiticoneDropdown_voice.SelectedIndex = 0
+                        SiticoneDropdown_voice.Enabled = False
+                    End If
+
                     ' Falls noch nicht gesetzt, jetzt aus /api/show übernehmen
                     If Not capabilitiesSet Then
                         capabilitiesSet = TryApplyCapabilitiesFromJson(showJsonObj)
@@ -2005,24 +2095,6 @@ Public Class Form1
             MessageBox.Show("Error loading model information: " & ex.Message)
         End Try
 
-        ' 5. Fallback auf models_config.json, falls die API-Daten nicht vorlagen (z.B. Offline)
-        If model_info_get IsNot Nothing Then
-            If Not capabilitiesSet Then
-                SiticoneChip_model_info_Vision.IsSelected = model_info_get.vision
-                SiticoneChip_model_info_Audio.IsSelected = model_info_get.audio
-                SiticoneChip_model_info_Tools.IsSelected = model_info_get.tools
-                SiticoneChip_model_info_Thinking.IsSelected = model_info_get.thinking
-                SiticoneChip_model_info_Embedding.IsSelected = model_info_get.embedding
-                SiticoneChip_model_info_Diffusion.IsSelected = model_info_get.image
-                SiticoneChip_model_info_Decision.IsSelected = model_info_get.decision
-            End If
-
-            If Not contextSet AndAlso model_info_get.context > 0 Then
-                SiticoneChip_model_info_Context.IsSelected = True
-                SiticoneChip_model_info_Context.Text = "context: " & model_info_get.context.ToString() & "k"
-                SiticoneChip_model_info_Context.Refresh()
-            End If
-        End If
 
         extractedContext.Clear()
         UpdateMemoryUI()
@@ -4462,17 +4534,17 @@ Public Class Form1
             Return False
         End If
 
-        ' Alle Fähigkeiten aus dem JSON-Array (kleingeschrieben) in ein HashSet laden
         Dim caps As New HashSet(Of String)(StringComparer.OrdinalIgnoreCase)
         For Each cap In CType(jsonObj("capabilities"), JArray)
             caps.Add(cap.ToString().Trim())
         Next
 
-        ' Alle 10 SiticoneChips setzen
+        ' Capabilities auf UI-Chips übertragen
         SiticoneChip_model_info_Completion.IsSelected = caps.Contains("completion")
         SiticoneChip_model_info_Vision.IsSelected = caps.Contains("vision")
         SiticoneChip_model_info_Diffusion.IsSelected = caps.Contains("diffusion") OrElse caps.Contains("image")
         SiticoneChip_model_info_Audio.IsSelected = caps.Contains("audio")
+        SiticoneChip_model_info_Speech.IsSelected = caps.Contains("speech")    ' <-- NEU
         SiticoneChip_model_info_Tools.IsSelected = caps.Contains("tools")
         SiticoneChip_model_info_Thinking.IsSelected = caps.Contains("thinking")
         SiticoneChip_model_info_Embedding.IsSelected = caps.Contains("embedding")

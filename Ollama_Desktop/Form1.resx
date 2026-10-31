@@ -120,9 +120,9 @@
   <metadata name="ToolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
-  <data name="SiticoneToggleSwitch_sshreinsert.ToolTipText" xml:space="preserve">
-    <value>Forces the system to append the System Prompt to the LLM during every single agent step. This prevents the AI from 'forgetting' its core rules when the context window fills up with massive console outputs.</value>
-  </data>
+  <metadata name="ToolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="TabPage_sshbot.TabImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -137,6 +137,9 @@
         mTciQZbLUJHIOrdzcgfY1HLGWnbmvN8AR8Bkkchts3NyB0jB2wrQ4Qip6dMBqovY5V6KZh1Aas2RUiF7
         xINvg1JgATgHrhIhn/KL4TOgUHcChqCyHzKlFQAAAABJRU5ErkJggg==
 </value>
+  </data>
+  <data name="SiticoneToggleSwitch_sshreinsert.ToolTipText" xml:space="preserve">
+    <value>Forces the system to append the System Prompt to the LLM during every single agent step. This prevents the AI from 'forgetting' its core rules when the context window fills up with massive console outputs.</value>
   </data>
   <data name="SiticoneButton_wisper.ButtonImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>

@@ -1,1553 +1,574 @@
 {
   "all-minilm": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": true,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 1,
-    "description": "all-minilm - Sentence Transformers - Kompaktes, schnelles Embedding-Modell (33M Parameter) für semantische Ähnlichkeit."
+    "manufacturer": "Sentence Transformers",
+    "description": "Compact, fast embedding model (33M parameters) designed for semantic similarity."
   },
   "alpha-orionis-uncensored": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 32,
-    "description": "alpha-orionis-uncensored - WizardLM - Uncensored Fine-Tune von WizardLM für kreative/freie Anwendungen."
+    "manufacturer": "WizardLM",
+    "description": "Uncensored fine-tune based on WizardLM, tailored for creative and unrestricted tasks."
   },
   "aya": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 8,
-    "description": "aya - Cohere - Mehrsprachiges Modell (101+ Sprachen), gut für Übersetzung und Multilingual-Tasks."
+    "manufacturer": "Cohere",
+    "description": "Multilingual model covering 101+ languages, optimized for translation and cross-lingual tasks."
   },
   "aya-expanse": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 8,
-    "description": "aya-expanse - Cohere - Weiterentwicklung von Aya, massiv mehrsprachig (23+ Sprachen) mit Fokus auf globale Zugänglichkeit."
+    "manufacturer": "Cohere",
+    "description": "Advanced multilingual model covering 23+ languages with a focus on depth and global accessibility."
   },
   "baichuan2": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 4,
-    "description": "baichuan2 - Baichuan Intelligent Technology - Führendes zweisprachiges (CN/EN) Basismodell, sehr stark im asiatischen Sprachraum."
+    "manufacturer": "Baichuan Intelligent Technology",
+    "description": "Leading bilingual (Chinese/English) foundation model, prominent in Asian language processing."
   },
   "bespoke-minicheck": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 32,
-    "description": "bespoke-minicheck - Bespoke Labs - Spezialisiertes Modell zur Überprüfung von Fakten (Fact-Checking) und Vermeidung von Halluzinationen in RAG-Pipelines."
+    "manufacturer": "Bespoke Labs",
+    "description": "Specialized model for fact-checking and hallucination detection in RAG pipelines."
   },
   "bge-m3": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": true,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 8,
-    "description": "bge-m3 - BAAI - Vielseitiges Embedding-Modell für multilinguale, lexikalische und semantische Retrieval-Aufgaben."
+    "manufacturer": "BAAI",
+    "description": "Versatile embedding model supporting dense, lexical, and multi-vector retrieval across 100+ languages."
   },
   "bonsai-2": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": true,
-    "image": false,
-    "decision": false,
-    "context": 256,
-    "description": "bonsai-2 - Custom - Kompaktes Open-Weight-Modell mit Fokus auf hocheffizientes logisches Denken und schnelle Tool-Ausführung."
+    "manufacturer": "Custom",
+    "description": "Compact open-weight model focused on highly efficient logical reasoning and rapid tool execution."
   },
   "bitnet-b1.58": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 8,
-    "description": "bitnet - Microsoft - Ein 1-Bit LLM-Ansatz, der extrem energieeffizient ist und fast ohne klassische Multiplikationen auskommt."
+    "manufacturer": "Microsoft",
+    "description": "Ternary 1.58-bit LLM architecture utilizing {-1, 0, 1} weights for extreme energy efficiency without matrix multiplications."
   },
   "clef": {
-    "vision": true,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": true,
-    "context": 256,
-    "description": "clef - Cloudflare - Ist ein multimodales 27B-Modell, das einen Zustand und ein Schema typisierter Fragen in Entscheidungen umwandelt."
+    "manufacturer": "Cloudflare",
+    "description": "Multimodal 27B decision model that converts state inputs and typed question schemas into structured actions."
   },
   "clef-flash": {
-    "vision": true,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": true,
-    "context": 256,
-    "description": "clef-flash - Cloudflare - Ist ein multimodales 9B-Modell, das einen Zustand und ein Schema typisierter Fragen in Entscheidungen umwandelt."
+    "manufacturer": "Cloudflare",
+    "description": "Compact 9B multimodal decision model designed for rapid state and typed question evaluation."
   },
   "codegeex4": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 128,
-    "description": "codegeex4 - THUDM - 9B Modell spezialisiert auf Code-Generierung und -Vervollständigung. Sehr starkes Preis-Leistungs-Verhältnis für Coding."
+    "manufacturer": "THUDM",
+    "description": "9B model specialized in code generation, code completion, and multi-turn developer tasks."
   },
   "codegemma": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 8,
-    "description": "codegemma - Google - Code-spezialisiertes Gemma, Fill-in-the-middle, Code-Generierung, Mathematik."
+    "manufacturer": "Google",
+    "description": "Code-specialized Gemma variant optimized for fill-in-the-middle (FIM), code generation, and mathematics."
   },
   "codellama": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 16,
-    "description": "codellama - Meta - Für Programmier- und Code-Aufgaben optimiert. Verfügbar in mehreren Größen (7B-34B)."
+    "manufacturer": "Meta",
+    "description": "Foundation model optimized for code synthesis and programming tasks across multiple sizes (7B-34B)."
   },
   "codellama-instruct": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 16,
-    "description": "codellama-instruct - Meta - Instruction-tuned Varianten von CodeLlama für bessere Befehlsbefolgung."
+    "manufacturer": "Meta",
+    "description": "Instruction-tuned Code Llama variant optimized for understanding natural language coding prompts."
   },
   "codestral": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 256,
-    "description": "codestral - Mistral AI - Erstklassiges 22B-Code-Modell von Mistral mit 256K Kontext, unterstützt 80+ Programmiersprachen."
+    "manufacturer": "Mistral AI",
+    "description": "Premier 22B code model featuring a 256K context window and support for 80+ programming languages."
   },
   "command-r": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 128,
-    "description": "command-r - Cohere - Konversations-/anwendungsoptimiertes Modell mit Fokus auf lange Kontexte und RAG."
+    "manufacturer": "Cohere",
+    "description": "Enterprise-grade conversational model optimized for long context and retrieval-augmented generation (RAG)."
   },
   "command-r-xl": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 128,
-    "description": "command-r-xl - Cohere - XL-Version für lange Kontexte und komplexe Dialoge, optimiert für Business-Integration."
+    "manufacturer": "Cohere",
+    "description": "Extended variant built for long-context comprehension and complex business workflow integration."
   },
   "command-r-plus": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 128,
-    "description": "command-r-plus - Cohere - Das leistungsstärkste offene RAG- und Tool-Calling-Modell von Cohere für komplexe Enterprise-Workflows."
+    "manufacturer": "Cohere",
+    "description": "Flagship open-weights enterprise model optimized for complex multi-step tool use and advanced RAG workflows."
   },
   "d1": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": true,
-    "image": false,
-    "decision": false,
-    "context": 128,
-    "description": "d1 - DeepSeek / Custom - Ein aufgabenoptimiertes Reasoning-Modell für strukturierte Problemlösungen und präzise Analysen."
+    "manufacturer": "DeepSeek / Custom",
+    "description": "Task-optimized reasoning model designed for structured problem solving and precise analysis."
   },
   "d1-omni": {
-    "vision": true,
-    "audio": true,
-    "tools": true,
-    "embedding": false,
-    "thinking": true,
-    "image": false,
-    "decision": true,
-    "context": 128,
-    "description": "d1-omni - Custom - Multimodales Allround-Modell mit integrierter Sprach-, Bild- und Textverarbeitung sowie erweitertem Reasoning."
+    "manufacturer": "Custom",
+    "description": "Multimodal all-round model integrating speech, vision, and text processing with advanced reasoning."
   },
   "dbrx": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 32,
-    "description": "dbrx - Databricks - Anpassbar für eigene Geschäftsdaten mit voller Kontrolle, Enterprise-fokussiert."
+    "manufacturer": "Databricks",
+    "description": "Enterprise-focused MoE model adaptable to proprietary business data with full deployment control."
   },
   "deepcoder": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 32,
-    "description": "deepcoder - DeepSeek - Vollständig Open-Source (1.5B, 14B), O3-mini-Level-Performance für Code-Generierung."
+    "manufacturer": "DeepSeek",
+    "description": "Open-source code generation model optimized for high-performance software engineering tasks."
   },
   "deepscaler": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": true,
-    "image": false,
-    "decision": false,
-    "context": 128,
-    "description": "deepscaler - DeepSeek - Sehr kleines effizientes Modell, welches eine hohe Genauigkeit erreicht, optimiert für Reasoning."
+    "manufacturer": "DeepSeek",
+    "description": "Compact, highly efficient reasoning model achieving high mathematical and logical accuracy via RL scaling."
   },
   "deepseek-coder": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 16,
-    "description": "deepseek-coder - DeepSeek - Spezialisiertes Modell für Programmieraufgaben, mehrere Größen verfügbar."
+    "manufacturer": "DeepSeek",
+    "description": "Specialized code generation and programming assistant model available in multiple parameter sizes."
   },
   "deepseek-coder-v2": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 160,
-    "description": "deepseek-coder-v2 - DeepSeek - Open-Source-Mixture-of-Experts Code-Modell, 87+ Programmiersprachen, 2 Billionen Tokens Training."
+    "manufacturer": "DeepSeek",
+    "description": "Open-source Mixture-of-Experts (MoE) code model supporting 87+ programming languages and 128K context."
   },
   "deepseek-ocr": {
-    "vision": true,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 128,
-    "description": "deepseek-ocr - DeepSeek - Ist ein Bildverarbeitungs- und Sprachmodell, das tokeneffiziente OCR durchführen kann. LLM Token werden in Image Token effektiver verarbeitet."
+    "manufacturer": "DeepSeek",
+    "description": "Token-efficient vision-language model specialized in optical character recognition (OCR) and document parsing."
   },
   "deepseek-r1": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": true,
-    "image": false,
-    "decision": false,
-    "context": 128,
-    "description": "deepseek-r1 - DeepSeek - Reasoning-orientiertes Modell (671B, 37B aktiv), 97% MATH-500 Genauigkeit, transparentes Reasoning, distillierte Varianten verfügbar."
+    "manufacturer": "DeepSeek",
+    "description": "State-of-the-art open reasoning model (671B total, 37B active) featuring transparent chain-of-thought processing."
   },
   "deepseek-v3.1": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": true,
-    "image": false,
-    "decision": false,
-    "context": 128,
-    "description": "deepseek-v3.1-terminus - DeepSeek - Hybrid-Modell (685B, 37B aktiv) mit Thinking- und Non-Thinking-Modus, verbesserte Version von V3."
+    "manufacturer": "DeepSeek",
+    "description": "Large-scale MoE model with dual thinking and standard completion modes for general-purpose tasks."
   },
   "devstral": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": true,
-    "image": false,
-    "decision": false,
-    "context": 128,
-    "description": "devstral - Mistral AI - 24B Agenten- und Coding-Modell (Apache 2.0) mit hervorragenden SWE-Bench-Werten."
+    "manufacturer": "Mistral AI",
+    "description": "24B open agentic and coding model optimized for SWE-bench and developer automation workflows."
   },
   "dolly": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 2,
-    "description": "dolly - Databricks - Offene Instruction-tuned Modelle, für einfache Assistenzaufgaben nützlich."
+    "manufacturer": "Databricks",
+    "description": "Open instruction-tuned model designed for general assistant and lightweight text tasks."
   },
   "dolly-v2": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 2,
-    "description": "dolly-v2 - Databricks - Verbesserte Instruction-Version der Dolly-Familie."
+    "manufacturer": "Databricks",
+    "description": "Commercially viable instruction-tuned model trained on high-quality human-generated instructions."
   },
   "dolphin": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 32,
-    "description": "dolphin - Eric Hartford - Uncensored Modelle basierend auf Mistral (v2.8), exzellent für Coding und kreative Arbeiten."
+    "manufacturer": "Eric Hartford",
+    "description": "Uncensored fine-tuned model family optimized for unrestricted reasoning, coding, and creative tasks."
   },
   "embeddinggemma": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": true,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 8,
-    "description": "embeddinggemma - Google - State-of-the-art 308M Embedding-Modell, #1 auf MTEB unter 500M Parameter. Trainiert auf 100+ Sprachen, 768 Dimensionen (anpassbar auf 128-768), läuft mit <200MB RAM. Ideal für RAG, Semantic Search, Classification, Clustering."
+    "manufacturer": "Google",
+    "description": "Lightweight 308M embedding model optimized for multilingual semantic search, RAG, and edge devices."
   },
   "embeddinggemma-2": {
-    "vision": true,
-    "audio": true,
-    "tools": false,
-    "embedding": true,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 256,
-    "description": "embeddinggemma-2 - Google - Bietet schnelle semantische Einbettungen direkt auf Laptops und Mobilgeräten – ideal für Suche, RAG, Klassifizierung und Clustering."
+    "manufacturer": "Google",
+    "description": "High-speed semantic embedding model designed for local execution on laptops, mobile devices, and RAG pipelines."
   },
   "everythinglm": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 16,
-    "description": "everythinglm - Totally Not An LLM - Uncensored Llama2-basiertes Modell mit 16K Context Window."
+    "manufacturer": "Totally Not An LLM",
+    "description": "Uncensored Llama-2-based model with an extended 16K context window for unrestricted generation."
   },
   "exaone": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 32,
-    "description": "exaone - LG AI Research - EXAONE Deep (2.4B-32B), exzellent in Math und Coding Benchmarks."
+    "manufacturer": "LG AI Research",
+    "description": "Bilingual (Korean/English) foundation model family with strong mathematical and coding benchmark performance."
   },
   "falcon3": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 32,
-    "description": "falcon3 - TII (UAE) - Open-Source-Modelle (1B-10B, auch 40B/180B), Apache 2.0 Lizenz, mehrere Varianten."
+    "manufacturer": "TII (UAE)",
+    "description": "Open-source foundation model family (1B–10B) offering strong performance under an Apache 2.0 license."
   },
   "flint": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": true,
-    "image": false,
-    "decision": false,
-    "context": 256,
-    "description": "Flint 40B - Recursive - MoE coding agent model with reasoning and multi-turn tool support."
+    "manufacturer": "Recursive",
+    "description": "MoE coding agent model featuring advanced reasoning and multi-turn tool support."
   },
   "x/flux2-klein": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": true,
-    "decision": false,
-    "context": 4,
-    "description": "x/flux2-klein - Black Forest Labs - Eine kompakte/quantisierte Version des Flux-Modells, optimiert für lokale Bildgenerierung."
+    "manufacturer": "Black Forest Labs",
+    "description": "Quantized, lightweight image generation model based on Flux architecture for local text-to-image synthesis."
   },
   "gemma2": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 8,
-    "description": "gemma2 - Google - Effiziente Modelle (2B, 9B, 27B) mit guter Basisleistung, kompakt und leistungsstark."
+    "manufacturer": "Google",
+    "description": "Efficient and high-performing open foundation model family available in 2B, 9B, and 27B parameter sizes."
   },
   "gemma2-chat": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 8,
-    "description": "gemma2-chat - Google - Chat-tuned Variante der Gemma2 Familie für konversationelle Aufgaben."
+    "manufacturer": "Google",
+    "description": "Instruction- and chat-tuned Gemma 2 variant optimized for conversational tasks and safety."
   },
   "gemma2-vision": {
-    "vision": true,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 8,
-    "description": "gemma2-vision - Google - Gemma2 mit Multimodal-/Bildunterstützung für visuelle Aufgaben."
+    "manufacturer": "Google",
+    "description": "Multimodal Gemma 2 variant capable of processing image inputs alongside text prompts."
   },
   "gemma3": {
-    "vision": true,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 128,
-    "description": "gemma3 - Google - Multimodale Familie (Text+Bild, 270M-27B), 128K Context, 140+ Sprachen, 3x weniger Speicher durch Quantisierung."
+    "manufacturer": "Google",
+    "description": "Next-generation multimodal model family (270M–27B) supporting text and image inputs with long context."
   },
   "gemma4": {
-    "vision": true,
-    "audio": true,
-    "tools": true,
-    "embedding": false,
-    "thinking": true,
-    "image": false,
-    "decision": false,
-    "context": 256,
-    "description": "gemma4 - Google - eignen sich hervorragend für logisches Denken, agentenbasierte Arbeitsabläufe, Codierung und multimodales Verständnis."
+    "manufacturer": "Google",
+    "description": "Advanced multimodal foundation model optimized for logical reasoning, agentic workflows, and coding."
   },
   "glm-ocr": {
-    "vision": true,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 128,
-    "description": "glm-ocr - GLM - multimodales OCR-Modell zum Verarbeiten komplexer Dokumente"
+    "manufacturer": "GLM",
+    "description": "Multimodal document analysis model specialized in parsing complex layouts and visual text."
   },
   "glm4": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": true,
-    "image": false,
-    "decision": false,
-    "context": 198,
-    "description": "glm4 - Zhipu AI - Starkes, mehrsprachiges Modell (besonders EN/CN). Hervorragend in Reasoning und komplexen Instruktionen."
+    "manufacturer": "Zhipu AI",
+    "description": "High-speed bilingual (Chinese/English) model featuring strong reasoning and complex instruction following."
   },
   "glm-4.7-flash": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": true,
-    "image": false,
-    "decision": false,
-    "context": 198,
-    "description": "glm-4.7-flash - Zhipu AI - Starkes, mehrsprachiges Modell (besonders EN/CN). Hervorragend in Reasoning und komplexen Instruktionen."
+    "manufacturer": "Zhipu AI",
+    "description": "Ultra-fast bilingual (Chinese/English) model optimized for low-latency reasoning and chat applications."
   },
   "gpt-oss": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": true,
-    "image": false,
-    "decision": false,
-    "context": 128,
-    "description": "gpt-oss - OpenAI - Erstes Open-Weight Modell von OpenAI seit GPT-2 (20B, 120B), für Reasoning und agentenbasierte Tasks, MoE mit 5.1B aktiv, think (low,medium,high)."
+    "manufacturer": "OpenAI",
+    "description": "Open-weight reasoning and agentic model family featuring configurable chain-of-thought depth."
   },
   "granite3.1": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 128,
-    "description": "granite3.1 - IBM - Low-Latency MoE-Modelle (1B, 3B), effizient für Edge-Deployment."
+    "manufacturer": "IBM",
+    "description": "Low-latency MoE models optimized for efficient enterprise and edge deployment."
   },
   "granite3.2-vision": {
-    "vision": true,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 128,
-    "description": "granite3.2-vision - IBM - Kompaktes Vision-Language Modell, gut für Dokument-Parsing und visuelle Dokumentenanalyse."
+    "manufacturer": "IBM",
+    "description": "Compact vision-language model tailored for document parsing and enterprise visual analysis."
   },
   "granite-code": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 8,
-    "description": "granite-code - IBM - Speziell auf Code-Generierung und -Verständnis trainierte Granite-Modellreihe für Entwickler."
+    "manufacturer": "IBM",
+    "description": "Developer-focused code model family trained specifically for software generation and comprehension."
   },
   "granite4.1": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 128,
-    "description": "granite4.1 - IBM - Foundation Models, die Mehrsprachigkeit, Programmierung, Retrieval-Augmented Generation (RAG), die Nutzung von Tools sowie strukturierte JSON-Ausgaben unterstützen."
+    "manufacturer": "IBM",
+    "description": "Enterprise foundation models supporting multilingual tasks, code, tool use, and structured JSON outputs."
   },
   "granite4.2": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": true,
-    "image": false,
-    "decision": false,
-    "context": 128,
-    "description": "granite4.2 - IBM - Foundation Models, die Mehrsprachigkeit, Programmierung, Retrieval-Augmented Generation (RAG), die Nutzung von Tools sowie strukturierte JSON-Ausgaben unterstützen."
+    "manufacturer": "IBM",
+    "description": "Enterprise foundation models supporting multilingual tasks, code, tool use, and structured JSON outputs."
   },
   "grok-1.5": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 128,
-    "description": "grok-1.5 - xAI - Verbessertes Modell von xAI mit deutlich längerem Kontext (128k) und verbesserter Reasoning-Leistung."
+    "manufacturer": "xAI",
+    "description": "Long-context model (128K) featuring strong reasoning, mathematics, and problem-solving capabilities."
   },
   "hermes3": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 128,
-    "description": "hermes3 - Nous Research - 'Flagship' Generalist-Modell (8B, 70B). Sehr stark im Befolgen von Anweisungen, Roleplay und Agenten-Tasks."
+    "manufacturer": "Nous Research",
+    "description": "Flagship generalist model (8B, 70B) excelling at instruction following, agentic workflows, and roleplay."
   },
   "hunyuan-large": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 256,
-    "description": "hunyuan-large - Tencent - Massives MoE Modell mit exzellenter Sprachabdeckung und langem Kontext."
+    "manufacturer": "Tencent",
+    "description": "Massive open MoE model featuring broad multilingual coverage and extensive context support."
   },
   "internlm3": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": true,
-    "image": false,
-    "decision": false,
-    "context": 32,
-    "description": "internlm3 - Shanghai AI Lab - Starkes chinesisch-englisches Open-Source-Modell mit exzellentem Reasoning und Tool-Support."
+    "manufacturer": "Shanghai AI Lab",
+    "description": "Bilingual (Chinese/English) open-source model with strong reasoning, tool-calling, and agent support."
   },
   "jamba-1.5-large": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 256,
-    "description": "jamba-1.5 - AI21 Labs - Hybrid-Architektur (SSM-Transformer), die extrem lange Kontexte effizient verarbeitet."
+    "manufacturer": "AI21 Labs",
+    "description": "Hybrid SSM-Transformer (Mamba) architecture built for highly efficient processing of ultra-long contexts."
   },
   "kimi-k2": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 130,
-    "description": "kimi-k2 - Moonshot AI - Spezialist für extrem lange Kontexte and präzises Retrieval."
+    "manufacturer": "Moonshot AI",
+    "description": "Advanced long-context model optimized for accurate retrieval and deep multi-document reasoning."
   },
   "laya": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": true,
-    "context": 1,
-    "description": "laya - Convai Innovations - Ist ein 421M-Entscheidungsmodell, das auf Basis von ModernBERT-large feingetunt wurde."
+    "manufacturer": "Convai Innovations",
+    "description": "421M parameter decision model fine-tuned on ModernBERT-large for fast classification and state evaluation."
   },
   "lfm2": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 32,
-    "description": "lfm2 - Liquid - ist ein Hybridmodellen, das für den Einsatz auf Endgeräten entwickelt wurden. Erstklassige Effizienz"
+    "manufacturer": "Liquid AI",
+    "description": "Edge-optimized hybrid model delivering high computational efficiency on consumer devices."
+  },
+  "lfm3-audio": {
+    "manufacturer": "Liquid AI",
+    "description": "Liquid Foundation Model featuring audio understanding and native text-to-speech (TTS) synthesis."
+  },
+  "lfm3-omni": {
+    "manufacturer": "Liquid AI",
+    "description": "Omnimodal Liquid Foundation Model integrating text, image, and audio processing capabilities."
   },
   "llama2": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 4,
-    "description": "llama2 - Meta - Klassische Llama-Foundation-Modelle (7B–70B), ältere Generation."
+    "manufacturer": "Meta",
+    "description": "Classic open foundation model family (7B–70B) for general language understanding and generation."
   },
   "llama2-chat": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 4,
-    "description": "llama2-chat - Meta - Llama 2 Chat-tuned Variante für konversationelle Anwendungen."
+    "manufacturer": "Meta",
+    "description": "Instruction- and dialogue-tuned Llama 2 variant designed for conversational deployments."
   },
   "llama2-uncensored": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 4,
-    "description": "llama2-uncensored - Community (George Sung/Jarrad Hope) - Uncensored Version von Llama 2 für kreative Arbeiten ohne Filter."
+    "manufacturer": "Community (George Sung/Jarrad Hope)",
+    "description": "Uncensored Llama 2 fine-tune designed for creative applications without alignment filters."
   },
   "llama3-gradient": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 1040,
-    "description": "llama3-gradient - Gradient/Crusoe - Extended Context Llama-3 8B mit bis zu 1M+ Token Context Window (erfordert 64-100GB+ RAM)."
+    "manufacturer": "Gradient / Crusoe",
+    "description": "Extended-context Llama-3 8B model supporting ultra-long context windows up to 1M+ tokens."
   },
   "llama3.1": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 128,
-    "description": "llama3.1 - Meta - Größere Llama-familie (8B-405B) mit sehr guten allgemeinen Fähigkeiten und großem Context Window."
+    "manufacturer": "Meta",
+    "description": "Advanced foundation model family (8B–405B) featuring a 128K context window and multilingual support."
   },
   "llama3.2": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 128,
-    "description": "llama3.2 - Meta - Kompakte Modellfamilie (1B-90B). Gute Allround-Leistung, häufig für Tool-Workflows genutzt."
+    "manufacturer": "Meta",
+    "description": "Compact model family (1B–3B) optimized for edge deployment, lightweight reasoning, and tool use."
   },
   "llama3.2-vision": {
-    "vision": true,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 128,
-    "description": "llama3.2-vision - Meta - Multimodales Llama-3.2 Modell mit Bildverständnis und Tool-Support."
+    "manufacturer": "Meta",
+    "description": "Multimodal model family (11B, 90B) combining visual reasoning with instruction-following capabilities."
   },
   "llama3.3": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 128,
-    "description": "llama3.3 - Meta - Neuestes State-of-the-art 70B Modell von Meta mit verbesserter Performance gegenüber 3.1. Hervorragende Allround-Leistung."
+    "manufacturer": "Meta",
+    "description": "State-of-the-art 70B open foundation model offering performance on par with larger previous-generation models."
   },
   "llava": {
-    "vision": true,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 4,
-    "description": "llava - LLaVA - Vision+Language Assistant (v1.6), stark bei Bild-Captioning und visuellen Q&A, kombiniert Vision Encoder mit Vicuna."
+    "manufacturer": "LLaVA",
+    "description": "Vision-language assistant combining visual encoders with language backbones for visual Q&A and image captioning."
   },
   "marco-o1": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": true,
-    "image": false,
-    "decision": false,
-    "context": 128,
-    "description": "marco-o1 - Alibaba - Open-Source Reasoning Modell, spezialisiert auf komplexe Problemstellungen und Chain-of-Thought."
+    "manufacturer": "Alibaba",
+    "description": "Open-source reasoning model specialized in complex problem-solving via structured chain-of-thought."
   },
   "mathstral": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 32,
-    "description": "mathstral - Mistral AI - Auf Mathematik und logische Probleme spezialisiertes 7B Modell. Basiert auf Mistral-Technologie."
+    "manufacturer": "Mistral AI",
+    "description": "Specialized 7B model built for advanced mathematics, scientific reasoning, and logic problems."
   },
   "medgemma": {
-    "vision": true,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 128,
-    "description": "medgemma - GOOGLE - MedGemma bietet erweiterte Unterstützung für verschiedene neue medizinische Bildverarbeitungs- und Datenanalyse-Anwendungen."
+    "manufacturer": "Google",
+    "description": "Specialized model supporting biomedical text analysis and medical imaging applications."
   },
   "medgemma1.5": {
-    "vision": true,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 128,
-    "description": "medgemma1.5 - GOOGLE - MedGemma 1.5 4B bietet erweiterte Unterstützung für verschiedene neue medizinische Bildverarbeitungs- und Datenanalyse-Anwendungen."
+    "manufacturer": "Google",
+    "description": "Enhanced 4B biomedical model tailored for clinical text understanding and medical visual analysis."
   },
   "nemotron-3.5-bolt": {
-    "vision": true,
-    "audio": true,
-    "tools": true,
-    "embedding": false,
-    "thinking": true,
-    "image": false,
-    "decision": false,
-    "context": 64,
-    "description": "Nemotron 3.5 Bolt - NVIDIA - Ultraschnelles multimodales Modell mit Audio-, Vision-, Reasoning- und Tool-Unterstützung."
+    "manufacturer": "NVIDIA",
+    "description": "Ultra-fast multimodal model featuring integrated audio, vision, reasoning, and tool-calling capabilities."
   },
   "nemotron-mini": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 4,
-    "description": "nemotron-mini - NVIDIA - Kleines, hocheffizientes 4B Modell. Optimiert für schnelle Antworten und Function-Calling auf Consumer-Hardware."
+    "manufacturer": "NVIDIA",
+    "description": "Compact 4B model optimized for fast responses, low resource footprint, and on-device function calling."
   },
   "nemotron3": {
-    "vision": true,
-    "audio": true,
-    "tools": true,
-    "embedding": false,
-    "thinking": true,
-    "image": false,
-    "decision": false,
-    "context": 128,
-    "description": "nemotron3 - NVIDIA - Ist ein multimodales großes Sprachmodell, das das Verständnis von Video, Audio, Bild und Text vereint."
+    "manufacturer": "NVIDIA",
+    "description": "Multimodal large language model unifying video, audio, image, and text comprehension."
   },
   "nemotron-3.5-lightning": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": true,
-    "image": false,
-    "decision": false,
-    "context": 256,
-    "description": "nemotron-3.5-lightning - NVIDIA - 30B MoE-Modell (3B aktiv) mit großem Kontext, speziell optimiert für Always-on-Agenten."
+    "manufacturer": "NVIDIA",
+    "description": "30B MoE model (3B active) featuring large context support, tailored for always-on autonomous agents."
   },
   "nimble": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": true,
-    "image": false,
-    "decision": true,
-    "context": 256,
-    "description": "nimble - Bespoke Labs - Ein 9B-Entscheidungsmodell für schnelle, typisierte Klassifizierung."
+    "manufacturer": "Bespoke Labs",
+    "description": "9B decision model engineered for high-speed, typed classification and schema routing."
   },
   "minicpm-v": {
-    "vision": true,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 32,
-    "description": "minicpm-v - OpenBMB - Leistungsstarkes Vision-Language-Modell (8B). Übertrifft oft größere Modelle bei OCR und Bildverständnis."
+    "manufacturer": "OpenBMB",
+    "description": "High-performance edge vision-language model excelling in OCR, visual reasoning, and multimodal understanding."
   },
   "ministral-3": {
-    "vision": true,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 256,
-    "description": "ministral-3 - Mistral AI - Bilder analysieren, Apache 2.0 License, Large context, Mathematik."
+    "manufacturer": "Mistral AI",
+    "description": "Compact edge model optimized for image analysis, large context comprehension, and mathematics under Apache 2.0."
   },
   "mistral": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 32,
-    "description": "mistral - Mistral AI - Effizientes 7B Modell (v0.3), leistungsfähig und oft in Tool-Setups verwendet."
+    "manufacturer": "Mistral AI",
+    "description": "High-performance 7B foundation model widely used for general tasks, fine-tuning, and tool workflows."
   },
   "mistral-large": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 128,
-    "description": "mistral-large - Mistral AI - Mistral Large 2 (123B), Flaggschiff-Modell mit 128K Context, exzellent in Code, Mathematik und Reasoning."
+    "manufacturer": "Mistral AI",
+    "description": "Flagship 123B model with a 128K context window, excelling in code, mathematics, and advanced reasoning."
   },
   "mistral-nemo": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 128,
-    "description": "mistral-nemo - Mistral AI - 12B Modell mit großem Context Window und guter Performance."
+    "manufacturer": "Mistral AI",
+    "description": "12B multilingual model featuring a 128K context window, developed in collaboration with NVIDIA."
   },
   "mistral-small": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 128,
-    "description": "mistral-small - Mistral AI - Mistral Small 3.1 mit Vision-Understanding, 128K Context, verbesserte Fehlerreduzierung."
+    "manufacturer": "Mistral AI",
+    "description": "Refined model with native vision understanding, 128K context, and low latency for enterprise tasks."
   },
   "mistral-medium-3.5": {
-    "vision": true,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": true,
-    "image": false,
-    "decision": false,
-    "context": 256,
-    "description": "mistral-medium-3.5 - Mistral AI - Ist das erste Flaggschiffmodell von Mistral AI, das das Befolgen von Anweisungen, logisches Schlussfolgern und Programmieren vereint."
+    "manufacturer": "Mistral AI",
+    "description": "Flagship model combining strong instruction-following, logical reasoning, and programming capabilities."
   },
   "mixtral": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 32,
-    "description": "mixtral - Mistral AI - Mixture-of-Experts (8x7B, 8x22B), sehr effizient durch aktivierte Teilmodelle."
+    "manufacturer": "Mistral AI",
+    "description": "Pioneering sparse Mixture-of-Experts (8x7B, 8x22B) architecture delivering high inference throughput."
   },
   "moondream": {
-    "vision": true,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 2,
-    "description": "moondream - Moondream - Kompaktes Vision-Language-Modell für Bildanalyse und visuelle Aufgaben."
+    "manufacturer": "Moondream",
+    "description": "Ultra-compact vision-language model designed for fast image analysis and visual Q&A on resource-limited devices."
   },
   "mpt": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 8,
-    "description": "mpt - MosaicML - MosaicML Modelle (7B-30B), beliebt für Fine-Tuning und Research."
+    "manufacturer": "MosaicML",
+    "description": "Open foundation models (7B–30B) trained by MosaicML, optimized for efficient fine-tuning and long contexts."
   },
   "mpt-vision": {
-    "vision": true,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 8,
-    "description": "mpt-vision - MosaicML - Multimodale MPT Variante mit Bildverarbeitung."
+    "manufacturer": "MosaicML",
+    "description": "Multimodal MPT model variant incorporating visual processing capabilities."
   },
   "mxbai-embed-large": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": true,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 1,
-    "description": "mxbai-embed-large - MixedBread AI - Leistungsstarkes Embedding-Modell mit sehr großem Context für semantische Suche."
+    "manufacturer": "MixedBread AI",
+    "description": "High-performance embedding model with large context support for semantic search and retrieval."
   },
   "nemotron-4-340b": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 4,
-    "description": "nemotron-4 - NVIDIA - Hochperformantes Modell, das speziell für die Generierung von synthetischen Trainingsdaten entwickelt wurde."
+    "manufacturer": "NVIDIA",
+    "description": "High-capacity 340B foundation model designed specifically for generating high-quality synthetic training data."
   },
   "nomic-embed-text": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": true,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 8,
-    "description": "nomic-embed-text - Nomic AI - Embedding-Modell mit großem Token-Context-Fenster für Retrieval-Aufgaben."
+    "manufacturer": "Nomic AI",
+    "description": "High-performance open text embedding model supporting an 8K token context window."
   },
   "nous-hermes": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 8,
-    "description": "nous-hermes - Nous Research - General-Use-Modelle basierend auf Llama/Llama2, gut für Assistenz-Aufgaben."
+    "manufacturer": "Nous Research",
+    "description": "General-purpose assistant models based on Llama architectures, optimized for conversational workflows."
   },
   "nova-pro": {
-    "vision": true,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 300,
-    "description": "nova-pro - Amazon - Multimodales Flaggschiff-Modell von AWS, optimiert für Enterprise-Workflows und Dokumentenanalyse."
+    "manufacturer": "Amazon",
+    "description": "AWS flagship multimodal model optimized for enterprise workflows, document parsing, and agentic tasks."
   },
   "olmo-3": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": true,
-    "image": false,
-    "decision": false,
-    "context": 65,
-    "description": "olmo-3 - Allen Institute (Ai2) - Reasoning/CoT Modell, Apache 2.0 License, Stark in Logik & Code sowie Mathematik."
+    "manufacturer": "Allen Institute (Ai2)",
+    "description": "Fully open reasoning foundation model featuring chain-of-thought capabilities under an Apache 2.0 license."
   },
   "openthinker": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": true,
-    "image": false,
-    "decision": false,
-    "context": 32,
-    "description": "openthinker - Open Thoughts - Destillation von DeepSeek-R1 für Reasoning-Aufgaben."
+    "manufacturer": "Open Thoughts",
+    "description": "Open-source reasoning model fine-tuned on DeepSeek-R1 distillations for complex logic tasks."
   },
   "openhermes": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 32,
-    "description": "openhermes - Nous Research - Extrem populärer Fine-Tune für exzellente Chat- und Assistenz-Fähigkeiten."
+    "manufacturer": "Nous Research",
+    "description": "Widely adopted open instruction-tuned model delivering strong chat, reasoning, and assistant performance."
   },
   "orca-mini": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 2,
-    "description": "orca-mini - Microsoft - Kompakt (3B), für Einsteiger und ressourcenbeschränkte Systeme."
+    "manufacturer": "Microsoft",
+    "description": "Compact 3B model designed for entry-level setups and resource-constrained environments."
   },
   "ornith": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 256,
-    "description": "ornith - DeepReinforce - Eine sich selbst verbessernde Familie von Open-Source-Modellen für agentische Programmierung."
+    "manufacturer": "DeepReinforce",
+    "description": "Self-improving open-source model family designed for agentic coding and autonomous workflow development."
   },
   "ornith-1.5": {
-    "vision": true,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 256,
-    "description": "ornith-1.5 - DeepReinforce - Ein wichtiger Meilenstein auf dem Weg zu Foundation Models durch End-to-End-Selbstverbesserung."
+    "manufacturer": "DeepReinforce",
+    "description": "Milestone open foundation model developed through end-to-end self-improvement for software engineering."
   },
   "phi3-medium": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 128,
-    "description": "phi3-medium - Microsoft - 14B Modell, ausgewogener Kompromiss zwischen Leistung und Ressourceneinsatz."
+    "manufacturer": "Microsoft",
+    "description": "14B model offering a balanced trade-off between reasoning capability and compute requirements."
   },
   "phi3-mini": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 128,
-    "description": "phi3-mini - Microsoft - Leichtgewichtiges 3.8B Modell, nützlich für ressourcenarme Setups, gute Leistung."
+    "manufacturer": "Microsoft",
+    "description": "Lightweight 3.8B model delivering strong reasoning performance on edge hardware."
   },
   "phi4": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 16,
-    "description": "phi4 - Microsoft - State-of-the-art 14B Modell, exzellentes Reasoning und präzise Instruktionsbefolgung."
+    "manufacturer": "Microsoft",
+    "description": "State-of-the-art 14B model excelling at complex mathematical reasoning and instruction adherence."
   },
   "phoenix": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 16,
-    "description": "phoenix - Together AI - Modellfamilie mit Fokus auf Retrieval/Tool-Integration."
+    "manufacturer": "Together AI",
+    "description": "Open model family focused on tool use, agentic workflows, and retrieval integration."
   },
   "phoenix-vl": {
-    "vision": true,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 16,
-    "description": "phoenix-vl - Together AI - Vision-Language Ableitung von Phoenix mit Tool-Support."
+    "manufacturer": "Together AI",
+    "description": "Vision-language derivative of Phoenix supporting visual analysis alongside tool workflows."
   },
   "pixtral-12b": {
-    "vision": true,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 128,
-    "description": "pixtral-12b - Mistral AI - Erstes natives multimodales Modell von Mistral. Exzellentes Bildverständnis bei moderater Modellgröße."
+    "manufacturer": "Mistral AI",
+    "description": "Native multimodal 12B model from Mistral AI delivering strong image and text comprehension."
   },
   "pplx-decider": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": true,
-    "context": 128,
-    "description": "pplx-decider - Perplexity / Custom - Spezialisiertes Entscheidungs- und Routing-Modell zur automatisierten Steuerung von Agenten-Workflows."
+    "manufacturer": "Perplexity / Custom",
+    "description": "Specialized decision and routing model designed for automated agent orchestration."
   },
   "qwen-chat": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 32,
-    "description": "qwen-chat - Alibaba - Chat-optimierte Version der Qwen-Reihe für Konversationen."
+    "manufacturer": "Alibaba",
+    "description": "Dialogue-optimized foundation model from the Qwen series for natural multi-turn conversations."
   },
   "qwen2": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 128,
-    "description": "qwen2 - Alibaba - Vielseitige Modellfamilie (0.5B-72B), gut für Tool-Workflows, mehrsprachig."
+    "manufacturer": "Alibaba",
+    "description": "Versatile open model family (0.5B–72B) featuring multilingual support and tool-calling capabilities."
   },
   "qwen2.5": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 128,
-    "description": "qwen2.5 - Alibaba - Verbesserte Version (0.5B-72B), 18+ Sprachen, stark in Mathematik und Reasoning."
+    "manufacturer": "Alibaba",
+    "description": "Enhanced model family (0.5B–72B) supporting 18+ languages with strong reasoning and math performance."
   },
   "qwen2.5-coder": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 128,
-    "description": "qwen2.5-coder - Alibaba - Code-spezialisiert, verbesserte Code-Generierung, Reasoning und Fixing."
+    "manufacturer": "Alibaba",
+    "description": "Code-specialized open model family excelling in code generation, debugging, and software reasoning."
   },
   "qwen3": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": true,
-    "image": false,
-    "decision": false,
-    "context": 128,
-    "description": "qwen3 - Alibaba - Neueste Generation (4B, 30B, 235B MoE mit 22B aktiv), Thinking- und Non-Thinking-Modus, stark verbessertes Reasoning."
+    "manufacturer": "Alibaba",
+    "description": "Next-generation model family (4B–235B MoE) supporting configurable thinking and non-thinking inference."
   },
   "qwen3-coder": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 128,
-    "description": "qwen3-coder - Alibaba - Qwen3 Code-spezialisiert (480B für Cloud), neueste Generation für Programmieraufgaben."
+    "manufacturer": "Alibaba",
+    "description": "Specialized coding model engineered for multi-file software engineering and autonomous programming tasks."
   },
   "qwen3-embedding": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": true,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 40,
-    "description": "qwen3-embedding - Alibaba - Neueste Generation (600M, 4B, 8B), Embedding Model."
+    "manufacturer": "Alibaba",
+    "description": "Next-generation multilingual text embedding model family (600M, 4B, 8B) for dense retrieval."
   },
   "qwen3-vl": {
-    "vision": true,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 32,
-    "description": "qwen3-vl - Alibaba - Leistungsfähigstes Vision-Language Modell der Qwen-Familie (multimodal, Tool-freundlich)."
+    "manufacturer": "Alibaba",
+    "description": "High-capacity vision-language model integrating multimodal understanding with tool calling."
   },
   "qwen3.5": {
-    "vision": true,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": true,
-    "image": false,
-    "decision": false,
-    "context": 256,
-    "description": "qwen3.5 - Alibaba - LLM mit Multimodalität und hocheffizienter Architektur für Bild- und Textdaten."
+    "manufacturer": "Alibaba",
+    "description": "Multimodal model architecture engineered for efficient unified processing of images and text."
   },
   "qwen3.6": {
-    "vision": true,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": true,
-    "image": false,
-    "decision": false,
-    "context": 256,
-    "description": "qwen3.6 - Alibaba - Fortgeschrittenes Qwen-Modell mit optimierten Coding- und Reasoning-Fähigkeiten."
+    "manufacturer": "Alibaba",
+    "description": "Advanced Qwen model variant featuring refined coding, mathematical, and reasoning capabilities."
   },
   "qwen3.8": {
-    "vision": true,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": true,
-    "image": false,
-    "decision": false,
-    "context": 256,
-    "description": "qwen3.8 - Alibaba - Liefert erhebliche Fortschritte bei Programmieraufgaben, professionellen Arbeiten, der Forschung sowie bei lang laufenden Agenten-Aufgaben."
+    "manufacturer": "Alibaba",
+    "description": "High-performance model delivering substantial gains in coding, research, and long-horizon agentic tasks."
   },
   "skywork-o1": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": true,
-    "image": false,
-    "decision": false,
-    "context": 128,
-    "description": "skywork-o1 - Skywork AI - Fokus auf Open-Source Reasoning mit hoher Transparenz in der Denkweise."
+    "manufacturer": "Skywork AI",
+    "description": "Open-source reasoning model focused on transparent, verifiable chain-of-thought generation."
   },
   "smollm": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 2,
-    "description": "smollm - HuggingFace - Reihe von kompakten Modellen (135M-360M) für einfache Aufgaben auf Edge-Geräten."
+    "manufacturer": "HuggingFace",
+    "description": "Ultra-compact model family (135M–360M) designed for local execution and lightweight tasks on edge hardware."
   },
   "smollm2": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 8,
-    "description": "smollm2 - HuggingFace - Sehr kleine, effiziente Modelle (135M-1.7B) mit Tool-Support für ressourcenbeschränkte Systeme."
+    "manufacturer": "HuggingFace",
+    "description": "Compact model family (135M–1.7B) featuring on-device tool support and efficient reasoning."
   },
   "snowflake-arctic-embed": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": true,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 1,
-    "description": "snowflake-arctic-embed - Snowflake - Suite von Text-Embedding-Modellen, optimiert für Performance."
+    "manufacturer": "Snowflake",
+    "description": "Suite of text embedding models engineered for high retrieval performance and low compute latency."
   },
   "solar-pro": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 128,
-    "description": "solar-pro - Upstage - Ein 22B Modell, das für Single-GPU-Setups optimiert ist und in Benchmarks oft deutlich größere Modelle schlägt."
+    "manufacturer": "Upstage",
+    "description": "22B foundation model optimized for single-GPU setups, competing with larger models on standard benchmarks."
   },
   "stablelm-2": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 4,
-    "description": "stablelm-2 - Stability AI - Sehr kompakte und schnelle Modelle (1.6B - 12B), ideal für Chat-Anwendungen auf schwacher Hardware."
+    "manufacturer": "Stability AI",
+    "description": "Compact, fast language model family (1.6B–12B) suitable for lightweight conversational deployments."
   },
   "starcoder": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 8,
-    "description": "starcoder - BigCode - Open-Source-Code-Modell für 80+ Programmiersprachen, gut für Code-Vervollständigung."
+    "manufacturer": "BigCode",
+    "description": "Open-source code model trained on 80+ programming languages for code completion and synthesis."
   },
   "starcoder-instruct": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 8,
-    "description": "starcoder-instruct - BigCode - Anweisungsoptimierte Code-Variante für bessere Instruktionsbefolgung."
+    "manufacturer": "BigCode",
+    "description": "Instruction-tuned StarCoder variant optimized for following natural language programming directions."
   },
   "starcoder2": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 16,
-    "description": "starcoder2 - BigCode - Weiterentwicklung von StarCoder (3B, 7B, 15B) mit verbessertem Codeverständnis, transparent trainiert."
+    "manufacturer": "BigCode",
+    "description": "Next-generation open code model family (3B, 7B, 15B) trained transparently on comprehensive source code datasets."
   },
   "starling-lm": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 8,
-    "description": "starling-lm - Berkeley - RLHF-optimiertes Modell, das in Chatbots durch sehr natürliche und hilfreiche Antworten glänzt."
+    "manufacturer": "Berkeley",
+    "description": "RLHF-tuned model known for natural, helpful, and high-quality conversational responses."
   },
   "tinyllama": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 2,
-    "description": "tinyllama - Meta - Sehr kleine Llama-Ableitungen (1.1B) für Embedded/Edge-Usecases."
+    "manufacturer": "Meta",
+    "description": "Ultra-compact 1.1B Llama architecture pre-trained for embedded systems and edge devices."
   },
   "tev1": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": true,
-    "image": false,
-    "decision": true,
-    "context": 256,
-    "description": "tev1 - Together AI - Ein Entscheidungsmodell für schnelle Klassifizierung."
+    "manufacturer": "Together AI",
+    "description": "Lightweight decision and routing model designed for fast, typed classification tasks."
   },
   "translategemma": {
-    "vision": true,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 128,
-    "description": "translategemma - Google - Übersetzungsmodell, die auf Gemma 3 basieren und bei der Kommunikation in 55 Sprachen unterstützen."
+    "manufacturer": "Google",
+    "description": "Specialized translation model based on Gemma architecture, supporting cross-lingual tasks across 55 languages."
   },
   "vicuna": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 4,
-    "description": "vicuna - LMSYS - Konversations-Modell (13B), gut für Dialoge und Chat-Anwendungen."
+    "manufacturer": "LMSYS",
+    "description": "Open conversational model fine-tuned on user-shared conversations for engaging chat experiences."
   },
   "wizard-vicuna": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 8,
-    "description": "wizard-vicuna - WizardLM - Instruction-tuned Varianten (7B, 13B, 30B), häufig für Assistenz/Tool-Workflows."
+    "manufacturer": "WizardLM",
+    "description": "Instruction-tuned hybrid model combining WizardLM instruction datasets with Vicuna conversational tuning."
   },
   "wizardlm": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 8,
-    "description": "wizardlm - WizardLM - Instruction-tuned Modell, oft für Tool-Calling und Assistenz verwendet."
+    "manufacturer": "WizardLM",
+    "description": "Instruction-tuned foundation model utilizing Evol-Instruct for complex prompt compliance."
   },
   "wizardlm2": {
-    "vision": false,
-    "audio": false,
-    "tools": true,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 32,
-    "description": "wizardlm2 - WizardLM - Neuere Instruction-Variante mit verbessertem Reasoning und Tool-Support."
+    "manufacturer": "WizardLM",
+    "description": "Advanced instruction-following model delivering strong performance in reasoning, coding, and multilingual tasks."
   },
   "yi": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 200,
-    "description": "yi - 01.AI - Bilingual (EN/CN) Modell (6B-34B), hohe Performance, lange Context-Unterstützung."
+    "manufacturer": "01.AI",
+    "description": "Bilingual (English/Chinese) model family (6B–34B) offering long context support and strong general performance."
   },
   "yi-vision": {
-    "vision": true,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 4,
-    "description": "yi-vision - 01.AI - Multimodales Modell mit Bildverarbeitungsfähigkeiten."
+    "manufacturer": "01.AI",
+    "description": "Multimodal model variant combining the Yi language backbone with high-resolution image perception."
   },
   "x/z-image-turbo": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": true,
-    "decision": false,
-    "context": 2,
-    "description": "x/z-image-turbo - Custom - Schnelles Modell, optimiert für die prompte Bildgenerierung."
+    "manufacturer": "Custom",
+    "description": "Fast diffusion model optimized for low-latency, prompt-based local image synthesis."
   },
   "zephyr": {
-    "vision": false,
-    "audio": false,
-    "tools": false,
-    "embedding": false,
-    "thinking": false,
-    "image": false,
-    "decision": false,
-    "context": 8,
-    "description": "zephyr - HuggingFace - Fine-tuned als hilfreicher Assistent, gut für Konversationen."
+    "manufacturer": "HuggingFace",
+    "description": "Direct Preference Optimization (DPO) fine-tuned assistant model designed for helpful and conversational dialogue."
   }
 }

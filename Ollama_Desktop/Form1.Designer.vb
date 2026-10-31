@@ -24,8 +24,8 @@ Partial Class Form1
     Private Sub InitializeComponent()
         components = New ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form1))
-        Dim LayoutState1 As SiticoneNetCoreUI.SiticoneFlowPanel.LayoutState = New SiticoneNetCoreUI.SiticoneFlowPanel.LayoutState()
-        Dim NavBarItem1 As SiticoneNetCoreUI.NavBarItem = New SiticoneNetCoreUI.NavBarItem()
+        Dim LayoutState2 As SiticoneNetCoreUI.SiticoneFlowPanel.LayoutState = New SiticoneNetCoreUI.SiticoneFlowPanel.LayoutState()
+        Dim NavBarItem2 As SiticoneNetCoreUI.NavBarItem = New SiticoneNetCoreUI.NavBarItem()
         WebView21 = New Microsoft.Web.WebView2.WinForms.WebView2()
         SiticoneTextBox_host = New SiticoneNetCoreUI.SiticoneTextBox()
         SiticoneDropdown_model = New SiticoneNetCoreUI.SiticoneDropdown()
@@ -34,6 +34,7 @@ Partial Class Form1
         SiticoneButton_file = New SiticoneNetCoreUI.SiticoneButton()
         SiticoneTabControl_tab = New SiticoneNetCoreUI.SiticoneTabControl()
         TabPage_modelinfo = New TabPage()
+        SiticoneChip_model_info_Speech = New SiticoneNetCoreUI.SiticoneChip()
         SiticoneLabel_model_info_show = New SiticoneNetCoreUI.SiticoneLabel()
         SiticoneLabel_model_info_tags = New SiticoneNetCoreUI.SiticoneLabel()
         SiticoneChip_model_info_insert = New SiticoneNetCoreUI.SiticoneChip()
@@ -60,6 +61,7 @@ Partial Class Form1
         SiticoneChip_model_info_Vision = New SiticoneNetCoreUI.SiticoneChip()
         SiticoneLabel1_model_info_description = New SiticoneNetCoreUI.SiticoneLabel()
         TabPage_modelparameter = New TabPage()
+        SiticoneDropdown_voice = New SiticoneNetCoreUI.SiticoneDropdown()
         SiticoneFlatPanel_trenn3 = New SiticoneNetCoreUI.SiticoneFlatPanel()
         SiticoneFlatPanel_thinking_use = New SiticoneNetCoreUI.SiticoneFlatPanel()
         SiticoneLabel_thinking_use = New SiticoneNetCoreUI.SiticoneLabel()
@@ -246,6 +248,7 @@ Partial Class Form1
         SiticoneButton_show_ollama_ps = New SiticoneNetCoreUI.SiticoneButton()
         SiticoneLabel_whisperlang = New SiticoneNetCoreUI.SiticoneLabel()
         Timer_LLM_progress = New Timer(components)
+        SiticoneLabel27 = New SiticoneNetCoreUI.SiticoneLabel()
         CType(WebView21, ComponentModel.ISupportInitialize).BeginInit()
         SiticoneTabControl_tab.SuspendLayout()
         TabPage_modelinfo.SuspendLayout()
@@ -298,7 +301,7 @@ Partial Class Form1
         WebView21.Dock = DockStyle.Fill
         WebView21.Location = New Point(3, 3)
         WebView21.Name = "WebView21"
-        WebView21.Size = New Size(1421, 643)
+        WebView21.Size = New Size(1449, 643)
         WebView21.TabIndex = 0
         WebView21.ZoomFactor = 1.1R
         ' 
@@ -496,7 +499,7 @@ Partial Class Form1
         SiticoneTextArea_prompt.Name = "SiticoneTextArea_prompt"
         SiticoneTextArea_prompt.PlaceholderText = "Write Prompt here..."
         SiticoneTextArea_prompt.ScrollBars = ScrollBars.Vertical
-        SiticoneTextArea_prompt.Size = New Size(1485, 36)
+        SiticoneTextArea_prompt.Size = New Size(1513, 36)
         SiticoneTextArea_prompt.TabIndex = 17
         ' 
         ' SiticoneButton_file
@@ -618,7 +621,7 @@ Partial Class Form1
         SiticoneTabControl_tab.SeparatorLineOpacity = 0.4F
         SiticoneTabControl_tab.ShowSeparatorLine = True
         SiticoneTabControl_tab.ShowToolTips = True
-        SiticoneTabControl_tab.Size = New Size(1435, 707)
+        SiticoneTabControl_tab.Size = New Size(1463, 707)
         SiticoneTabControl_tab.SizeMode = TabSizeMode.Fixed
         SiticoneTabControl_tab.TabImagePadding = 3
         SiticoneTabControl_tab.TabImageSize = 32
@@ -632,6 +635,7 @@ Partial Class Form1
         ' TabPage_modelinfo
         ' 
         TabPage_modelinfo.BackColor = Color.WhiteSmoke
+        TabPage_modelinfo.Controls.Add(SiticoneChip_model_info_Speech)
         TabPage_modelinfo.Controls.Add(SiticoneLabel_model_info_show)
         TabPage_modelinfo.Controls.Add(SiticoneLabel_model_info_tags)
         TabPage_modelinfo.Controls.Add(SiticoneChip_model_info_insert)
@@ -660,10 +664,63 @@ Partial Class Form1
         TabPage_modelinfo.Location = New Point(4, 54)
         TabPage_modelinfo.Name = "TabPage_modelinfo"
         TabPage_modelinfo.Padding = New Padding(3)
-        TabPage_modelinfo.Size = New Size(1427, 649)
+        TabPage_modelinfo.Size = New Size(1455, 649)
         SiticoneTabControl_tab.SetTabImage(TabPage_modelinfo, My.Resources.Resource_svg.Model_Info)
         TabPage_modelinfo.TabIndex = 5
         TabPage_modelinfo.Text = "Model Info"
+        ' 
+        ' SiticoneChip_model_info_Speech
+        ' 
+        SiticoneChip_model_info_Speech.AccentColor = Color.FromArgb(CByte(0), CByte(122), CByte(204))
+        SiticoneChip_model_info_Speech.AutoDisposeOnClose = True
+        SiticoneChip_model_info_Speech.Avatar = Nothing
+        SiticoneChip_model_info_Speech.BackColor = Color.Transparent
+        SiticoneChip_model_info_Speech.BorderColor = Color.FromArgb(CByte(210), CByte(210), CByte(210))
+        SiticoneChip_model_info_Speech.BorderWidth = 1
+        SiticoneChip_model_info_Speech.BottomLeftRadius = 20F
+        SiticoneChip_model_info_Speech.BottomRightRadius = 20F
+        SiticoneChip_model_info_Speech.CheckmarkColor = Color.FromArgb(CByte(64), CByte(64), CByte(64))
+        SiticoneChip_model_info_Speech.CheckmarkPadding = New Padding(8, 8, 0, 8)
+        SiticoneChip_model_info_Speech.CheckmarkScale = 0.6F
+        SiticoneChip_model_info_Speech.CheckmarkThickness = 2F
+        SiticoneChip_model_info_Speech.CheckmarkWidth = 20
+        SiticoneChip_model_info_Speech.CloseButtonBorderColor = Color.FromArgb(CByte(128), CByte(128), CByte(128))
+        SiticoneChip_model_info_Speech.CloseButtonBorderThickness = 1F
+        SiticoneChip_model_info_Speech.CloseButtonHoverBackColor = Color.FromArgb(CByte(30), CByte(128), CByte(128), CByte(128))
+        SiticoneChip_model_info_Speech.CloseIconColor = Color.Black
+        SiticoneChip_model_info_Speech.CloseIconHoverColor = Color.FromArgb(CByte(64), CByte(64), CByte(64))
+        SiticoneChip_model_info_Speech.CloseIconInnerPadding = 4
+        SiticoneChip_model_info_Speech.CloseIconPadding = New Padding(8)
+        SiticoneChip_model_info_Speech.CloseIconSize = 20
+        SiticoneChip_model_info_Speech.CloseIconThickness = 1.5F
+        SiticoneChip_model_info_Speech.EnableHoverAnimation = False
+        SiticoneChip_model_info_Speech.EnableRipples = False
+        SiticoneChip_model_info_Speech.EnableSelection = False
+        SiticoneChip_model_info_Speech.FillColor = Color.FromArgb(CByte(255), CByte(192), CByte(192))
+        SiticoneChip_model_info_Speech.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
+        SiticoneChip_model_info_Speech.ForeColor = Color.FromArgb(CByte(20), CByte(20), CByte(20))
+        SiticoneChip_model_info_Speech.Group = ""
+        SiticoneChip_model_info_Speech.HoverColor = Color.FromArgb(CByte(255), CByte(192), CByte(192))
+        SiticoneChip_model_info_Speech.HoverTextColor = Color.Empty
+        SiticoneChip_model_info_Speech.IsSelected = False
+        SiticoneChip_model_info_Speech.Location = New Point(532, 31)
+        SiticoneChip_model_info_Speech.Name = "SiticoneChip_model_info_Speech"
+        SiticoneChip_model_info_Speech.Padding = New Padding(8, 4, 8, 4)
+        SiticoneChip_model_info_Speech.PressedColor = Color.FromArgb(CByte(224), CByte(224), CByte(224))
+        SiticoneChip_model_info_Speech.RippleColor = Color.Gray
+        SiticoneChip_model_info_Speech.RippleDurationMS = 500
+        SiticoneChip_model_info_Speech.RippleOpacity = 0.1F
+        SiticoneChip_model_info_Speech.SelectedFillColor = Color.FromArgb(CByte(192), CByte(255), CByte(192))
+        SiticoneChip_model_info_Speech.SelectedTextColor = Color.Empty
+        SiticoneChip_model_info_Speech.ShowCheckmark = True
+        SiticoneChip_model_info_Speech.ShowCloseButton = False
+        SiticoneChip_model_info_Speech.ShowCloseButtonBorder = False
+        SiticoneChip_model_info_Speech.Size = New Size(130, 29)
+        SiticoneChip_model_info_Speech.TabIndex = 67
+        SiticoneChip_model_info_Speech.Text = "speech"
+        ToolTip1.SetToolTip(SiticoneChip_model_info_Speech, "Indicates whether the model can generate voices from text.")
+        SiticoneChip_model_info_Speech.TopLeftRadius = 20F
+        SiticoneChip_model_info_Speech.TopRightRadius = 20F
         ' 
         ' SiticoneLabel_model_info_show
         ' 
@@ -719,7 +776,7 @@ Partial Class Form1
         SiticoneChip_model_info_insert.HoverColor = Color.FromArgb(CByte(255), CByte(192), CByte(192))
         SiticoneChip_model_info_insert.HoverTextColor = Color.Empty
         SiticoneChip_model_info_insert.IsSelected = False
-        SiticoneChip_model_info_insert.Location = New Point(1286, 31)
+        SiticoneChip_model_info_insert.Location = New Point(1318, 31)
         SiticoneChip_model_info_insert.Name = "SiticoneChip_model_info_insert"
         SiticoneChip_model_info_insert.Padding = New Padding(8, 4, 8, 4)
         SiticoneChip_model_info_insert.PressedColor = Color.FromArgb(CByte(224), CByte(224), CByte(224))
@@ -731,7 +788,7 @@ Partial Class Form1
         SiticoneChip_model_info_insert.ShowCheckmark = True
         SiticoneChip_model_info_insert.ShowCloseButton = False
         SiticoneChip_model_info_insert.ShowCloseButtonBorder = False
-        SiticoneChip_model_info_insert.Size = New Size(136, 29)
+        SiticoneChip_model_info_insert.Size = New Size(130, 29)
         SiticoneChip_model_info_insert.TabIndex = 64
         SiticoneChip_model_info_insert.Text = "insert"
         ToolTip1.SetToolTip(SiticoneChip_model_info_insert, "Indicates whether the model supports fill-in-the-middle (FIM) text or code insertion.")
@@ -772,7 +829,7 @@ Partial Class Form1
         SiticoneChip_model_info_Rerank.HoverColor = Color.FromArgb(CByte(255), CByte(192), CByte(192))
         SiticoneChip_model_info_Rerank.HoverTextColor = Color.Empty
         SiticoneChip_model_info_Rerank.IsSelected = False
-        SiticoneChip_model_info_Rerank.Location = New Point(1002, 31)
+        SiticoneChip_model_info_Rerank.Location = New Point(1056, 31)
         SiticoneChip_model_info_Rerank.Name = "SiticoneChip_model_info_Rerank"
         SiticoneChip_model_info_Rerank.Padding = New Padding(8, 4, 8, 4)
         SiticoneChip_model_info_Rerank.PressedColor = Color.FromArgb(CByte(224), CByte(224), CByte(224))
@@ -784,7 +841,7 @@ Partial Class Form1
         SiticoneChip_model_info_Rerank.ShowCheckmark = True
         SiticoneChip_model_info_Rerank.ShowCloseButton = False
         SiticoneChip_model_info_Rerank.ShowCloseButtonBorder = False
-        SiticoneChip_model_info_Rerank.Size = New Size(140, 29)
+        SiticoneChip_model_info_Rerank.Size = New Size(130, 29)
         SiticoneChip_model_info_Rerank.TabIndex = 63
         SiticoneChip_model_info_Rerank.Text = "rerank"
         ToolTip1.SetToolTip(SiticoneChip_model_info_Rerank, "Indicates whether the model supports reranking search results by relevance.")
@@ -837,7 +894,7 @@ Partial Class Form1
         SiticoneChip_model_info_Completion.ShowCheckmark = True
         SiticoneChip_model_info_Completion.ShowCloseButton = False
         SiticoneChip_model_info_Completion.ShowCloseButtonBorder = False
-        SiticoneChip_model_info_Completion.Size = New Size(140, 29)
+        SiticoneChip_model_info_Completion.Size = New Size(130, 29)
         SiticoneChip_model_info_Completion.TabIndex = 62
         SiticoneChip_model_info_Completion.Text = "completion"
         ToolTip1.SetToolTip(SiticoneChip_model_info_Completion, "Indicates whether the model supports standard text and chat completion.")
@@ -1000,7 +1057,7 @@ Partial Class Form1
         ' 
         PictureBox_vram_bar.Location = New Point(8, 102)
         PictureBox_vram_bar.Name = "PictureBox_vram_bar"
-        PictureBox_vram_bar.Size = New Size(1403, 33)
+        PictureBox_vram_bar.Size = New Size(1440, 33)
         PictureBox_vram_bar.TabIndex = 56
         PictureBox_vram_bar.TabStop = False
         ' 
@@ -1126,7 +1183,7 @@ Partial Class Form1
         SiticoneChip_model_info_Decision.HoverColor = Color.FromArgb(CByte(255), CByte(192), CByte(192))
         SiticoneChip_model_info_Decision.HoverTextColor = Color.Empty
         SiticoneChip_model_info_Decision.IsSelected = False
-        SiticoneChip_model_info_Decision.Location = New Point(1144, 31)
+        SiticoneChip_model_info_Decision.Location = New Point(1187, 31)
         SiticoneChip_model_info_Decision.Name = "SiticoneChip_model_info_Decision"
         SiticoneChip_model_info_Decision.Padding = New Padding(8, 4, 8, 4)
         SiticoneChip_model_info_Decision.PressedColor = Color.FromArgb(CByte(224), CByte(224), CByte(224))
@@ -1138,7 +1195,7 @@ Partial Class Form1
         SiticoneChip_model_info_Decision.ShowCheckmark = True
         SiticoneChip_model_info_Decision.ShowCloseButton = False
         SiticoneChip_model_info_Decision.ShowCloseButtonBorder = False
-        SiticoneChip_model_info_Decision.Size = New Size(140, 29)
+        SiticoneChip_model_info_Decision.Size = New Size(130, 29)
         SiticoneChip_model_info_Decision.TabIndex = 52
         SiticoneChip_model_info_Decision.Text = "decision"
         ToolTip1.SetToolTip(SiticoneChip_model_info_Decision, "Indicates whether the model is optimized for structured decision-making and classification tasks.")
@@ -1179,7 +1236,7 @@ Partial Class Form1
         SiticoneChip_model_info_Audio.HoverColor = Color.FromArgb(CByte(255), CByte(192), CByte(192))
         SiticoneChip_model_info_Audio.HoverTextColor = Color.Empty
         SiticoneChip_model_info_Audio.IsSelected = False
-        SiticoneChip_model_info_Audio.Location = New Point(434, 31)
+        SiticoneChip_model_info_Audio.Location = New Point(270, 31)
         SiticoneChip_model_info_Audio.Name = "SiticoneChip_model_info_Audio"
         SiticoneChip_model_info_Audio.Padding = New Padding(8, 4, 8, 4)
         SiticoneChip_model_info_Audio.PressedColor = Color.FromArgb(CByte(224), CByte(224), CByte(224))
@@ -1191,10 +1248,10 @@ Partial Class Form1
         SiticoneChip_model_info_Audio.ShowCheckmark = True
         SiticoneChip_model_info_Audio.ShowCloseButton = False
         SiticoneChip_model_info_Audio.ShowCloseButtonBorder = False
-        SiticoneChip_model_info_Audio.Size = New Size(140, 29)
+        SiticoneChip_model_info_Audio.Size = New Size(130, 29)
         SiticoneChip_model_info_Audio.TabIndex = 51
         SiticoneChip_model_info_Audio.Text = "audio"
-        ToolTip1.SetToolTip(SiticoneChip_model_info_Audio, "Indicates whether the model can process or generate audio and speech data.")
+        ToolTip1.SetToolTip(SiticoneChip_model_info_Audio, "Indicates whether the model can process audio and speech data.")
         SiticoneChip_model_info_Audio.TopLeftRadius = 20F
         SiticoneChip_model_info_Audio.TopRightRadius = 20F
         ' 
@@ -1232,7 +1289,7 @@ Partial Class Form1
         SiticoneChip_model_info_Diffusion.HoverColor = Color.FromArgb(CByte(255), CByte(192), CByte(192))
         SiticoneChip_model_info_Diffusion.HoverTextColor = Color.Empty
         SiticoneChip_model_info_Diffusion.IsSelected = False
-        SiticoneChip_model_info_Diffusion.Location = New Point(292, 31)
+        SiticoneChip_model_info_Diffusion.Location = New Point(401, 31)
         SiticoneChip_model_info_Diffusion.Name = "SiticoneChip_model_info_Diffusion"
         SiticoneChip_model_info_Diffusion.Padding = New Padding(8, 4, 8, 4)
         SiticoneChip_model_info_Diffusion.PressedColor = Color.FromArgb(CByte(224), CByte(224), CByte(224))
@@ -1244,7 +1301,7 @@ Partial Class Form1
         SiticoneChip_model_info_Diffusion.ShowCheckmark = True
         SiticoneChip_model_info_Diffusion.ShowCloseButton = False
         SiticoneChip_model_info_Diffusion.ShowCloseButtonBorder = False
-        SiticoneChip_model_info_Diffusion.Size = New Size(140, 29)
+        SiticoneChip_model_info_Diffusion.Size = New Size(130, 29)
         SiticoneChip_model_info_Diffusion.TabIndex = 50
         SiticoneChip_model_info_Diffusion.Text = "diffusion"
         ToolTip1.SetToolTip(SiticoneChip_model_info_Diffusion, "Indicates whether the model can generate images from text prompts.")
@@ -1260,7 +1317,7 @@ Partial Class Form1
         Scintilla_model_info.Location = New Point(8, 162)
         Scintilla_model_info.Name = "Scintilla_model_info"
         Scintilla_model_info.ScrollWidth = 70
-        Scintilla_model_info.Size = New Size(1413, 202)
+        Scintilla_model_info.Size = New Size(1441, 202)
         Scintilla_model_info.TabIndex = 49
         ' 
         ' Scintilla_model_info_request
@@ -1272,7 +1329,7 @@ Partial Class Form1
         Scintilla_model_info_request.Location = New Point(8, 391)
         Scintilla_model_info_request.Name = "Scintilla_model_info_request"
         Scintilla_model_info_request.ScrollWidth = 70
-        Scintilla_model_info_request.Size = New Size(1413, 222)
+        Scintilla_model_info_request.Size = New Size(1441, 222)
         Scintilla_model_info_request.TabIndex = 48
         ' 
         ' SiticoneButton_show_licence
@@ -1325,7 +1382,7 @@ Partial Class Form1
         SiticoneButton_show_licence.IsReadOnly = False
         SiticoneButton_show_licence.IsToggleButton = False
         SiticoneButton_show_licence.IsToggled = False
-        SiticoneButton_show_licence.Location = New Point(1314, 618)
+        SiticoneButton_show_licence.Location = New Point(1342, 618)
         SiticoneButton_show_licence.LongPressDurationMS = 1000
         SiticoneButton_show_licence.Name = "SiticoneButton_show_licence"
         SiticoneButton_show_licence.NormalFontStyle = FontStyle.Regular
@@ -1387,7 +1444,7 @@ Partial Class Form1
         SiticoneChip_model_info_Context.HoverColor = Color.FromArgb(CByte(255), CByte(192), CByte(192))
         SiticoneChip_model_info_Context.HoverTextColor = Color.Empty
         SiticoneChip_model_info_Context.IsSelected = False
-        SiticoneChip_model_info_Context.Location = New Point(1221, 66)
+        SiticoneChip_model_info_Context.Location = New Point(1187, 66)
         SiticoneChip_model_info_Context.Name = "SiticoneChip_model_info_Context"
         SiticoneChip_model_info_Context.Padding = New Padding(8, 4, 8, 4)
         SiticoneChip_model_info_Context.PressedColor = Color.FromArgb(CByte(224), CByte(224), CByte(224))
@@ -1399,7 +1456,7 @@ Partial Class Form1
         SiticoneChip_model_info_Context.ShowCheckmark = True
         SiticoneChip_model_info_Context.ShowCloseButton = False
         SiticoneChip_model_info_Context.ShowCloseButtonBorder = False
-        SiticoneChip_model_info_Context.Size = New Size(200, 29)
+        SiticoneChip_model_info_Context.Size = New Size(261, 29)
         SiticoneChip_model_info_Context.TabIndex = 9
         SiticoneChip_model_info_Context.Text = "context: ?"
         ToolTip1.SetToolTip(SiticoneChip_model_info_Context, "Displays the maximum context window size (in tokens) supported by the model.")
@@ -1440,7 +1497,7 @@ Partial Class Form1
         SiticoneChip_model_info_Embedding.HoverColor = Color.FromArgb(CByte(255), CByte(192), CByte(192))
         SiticoneChip_model_info_Embedding.HoverTextColor = Color.Empty
         SiticoneChip_model_info_Embedding.IsSelected = False
-        SiticoneChip_model_info_Embedding.Location = New Point(860, 31)
+        SiticoneChip_model_info_Embedding.Location = New Point(925, 31)
         SiticoneChip_model_info_Embedding.Name = "SiticoneChip_model_info_Embedding"
         SiticoneChip_model_info_Embedding.Padding = New Padding(8, 4, 8, 4)
         SiticoneChip_model_info_Embedding.PressedColor = Color.FromArgb(CByte(224), CByte(224), CByte(224))
@@ -1452,7 +1509,7 @@ Partial Class Form1
         SiticoneChip_model_info_Embedding.ShowCheckmark = True
         SiticoneChip_model_info_Embedding.ShowCloseButton = False
         SiticoneChip_model_info_Embedding.ShowCloseButtonBorder = False
-        SiticoneChip_model_info_Embedding.Size = New Size(140, 29)
+        SiticoneChip_model_info_Embedding.Size = New Size(130, 29)
         SiticoneChip_model_info_Embedding.TabIndex = 8
         SiticoneChip_model_info_Embedding.Text = "embedding"
         ToolTip1.SetToolTip(SiticoneChip_model_info_Embedding, "Indicates whether the model can generate vector embeddings for semantic search and RAG.")
@@ -1493,7 +1550,7 @@ Partial Class Form1
         SiticoneChip_model_info_Thinking.HoverColor = Color.FromArgb(CByte(255), CByte(192), CByte(192))
         SiticoneChip_model_info_Thinking.HoverTextColor = Color.Empty
         SiticoneChip_model_info_Thinking.IsSelected = False
-        SiticoneChip_model_info_Thinking.Location = New Point(718, 31)
+        SiticoneChip_model_info_Thinking.Location = New Point(794, 31)
         SiticoneChip_model_info_Thinking.Name = "SiticoneChip_model_info_Thinking"
         SiticoneChip_model_info_Thinking.Padding = New Padding(8, 4, 8, 4)
         SiticoneChip_model_info_Thinking.PressedColor = Color.FromArgb(CByte(224), CByte(224), CByte(224))
@@ -1505,7 +1562,7 @@ Partial Class Form1
         SiticoneChip_model_info_Thinking.ShowCheckmark = True
         SiticoneChip_model_info_Thinking.ShowCloseButton = False
         SiticoneChip_model_info_Thinking.ShowCloseButtonBorder = False
-        SiticoneChip_model_info_Thinking.Size = New Size(140, 29)
+        SiticoneChip_model_info_Thinking.Size = New Size(130, 29)
         SiticoneChip_model_info_Thinking.TabIndex = 7
         SiticoneChip_model_info_Thinking.Text = "thinking"
         ToolTip1.SetToolTip(SiticoneChip_model_info_Thinking, "Indicates whether the model uses an internal reasoning (chain-of-thought) process before answering.")
@@ -1546,7 +1603,7 @@ Partial Class Form1
         SiticoneChip_model_info_Tools.HoverColor = Color.FromArgb(CByte(255), CByte(192), CByte(192))
         SiticoneChip_model_info_Tools.HoverTextColor = Color.Empty
         SiticoneChip_model_info_Tools.IsSelected = False
-        SiticoneChip_model_info_Tools.Location = New Point(576, 31)
+        SiticoneChip_model_info_Tools.Location = New Point(663, 31)
         SiticoneChip_model_info_Tools.Name = "SiticoneChip_model_info_Tools"
         SiticoneChip_model_info_Tools.Padding = New Padding(8, 4, 8, 4)
         SiticoneChip_model_info_Tools.PressedColor = Color.FromArgb(CByte(224), CByte(224), CByte(224))
@@ -1558,7 +1615,7 @@ Partial Class Form1
         SiticoneChip_model_info_Tools.ShowCheckmark = True
         SiticoneChip_model_info_Tools.ShowCloseButton = False
         SiticoneChip_model_info_Tools.ShowCloseButtonBorder = False
-        SiticoneChip_model_info_Tools.Size = New Size(140, 29)
+        SiticoneChip_model_info_Tools.Size = New Size(130, 29)
         SiticoneChip_model_info_Tools.TabIndex = 6
         SiticoneChip_model_info_Tools.Text = "tools"
         ToolTip1.SetToolTip(SiticoneChip_model_info_Tools, "Indicates whether the model supports function calling and external tool use.")
@@ -1599,7 +1656,7 @@ Partial Class Form1
         SiticoneChip_model_info_Vision.HoverColor = Color.FromArgb(CByte(255), CByte(192), CByte(192))
         SiticoneChip_model_info_Vision.HoverTextColor = Color.Empty
         SiticoneChip_model_info_Vision.IsSelected = False
-        SiticoneChip_model_info_Vision.Location = New Point(150, 31)
+        SiticoneChip_model_info_Vision.Location = New Point(139, 31)
         SiticoneChip_model_info_Vision.Name = "SiticoneChip_model_info_Vision"
         SiticoneChip_model_info_Vision.Padding = New Padding(8, 4, 8, 4)
         SiticoneChip_model_info_Vision.PressedColor = Color.FromArgb(CByte(224), CByte(224), CByte(224))
@@ -1611,7 +1668,7 @@ Partial Class Form1
         SiticoneChip_model_info_Vision.ShowCheckmark = True
         SiticoneChip_model_info_Vision.ShowCloseButton = False
         SiticoneChip_model_info_Vision.ShowCloseButtonBorder = False
-        SiticoneChip_model_info_Vision.Size = New Size(140, 29)
+        SiticoneChip_model_info_Vision.Size = New Size(130, 29)
         SiticoneChip_model_info_Vision.TabIndex = 5
         SiticoneChip_model_info_Vision.Text = "vision"
         ToolTip1.SetToolTip(SiticoneChip_model_info_Vision, "Indicates whether the model can process and analyze images (multimodal vision).")
@@ -1626,7 +1683,7 @@ Partial Class Form1
         SiticoneLabel1_model_info_description.ForeColor = Color.FromArgb(CByte(26), CByte(115), CByte(232))
         SiticoneLabel1_model_info_description.Location = New Point(6, 3)
         SiticoneLabel1_model_info_description.Name = "SiticoneLabel1_model_info_description"
-        SiticoneLabel1_model_info_description.Size = New Size(1415, 25)
+        SiticoneLabel1_model_info_description.Size = New Size(1443, 25)
         SiticoneLabel1_model_info_description.TabIndex = 2
         SiticoneLabel1_model_info_description.Text = "unknown"
         SiticoneLabel1_model_info_description.TextAlign = ContentAlignment.MiddleLeft
@@ -1634,6 +1691,8 @@ Partial Class Form1
         ' TabPage_modelparameter
         ' 
         TabPage_modelparameter.BackColor = Color.WhiteSmoke
+        TabPage_modelparameter.Controls.Add(SiticoneLabel27)
+        TabPage_modelparameter.Controls.Add(SiticoneDropdown_voice)
         TabPage_modelparameter.Controls.Add(SiticoneFlatPanel_trenn3)
         TabPage_modelparameter.Controls.Add(SiticoneFlatPanel_trenn2)
         TabPage_modelparameter.Controls.Add(SiticoneFlatPanel_trenn1)
@@ -1656,10 +1715,54 @@ Partial Class Form1
         TabPage_modelparameter.Location = New Point(4, 54)
         TabPage_modelparameter.Name = "TabPage_modelparameter"
         TabPage_modelparameter.Padding = New Padding(3)
-        TabPage_modelparameter.Size = New Size(1427, 649)
+        TabPage_modelparameter.Size = New Size(1455, 649)
         SiticoneTabControl_tab.SetTabImage(TabPage_modelparameter, My.Resources.Resource_svg.Model_Parameter)
         TabPage_modelparameter.TabIndex = 0
         TabPage_modelparameter.Text = "Model Parameter"
+        ' 
+        ' SiticoneDropdown_voice
+        ' 
+        SiticoneDropdown_voice.AllowMultipleSelection = False
+        SiticoneDropdown_voice.Anchor = AnchorStyles.Top Or AnchorStyles.Right
+        SiticoneDropdown_voice.BackColor = Color.FromArgb(CByte(209), CByte(232), CByte(255))
+        SiticoneDropdown_voice.BorderColor = Color.Gray
+        SiticoneDropdown_voice.BorderSize = 2
+        SiticoneDropdown_voice.CanBeep = False
+        SiticoneDropdown_voice.CanShake = True
+        SiticoneDropdown_voice.CornerRadius = 8
+        SiticoneDropdown_voice.DataSource = Nothing
+        SiticoneDropdown_voice.DisplayMember = Nothing
+        SiticoneDropdown_voice.DropdownBackColor = Color.White
+        SiticoneDropdown_voice.DropdownCornerRadius = 8
+        SiticoneDropdown_voice.DropdownWidth = 0
+        SiticoneDropdown_voice.DropShadowEnabled = False
+        SiticoneDropdown_voice.Font = New Font("Segoe UI", 10F)
+        SiticoneDropdown_voice.ForeColor = Color.DimGray
+        SiticoneDropdown_voice.HoveredItemBackColor = Color.LightGray
+        SiticoneDropdown_voice.HoveredItemTextColor = Color.Black
+        SiticoneDropdown_voice.IsReadonly = False
+        SiticoneDropdown_voice.ItemHeight = 30
+        SiticoneDropdown_voice.Location = New Point(1253, 99)
+        SiticoneDropdown_voice.MaxDropDownItems = 8
+        SiticoneDropdown_voice.Name = "SiticoneDropdown_voice"
+        SiticoneDropdown_voice.NotFoundBackColor = Color.Transparent
+        SiticoneDropdown_voice.NotFoundFont = Nothing
+        SiticoneDropdown_voice.NotFoundTextColor = Color.Gray
+        SiticoneDropdown_voice.PlaceholderColor = Color.Gray
+        SiticoneDropdown_voice.PlaceholderDisappearsOnFocus = False
+        SiticoneDropdown_voice.PlaceholderText = "Select a Voice"
+        SiticoneDropdown_voice.SearchTextColor = Color.DimGray
+        SiticoneDropdown_voice.SearchTextFont = Nothing
+        SiticoneDropdown_voice.SelectedIndex = -1
+        SiticoneDropdown_voice.SelectedItem = Nothing
+        SiticoneDropdown_voice.SelectedItemBackColor = Color.LightBlue
+        SiticoneDropdown_voice.SelectedItemTextColor = Color.Black
+        SiticoneDropdown_voice.SelectedValue = Nothing
+        SiticoneDropdown_voice.Size = New Size(194, 30)
+        SiticoneDropdown_voice.TabIndex = 64
+        ToolTip1.SetToolTip(SiticoneDropdown_voice, "Select the speaker voice for text-to-speech generation.")
+        SiticoneDropdown_voice.UnselectedItemTextColor = Color.Black
+        SiticoneDropdown_voice.ValueMember = Nothing
         ' 
         ' SiticoneFlatPanel_trenn3
         ' 
@@ -2254,7 +2357,7 @@ Partial Class Form1
         Scintilla_format.Location = New Point(8, 130)
         Scintilla_format.Name = "Scintilla_format"
         Scintilla_format.ScrollWidth = 70
-        Scintilla_format.Size = New Size(1411, 203)
+        Scintilla_format.Size = New Size(1439, 203)
         Scintilla_format.TabIndex = 53
         ' 
         ' SiticoneButton_link_content_prompt
@@ -2348,7 +2451,7 @@ Partial Class Form1
         SiticoneTextArea_content_prompt.Name = "SiticoneTextArea_content_prompt"
         SiticoneTextArea_content_prompt.PlaceholderText = "Write Contentprompt here..."
         SiticoneTextArea_content_prompt.ScrollBars = ScrollBars.Vertical
-        SiticoneTextArea_content_prompt.Size = New Size(1411, 65)
+        SiticoneTextArea_content_prompt.Size = New Size(1439, 65)
         SiticoneTextArea_content_prompt.TabIndex = 51
         ' 
         ' SiticoneLabel13
@@ -2358,7 +2461,7 @@ Partial Class Form1
         SiticoneLabel13.Font = New Font("Segoe UI", 10F)
         SiticoneLabel13.Location = New Point(44, 523)
         SiticoneLabel13.Name = "SiticoneLabel13"
-        SiticoneLabel13.Size = New Size(602, 21)
+        SiticoneLabel13.Size = New Size(630, 21)
         SiticoneLabel13.TabIndex = 50
         SiticoneLabel13.Text = "Content Prompt:"
         ' 
@@ -2597,7 +2700,7 @@ Partial Class Form1
         ' 
         SiticoneLabel6.BackColor = Color.Transparent
         SiticoneLabel6.Font = New Font("Segoe UI", 10F)
-        SiticoneLabel6.Location = New Point(44, 108)
+        SiticoneLabel6.Location = New Point(44, 107)
         SiticoneLabel6.Name = "SiticoneLabel6"
         SiticoneLabel6.Size = New Size(116, 21)
         SiticoneLabel6.TabIndex = 38
@@ -2653,7 +2756,7 @@ Partial Class Form1
         SiticoneButton_load_parameter.IsReadOnly = False
         SiticoneButton_load_parameter.IsToggleButton = False
         SiticoneButton_load_parameter.IsToggled = False
-        SiticoneButton_load_parameter.Location = New Point(1202, 619)
+        SiticoneButton_load_parameter.Location = New Point(1230, 619)
         SiticoneButton_load_parameter.LongPressDurationMS = 1000
         SiticoneButton_load_parameter.Name = "SiticoneButton_load_parameter"
         SiticoneButton_load_parameter.NormalFontStyle = FontStyle.Regular
@@ -2731,7 +2834,7 @@ Partial Class Form1
         SiticoneButton_save_parameter.IsReadOnly = False
         SiticoneButton_save_parameter.IsToggleButton = False
         SiticoneButton_save_parameter.IsToggled = False
-        SiticoneButton_save_parameter.Location = New Point(1315, 619)
+        SiticoneButton_save_parameter.Location = New Point(1343, 619)
         SiticoneButton_save_parameter.LongPressDurationMS = 1000
         SiticoneButton_save_parameter.Name = "SiticoneButton_save_parameter"
         SiticoneButton_save_parameter.NormalFontStyle = FontStyle.Regular
@@ -2776,7 +2879,7 @@ Partial Class Form1
         dgv_option.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
         dgv_option.Location = New Point(8, 364)
         dgv_option.Name = "dgv_option"
-        dgv_option.Size = New Size(1411, 150)
+        dgv_option.Size = New Size(1439, 150)
         dgv_option.TabIndex = 32
         ' 
         ' SiticoneLabel4
@@ -2802,7 +2905,7 @@ Partial Class Form1
         SiticoneTextArea_system.Name = "SiticoneTextArea_system"
         SiticoneTextArea_system.PlaceholderText = "Write Systemprompt here..."
         SiticoneTextArea_system.ScrollBars = ScrollBars.Vertical
-        SiticoneTextArea_system.Size = New Size(1411, 65)
+        SiticoneTextArea_system.Size = New Size(1439, 65)
         SiticoneTextArea_system.TabIndex = 25
         ' 
         ' TabPage_tool
@@ -2826,7 +2929,7 @@ Partial Class Form1
         TabPage_tool.Location = New Point(4, 54)
         TabPage_tool.Name = "TabPage_tool"
         TabPage_tool.Padding = New Padding(3)
-        TabPage_tool.Size = New Size(1427, 649)
+        TabPage_tool.Size = New Size(1455, 649)
         SiticoneTabControl_tab.SetTabImage(TabPage_tool, My.Resources.Resource_svg.Tools)
         TabPage_tool.TabIndex = 8
         TabPage_tool.Text = "Tools"
@@ -2909,7 +3012,7 @@ Partial Class Form1
         Scintilla_Tools_pythoncode.Location = New Point(6, 445)
         Scintilla_Tools_pythoncode.Name = "Scintilla_Tools_pythoncode"
         Scintilla_Tools_pythoncode.ScrollWidth = 70
-        Scintilla_Tools_pythoncode.Size = New Size(1413, 168)
+        Scintilla_Tools_pythoncode.Size = New Size(1441, 168)
         Scintilla_Tools_pythoncode.TabIndex = 58
         ' 
         ' Scintilla_Tools_Json
@@ -2921,7 +3024,7 @@ Partial Class Form1
         Scintilla_Tools_Json.Location = New Point(8, 130)
         Scintilla_Tools_Json.Name = "Scintilla_Tools_Json"
         Scintilla_Tools_Json.ScrollWidth = 70
-        Scintilla_Tools_Json.Size = New Size(1411, 284)
+        Scintilla_Tools_Json.Size = New Size(1439, 284)
         Scintilla_Tools_Json.TabIndex = 57
         ' 
         ' SiticoneButton_link_tool_python_code
@@ -3293,7 +3396,7 @@ Partial Class Form1
         SiticoneButton_load_tools.IsReadOnly = False
         SiticoneButton_load_tools.IsToggleButton = False
         SiticoneButton_load_tools.IsToggled = False
-        SiticoneButton_load_tools.Location = New Point(1203, 619)
+        SiticoneButton_load_tools.Location = New Point(1231, 619)
         SiticoneButton_load_tools.LongPressDurationMS = 1000
         SiticoneButton_load_tools.Name = "SiticoneButton_load_tools"
         SiticoneButton_load_tools.NormalFontStyle = FontStyle.Regular
@@ -3371,7 +3474,7 @@ Partial Class Form1
         SiticoneButton_save_tools.IsReadOnly = False
         SiticoneButton_save_tools.IsToggleButton = False
         SiticoneButton_save_tools.IsToggled = False
-        SiticoneButton_save_tools.Location = New Point(1316, 619)
+        SiticoneButton_save_tools.Location = New Point(1344, 619)
         SiticoneButton_save_tools.LongPressDurationMS = 1000
         SiticoneButton_save_tools.Name = "SiticoneButton_save_tools"
         SiticoneButton_save_tools.NormalFontStyle = FontStyle.Regular
@@ -3445,7 +3548,7 @@ Partial Class Form1
         SiticoneTextBox_request_answer.ShadowAnimationDuration = 1
         SiticoneTextBox_request_answer.ShadowBlur = 10
         SiticoneTextBox_request_answer.ShadowColor = Color.FromArgb(CByte(15), CByte(0), CByte(0), CByte(0))
-        SiticoneTextBox_request_answer.Size = New Size(1015, 23)
+        SiticoneTextBox_request_answer.Size = New Size(1043, 23)
         SiticoneTextBox_request_answer.SolidBorderColor = Color.LightSlateGray
         SiticoneTextBox_request_answer.SolidBorderFocusColor = Color.FromArgb(CByte(77), CByte(77), CByte(255))
         SiticoneTextBox_request_answer.SolidBorderHoverColor = Color.Gray
@@ -3468,7 +3571,7 @@ Partial Class Form1
         SiticoneTextArea_Tools_system.Name = "SiticoneTextArea_Tools_system"
         SiticoneTextArea_Tools_system.PlaceholderText = "Write addition Prompt here..."
         SiticoneTextArea_Tools_system.ScrollBars = ScrollBars.Vertical
-        SiticoneTextArea_Tools_system.Size = New Size(1411, 65)
+        SiticoneTextArea_Tools_system.Size = New Size(1439, 65)
         SiticoneTextArea_Tools_system.TabIndex = 45
         ' 
         ' SiticoneLabel9
@@ -3526,7 +3629,7 @@ Partial Class Form1
         TabPage_ragtool.Location = New Point(4, 54)
         TabPage_ragtool.Name = "TabPage_ragtool"
         TabPage_ragtool.Padding = New Padding(3)
-        TabPage_ragtool.Size = New Size(1427, 649)
+        TabPage_ragtool.Size = New Size(1455, 649)
         SiticoneTabControl_tab.SetTabImage(TabPage_ragtool, My.Resources.Resource_svg.RAG_Tool)
         TabPage_ragtool.TabIndex = 9
         TabPage_ragtool.Text = "RAG Tool"
@@ -3608,7 +3711,7 @@ Partial Class Form1
         Scintilla_Rag_Json.Location = New Point(8, 130)
         Scintilla_Rag_Json.Name = "Scintilla_Rag_Json"
         Scintilla_Rag_Json.ScrollWidth = 70
-        Scintilla_Rag_Json.Size = New Size(1411, 374)
+        Scintilla_Rag_Json.Size = New Size(1439, 374)
         Scintilla_Rag_Json.TabIndex = 68
         ' 
         ' SiticoneButton_link_rag_tool_json
@@ -3815,7 +3918,7 @@ Partial Class Form1
         SiticoneButton_load_rag.IsReadOnly = False
         SiticoneButton_load_rag.IsToggleButton = False
         SiticoneButton_load_rag.IsToggled = False
-        SiticoneButton_load_rag.Location = New Point(1203, 619)
+        SiticoneButton_load_rag.Location = New Point(1231, 619)
         SiticoneButton_load_rag.LongPressDurationMS = 1000
         SiticoneButton_load_rag.Name = "SiticoneButton_load_rag"
         SiticoneButton_load_rag.NormalFontStyle = FontStyle.Regular
@@ -3893,7 +3996,7 @@ Partial Class Form1
         SiticoneButton_save_rag.IsReadOnly = False
         SiticoneButton_save_rag.IsToggleButton = False
         SiticoneButton_save_rag.IsToggled = False
-        SiticoneButton_save_rag.Location = New Point(1316, 619)
+        SiticoneButton_save_rag.Location = New Point(1344, 619)
         SiticoneButton_save_rag.LongPressDurationMS = 1000
         SiticoneButton_save_rag.Name = "SiticoneButton_save_rag"
         SiticoneButton_save_rag.NormalFontStyle = FontStyle.Regular
@@ -3934,7 +4037,7 @@ Partial Class Form1
         SiticoneTextArea_Rag_system.Name = "SiticoneTextArea_Rag_system"
         SiticoneTextArea_Rag_system.PlaceholderText = "Write addition Prompt here..."
         SiticoneTextArea_Rag_system.ScrollBars = ScrollBars.Vertical
-        SiticoneTextArea_Rag_system.Size = New Size(1411, 65)
+        SiticoneTextArea_Rag_system.Size = New Size(1439, 65)
         SiticoneTextArea_Rag_system.TabIndex = 63
         ' 
         ' SiticoneLabel11
@@ -3980,7 +4083,7 @@ Partial Class Form1
         SiticoneDropdown_delta_val.IsReadonly = False
         SiticoneDropdown_delta_val.ItemHeight = 30
         SiticoneDropdown_delta_val.Items.AddRange(New String() {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"})
-        SiticoneDropdown_delta_val.Location = New Point(1364, 510)
+        SiticoneDropdown_delta_val.Location = New Point(1392, 510)
         SiticoneDropdown_delta_val.MaxDropDownItems = 10
         SiticoneDropdown_delta_val.Name = "SiticoneDropdown_delta_val"
         SiticoneDropdown_delta_val.NotFoundBackColor = Color.Transparent
@@ -4008,7 +4111,7 @@ Partial Class Form1
         SiticoneLabel1_delta.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
         SiticoneLabel1_delta.BackColor = Color.Transparent
         SiticoneLabel1_delta.Font = New Font("Segoe UI", 10F)
-        SiticoneLabel1_delta.Location = New Point(1313, 515)
+        SiticoneLabel1_delta.Location = New Point(1341, 515)
         SiticoneLabel1_delta.Name = "SiticoneLabel1_delta"
         SiticoneLabel1_delta.Size = New Size(45, 21)
         SiticoneLabel1_delta.TabIndex = 58
@@ -4186,7 +4289,7 @@ Partial Class Form1
         SiticoneButton_ragpath.IsReadOnly = False
         SiticoneButton_ragpath.IsToggleButton = False
         SiticoneButton_ragpath.IsToggled = False
-        SiticoneButton_ragpath.Location = New Point(1257, 510)
+        SiticoneButton_ragpath.Location = New Point(1285, 510)
         SiticoneButton_ragpath.LongPressDurationMS = 1000
         SiticoneButton_ragpath.Name = "SiticoneButton_ragpath"
         SiticoneButton_ragpath.NormalFontStyle = FontStyle.Regular
@@ -4275,7 +4378,7 @@ Partial Class Form1
         SiticoneTextBox_ragpath.ShadowAnimationDuration = 1
         SiticoneTextBox_ragpath.ShadowBlur = 10
         SiticoneTextBox_ragpath.ShadowColor = Color.FromArgb(CByte(15), CByte(0), CByte(0), CByte(0))
-        SiticoneTextBox_ragpath.Size = New Size(1157, 30)
+        SiticoneTextBox_ragpath.Size = New Size(1185, 30)
         SiticoneTextBox_ragpath.SolidBorderColor = Color.LightSlateGray
         SiticoneTextBox_ragpath.SolidBorderFocusColor = Color.FromArgb(CByte(77), CByte(77), CByte(255))
         SiticoneTextBox_ragpath.SolidBorderHoverColor = Color.Gray
@@ -4296,7 +4399,7 @@ Partial Class Form1
         TabPage_decision.Location = New Point(4, 54)
         TabPage_decision.Name = "TabPage_decision"
         TabPage_decision.Padding = New Padding(3)
-        TabPage_decision.Size = New Size(1427, 649)
+        TabPage_decision.Size = New Size(1455, 649)
         SiticoneTabControl_tab.SetTabImage(TabPage_decision, My.Resources.Resource_svg.Decision_Tool)
         TabPage_decision.TabIndex = 11
         TabPage_decision.Text = "Decision Tool"
@@ -4352,7 +4455,7 @@ Partial Class Form1
         SiticoneButton_load_decision.IsReadOnly = False
         SiticoneButton_load_decision.IsToggleButton = False
         SiticoneButton_load_decision.IsToggled = False
-        SiticoneButton_load_decision.Location = New Point(1203, 619)
+        SiticoneButton_load_decision.Location = New Point(1231, 619)
         SiticoneButton_load_decision.LongPressDurationMS = 1000
         SiticoneButton_load_decision.Name = "SiticoneButton_load_decision"
         SiticoneButton_load_decision.NormalFontStyle = FontStyle.Regular
@@ -4430,7 +4533,7 @@ Partial Class Form1
         SiticoneButton_save_decision.IsReadOnly = False
         SiticoneButton_save_decision.IsToggleButton = False
         SiticoneButton_save_decision.IsToggled = False
-        SiticoneButton_save_decision.Location = New Point(1316, 619)
+        SiticoneButton_save_decision.Location = New Point(1344, 619)
         SiticoneButton_save_decision.LongPressDurationMS = 1000
         SiticoneButton_save_decision.Name = "SiticoneButton_save_decision"
         SiticoneButton_save_decision.NormalFontStyle = FontStyle.Regular
@@ -4544,7 +4647,7 @@ Partial Class Form1
         Scintilla_Decision_Json.Location = New Point(8, 33)
         Scintilla_Decision_Json.Name = "Scintilla_Decision_Json"
         Scintilla_Decision_Json.ScrollWidth = 497
-        Scintilla_Decision_Json.Size = New Size(1411, 580)
+        Scintilla_Decision_Json.Size = New Size(1439, 580)
         Scintilla_Decision_Json.TabIndex = 72
         ' 
         ' SiticoneLabel26
@@ -4632,7 +4735,7 @@ Partial Class Form1
         TabPage_requestjson.Location = New Point(4, 54)
         TabPage_requestjson.Name = "TabPage_requestjson"
         TabPage_requestjson.Padding = New Padding(3)
-        TabPage_requestjson.Size = New Size(1427, 649)
+        TabPage_requestjson.Size = New Size(1455, 649)
         SiticoneTabControl_tab.SetTabImage(TabPage_requestjson, My.Resources.Resource_svg.Request_JSON)
         TabPage_requestjson.TabIndex = 1
         TabPage_requestjson.Text = "Request JSON"
@@ -4646,7 +4749,7 @@ Partial Class Form1
         Scintilla_Request_JSON.Location = New Point(3, 3)
         Scintilla_Request_JSON.Name = "Scintilla_Request_JSON"
         Scintilla_Request_JSON.ScrollWidth = 70
-        Scintilla_Request_JSON.Size = New Size(1421, 643)
+        Scintilla_Request_JSON.Size = New Size(1449, 643)
         Scintilla_Request_JSON.TabIndex = 69
         ' 
         ' TabPage_responsejson
@@ -4656,7 +4759,7 @@ Partial Class Form1
         TabPage_responsejson.Location = New Point(4, 54)
         TabPage_responsejson.Name = "TabPage_responsejson"
         TabPage_responsejson.Padding = New Padding(3)
-        TabPage_responsejson.Size = New Size(1427, 649)
+        TabPage_responsejson.Size = New Size(1455, 649)
         SiticoneTabControl_tab.SetTabImage(TabPage_responsejson, My.Resources.Resource_svg.Response_JSON)
         TabPage_responsejson.TabIndex = 2
         TabPage_responsejson.Text = "Response JSON"
@@ -4670,7 +4773,7 @@ Partial Class Form1
         Scintilla_Response_JSON.Location = New Point(3, 3)
         Scintilla_Response_JSON.Name = "Scintilla_Response_JSON"
         Scintilla_Response_JSON.ScrollWidth = 70
-        Scintilla_Response_JSON.Size = New Size(1421, 643)
+        Scintilla_Response_JSON.Size = New Size(1449, 643)
         Scintilla_Response_JSON.TabIndex = 70
         ' 
         ' TabPage_responsemd
@@ -4680,7 +4783,7 @@ Partial Class Form1
         TabPage_responsemd.Location = New Point(4, 54)
         TabPage_responsemd.Name = "TabPage_responsemd"
         TabPage_responsemd.Padding = New Padding(3)
-        TabPage_responsemd.Size = New Size(1427, 649)
+        TabPage_responsemd.Size = New Size(1455, 649)
         SiticoneTabControl_tab.SetTabImage(TabPage_responsemd, My.Resources.Resource_svg.Response_MD)
         TabPage_responsemd.TabIndex = 3
         TabPage_responsemd.Text = "Response MD"
@@ -4694,7 +4797,7 @@ Partial Class Form1
         Scintilla_response.Location = New Point(3, 3)
         Scintilla_response.Name = "Scintilla_response"
         Scintilla_response.ScrollWidth = 70
-        Scintilla_response.Size = New Size(1421, 643)
+        Scintilla_response.Size = New Size(1449, 643)
         Scintilla_response.TabIndex = 71
         ' 
         ' TabPage_responsehtml
@@ -4704,7 +4807,7 @@ Partial Class Form1
         TabPage_responsehtml.Location = New Point(4, 54)
         TabPage_responsehtml.Name = "TabPage_responsehtml"
         TabPage_responsehtml.Padding = New Padding(3)
-        TabPage_responsehtml.Size = New Size(1427, 649)
+        TabPage_responsehtml.Size = New Size(1455, 649)
         SiticoneTabControl_tab.SetTabImage(TabPage_responsehtml, My.Resources.Resource_svg.Response_HTML)
         TabPage_responsehtml.TabIndex = 4
         TabPage_responsehtml.Text = "Response HTML"
@@ -4720,7 +4823,7 @@ Partial Class Form1
         TabPage_codeparameter.Location = New Point(4, 54)
         TabPage_codeparameter.Name = "TabPage_codeparameter"
         TabPage_codeparameter.Padding = New Padding(3)
-        TabPage_codeparameter.Size = New Size(1427, 649)
+        TabPage_codeparameter.Size = New Size(1455, 649)
         SiticoneTabControl_tab.SetTabImage(TabPage_codeparameter, My.Resources.Resource_svg.Code_Parameter)
         TabPage_codeparameter.TabIndex = 7
         TabPage_codeparameter.Text = "Code Parameter"
@@ -4852,7 +4955,7 @@ Partial Class Form1
         SiticoneButton_load_execute.IsReadOnly = False
         SiticoneButton_load_execute.IsToggleButton = False
         SiticoneButton_load_execute.IsToggled = False
-        SiticoneButton_load_execute.Location = New Point(1203, 619)
+        SiticoneButton_load_execute.Location = New Point(1231, 619)
         SiticoneButton_load_execute.LongPressDurationMS = 1000
         SiticoneButton_load_execute.Name = "SiticoneButton_load_execute"
         SiticoneButton_load_execute.NormalFontStyle = FontStyle.Regular
@@ -4930,7 +5033,7 @@ Partial Class Form1
         SiticoneButton_save_execute.IsReadOnly = False
         SiticoneButton_save_execute.IsToggleButton = False
         SiticoneButton_save_execute.IsToggled = False
-        SiticoneButton_save_execute.Location = New Point(1316, 619)
+        SiticoneButton_save_execute.Location = New Point(1344, 619)
         SiticoneButton_save_execute.LongPressDurationMS = 1000
         SiticoneButton_save_execute.Name = "SiticoneButton_save_execute"
         SiticoneButton_save_execute.NormalFontStyle = FontStyle.Regular
@@ -4965,7 +5068,7 @@ Partial Class Form1
         dvg_execute.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
         dvg_execute.Location = New Point(8, 31)
         dvg_execute.Name = "dvg_execute"
-        dvg_execute.Size = New Size(1411, 582)
+        dvg_execute.Size = New Size(1439, 582)
         dvg_execute.TabIndex = 33
         ' 
         ' SiticoneLabel2
@@ -4990,7 +5093,7 @@ Partial Class Form1
         TabPage_codeblock.Controls.Add(SiticoneDropdown_language)
         TabPage_codeblock.Location = New Point(4, 54)
         TabPage_codeblock.Name = "TabPage_codeblock"
-        TabPage_codeblock.Size = New Size(1427, 649)
+        TabPage_codeblock.Size = New Size(1455, 649)
         SiticoneTabControl_tab.SetTabImage(TabPage_codeblock, My.Resources.Resource_svg.Code_Block)
         TabPage_codeblock.TabIndex = 6
         TabPage_codeblock.Text = "Code Block"
@@ -5191,7 +5294,7 @@ Partial Class Form1
         SiticoneButton_code_save.IsReadOnly = False
         SiticoneButton_code_save.IsToggleButton = False
         SiticoneButton_code_save.IsToggled = False
-        SiticoneButton_code_save.Location = New Point(1314, 6)
+        SiticoneButton_code_save.Location = New Point(1342, 6)
         SiticoneButton_code_save.LongPressDurationMS = 1000
         SiticoneButton_code_save.Name = "SiticoneButton_code_save"
         SiticoneButton_code_save.NormalFontStyle = FontStyle.Regular
@@ -5226,7 +5329,7 @@ Partial Class Form1
         SiticoneLabel_runpath.Font = New Font("Segoe UI", 10F)
         SiticoneLabel_runpath.Location = New Point(596, 8)
         SiticoneLabel_runpath.Name = "SiticoneLabel_runpath"
-        SiticoneLabel_runpath.Size = New Size(712, 23)
+        SiticoneLabel_runpath.Size = New Size(740, 23)
         SiticoneLabel_runpath.TabIndex = 31
         SiticoneLabel_runpath.Tag = ""
         SiticoneLabel_runpath.Text = "path:"
@@ -5273,11 +5376,11 @@ Partial Class Form1
         SiticoneSplitContainer_runcont.Panel2.Controls.Add(SiticoneTextArea_run_output)
         SiticoneSplitContainer_runcont.Panel2Title = "Output:"
         SiticoneSplitContainer_runcont.ShowPanelHeaders = False
-        SiticoneSplitContainer_runcont.Size = New Size(1419, 613)
+        SiticoneSplitContainer_runcont.Size = New Size(1447, 613)
         SiticoneSplitContainer_runcont.SnapDistance = 20
         SiticoneSplitContainer_runcont.SnapPositions = New Single() {0.25F, 0.5F, 0.75F}
         SiticoneSplitContainer_runcont.SplitterCursor = Cursors.HSplit
-        SiticoneSplitContainer_runcont.SplitterDistance = 491
+        SiticoneSplitContainer_runcont.SplitterDistance = 527
         SiticoneSplitContainer_runcont.SplitterHighlightColor = Color.DodgerBlue
         SiticoneSplitContainer_runcont.SplitterMoveable = True
         SiticoneSplitContainer_runcont.SplitterMoveLeftKey = Keys.Left
@@ -5298,7 +5401,7 @@ Partial Class Form1
         Scintilla_code_block.Location = New Point(0, 0)
         Scintilla_code_block.Name = "Scintilla_code_block"
         Scintilla_code_block.ScrollWidth = 70
-        Scintilla_code_block.Size = New Size(1419, 491)
+        Scintilla_code_block.Size = New Size(1447, 527)
         Scintilla_code_block.TabIndex = 59
         ' 
         ' SiticoneTextArea_run_output
@@ -5313,7 +5416,7 @@ Partial Class Form1
         SiticoneTextArea_run_output.Name = "SiticoneTextArea_run_output"
         SiticoneTextArea_run_output.PlaceholderText = "Wait for Output..."
         SiticoneTextArea_run_output.ScrollBars = ScrollBars.Vertical
-        SiticoneTextArea_run_output.Size = New Size(1419, 118)
+        SiticoneTextArea_run_output.Size = New Size(1447, 82)
         SiticoneTextArea_run_output.TabIndex = 2
         ' 
         ' SiticoneButton_code_run
@@ -5471,7 +5574,7 @@ Partial Class Form1
         TabPage_sshbot.Controls.Add(SiticoneTextArea_ssh_system)
         TabPage_sshbot.Location = New Point(4, 54)
         TabPage_sshbot.Name = "TabPage_sshbot"
-        TabPage_sshbot.Size = New Size(1427, 649)
+        TabPage_sshbot.Size = New Size(1455, 649)
         SiticoneTabControl_tab.SetTabImage(TabPage_sshbot, CType(resources.GetObject("TabPage_sshbot.TabImage"), Image))
         TabPage_sshbot.TabIndex = 10
         TabPage_sshbot.Text = "SSH Bot"
@@ -5801,7 +5904,7 @@ Partial Class Form1
         SiticoneTextArea_ssh_response.Name = "SiticoneTextArea_ssh_response"
         SiticoneTextArea_ssh_response.PlaceholderText = "Write addition Prompt here..."
         SiticoneTextArea_ssh_response.ScrollBars = ScrollBars.Vertical
-        SiticoneTextArea_ssh_response.Size = New Size(1411, 65)
+        SiticoneTextArea_ssh_response.Size = New Size(1439, 65)
         SiticoneTextArea_ssh_response.TabIndex = 78
         ' 
         ' SiticoneButton_ssh_response
@@ -6623,7 +6726,7 @@ Partial Class Form1
         WebViewTerminal.DefaultBackgroundColor = Color.White
         WebViewTerminal.Location = New Point(8, 261)
         WebViewTerminal.Name = "WebViewTerminal"
-        WebViewTerminal.Size = New Size(1411, 385)
+        WebViewTerminal.Size = New Size(1439, 385)
         WebViewTerminal.TabIndex = 62
         WebViewTerminal.ZoomFactor = 1R
         ' 
@@ -6795,7 +6898,7 @@ Partial Class Form1
         SiticoneTextArea_ssh_system.Name = "SiticoneTextArea_ssh_system"
         SiticoneTextArea_ssh_system.PlaceholderText = "Write addition Prompt here..."
         SiticoneTextArea_ssh_system.ScrollBars = ScrollBars.Vertical
-        SiticoneTextArea_ssh_system.Size = New Size(1411, 65)
+        SiticoneTextArea_ssh_system.Size = New Size(1439, 65)
         SiticoneTextArea_ssh_system.TabIndex = 57
         ' 
         ' SiticoneDropdown_default
@@ -6819,7 +6922,7 @@ Partial Class Form1
         SiticoneDropdown_default.HoveredItemTextColor = Color.Black
         SiticoneDropdown_default.IsReadonly = False
         SiticoneDropdown_default.ItemHeight = 30
-        SiticoneDropdown_default.Location = New Point(1203, 24)
+        SiticoneDropdown_default.Location = New Point(1241, 24)
         SiticoneDropdown_default.MaxDropDownItems = 8
         SiticoneDropdown_default.Name = "SiticoneDropdown_default"
         SiticoneDropdown_default.NotFoundBackColor = Color.Transparent
@@ -6988,7 +7091,7 @@ Partial Class Form1
         SiticoneDropdown_wisperlang.IsReadonly = False
         SiticoneDropdown_wisperlang.ItemHeight = 30
         SiticoneDropdown_wisperlang.Items.AddRange(New String() {"Auto Detection,auto", "German,de", "English,en", "Spanish,es", "French,fr", "Italian,it", "Dutch,nl", "Polish,pl", "Portuguese,pt", "Russian,ru", "Chinese,zh", "Japanese,ja", "Korean,ko", "Turkish,tr", "Swedish,sv", "Norwegian,no", "Danish,da", "Finnish,fi", "Greek,el", "Czech,cs", "Hungarian,hu", "Romanian,ro", "Ukrainian,uk", "Arabic,ar", "Persian,fa", "Hindi,hi"})
-        SiticoneDropdown_wisperlang.Location = New Point(1343, 24)
+        SiticoneDropdown_wisperlang.Location = New Point(1381, 24)
         SiticoneDropdown_wisperlang.MaxDropDownItems = 8
         SiticoneDropdown_wisperlang.Name = "SiticoneDropdown_wisperlang"
         SiticoneDropdown_wisperlang.NotFoundBackColor = Color.Transparent
@@ -7081,7 +7184,7 @@ Partial Class Form1
         SiticoneButton_HTMLtoPDF.IsReadOnly = False
         SiticoneButton_HTMLtoPDF.IsToggleButton = False
         SiticoneButton_HTMLtoPDF.IsToggled = False
-        SiticoneButton_HTMLtoPDF.Location = New Point(1399, 1)
+        SiticoneButton_HTMLtoPDF.Location = New Point(1427, 1)
         SiticoneButton_HTMLtoPDF.LongPressDurationMS = 1000
         SiticoneButton_HTMLtoPDF.Name = "SiticoneButton_HTMLtoPDF"
         SiticoneButton_HTMLtoPDF.NormalFontStyle = FontStyle.Regular
@@ -7143,7 +7246,7 @@ Partial Class Form1
         SiticonePanel_prompt.RippleMaxSize = 600F
         SiticonePanel_prompt.RippleSpeed = 15F
         SiticonePanel_prompt.ShowBorder = False
-        SiticonePanel_prompt.Size = New Size(1505, 87)
+        SiticonePanel_prompt.Size = New Size(1533, 87)
         SiticonePanel_prompt.TabIndex = 40
         SiticonePanel_prompt.TabStop = True
         SiticonePanel_prompt.TrackSystemTheme = False
@@ -7192,7 +7295,7 @@ Partial Class Form1
         SiticonePanel_prompt_action.RippleMaxSize = 600F
         SiticonePanel_prompt_action.RippleSpeed = 15F
         SiticonePanel_prompt_action.ShowBorder = False
-        SiticonePanel_prompt_action.Size = New Size(1485, 36)
+        SiticonePanel_prompt_action.Size = New Size(1513, 36)
         SiticonePanel_prompt_action.TabIndex = 18
         SiticonePanel_prompt_action.TabStop = True
         SiticonePanel_prompt_action.TrackSystemTheme = False
@@ -7437,7 +7540,7 @@ Partial Class Form1
         SiticoneLabel_show_LLM.ForeColor = Color.FromArgb(CByte(26), CByte(115), CByte(232))
         SiticoneLabel_show_LLM.Location = New Point(184, 5)
         SiticoneLabel_show_LLM.Name = "SiticoneLabel_show_LLM"
-        SiticoneLabel_show_LLM.Size = New Size(1135, 25)
+        SiticoneLabel_show_LLM.Size = New Size(1163, 25)
         SiticoneLabel_show_LLM.TabIndex = 51
         SiticoneLabel_show_LLM.Text = "no LLM selected"
         SiticoneLabel_show_LLM.TextAlign = ContentAlignment.MiddleRight
@@ -7458,7 +7561,7 @@ Partial Class Form1
         SiticonePlayPauseButton_request.IconColor = Color.FromArgb(CByte(26), CByte(115), CByte(232))
         SiticonePlayPauseButton_request.IconPadding = 0
         SiticonePlayPauseButton_request.IconScale = 0.6F
-        SiticonePlayPauseButton_request.Location = New Point(1449, 0)
+        SiticonePlayPauseButton_request.Location = New Point(1477, 0)
         SiticonePlayPauseButton_request.MaximumSize = New Size(200, 200)
         SiticonePlayPauseButton_request.MinimumSize = New Size(10, 10)
         SiticonePlayPauseButton_request.Name = "SiticonePlayPauseButton_request"
@@ -7468,10 +7571,10 @@ Partial Class Form1
         SiticonePlayPauseButton_request.Size = New Size(36, 36)
         SiticonePlayPauseButton_request.StrokeWidth = 3F
         SiticonePlayPauseButton_request.TabIndex = 1
-        LayoutState1.Location = New Point(3, 3)
-        LayoutState1.Size = New Size(36, 36)
-        LayoutState1.Visible = True
-        SiticonePlayPauseButton_request.Tag = LayoutState1
+        LayoutState2.Location = New Point(3, 3)
+        LayoutState2.Size = New Size(36, 36)
+        LayoutState2.Visible = True
+        SiticonePlayPauseButton_request.Tag = LayoutState2
         SiticonePlayPauseButton_request.TopLeftRadius = 2
         SiticonePlayPauseButton_request.TopRightRadius = 2
         ' 
@@ -7602,7 +7705,7 @@ Partial Class Form1
         SiticoneButton_timing.IsReadOnly = False
         SiticoneButton_timing.IsToggleButton = False
         SiticoneButton_timing.IsToggled = False
-        SiticoneButton_timing.Location = New Point(1325, 1)
+        SiticoneButton_timing.Location = New Point(1353, 1)
         SiticoneButton_timing.LongPressDurationMS = 1000
         SiticoneButton_timing.Name = "SiticoneButton_timing"
         SiticoneButton_timing.NormalFontStyle = FontStyle.Regular
@@ -7680,7 +7783,7 @@ Partial Class Form1
         SiticoneButton_show_thinking.IsReadOnly = False
         SiticoneButton_show_thinking.IsToggleButton = False
         SiticoneButton_show_thinking.IsToggled = False
-        SiticoneButton_show_thinking.Location = New Point(1361, 1)
+        SiticoneButton_show_thinking.Location = New Point(1389, 1)
         SiticoneButton_show_thinking.LongPressDurationMS = 1000
         SiticoneButton_show_thinking.Name = "SiticoneButton_show_thinking"
         SiticoneButton_show_thinking.NormalFontStyle = FontStyle.Regular
@@ -7725,7 +7828,7 @@ Partial Class Form1
         SiticoneFlowPanel_prompt_filecontent.ItemSpacing = 5
         SiticoneFlowPanel_prompt_filecontent.Location = New Point(10, 46)
         SiticoneFlowPanel_prompt_filecontent.Name = "SiticoneFlowPanel_prompt_filecontent"
-        SiticoneFlowPanel_prompt_filecontent.Size = New Size(1485, 0)
+        SiticoneFlowPanel_prompt_filecontent.Size = New Size(1513, 0)
         SiticoneFlowPanel_prompt_filecontent.TabIndex = 0
         SiticoneFlowPanel_prompt_filecontent.VirtualizationThreshold = 100
         ' 
@@ -7733,7 +7836,7 @@ Partial Class Form1
         ' 
         SiticoneLabel_default.BackColor = Color.Transparent
         SiticoneLabel_default.Font = New Font("Segoe UI", 10F)
-        SiticoneLabel_default.Location = New Point(1202, 0)
+        SiticoneLabel_default.Location = New Point(1240, 0)
         SiticoneLabel_default.Name = "SiticoneLabel_default"
         SiticoneLabel_default.Size = New Size(146, 21)
         SiticoneLabel_default.TabIndex = 36
@@ -7785,15 +7888,15 @@ Partial Class Form1
         SiticoneNavbar_tab.IndicatorGradientEndColor = Color.FromArgb(CByte(0), CByte(180), CByte(240))
         SiticoneNavbar_tab.IndicatorGradientStartColor = Color.FromArgb(CByte(0), CByte(120), CByte(215))
         SiticoneNavbar_tab.IsCollapsed = True
-        NavBarItem1.BackColor = Color.Empty
-        NavBarItem1.BorderColor = Color.Empty
-        NavBarItem1.ForeColor = Color.Empty
-        NavBarItem1.PressBackColor = Color.Empty
-        NavBarItem1.SelectedBackColor = Color.Empty
-        NavBarItem1.SelectedBorderColor = Color.Empty
-        NavBarItem1.SelectedForeColor = Color.Empty
-        NavBarItem1.Text = "Button 1"
-        SiticoneNavbar_tab.Items.Add(NavBarItem1)
+        NavBarItem2.BackColor = Color.Empty
+        NavBarItem2.BorderColor = Color.Empty
+        NavBarItem2.ForeColor = Color.Empty
+        NavBarItem2.PressBackColor = Color.Empty
+        NavBarItem2.SelectedBackColor = Color.Empty
+        NavBarItem2.SelectedBorderColor = Color.Empty
+        NavBarItem2.SelectedForeColor = Color.Empty
+        NavBarItem2.Text = "Button 1"
+        SiticoneNavbar_tab.Items.Add(NavBarItem2)
         SiticoneNavbar_tab.Location = New Point(0, 0)
         SiticoneNavbar_tab.MaterialTabSelectedIndicatorColor = SystemColors.Highlight
         SiticoneNavbar_tab.MaxButtonHeight = 60
@@ -7808,7 +7911,7 @@ Partial Class Form1
         SiticoneNavbar_tab.SelectedIndex = 0
         SiticoneNavbar_tab.SelectedIndicatorSideColor = Color.FromArgb(CByte(16), CByte(100), CByte(220))
         SiticoneNavbar_tab.SelectedIndicatorThickness = 3
-        SiticoneNavbar_tab.SelectedItem = NavBarItem1
+        SiticoneNavbar_tab.SelectedItem = NavBarItem2
         SiticoneNavbar_tab.ShowHeaderTitle = True
         SiticoneNavbar_tab.ShowTitleSections = False
         SiticoneNavbar_tab.ShowTitleSeparator = True
@@ -7856,7 +7959,7 @@ Partial Class Form1
         SiticonePanel_dock.RippleMaxSize = 600F
         SiticonePanel_dock.RippleSpeed = 15F
         SiticonePanel_dock.ShowBorder = False
-        SiticonePanel_dock.Size = New Size(1505, 707)
+        SiticonePanel_dock.Size = New Size(1533, 707)
         SiticonePanel_dock.TabIndex = 61
         SiticonePanel_dock.TabStop = True
         SiticonePanel_dock.TrackSystemTheme = False
@@ -7895,7 +7998,7 @@ Partial Class Form1
         SiticonePanel_dockright.RippleMaxSize = 600F
         SiticonePanel_dockright.RippleSpeed = 15F
         SiticonePanel_dockright.ShowBorder = False
-        SiticonePanel_dockright.Size = New Size(1435, 707)
+        SiticonePanel_dockright.Size = New Size(1463, 707)
         SiticonePanel_dockright.TabIndex = 61
         SiticonePanel_dockright.TabStop = True
         SiticonePanel_dockright.TrackSystemTheme = False
@@ -7943,7 +8046,7 @@ Partial Class Form1
         SiticonePanel_Header.RippleMaxSize = 600F
         SiticonePanel_Header.RippleSpeed = 15F
         SiticonePanel_Header.ShowBorder = False
-        SiticonePanel_Header.Size = New Size(1505, 40)
+        SiticonePanel_Header.Size = New Size(1533, 40)
         SiticonePanel_Header.TabIndex = 24
         SiticonePanel_Header.TabStop = True
         SiticonePanel_Header.TrackSystemTheme = False
@@ -8389,7 +8492,7 @@ Partial Class Form1
         SiticoneButton4_close1.IsReadOnly = False
         SiticoneButton4_close1.IsToggleButton = False
         SiticoneButton4_close1.IsToggled = False
-        SiticoneButton4_close1.Location = New Point(1468, 0)
+        SiticoneButton4_close1.Location = New Point(1496, 0)
         SiticoneButton4_close1.LongPressDurationMS = 1000
         SiticoneButton4_close1.Name = "SiticoneButton4_close1"
         SiticoneButton4_close1.NormalFontStyle = FontStyle.Regular
@@ -8467,7 +8570,7 @@ Partial Class Form1
         SiticoneButton_max1.IsReadOnly = False
         SiticoneButton_max1.IsToggleButton = False
         SiticoneButton_max1.IsToggled = False
-        SiticoneButton_max1.Location = New Point(1426, 0)
+        SiticoneButton_max1.Location = New Point(1454, 0)
         SiticoneButton_max1.LongPressDurationMS = 1000
         SiticoneButton_max1.Name = "SiticoneButton_max1"
         SiticoneButton_max1.NormalFontStyle = FontStyle.Regular
@@ -8545,7 +8648,7 @@ Partial Class Form1
         SiticoneButton_min1.IsReadOnly = False
         SiticoneButton_min1.IsToggleButton = False
         SiticoneButton_min1.IsToggled = False
-        SiticoneButton_min1.Location = New Point(1384, 0)
+        SiticoneButton_min1.Location = New Point(1412, 0)
         SiticoneButton_min1.LongPressDurationMS = 1000
         SiticoneButton_min1.Name = "SiticoneButton_min1"
         SiticoneButton_min1.NormalFontStyle = FontStyle.Regular
@@ -8595,7 +8698,7 @@ Partial Class Form1
         SiticoneDragForm_Header.Name = "SiticoneDragForm_Header"
         SiticoneDragForm_Header.ShadowColor = Color.FromArgb(CByte(50), CByte(0), CByte(0), CByte(0))
         SiticoneDragForm_Header.ShadowOffset = New Point(0, 2)
-        SiticoneDragForm_Header.Size = New Size(1118, 40)
+        SiticoneDragForm_Header.Size = New Size(1146, 40)
         SiticoneDragForm_Header.TabIndex = 54
         SiticoneDragForm_Header.TabStop = True
         SiticoneDragForm_Header.TargetForm = Me
@@ -8653,7 +8756,7 @@ Partial Class Form1
         SiticonePanel_llm_setting.RippleMaxSize = 600F
         SiticonePanel_llm_setting.RippleSpeed = 15F
         SiticonePanel_llm_setting.ShowBorder = False
-        SiticonePanel_llm_setting.Size = New Size(1505, 61)
+        SiticonePanel_llm_setting.Size = New Size(1533, 61)
         SiticonePanel_llm_setting.TabIndex = 62
         SiticonePanel_llm_setting.TabStop = True
         SiticonePanel_llm_setting.TrackSystemTheme = False
@@ -8743,7 +8846,7 @@ Partial Class Form1
         ' 
         SiticoneLabel_whisperlang.BackColor = Color.Transparent
         SiticoneLabel_whisperlang.Font = New Font("Segoe UI", 10F)
-        SiticoneLabel_whisperlang.Location = New Point(1342, 0)
+        SiticoneLabel_whisperlang.Location = New Point(1380, 0)
         SiticoneLabel_whisperlang.Name = "SiticoneLabel_whisperlang"
         SiticoneLabel_whisperlang.Size = New Size(146, 21)
         SiticoneLabel_whisperlang.TabIndex = 54
@@ -8752,11 +8855,22 @@ Partial Class Form1
         ' Timer_LLM_progress
         ' 
         ' 
+        ' SiticoneLabel27
+        ' 
+        SiticoneLabel27.Anchor = AnchorStyles.Top Or AnchorStyles.Right
+        SiticoneLabel27.BackColor = Color.Transparent
+        SiticoneLabel27.Font = New Font("Segoe UI", 10F)
+        SiticoneLabel27.Location = New Point(1047, 106)
+        SiticoneLabel27.Name = "SiticoneLabel27"
+        SiticoneLabel27.Size = New Size(200, 21)
+        SiticoneLabel27.TabIndex = 65
+        SiticoneLabel27.Text = "Text-to-Speech Speaker Voice:"
+        ' 
         ' Form1
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
-        ClientSize = New Size(1515, 905)
+        ClientSize = New Size(1543, 905)
         Controls.Add(SiticonePanel_dock)
         Controls.Add(SiticonePanel_llm_setting)
         Controls.Add(SiticonePanel_Header)
@@ -8764,7 +8878,7 @@ Partial Class Form1
         FormBorderStyle = FormBorderStyle.None
         Icon = CType(resources.GetObject("$this.Icon"), Icon)
         KeyPreview = True
-        MinimumSize = New Size(1515, 905)
+        MinimumSize = New Size(1543, 905)
         Name = "Form1"
         Padding = New Padding(5)
         Text = "Ollama Desktop"
@@ -9044,5 +9158,8 @@ Partial Class Form1
     Friend WithEvents SiticoneButton_show_ollama_ps As SiticoneNetCoreUI.SiticoneButton
     Friend WithEvents SiticoneLabel_model_info_tags As SiticoneNetCoreUI.SiticoneLabel
     Friend WithEvents SiticoneLabel_model_info_show As SiticoneNetCoreUI.SiticoneLabel
+    Friend WithEvents SiticoneChip_model_info_Speech As SiticoneNetCoreUI.SiticoneChip
+    Friend WithEvents SiticoneDropdown_voice As SiticoneNetCoreUI.SiticoneDropdown
+    Friend WithEvents SiticoneLabel27 As SiticoneNetCoreUI.SiticoneLabel
 
 End Class

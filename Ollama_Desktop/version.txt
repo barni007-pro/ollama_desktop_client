@@ -141,3 +141,14 @@ V 1.6.4.35
   to verify active toggles and media attachments against model capabilities, warning users when features are unsupported.
 - add nemotron-3.5-bolt to models_config.json
 - add flint to models_config.json
+V 1.6.5.36
+- Simplified models_config.json: 
+  Removed redundant capability flags; model features are now dynamically inferred from Ollama API metadata, keeping configuration limited to custom descriptions.
+- Native Text-to-Speech (TTS) Integration: 
+  Added full support for speech-capable models (e.g., lfm3-audio, lfm3-omni, phonon) via Ollama's /v1/audio/speech endpoint. 
+  Prompts sent to models with the speech capability automatically generate WAV audio instead of text, 
+  with available voice profiles dynamically fetched from /api/show into a new voice selector dropdown. 
+  Generated speech is rendered with an embedded HTML5 audio player directly inside the WebView2 response panel.
+- add lfm3-audio to models_config.json
+- add lfm3-omni to models_config.json
+- add phonon to models_config.json
