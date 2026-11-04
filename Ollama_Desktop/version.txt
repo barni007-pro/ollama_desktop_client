@@ -152,3 +152,15 @@ V 1.6.5.36
 - add lfm3-audio to models_config.json
 - add lfm3-omni to models_config.json
 - add phonon to models_config.json
+V 1.6.6.37
+- Save & Load Chats (*.chat.json):
+  Export complete conversations to *.chat.json files and reload them at any time with full session recovery.
+- Instant Branching:
+  Navigate back to any previous response and continue the conversation from that exact point.
+- Smart History Browsing:
+  Step back and forth through your chat while the conversation view, token counts, and metrics update dynamically for each turn.
+- Step-Specific Code Extraction:
+  Code blocks, syntax highlighting, and execution tools now automatically update to match the currently selected turn.
+- Direct Context Size Toggle (num_ctx):
+  Easily enable or disable the custom context window via a dedicated toggle switch,
+  immediately applying and syncing the selected token size without requiring a confirmation button.

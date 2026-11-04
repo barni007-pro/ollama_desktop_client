@@ -180,17 +180,21 @@ Public Class Form1
     ' Kumulierter Markdown-Verlauf für die HTML-Ausgabe bei aktivem Kontext
     Private conversationHistoryMarkdown As New StringBuilder()
 
-    'Variable zur Verfolgung des aktuellen Navigations-Indexes im Chat-Verlauf
-    Public Structure ChatTurn
-        Public UserPrompt As String
-        Public ResponseText As String
-        Public ContextTokens As List(Of Integer) ' Speichert die KI-Context-Tokens für diesen Schritt
-        Public ModelName As String ' Speichert das Modell, mit dem die Antwort generiert wurde
-    End Structure
+    ' Variable zur Verfolgung des aktuellen Navigations-Indexes im Chat-Verlauf
+    ' Speichert die Rohdaten eines Chat-Schritts
+    Public Class ChatTurn
+        Public Property UserPrompt As String
+        Public Property RequestJson As String
+        Public Property ResponseJson As String
+        Public Property API As String
+    End Class
 
     ' Die Liste, die alle bisherigen Chat-Schritte speichert
     Private chatHistory As New List(Of ChatTurn)()
     Private currentTurnIndex As Integer = -1
+
+    ' Speichert den zuletzt genutzten API-Endpunkt
+    Public Current_API As String = ""
 
     ' Model VRAM Berechnung
     Public Class VramCalculationResult
@@ -948,84 +952,18 @@ Public Class Form1
     End Function
 
     Sub render_response(response_sub As String, Optional isNewTurn As Boolean = False, Optional promptText As String = "")
-        Dim model As String = If(SiticoneDropdown_model.SelectedItem IsNot Nothing, SiticoneDropdown_model.SelectedItem.ToString(), "Model")
-
-        ' Wenn die Antwort valides JSON ist, erst in hübsch formatierten Text (Pretty Print) umwandeln
-        If IsValidJsonCore(response_sub) Then
-            Try
-                Dim parsedJson As JToken = JToken.Parse(response_sub)
-                response_sub = parsedJson.ToString(Newtonsoft.Json.Formatting.Indented)
-            Catch ex As Exception
-            End Try
-
-            response_sub = "```json" & vbLf & response_sub & vbLf & "```"
-        End If
-
-        Dim backtickCount As Integer = Regex.Matches(response_sub, "```").Count
-        If backtickCount Mod 2 <> 0 Then
-            response_sub &= vbLf & "```"
-        End If
-
-        Scintilla_response.Text = response_sub.Replace(vbLf, vbCrLf)
-
         If isNewTurn Then
-            ' Kopie der aktuellen KI-Kontext-Tokens für diesen Schritt sichern
-            Dim contextCopy As New List(Of Integer)(extractedContext)
-
-            chatHistory.Add(New ChatTurn With {
-            .UserPrompt = promptText,
-            .ResponseText = response_sub,
-            .ContextTokens = contextCopy,
-            .ModelName = model
-        })
+            Dim newTurn As New ChatTurn With {
+                .UserPrompt = promptText,
+                .RequestJson = Request_JSON,
+                .ResponseJson = Response_JSON,
+                .API = Current_API
+            }
+            chatHistory.Add(newTurn)
             currentTurnIndex = chatHistory.Count - 1
-
-            ' Verlauf bis zum aktuellen Index aufbauen und im WebView2 anzeigen
-            RebuildConversationMarkdownUpToCurrent()
-            WebView21.NavigateToString(BuildHtml(conversationHistoryMarkdown.ToString()))
-
-            UpdateButtonStates()
-        Else
-            If SiticoneToggleSwitch_last_context.Checked AndAlso conversationHistoryMarkdown.Length > 0 Then
-                WebView21.NavigateToString(BuildHtml(conversationHistoryMarkdown.ToString()))
-            Else
-                WebView21.NavigateToString(BuildHtml(response_sub))
-            End If
         End If
 
-        SiticoneButton_HTMLtoPDF.Enabled = True
-
-        Try
-            Dim parsedJson As JToken = JToken.Parse(Response_JSON)
-            If parsedJson("image") IsNot Nothing Then
-                parsedJson("image") = "<... Base64 Image Data Truncated ...>"
-            End If
-            Dim prettyJsonString As String = parsedJson.ToString(Formatting.Indented)
-            Scintilla_Response_JSON.Text = prettyJsonString
-            CodeBlock_List.Clear()
-            ToolsCodeBlockJson = ""
-            SiticoneDropdown_language.Items.Clear()
-            Scintilla_code_block.Text = ""
-            SiticoneTextArea_run_output.Text = ""
-            CodeBlock_List = ExtractCodeBlocks(response_sub)
-            If ToolsCodeBlockJson <> "empty" Then
-                SiticoneTextBox_request_answer.Text = ToolsCodeBlockJson
-            End If
-            SiticoneButton_code_run.Enabled = False
-
-            If CodeBlock_List.Count >= 1 Then
-                For i As Integer = 0 To CodeBlock_List.Count - 1
-                    Dim block As CodeBlock = CodeBlock_List(i)
-                    Dim displayLanguage As String = If(String.IsNullOrWhiteSpace(block.Language), "unknown", block.Language)
-                    SiticoneDropdown_language.Items.Add($"{i + 1}. {displayLanguage}")
-                Next
-                SiticoneDropdown_language.SelectedIndex = 0
-                change_language()
-            End If
-
-        Catch ex As Exception
-            Scintilla_Response_JSON.Text = Response_JSON
-        End Try
+        RenderChatHistoryUpTo(currentTurnIndex)
     End Sub
 
     Private Function GetResponseTextFromJson(jsonString As String) As String
@@ -1072,7 +1010,18 @@ Public Class Form1
         If chatHistory Is Nothing OrElse chatHistory.Count = 0 Then
             currentTurnIndex = -1
             extractedContext.Clear()
+            extractedThinking = ""
             conversationHistoryMarkdown.Clear()
+            Scintilla_response.Text = ""
+            Scintilla_Request_JSON.Text = ""
+            Scintilla_Response_JSON.Text = ""
+            CodeBlock_List.Clear()
+            SiticoneDropdown_language.Items.Clear()
+            Scintilla_code_block.Text = ""
+            SiticoneTextArea_run_output.Text = ""
+            If WebView21 IsNot Nothing AndAlso WebView21.CoreWebView2 IsNot Nothing Then
+                WebView21.NavigateToString(BuildHtml("*Context memory and HTML history have been cleared.*"))
+            End If
             UpdateButtonStates()
             Return
         End If
@@ -1081,52 +1030,134 @@ Public Class Form1
         If maxIndex >= chatHistory.Count Then maxIndex = chatHistory.Count - 1
 
         currentTurnIndex = maxIndex
+        Dim turn As ChatTurn = chatHistory(currentTurnIndex)
 
-        ' Setze die KI-Kontext-Tokens auf den Stand dieses gewählten Schrittes zurück
-        If chatHistory(currentTurnIndex).ContextTokens IsNot Nothing Then
-            extractedContext = New List(Of Integer)(chatHistory(currentTurnIndex).ContextTokens)
-        Else
-            extractedContext.Clear()
+        ' 1. Variablen für den aktuellen Stand synchronisieren
+        Request_JSON = turn.RequestJson
+        Response_JSON = turn.ResponseJson
+        Current_API = turn.API
+        request_mem = turn.UserPrompt
+
+        ' 2. Tokens, Kontext, Thinking und Timing dynamisch aus ResponseJSON extrahieren
+        extractedContext.Clear()
+        extractedThinking = ""
+        timing_total_duration = 0
+        timing_load_duration = 0
+        timing_prompt_eval_count = 0
+        timing_prompt_eval_duration = 0
+        timing_eval_count = 0
+        timing_eval_duration = 0
+
+        Try
+            If Not String.IsNullOrWhiteSpace(turn.ResponseJson) AndAlso turn.ResponseJson <> "empty" Then
+                Dim json As JObject = JObject.Parse(turn.ResponseJson)
+
+                ' Kontext-Tokens
+                Dim tempItems = json("context")?.ToObject(Of List(Of Integer))()
+                If tempItems IsNot Nothing Then
+                    extractedContext.AddRange(tempItems)
+                End If
+
+                ' Thinking-Prozess
+                extractedThinking = json.SelectToken("thinking")?.ToString()
+
+                ' Token-Zähler und Timing-Statistiken
+                timing_total_duration = json.SelectToken("total_duration")?.Value(Of Long)
+                timing_load_duration = json.SelectToken("load_duration")?.Value(Of Long)
+                timing_prompt_eval_count = json.SelectToken("prompt_eval_count")?.Value(Of Long)
+                timing_prompt_eval_duration = json.SelectToken("prompt_eval_duration")?.Value(Of Long)
+                timing_eval_count = json.SelectToken("eval_count")?.Value(Of Long)
+                timing_eval_duration = json.SelectToken("eval_duration")?.Value(Of Long)
+            End If
+        Catch ex As Exception
+            AppLog($"[DEBUG-RenderChatHistoryUpTo] Fehler beim Parsen der Tokens/Timing: {ex.Message}")
+        End Try
+
+        SiticoneButton_show_thinking.Enabled = Not String.IsNullOrEmpty(extractedThinking)
+        SiticoneButton_timing.Enabled = (timing_total_duration > 0)
+
+        ' 3. Markdown für den selektierten Eintrag ermitteln und in Scintilla setzen
+        Dim currentMarkdown As String = GetResponseMarkdown(turn.ResponseJson, turn.RequestJson, turn.API)
+        response_mem = currentMarkdown
+        Scintilla_response.Text = currentMarkdown.Replace(vbLf, vbCrLf)
+
+        ' 4. Request JSON und Response JSON im Scintilla Viewer formatieren
+        Try
+            Scintilla_Request_JSON.Text = JToken.Parse(turn.RequestJson).ToString(Formatting.Indented)
+        Catch
+            Scintilla_Request_JSON.Text = If(turn.RequestJson, "")
+        End Try
+
+        Try
+            Dim parsedJson As JToken = JToken.Parse(turn.ResponseJson)
+            If parsedJson("image") IsNot Nothing Then
+                parsedJson("image") = "<... Base64 Image Data Truncated ...>"
+            End If
+            Scintilla_Response_JSON.Text = parsedJson.ToString(Formatting.Indented)
+        Catch
+            Scintilla_Response_JSON.Text = If(turn.ResponseJson, "")
+        End Try
+
+        ' 5. CodeBlock-Extraktion für den selektierten Eintrag durchführen
+        CodeBlock_List.Clear()
+        ToolsCodeBlockJson = "empty"
+        SiticoneDropdown_language.Items.Clear()
+        Scintilla_code_block.Text = ""
+        SiticoneTextArea_run_output.Text = ""
+
+        CodeBlock_List = ExtractCodeBlocks(currentMarkdown)
+        If ToolsCodeBlockJson <> "empty" Then
+            SiticoneTextBox_request_answer.Text = ToolsCodeBlockJson
+        End If
+        SiticoneButton_code_run.Enabled = False
+
+        If CodeBlock_List.Count >= 1 Then
+            For i As Integer = 0 To CodeBlock_List.Count - 1
+                Dim block As CodeBlock = CodeBlock_List(i)
+                Dim displayLanguage As String = If(String.IsNullOrWhiteSpace(block.Language), "unknown", block.Language)
+                SiticoneDropdown_language.Items.Add($"{i + 1}. {displayLanguage}")
+            Next
+            SiticoneDropdown_language.SelectedIndex = 0
+            change_language()
         End If
 
-        ' Markdown-Verlauf bis zum gewählten Schritt neu aufbauen
+        ' 6. HTML Seite für alle gespeicherten Antworten bis zum gerade angewählten Eintrag neu generieren
         RebuildConversationMarkdownUpToCurrent()
-
         If WebView21 IsNot Nothing AndAlso WebView21.CoreWebView2 IsNot Nothing Then
             WebView21.NavigateToString(BuildHtml(conversationHistoryMarkdown.ToString()))
         End If
 
+        SiticoneButton_HTMLtoPDF.Enabled = True
         UpdateButtonStates()
     End Sub
+
 
     Private Sub RebuildConversationMarkdownUpToCurrent()
         conversationHistoryMarkdown.Clear()
         If chatHistory Is Nothing OrElse chatHistory.Count = 0 OrElse currentTurnIndex < 0 Then Return
 
-        Dim currentFallbackModel As String = If(SiticoneDropdown_model.SelectedItem IsNot Nothing, SiticoneDropdown_model.SelectedItem.ToString(), "Model")
-
         For i As Integer = 0 To currentTurnIndex
             Dim turn = chatHistory(i)
-
-            ' Verwende den im ChatTurn gespeicherten Modellnamen, sonst Fallback
-            Dim displayModel As String = If(Not String.IsNullOrWhiteSpace(turn.ModelName), turn.ModelName, currentFallbackModel)
+            Dim displayModel As String = GetModelNameFromTurn(turn.ResponseJson, turn.RequestJson)
+            Dim turnMarkdownText As String = GetResponseMarkdown(turn.ResponseJson, turn.RequestJson, turn.API)
 
             Dim encodedPrompt As String = System.Web.HttpUtility.HtmlEncode(turn.UserPrompt) _
-            .Replace(vbCrLf, "<br>") _
-            .Replace(vbLf, "<br>") _
-            .Replace(vbCr, "<br>")
+                .Replace(vbCrLf, "<br>") _
+                .Replace(vbLf, "<br>") _
+                .Replace(vbCr, "<br>")
 
             Dim userBubbleHtml As String = $"<div style=""background-color: #f0f2f5; border-radius: 12px; padding: 12px 16px; margin: 12px 0 20px 0; border: 1px solid #e4e6eb; border-left: 4px solid #0078d4; box-shadow: 0 2px 4px rgba(0,0,0,0.05);"">" &
-                                       $"<div style=""font-weight: 600; font-size: 0.95em; color: #1c1e21; margin-bottom: 6px;"">👤 User</div>" &
-                                       $"<div style=""color: #050505; line-height: 1.5; font-size: 0.98em;"">{encodedPrompt}</div>" &
-                                       $"</div>"
+                                           $"<div style=""font-weight: 600; font-size: 0.95em; color: #1c1e21; margin-bottom: 6px;"">👤 User</div>" &
+                                           $"<div style=""color: #050505; line-height: 1.5; font-size: 0.98em;"">{encodedPrompt}</div>" &
+                                           $"</div>"
 
             Dim turnMarkdown As String = userBubbleHtml & vbCrLf & vbCrLf &
-                                     $"### 🤖 {displayModel}{vbCrLf}{turn.ResponseText}{vbCrLf}{vbCrLf}---{vbCrLf}"
+                                         $"### 🤖 {displayModel}{vbCrLf}{turnMarkdownText}{vbCrLf}{vbCrLf}---{vbCrLf}"
 
             conversationHistoryMarkdown.AppendLine(turnMarkdown)
         Next
     End Sub
+
 
     Private Function GetHtmlHeader() As String
         Return "<html><head><meta charset='utf-8'>" &
@@ -1153,21 +1184,30 @@ Public Class Form1
 
         UpdateMemoryUI()
     End Sub
+
     Private Sub SiticoneButton_nav_clear_Click(sender As Object, e As EventArgs) Handles SiticoneButton_nav_clear.Click
         AppLog("[DEBUG-nav_clear_Click] User hat Navigation und Context gelöscht.")
 
-        ' chatHistory zurücksetzen
         chatHistory.Clear()
         currentTurnIndex = -1
-        UpdateButtonStates()
 
         Response_nav_pointer = -1
         Response_json_nav_mem.Clear()
         extractedContext.Clear()
+        extractedThinking = ""
         conversationHistoryMarkdown.Clear()
+
+        Scintilla_response.Text = ""
+        Scintilla_Request_JSON.Text = ""
+        Scintilla_Response_JSON.Text = ""
+        CodeBlock_List.Clear()
+        SiticoneDropdown_language.Items.Clear()
+        Scintilla_code_block.Text = ""
+        SiticoneTextArea_run_output.Text = ""
+
         WebView21.NavigateToString(BuildHtml("*Context memory and HTML history have been cleared.*"))
 
-        UpdateMemoryUI()
+        UpdateButtonStates()
     End Sub
 
     Private Sub UpdateMemoryUI()
@@ -1266,10 +1306,13 @@ Public Class Form1
         Dim apiUrl As String
         If isSpeechMode Then
             apiUrl = "http://" & SiticoneTextBox_host.Text & "/v1/audio/speech"
+            Current_API = "/v1/audio/speech"
         ElseIf SiticoneToggleSwitch_decisiontools.Checked Then
             apiUrl = "http://" & SiticoneTextBox_host.Text & "/v1/systemone"
+            Current_API = "/v1/systemone"
         Else
             apiUrl = "http://" & SiticoneTextBox_host.Text & "/api/generate"
+            Current_API = "/api/generate"
         End If
 
         Dim requestBody As String = ""
@@ -4423,13 +4466,25 @@ Public Class Form1
     Public Sub SyncCalcCtxDropdownFromDgv()
         If dgv_option Is Nothing OrElse dgv_option.Rows.Count = 0 Then Return
 
+        Dim found As Boolean = False
+
         For Each row As DataGridViewRow In dgv_option.Rows
-            If Not row.IsNewRow AndAlso row.Cells(0).Value IsNot Nothing Then
-                Dim paramName As String = row.Cells(0).Value.ToString().Trim()
+            If Not row.IsNewRow AndAlso row.Cells("OptionName").Value IsNot Nothing Then
+                Dim paramName As String = row.Cells("OptionName").Value.ToString().Trim()
 
                 If String.Equals(paramName, "num_ctx", StringComparison.OrdinalIgnoreCase) Then
-                    If row.Cells(3).Value IsNot Nothing Then
-                        Dim ctxValueStr As String = row.Cells(3).Value.ToString().Trim()
+                    found = True
+
+                    ' 1. Use-Status für den ToggleSwitch setzen
+                    Dim isUsed As Boolean = False
+                    If row.Cells("Use").Value IsNot Nothing Then
+                        Boolean.TryParse(row.Cells("Use").Value.ToString(), isUsed)
+                    End If
+                    SiticoneToggleSwitch_use_num_ctx.Checked = isUsed
+
+                    ' 2. Wert für das Dropdown setzen
+                    If row.Cells("Value").Value IsNot Nothing Then
+                        Dim ctxValueStr As String = row.Cells("Value").Value.ToString().Trim()
                         If SiticoneDropdown_calc_ctx.Items.Contains(ctxValueStr) Then
                             SiticoneDropdown_calc_ctx.SelectedItem = ctxValueStr
                         End If
@@ -4438,6 +4493,10 @@ Public Class Form1
                 End If
             End If
         Next
+
+        If Not found Then
+            SiticoneToggleSwitch_use_num_ctx.Checked = False
+        End If
     End Sub
 
     ' Liest den gewählten Base-System-Overhead als Double aus dem Dropdown SiticoneDropdown_vram_base aus.
@@ -4481,13 +4540,30 @@ Public Class Form1
     End Sub
 
     Private Sub SiticoneDropdown_calc_ctx_SelectedIndexChanged(sender As Object, e As EventArgs) Handles SiticoneDropdown_calc_ctx.SelectedIndexChanged
+        If isAppReady AndAlso Not isLoadingParameters AndAlso SiticoneToggleSwitch_use_num_ctx.Checked Then
+            Dim selectedCtx As String = SiticoneDropdown_calc_ctx.SelectedItem?.ToString().Trim()
+
+            If Not String.IsNullOrEmpty(selectedCtx) Then
+                For Each row As DataGridViewRow In dgv_option.Rows
+                    If Not row.IsNewRow AndAlso row.Cells("OptionName").Value IsNot Nothing Then
+                        If String.Equals(row.Cells("OptionName").Value.ToString().Trim(), "num_ctx", StringComparison.OrdinalIgnoreCase) Then
+                            row.Cells("Value").Value = selectedCtx
+                            SaveDgvOptionsToSettings()
+                            Exit For
+                        End If
+                    End If
+                Next
+            End If
+        End If
+
         UpdateVramCalculationUI()
     End Sub
 
-    Private Sub SiticoneButton_set_num_ctx_Click(sender As Object, e As EventArgs) Handles SiticoneButton_set_num_ctx.Click
-        If SiticoneDropdown_calc_ctx.SelectedItem Is Nothing Then Return
+    Private Sub SiticoneToggleSwitch_use_num_ctx_CheckedChanged(sender As Object, e As EventArgs) Handles SiticoneToggleSwitch_use_num_ctx.CheckedChanged
+        If Not isAppReady OrElse isLoadingParameters Then Exit Sub
 
-        Dim selectedCtx As String = SiticoneDropdown_calc_ctx.SelectedItem.ToString().Trim()
+        Dim isChecked As Boolean = SiticoneToggleSwitch_use_num_ctx.Checked
+        Dim selectedCtx As String = If(SiticoneDropdown_calc_ctx.SelectedItem IsNot Nothing, SiticoneDropdown_calc_ctx.SelectedItem.ToString().Trim(), "8192")
         Dim found As Boolean = False
 
         For Each row As DataGridViewRow In dgv_option.Rows
@@ -4495,19 +4571,27 @@ Public Class Form1
                 Dim paramName As String = row.Cells("OptionName").Value.ToString().Trim()
 
                 If String.Equals(paramName, "num_ctx", StringComparison.OrdinalIgnoreCase) Then
-                    row.Cells("Use").Value = True
-                    row.Cells("ValueType").Value = "int"
-                    row.Cells("Value").Value = selectedCtx
                     found = True
+                    row.Cells("Use").Value = isChecked
+                    If isChecked Then
+                        row.Cells("ValueType").Value = "int"
+                        row.Cells("Value").Value = selectedCtx
+                    End If
                     Exit For
                 End If
             End If
         Next
 
-        If Not found Then
+        ' Falls die Zeile noch gar nicht existiert und eingeschaltet wird, neu anlegen
+        If Not found AndAlso isChecked Then
             dgv_option.Rows.Add("num_ctx", True, "int", selectedCtx)
         End If
 
+        SaveDgvOptionsToSettings()
+        UpdateVramCalculationUI()
+    End Sub
+
+    Private Sub SaveDgvOptionsToSettings()
         Dim newOptionList As New Specialized.StringCollection()
         For Each row As DataGridViewRow In dgv_option.Rows
             If Not row.IsNewRow Then
@@ -4525,8 +4609,6 @@ Public Class Form1
 
         My.Settings.option_list = newOptionList
         My.Settings.Save()
-
-        UpdateVramCalculationUI()
     End Sub
 
     Private Function TryApplyCapabilitiesFromJson(jsonObj As JObject) As Boolean
@@ -4713,6 +4795,201 @@ Public Class Form1
 
         Return True
     End Function
+
+    ''' <summary>
+    ''' Ermittelt den Markdown-Antworttext dynamisch aus der ResponseJSON (unterstützt generate, chat, speech und JSON-Modi).
+    ''' </summary>
+    Private Function GetResponseMarkdown(responseJson As String, requestJson As String, api As String) As String
+        If String.IsNullOrWhiteSpace(responseJson) Then Return ""
+        If responseJson = "empty" Then Return "empty"
+
+        ' 1. Fall: Sprachgenerierung (TTS)
+        If Not String.IsNullOrEmpty(api) AndAlso (api.Contains("/audio/speech") OrElse api = "speech") Then
+            Try
+                Dim jObj As JObject = JObject.Parse(responseJson)
+                Dim fileName As String = jObj.SelectToken("file")?.ToString()
+                Dim modelName As String = jObj.SelectToken("model")?.ToString()
+                Dim voiceName As String = jObj.SelectToken("voice")?.ToString()
+
+                Dim promptText As String = ""
+                If Not String.IsNullOrWhiteSpace(requestJson) Then
+                    Try
+                        Dim reqObj As JObject = JObject.Parse(requestJson)
+                        promptText = reqObj.SelectToken("input")?.ToString()
+                    Catch
+                    End Try
+                End If
+
+                If Not String.IsNullOrEmpty(fileName) Then
+                    Dim virtualUrl As String = $"https://ollama.local/{fileName}"
+                    Return $"<div style='margin: 15px 0; padding: 12px; background-color: #252526; border-radius: 8px; border: 1px solid #3e3e42;'>" &
+                           $"<div style='font-size: 0.9em; font-weight: bold; color: #569cd6; margin-bottom: 8px;'>🔊 Generated speech output ({modelName} | Voice: {voiceName}):</div>" &
+                           $"<div style='font-style: italic; color: #cccccc; margin-bottom: 10px;'>""{promptText}""</div>" &
+                           $"<audio controls autoplay src='{virtualUrl}' style='width: 100%; height: 35px;'></audio>" &
+                           $"</div>"
+                End If
+            Catch ex As Exception
+                AppLog($"[DEBUG-GetResponseMarkdown] TTS Parse-Fehler: {ex.Message}")
+            End Try
+        End If
+
+        ' 2. Fall: Standard Ollama JSON Response
+        Try
+            Dim jObj As JObject = JObject.Parse(responseJson)
+            Dim markdownText As String = ""
+
+            If jObj("response") IsNot Nothing Then
+                markdownText = jObj("response").ToString()
+            ElseIf jObj.SelectToken("message.content") IsNot Nothing Then
+                markdownText = jObj.SelectToken("message.content").ToString()
+            ElseIf jObj("error") IsNot Nothing Then
+                markdownText = "Error: " & jObj("error").ToString()
+            Else
+                markdownText = responseJson
+            End If
+
+            ' Generiertes Bild berücksichtigen, falls Base64 im JSON vorhanden ist
+            Dim imageBase64 As String = jObj.SelectToken("image")?.ToString()
+            If Not String.IsNullOrEmpty(imageBase64) AndAlso Not imageBase64.Contains("Truncated") Then
+                Try
+                    Dim imageBytes As Byte() = Convert.FromBase64String(imageBase64)
+                    Dim fileExtension As String = ".png"
+                    If imageBytes.Length > 1 Then
+                        If imageBytes(0) = &HFF AndAlso imageBytes(1) = &HD8 Then fileExtension = ".jpg"
+                        If imageBytes(0) = &H89 AndAlso imageBytes(1) = &H50 Then fileExtension = ".png"
+                        If imageBytes(0) = &H47 AndAlso imageBytes(1) = &H49 Then fileExtension = ".gif"
+                        If imageBytes(0) = &H42 AndAlso imageBytes(1) = &H4D Then fileExtension = ".bmp"
+                    End If
+
+                    Dim fileNameOnly As String = $"ollama_img_nav_{DateTime.Now:yyyyMMdd_HHmmss}_{Guid.NewGuid().ToString().Substring(0, 5)}{fileExtension}"
+                    Dim tempFilePath As String = IO.Path.Combine(IO.Path.GetTempPath(), fileNameOnly)
+
+                    If Not IO.File.Exists(tempFilePath) Then
+                        IO.File.WriteAllBytes(tempFilePath, imageBytes)
+                    End If
+
+                    Dim virtualUrl As String = $"https://ollama.local/{fileNameOnly}"
+                    Dim markdownImage As String = $"![Generiertes Bild]({virtualUrl})"
+
+                    If String.IsNullOrEmpty(markdownText) Then
+                        markdownText = markdownImage
+                    ElseIf Not markdownText.Contains(virtualUrl) Then
+                        markdownText &= vbCrLf & vbCrLf & markdownImage
+                    End If
+                Catch ex As Exception
+                    AppLog($"[DEBUG-GetResponseMarkdown] Fehler beim Wiederherstellen des Bildes: {ex.Message}")
+                End Try
+            End If
+
+            ' Pretty-Printing, falls Antwort reines JSON ist
+            If IsValidJsonCore(markdownText) Then
+                Try
+                    Dim parsedJson As JToken = JToken.Parse(markdownText)
+                    markdownText = parsedJson.ToString(Newtonsoft.Json.Formatting.Indented)
+                Catch
+                End Try
+                markdownText = "```json" & vbLf & markdownText & vbLf & "```"
+            End If
+
+            Dim backtickCount As Integer = Regex.Matches(markdownText, "```").Count
+            If backtickCount Mod 2 <> 0 Then
+                markdownText &= vbLf & "```"
+            End If
+
+            Return markdownText
+        Catch ex As Exception
+            Return responseJson
+        End Try
+    End Function
+
+    ''' <summary>
+    ''' Liest den Modellnamen aus der ResponseJSON bzw. RequestJSON aus.
+    ''' </summary>
+    Private Function GetModelNameFromTurn(responseJson As String, requestJson As String) As String
+        Try
+            If Not String.IsNullOrWhiteSpace(responseJson) AndAlso responseJson <> "empty" Then
+                Dim rObj As JObject = JObject.Parse(responseJson)
+                Dim m As String = rObj.SelectToken("model")?.ToString()
+                If Not String.IsNullOrWhiteSpace(m) Then Return m
+            End If
+        Catch
+        End Try
+
+        Try
+            If Not String.IsNullOrWhiteSpace(requestJson) Then
+                Dim reqObj As JObject = JObject.Parse(requestJson)
+                Dim m As String = reqObj.SelectToken("model")?.ToString()
+                If Not String.IsNullOrWhiteSpace(m) Then Return m
+            End If
+        Catch
+        End Try
+
+        Return If(SiticoneDropdown_model.SelectedItem IsNot Nothing, SiticoneDropdown_model.SelectedItem.ToString(), "Model")
+    End Function
+
+    Private Sub SiticoneButton_chat_save_Click(sender As Object, e As EventArgs) Handles SiticoneButton_chat_save.Click
+        If chatHistory Is Nothing OrElse chatHistory.Count = 0 Then
+            MessageBox.Show("There is no chat history available to save.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            Return
+        End If
+
+        Using sfd As New SaveFileDialog()
+            sfd.Filter = "Chat Files (*.chat.json)|*.chat.json|All files (*.*)|*.*"
+            sfd.Title = "Save Chat History to JSON File"
+            sfd.DefaultExt = "chat.json"
+            sfd.AddExtension = True
+            sfd.FileName = $"Chat_{DateTime.Now:yyyy-MM-dd_HH-mm-ss}.chat.json"
+
+            If sfd.ShowDialog() = DialogResult.OK Then
+                Try
+                    Dim json As String = JsonConvert.SerializeObject(chatHistory, Formatting.Indented)
+                    File.WriteAllText(sfd.FileName, json, Encoding.UTF8)
+                    AppLog($"[CHAT] History successfully saved to: {sfd.FileName} ({chatHistory.Count} turns)")
+                Catch ex As Exception
+                    MessageBox.Show("Error saving chat history: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End Try
+            End If
+        End Using
+    End Sub
+
+    Private Sub SiticoneButton_chat_load_Click(sender As Object, e As EventArgs) Handles SiticoneButton_chat_load.Click
+        Using ofd As New OpenFileDialog()
+            ofd.Filter = "Chat Files (*.chat.json)|*.chat.json|All files (*.*)|*.*"
+            ofd.Title = "Load Chat History from JSON File"
+            ofd.Multiselect = False
+
+            If ofd.ShowDialog() = DialogResult.OK Then
+                Try
+                    Dim jsonContent As String = File.ReadAllText(ofd.FileName, Encoding.UTF8)
+                    Dim loadedHistory As List(Of ChatTurn) = JsonConvert.DeserializeObject(Of List(Of ChatTurn))(jsonContent)
+
+                    If loadedHistory Is Nothing OrElse loadedHistory.Count = 0 Then
+                        MessageBox.Show("The selected file does not contain a valid chat history.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                        Return
+                    End If
+
+                    ' Bestehenden Verlauf ersetzen
+                    chatHistory.Clear()
+                    chatHistory.AddRange(loadedHistory)
+
+                    ' Hilfs-Puffer synchron halten
+                    Response_json_nav_mem.Clear()
+                    For Each turn In chatHistory
+                        Response_json_nav_mem.Add(turn.ResponseJson)
+                    Next
+                    Response_nav_pointer = Response_json_nav_mem.Count - 1
+
+                    ' Auf den letzten Eintrag springen und den gesamten UI-Zustand neu aufbauen
+                    currentTurnIndex = chatHistory.Count - 1
+                    RenderChatHistoryUpTo(currentTurnIndex)
+
+                    AppLog($"[CHAT] History successfully loaded from: {ofd.FileName} ({chatHistory.Count} turns)")
+                Catch ex As Exception
+                    MessageBox.Show("Error loading chat history: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End Try
+            End If
+        End Using
+    End Sub
 
 End Class
 
