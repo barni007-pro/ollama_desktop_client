@@ -8112,7 +8112,7 @@ Partial Class Form1
         SiticoneButton_chat_save.IsReadOnly = False
         SiticoneButton_chat_save.IsToggleButton = False
         SiticoneButton_chat_save.IsToggled = False
-        SiticoneButton_chat_save.Location = New Point(349, 0)
+        SiticoneButton_chat_save.Location = New Point(362, 0)
         SiticoneButton_chat_save.LongPressDurationMS = 1000
         SiticoneButton_chat_save.Name = "SiticoneButton_chat_save"
         SiticoneButton_chat_save.NormalFontStyle = FontStyle.Regular
@@ -8189,7 +8189,7 @@ Partial Class Form1
         SiticoneButton_chat_load.IsReadOnly = False
         SiticoneButton_chat_load.IsToggleButton = False
         SiticoneButton_chat_load.IsToggled = False
-        SiticoneButton_chat_load.Location = New Point(258, 0)
+        SiticoneButton_chat_load.Location = New Point(271, 0)
         SiticoneButton_chat_load.LongPressDurationMS = 1000
         SiticoneButton_chat_load.Name = "SiticoneButton_chat_load"
         SiticoneButton_chat_load.NormalFontStyle = FontStyle.Regular
@@ -8229,7 +8229,7 @@ Partial Class Form1
         SiticoneButton_nav_clear.BadgeValueForeColor = Color.White
         SiticoneButton_nav_clear.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
         SiticoneButton_nav_clear.BorderWidth = 2
-        SiticoneButton_nav_clear.ButtonBackColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
+        SiticoneButton_nav_clear.ButtonBackColor = Color.Green
         SiticoneButton_nav_clear.ButtonImage = Nothing
         SiticoneButton_nav_clear.ButtonTextLeftPadding = 0
         SiticoneButton_nav_clear.CanBeep = True
@@ -8285,7 +8285,7 @@ Partial Class Form1
         SiticoneButton_nav_clear.ShadowOffset = New Point(2, 2)
         SiticoneButton_nav_clear.ShakeDuration = 500
         SiticoneButton_nav_clear.ShakeIntensity = 5
-        SiticoneButton_nav_clear.Size = New Size(85, 36)
+        SiticoneButton_nav_clear.Size = New Size(98, 36)
         SiticoneButton_nav_clear.TabIndex = 63
         SiticoneButton_nav_clear.Text = "Clear"
         SiticoneButton_nav_clear.TextAlign = ContentAlignment.MiddleCenter
@@ -8421,7 +8421,7 @@ Partial Class Form1
         SiticoneButton_nav_r.IsReadOnly = False
         SiticoneButton_nav_r.IsToggleButton = False
         SiticoneButton_nav_r.IsToggled = False
-        SiticoneButton_nav_r.Location = New Point(216, 0)
+        SiticoneButton_nav_r.Location = New Point(229, 0)
         SiticoneButton_nav_r.LongPressDurationMS = 1000
         SiticoneButton_nav_r.Name = "SiticoneButton_nav_r"
         SiticoneButton_nav_r.NormalFontStyle = FontStyle.Bold
@@ -8856,11 +8856,11 @@ Partial Class Form1
         SiticoneDragForm_Header.GradientEndColor = Color.FromArgb(CByte(13), CByte(110), CByte(253))
         SiticoneDragForm_Header.GradientMode = Drawing2D.LinearGradientMode.ForwardDiagonal
         SiticoneDragForm_Header.GradientStartColor = Color.FromArgb(CByte(13), CByte(110), CByte(253))
-        SiticoneDragForm_Header.Location = New Point(440, -2)
+        SiticoneDragForm_Header.Location = New Point(453, -2)
         SiticoneDragForm_Header.Name = "SiticoneDragForm_Header"
         SiticoneDragForm_Header.ShadowColor = Color.FromArgb(CByte(50), CByte(0), CByte(0), CByte(0))
         SiticoneDragForm_Header.ShadowOffset = New Point(0, 2)
-        SiticoneDragForm_Header.Size = New Size(966, 40)
+        SiticoneDragForm_Header.Size = New Size(953, 40)
         SiticoneDragForm_Header.TabIndex = 54
         SiticoneDragForm_Header.TabStop = True
         SiticoneDragForm_Header.TargetForm = Me

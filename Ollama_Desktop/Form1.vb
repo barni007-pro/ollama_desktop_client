@@ -187,6 +187,7 @@ Public Class Form1
         Public Property RequestJson As String
         Public Property ResponseJson As String
         Public Property API As String
+        Public Property Model As String
     End Class
 
     ' Die Liste, die alle bisherigen Chat-Schritte speichert
@@ -870,7 +871,9 @@ Public Class Form1
 
             Dim think As Boolean = SiticoneToggleSwitch_thinking_use.Checked
             Dim think_level As String = SiticoneDropdown_thinking_use.SelectedItem
-            Dim context As Boolean = SiticoneToggleSwitch_last_context.Checked AndAlso extractedContext.Count > 0
+
+            ' Kontext nur nutzen, wenn Schalter an ist, Tokens existieren UND das Modell übereinstimmt
+            Dim context As Boolean = IsContextUsable()
 
             If SiticoneToggleSwitch_sshbot.Checked Then
                 If SiticoneToggleSwitch_sshreinsert.Checked = False Then
@@ -953,11 +956,14 @@ Public Class Form1
 
     Sub render_response(response_sub As String, Optional isNewTurn As Boolean = False, Optional promptText As String = "")
         If isNewTurn Then
+            Dim currentModel As String = If(SiticoneDropdown_model.SelectedItem IsNot Nothing, SiticoneDropdown_model.SelectedItem.ToString(), "Model")
+
             Dim newTurn As New ChatTurn With {
                 .UserPrompt = promptText,
                 .RequestJson = Request_JSON,
                 .ResponseJson = Response_JSON,
-                .API = Current_API
+                .API = Current_API,
+                .Model = currentModel
             }
             chatHistory.Add(newTurn)
             currentTurnIndex = chatHistory.Count - 1
@@ -1216,7 +1222,24 @@ Public Class Form1
         Dim ctxCount As Integer = extractedContext.Count
 
         SiticoneButton_nav_clear.Text = $"{currentPage}/{totalPages} ({ctxCount})"
-        SiticoneLabel_last_context.Text = $"Use Last Context ({ctxCount} Tokens)"
+
+        Dim contextUsable As Boolean = IsContextUsable()
+
+        If contextUsable Then
+            ' Ja: Kontext ist aktiv und passt zum gewählten Modell
+            SiticoneButton_nav_clear.ButtonBackColor = Color.FromArgb(0, 128, 0)
+            SiticoneLabel_last_context.Text = $"Use Last Context ({ctxCount} Tokens)"
+        Else
+            ' Nein: Kontext deaktiviert, leer oder Modell stimmt nicht überein
+            SiticoneButton_nav_clear.ButtonBackColor = Color.FromArgb(128, 84, 84)
+
+            If SiticoneToggleSwitch_last_context.Checked AndAlso ctxCount > 0 AndAlso chatHistory IsNot Nothing AndAlso currentTurnIndex >= 0 AndAlso currentTurnIndex < chatHistory.Count Then
+                Dim turnModel As String = chatHistory(currentTurnIndex).Model
+                SiticoneLabel_last_context.Text = $"Use Last Context ({ctxCount} Tokens - inactive for current model)"
+            Else
+                SiticoneLabel_last_context.Text = $"Use Last Context ({ctxCount} Tokens)"
+            End If
+        End If
     End Sub
 
     Private Function BuildHtml(markDownStr As String) As String
@@ -1770,7 +1793,6 @@ Public Class Form1
             MessageBox.Show("Error retrieving models: " & ex.Message)
         End Try
 
-        extractedContext.Clear()
         UpdateMemoryUI()
         UpdateVramCalculationUI()
         Me.Cursor = Cursors.Default
@@ -2138,8 +2160,6 @@ Public Class Form1
             MessageBox.Show("Error loading model information: " & ex.Message)
         End Try
 
-
-        extractedContext.Clear()
         UpdateMemoryUI()
         CheckActiveSwitchesAgainstModelCapabilities()
         UpdateVramCalculationUI()
@@ -4989,6 +5009,27 @@ Public Class Form1
                 End Try
             End If
         End Using
+    End Sub
+
+    Private Function IsContextUsable() As Boolean
+        If Not SiticoneToggleSwitch_last_context.Checked Then Return False
+        If extractedContext Is Nothing OrElse extractedContext.Count = 0 Then Return False
+        If chatHistory Is Nothing OrElse currentTurnIndex < 0 OrElse currentTurnIndex >= chatHistory.Count Then Return False
+
+        Dim currentModel As String = SiticoneDropdown_model.SelectedItem?.ToString().Trim()
+        Dim turnModel As String = chatHistory(currentTurnIndex).Model?.Trim()
+
+        ' Falls bei älteren *.chat.json Dateien kein Model-Feld vorhanden war, aus den JSON-Daten ableiten
+        If String.IsNullOrEmpty(turnModel) Then
+            turnModel = GetModelNameFromTurn(chatHistory(currentTurnIndex).ResponseJson, chatHistory(currentTurnIndex).RequestJson).Trim()
+            chatHistory(currentTurnIndex).Model = turnModel
+        End If
+
+        Return Not String.IsNullOrEmpty(currentModel) AndAlso String.Equals(currentModel, turnModel, StringComparison.OrdinalIgnoreCase)
+    End Function
+
+    Private Sub SiticoneToggleSwitch_last_context_CheckedChanged(sender As Object, e As EventArgs) Handles SiticoneToggleSwitch_last_context.CheckedChanged
+        UpdateMemoryUI()
     End Sub
 
 End Class

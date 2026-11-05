@@ -164,3 +164,9 @@ V 1.6.6.37
 - Direct Context Size Toggle (num_ctx):
   Easily enable or disable the custom context window via a dedicated toggle switch,
   immediately applying and syncing the selected token size without requiring a confirmation button.
+V 1.6.7.38
+- Model-Aware Context Preservation:
+  Previous context tokens are now strictly bound to the model that generated them. 
+  Context is no longer discarded when switching models, allowing you to return to the original model later without losing conversation state.
+- Visual Context Status Indicator:
+  The navigation clear button dynamically reflects the current context validity via its background color, or mismatched with the current model.
