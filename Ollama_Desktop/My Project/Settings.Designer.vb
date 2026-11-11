@@ -735,12 +735,12 @@ Namespace My
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("")>  _
-        Public Property test() As String
+        Public Property ollama_api_key() As String
             Get
-                Return CType(Me("test"),String)
+                Return CType(Me("ollama_api_key"),String)
             End Get
             Set
-                Me("test") = value
+                Me("ollama_api_key") = value
             End Set
         End Property
     End Class

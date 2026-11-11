@@ -24,8 +24,8 @@ Partial Class Form1
     Private Sub InitializeComponent()
         components = New ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form1))
-        Dim LayoutState1 As SiticoneNetCoreUI.SiticoneFlowPanel.LayoutState = New SiticoneNetCoreUI.SiticoneFlowPanel.LayoutState()
-        Dim NavBarItem1 As SiticoneNetCoreUI.NavBarItem = New SiticoneNetCoreUI.NavBarItem()
+        Dim LayoutState3 As SiticoneNetCoreUI.SiticoneFlowPanel.LayoutState = New SiticoneNetCoreUI.SiticoneFlowPanel.LayoutState()
+        Dim NavBarItem3 As SiticoneNetCoreUI.NavBarItem = New SiticoneNetCoreUI.NavBarItem()
         WebView21 = New Microsoft.Web.WebView2.WinForms.WebView2()
         SiticoneTextBox_host = New SiticoneNetCoreUI.SiticoneTextBox()
         SiticoneDropdown_model = New SiticoneNetCoreUI.SiticoneDropdown()
@@ -253,6 +253,8 @@ Partial Class Form1
         SiticoneButton_show_ollama_ps = New SiticoneNetCoreUI.SiticoneButton()
         SiticoneLabel_whisperlang = New SiticoneNetCoreUI.SiticoneLabel()
         Timer_LLM_progress = New Timer(components)
+        SiticoneTextBox_apikey = New SiticoneNetCoreUI.SiticoneTextBox()
+        SiticoneLabel29 = New SiticoneNetCoreUI.SiticoneLabel()
         CType(WebView21, ComponentModel.ISupportInitialize).BeginInit()
         SiticoneTabControl_tab.SuspendLayout()
         TabPage_modelinfo.SuspendLayout()
@@ -391,7 +393,7 @@ Partial Class Form1
         SiticoneDropdown_model.HoveredItemTextColor = Color.Black
         SiticoneDropdown_model.IsReadonly = False
         SiticoneDropdown_model.ItemHeight = 30
-        SiticoneDropdown_model.Location = New Point(393, 24)
+        SiticoneDropdown_model.Location = New Point(659, 24)
         SiticoneDropdown_model.MaxDropDownItems = 8
         SiticoneDropdown_model.Name = "SiticoneDropdown_model"
         SiticoneDropdown_model.NotFoundBackColor = Color.Transparent
@@ -462,7 +464,7 @@ Partial Class Form1
         SiticoneButton_get_llm.IsReadOnly = False
         SiticoneButton_get_llm.IsToggleButton = False
         SiticoneButton_get_llm.IsToggled = False
-        SiticoneButton_get_llm.Location = New Point(280, 24)
+        SiticoneButton_get_llm.Location = New Point(546, 24)
         SiticoneButton_get_llm.LongPressDurationMS = 1000
         SiticoneButton_get_llm.Name = "SiticoneButton_get_llm"
         SiticoneButton_get_llm.NormalFontStyle = FontStyle.Regular
@@ -5386,7 +5388,7 @@ Partial Class Form1
         SiticoneSplitContainer_runcont.SnapDistance = 20
         SiticoneSplitContainer_runcont.SnapPositions = New Single() {0.25F, 0.5F, 0.75F}
         SiticoneSplitContainer_runcont.SplitterCursor = Cursors.HSplit
-        SiticoneSplitContainer_runcont.SplitterDistance = 584
+        SiticoneSplitContainer_runcont.SplitterDistance = 562
         SiticoneSplitContainer_runcont.SplitterHighlightColor = Color.DodgerBlue
         SiticoneSplitContainer_runcont.SplitterMoveable = True
         SiticoneSplitContainer_runcont.SplitterMoveLeftKey = Keys.Left
@@ -5407,7 +5409,7 @@ Partial Class Form1
         Scintilla_code_block.Location = New Point(0, 0)
         Scintilla_code_block.Name = "Scintilla_code_block"
         Scintilla_code_block.ScrollWidth = 70
-        Scintilla_code_block.Size = New Size(1447, 584)
+        Scintilla_code_block.Size = New Size(1447, 562)
         Scintilla_code_block.TabIndex = 59
         ' 
         ' SiticoneTextArea_run_output
@@ -5422,7 +5424,7 @@ Partial Class Form1
         SiticoneTextArea_run_output.Name = "SiticoneTextArea_run_output"
         SiticoneTextArea_run_output.PlaceholderText = "Wait for Output..."
         SiticoneTextArea_run_output.ScrollBars = ScrollBars.Vertical
-        SiticoneTextArea_run_output.Size = New Size(1447, 25)
+        SiticoneTextArea_run_output.Size = New Size(1447, 47)
         SiticoneTextArea_run_output.TabIndex = 2
         ' 
         ' SiticoneButton_code_run
@@ -7000,7 +7002,7 @@ Partial Class Form1
         SiticoneButton_preload.IsReadOnly = False
         SiticoneButton_preload.IsToggleButton = False
         SiticoneButton_preload.IsToggled = False
-        SiticoneButton_preload.Location = New Point(639, 24)
+        SiticoneButton_preload.Location = New Point(905, 24)
         SiticoneButton_preload.LongPressDurationMS = 1000
         SiticoneButton_preload.Name = "SiticoneButton_preload"
         SiticoneButton_preload.NormalFontStyle = FontStyle.Regular
@@ -7045,7 +7047,7 @@ Partial Class Form1
         SiticoneToggleSwitch_test.IsRequired = False
         SiticoneToggleSwitch_test.LabelColor = Color.Black
         SiticoneToggleSwitch_test.LabelFont = New Font("Segoe UI", 9F)
-        SiticoneToggleSwitch_test.Location = New Point(986, 26)
+        SiticoneToggleSwitch_test.Location = New Point(1133, 26)
         SiticoneToggleSwitch_test.Logger = Nothing
         SiticoneToggleSwitch_test.Name = "SiticoneToggleSwitch_test"
         SiticoneToggleSwitch_test.OffBackColor1 = Color.FromArgb(CByte(229), CByte(229), CByte(229))
@@ -7133,7 +7135,7 @@ Partial Class Form1
         ' 
         SiticoneLabel_model.BackColor = Color.Transparent
         SiticoneLabel_model.Font = New Font("Segoe UI", 10F)
-        SiticoneLabel_model.Location = New Point(393, 1)
+        SiticoneLabel_model.Location = New Point(659, 1)
         SiticoneLabel_model.Name = "SiticoneLabel_model"
         SiticoneLabel_model.Size = New Size(116, 21)
         SiticoneLabel_model.TabIndex = 25
@@ -7577,10 +7579,10 @@ Partial Class Form1
         SiticonePlayPauseButton_request.Size = New Size(36, 36)
         SiticonePlayPauseButton_request.StrokeWidth = 3F
         SiticonePlayPauseButton_request.TabIndex = 1
-        LayoutState1.Location = New Point(3, 3)
-        LayoutState1.Size = New Size(36, 36)
-        LayoutState1.Visible = True
-        SiticonePlayPauseButton_request.Tag = LayoutState1
+        LayoutState3.Location = New Point(3, 3)
+        LayoutState3.Size = New Size(36, 36)
+        LayoutState3.Visible = True
+        SiticonePlayPauseButton_request.Tag = LayoutState3
         SiticonePlayPauseButton_request.TopLeftRadius = 2
         SiticonePlayPauseButton_request.TopRightRadius = 2
         ' 
@@ -7852,9 +7854,9 @@ Partial Class Form1
         ' 
         SiticoneLabel_test.BackColor = Color.Transparent
         SiticoneLabel_test.Font = New Font("Segoe UI", 10F)
-        SiticoneLabel_test.Location = New Point(986, 0)
+        SiticoneLabel_test.Location = New Point(1133, 0)
         SiticoneLabel_test.Name = "SiticoneLabel_test"
-        SiticoneLabel_test.Size = New Size(112, 21)
+        SiticoneLabel_test.Size = New Size(89, 21)
         SiticoneLabel_test.TabIndex = 52
         SiticoneLabel_test.Text = "Bypass Test:"
         SiticoneLabel_test.Visible = False
@@ -7894,15 +7896,15 @@ Partial Class Form1
         SiticoneNavbar_tab.IndicatorGradientEndColor = Color.FromArgb(CByte(0), CByte(180), CByte(240))
         SiticoneNavbar_tab.IndicatorGradientStartColor = Color.FromArgb(CByte(0), CByte(120), CByte(215))
         SiticoneNavbar_tab.IsCollapsed = True
-        NavBarItem1.BackColor = Color.Empty
-        NavBarItem1.BorderColor = Color.Empty
-        NavBarItem1.ForeColor = Color.Empty
-        NavBarItem1.PressBackColor = Color.Empty
-        NavBarItem1.SelectedBackColor = Color.Empty
-        NavBarItem1.SelectedBorderColor = Color.Empty
-        NavBarItem1.SelectedForeColor = Color.Empty
-        NavBarItem1.Text = "Button 1"
-        SiticoneNavbar_tab.Items.Add(NavBarItem1)
+        NavBarItem3.BackColor = Color.Empty
+        NavBarItem3.BorderColor = Color.Empty
+        NavBarItem3.ForeColor = Color.Empty
+        NavBarItem3.PressBackColor = Color.Empty
+        NavBarItem3.SelectedBackColor = Color.Empty
+        NavBarItem3.SelectedBorderColor = Color.Empty
+        NavBarItem3.SelectedForeColor = Color.Empty
+        NavBarItem3.Text = "Button 1"
+        SiticoneNavbar_tab.Items.Add(NavBarItem3)
         SiticoneNavbar_tab.Location = New Point(0, 0)
         SiticoneNavbar_tab.MaterialTabSelectedIndicatorColor = SystemColors.Highlight
         SiticoneNavbar_tab.MaxButtonHeight = 60
@@ -7917,7 +7919,7 @@ Partial Class Form1
         SiticoneNavbar_tab.SelectedIndex = 0
         SiticoneNavbar_tab.SelectedIndicatorSideColor = Color.FromArgb(CByte(16), CByte(100), CByte(220))
         SiticoneNavbar_tab.SelectedIndicatorThickness = 3
-        SiticoneNavbar_tab.SelectedItem = NavBarItem1
+        SiticoneNavbar_tab.SelectedItem = NavBarItem3
         SiticoneNavbar_tab.ShowHeaderTitle = True
         SiticoneNavbar_tab.ShowTitleSections = False
         SiticoneNavbar_tab.ShowTitleSeparator = True
@@ -8885,6 +8887,8 @@ Partial Class Form1
         SiticonePanel_llm_setting.BorderGradientEndColor = Color.Purple
         SiticonePanel_llm_setting.BorderGradientStartColor = Color.Blue
         SiticonePanel_llm_setting.BorderThickness = 2F
+        SiticonePanel_llm_setting.Controls.Add(SiticoneLabel29)
+        SiticonePanel_llm_setting.Controls.Add(SiticoneTextBox_apikey)
         SiticonePanel_llm_setting.Controls.Add(SiticoneButton_show_ollama_ps)
         SiticonePanel_llm_setting.Controls.Add(SiticoneDropdown_wisperlang)
         SiticonePanel_llm_setting.Controls.Add(SiticoneLabel_whisperlang)
@@ -8976,7 +8980,7 @@ Partial Class Form1
         SiticoneButton_show_ollama_ps.IsReadOnly = False
         SiticoneButton_show_ollama_ps.IsToggleButton = False
         SiticoneButton_show_ollama_ps.IsToggled = False
-        SiticoneButton_show_ollama_ps.Location = New Point(752, 24)
+        SiticoneButton_show_ollama_ps.Location = New Point(1018, 24)
         SiticoneButton_show_ollama_ps.LongPressDurationMS = 1000
         SiticoneButton_show_ollama_ps.Name = "SiticoneButton_show_ollama_ps"
         SiticoneButton_show_ollama_ps.NormalFontStyle = FontStyle.Regular
@@ -9016,6 +9020,76 @@ Partial Class Form1
         ' 
         ' Timer_LLM_progress
         ' 
+        ' 
+        ' SiticoneTextBox_apikey
+        ' 
+        SiticoneTextBox_apikey.AccessibleDescription = "A customizable text input field."
+        SiticoneTextBox_apikey.AccessibleName = "Text Box"
+        SiticoneTextBox_apikey.AccessibleRole = AccessibleRole.Text
+        SiticoneTextBox_apikey.BackColor = Color.Transparent
+        SiticoneTextBox_apikey.BlinkCount = 3
+        SiticoneTextBox_apikey.BlinkShadow = False
+        SiticoneTextBox_apikey.BorderColor1 = Color.LightSlateGray
+        SiticoneTextBox_apikey.BorderColor2 = Color.LightSlateGray
+        SiticoneTextBox_apikey.BorderFocusColor1 = Color.FromArgb(CByte(77), CByte(77), CByte(255))
+        SiticoneTextBox_apikey.BorderFocusColor2 = Color.FromArgb(CByte(77), CByte(77), CByte(255))
+        SiticoneTextBox_apikey.CanShake = True
+        SiticoneTextBox_apikey.ContinuousBlink = False
+        SiticoneTextBox_apikey.CornerRadiusBottomLeft = 8
+        SiticoneTextBox_apikey.CornerRadiusBottomRight = 8
+        SiticoneTextBox_apikey.CornerRadiusTopLeft = 8
+        SiticoneTextBox_apikey.CornerRadiusTopRight = 8
+        SiticoneTextBox_apikey.CursorBlinkRate = 500
+        SiticoneTextBox_apikey.CursorColor = Color.Black
+        SiticoneTextBox_apikey.CursorHeight = 26
+        SiticoneTextBox_apikey.CursorOffset = 0
+        SiticoneTextBox_apikey.CursorStyle = SiticoneNetCoreUI.Helpers.DrawingStyle.SiticoneDrawingStyle.Solid
+        SiticoneTextBox_apikey.CursorWidth = 1
+        SiticoneTextBox_apikey.DisabledBackColor = Color.WhiteSmoke
+        SiticoneTextBox_apikey.DisabledBorderColor = Color.LightGray
+        SiticoneTextBox_apikey.DisabledTextColor = Color.Gray
+        SiticoneTextBox_apikey.EnableDropShadow = False
+        SiticoneTextBox_apikey.FillColor1 = Color.AliceBlue
+        SiticoneTextBox_apikey.FillColor2 = Color.AliceBlue
+        SiticoneTextBox_apikey.Font = New Font("Segoe UI", 9.5F)
+        SiticoneTextBox_apikey.ForeColor = Color.DimGray
+        SiticoneTextBox_apikey.HoverBorderColor1 = Color.Gray
+        SiticoneTextBox_apikey.HoverBorderColor2 = Color.Gray
+        SiticoneTextBox_apikey.IsEnabled = True
+        SiticoneTextBox_apikey.Location = New Point(280, 24)
+        SiticoneTextBox_apikey.Name = "SiticoneTextBox_apikey"
+        SiticoneTextBox_apikey.PlaceholderColor = Color.Gray
+        SiticoneTextBox_apikey.PlaceholderText = "Enter Ollama API Key"
+        SiticoneTextBox_apikey.ReadOnlyBorderColor1 = Color.LightGray
+        SiticoneTextBox_apikey.ReadOnlyBorderColor2 = Color.LightGray
+        SiticoneTextBox_apikey.ReadOnlyFillColor1 = Color.WhiteSmoke
+        SiticoneTextBox_apikey.ReadOnlyFillColor2 = Color.WhiteSmoke
+        SiticoneTextBox_apikey.ReadOnlyPlaceholderColor = Color.DarkGray
+        SiticoneTextBox_apikey.SelectionBackColor = Color.FromArgb(CByte(77), CByte(77), CByte(255))
+        SiticoneTextBox_apikey.ShadowAnimationDuration = 1
+        SiticoneTextBox_apikey.ShadowBlur = 10
+        SiticoneTextBox_apikey.ShadowColor = Color.FromArgb(CByte(15), CByte(0), CByte(0), CByte(0))
+        SiticoneTextBox_apikey.Size = New Size(259, 30)
+        SiticoneTextBox_apikey.SolidBorderColor = Color.LightSlateGray
+        SiticoneTextBox_apikey.SolidBorderFocusColor = Color.FromArgb(CByte(77), CByte(77), CByte(255))
+        SiticoneTextBox_apikey.SolidBorderHoverColor = Color.Gray
+        SiticoneTextBox_apikey.SolidFillColor = Color.FromArgb(CByte(209), CByte(232), CByte(255))
+        SiticoneTextBox_apikey.TabIndex = 56
+        SiticoneTextBox_apikey.TextPadding = New Padding(16, 0, 6, 0)
+        ToolTip1.SetToolTip(SiticoneTextBox_apikey, "Specifies the host address and port of the Ollama server (e.g., localhost:11434 or 192.168.1.100:11434).")
+        SiticoneTextBox_apikey.UseSystemPasswordChar = True
+        SiticoneTextBox_apikey.ValidationErrorMessage = "Invalid input."
+        SiticoneTextBox_apikey.ValidationFunction = Nothing
+        ' 
+        ' SiticoneLabel29
+        ' 
+        SiticoneLabel29.BackColor = Color.Transparent
+        SiticoneLabel29.Font = New Font("Segoe UI", 10F)
+        SiticoneLabel29.Location = New Point(282, 0)
+        SiticoneLabel29.Name = "SiticoneLabel29"
+        SiticoneLabel29.Size = New Size(116, 21)
+        SiticoneLabel29.TabIndex = 57
+        SiticoneLabel29.Text = "API Key:"
         ' 
         ' Form1
         ' 
@@ -9317,5 +9391,7 @@ Partial Class Form1
     Friend WithEvents SiticoneFlatPanel4 As SiticoneNetCoreUI.SiticoneFlatPanel
     Friend WithEvents SiticoneLabel28 As SiticoneNetCoreUI.SiticoneLabel
     Friend WithEvents SiticoneToggleSwitch_use_num_ctx As SiticoneNetCoreUI.SiticoneToggleSwitch
+    Friend WithEvents SiticoneLabel29 As SiticoneNetCoreUI.SiticoneLabel
+    Friend WithEvents SiticoneTextBox_apikey As SiticoneNetCoreUI.SiticoneTextBox
 
 End Class

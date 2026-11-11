@@ -437,7 +437,7 @@ Analysiere das Ergebnis. Wenn das Ziel erreicht ist, beginne deine Antwort ZWING
     <Setting Name="BaseSystemOverheadGB" Type="System.String" Scope="User">
       <Value Profile="(Default)">1.6 GB (Standard)</Value>
     </Setting>
-    <Setting Name="test" Type="System.String" Scope="User">
+    <Setting Name="ollama_api_key" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
   </Settings>

@@ -170,3 +170,8 @@ V 1.6.7.38
   Context is no longer discarded when switching models, allowing you to return to the original model later without losing conversation state.
 - Visual Context Status Indicator:
   The navigation clear button dynamically reflects the current context validity via its background color, or mismatched with the current model.
+V 1.6.8.39
+- Ollama Cloud & Remote Gateway Support:
+  Connect directly to Ollama Cloud, remote instances, and secured reverse proxies (e.g., Nginx, LiteLLM, Cloudflare Tunnel) via HTTPS.
+  Added dedicated API key storage and automatic HTTP Bearer token authentication for all inference and metadata requests.
+  Intelligent base URL resolution automatically handles both local (http://) and remote (https://) endpoint schemas.

@@ -232,6 +232,7 @@ Public Class Form1
 
         ToolTip1.AutoPopDelay = 10000
         SiticoneTextBox_host.Text = My.Settings.ollama_host
+        SiticoneTextBox_apikey.Text = My.Settings.ollama_api_key
         SiticoneSplitContainer_runcont.SplitterDistance = 495
 
 
@@ -479,7 +480,8 @@ Public Class Form1
     End Sub
 
     Private Sub Form1_FormClosed(sender As Object, e As FormClosedEventArgs) Handles MyBase.FormClosed
-        My.Settings.ollama_host = SiticoneTextBox_host.Text
+        My.Settings.ollama_host = SiticoneTextBox_host.Text.Trim()
+        My.Settings.ollama_api_key = SiticoneTextBox_apikey.Text.Trim()
 
         My.Settings.system = SiticoneTextArea_system.Text
         My.Settings.system_use = SiticoneToggleSwitch_system_use.Checked
@@ -1144,8 +1146,11 @@ Public Class Form1
 
         For i As Integer = 0 To currentTurnIndex
             Dim turn = chatHistory(i)
-            Dim displayModel As String = GetModelNameFromTurn(turn.ResponseJson, turn.RequestJson)
+
+            'Dim displayModel As String = GetModelNameFromTurn(turn.ResponseJson, turn.RequestJson)
+            Dim displayModel As String = If(Not String.IsNullOrWhiteSpace(turn.Model), turn.Model, GetModelNameFromTurn(turn.ResponseJson, turn.RequestJson))
             Dim turnMarkdownText As String = GetResponseMarkdown(turn.ResponseJson, turn.RequestJson, turn.API)
+
 
             Dim encodedPrompt As String = System.Web.HttpUtility.HtmlEncode(turn.UserPrompt) _
                 .Replace(vbCrLf, "<br>") _
@@ -1325,16 +1330,18 @@ Public Class Form1
         ' Gewählte Stimme aus dem Dropdown ermitteln (Fallback auf "default")
         Dim selectedVoice As String = If(SiticoneDropdown_voice.SelectedItem IsNot Nothing, SiticoneDropdown_voice.SelectedItem.ToString().Trim(), "default")
 
-        ' 1. API-Endpunkt dynamisch wählen
+        ' 1. Basis-URL ermitteln (lokal http:// oder Cloud https://) und API-Endpunkt wählen
+        Dim baseUrl As String = GetBaseApiUrl()
         Dim apiUrl As String
+
         If isSpeechMode Then
-            apiUrl = "http://" & SiticoneTextBox_host.Text & "/v1/audio/speech"
+            apiUrl = $"{baseUrl}/v1/audio/speech"
             Current_API = "/v1/audio/speech"
         ElseIf SiticoneToggleSwitch_decisiontools.Checked Then
-            apiUrl = "http://" & SiticoneTextBox_host.Text & "/v1/systemone"
+            apiUrl = $"{baseUrl}/v1/systemone"
             Current_API = "/v1/systemone"
         Else
-            apiUrl = "http://" & SiticoneTextBox_host.Text & "/api/generate"
+            apiUrl = $"{baseUrl}/api/generate"
             Current_API = "/api/generate"
         End If
 
@@ -1375,8 +1382,6 @@ Public Class Form1
             cleanText = Regex.Replace(cleanText, "```.*?```", "", RegexOptions.Singleline)
             cleanText = Regex.Replace(cleanText, "[#*`_>\[\]]", "").Trim()
 
-            ' Ausgewählte Stimme aus dem Dropdown ermitteln (Fallback auf "default")
-
             If SiticoneDropdown_voice.SelectedItem IsNot Nothing Then
                 selectedVoice = SiticoneDropdown_voice.SelectedItem.ToString().Trim()
             End If
@@ -1396,7 +1401,7 @@ Public Class Form1
             payload("model") = model
             payload("state") = prompt
 
-            ' Bilder für Decision Modelle hinzufügen
+            ' Bilder für Decision-Modelle hinzufügen
             If image_list.Count > 0 Then
                 AppLog($"[DEBUG-QueryOllama] Füge {image_list.Count} Bild(er) zum Decision-Payload hinzu.")
                 Dim base64Images As New List(Of String)
@@ -1512,17 +1517,14 @@ Public Class Form1
 
             Response_JSON = ""
 
-            Dim handler As New HttpClientHandler()
-            handler.UseProxy = My.Settings.use_proxy
+            Dim timeoutSecs As Double = Val(SiticoneTextBox_timeout.Text.Trim())
+            If timeoutSecs <= 0 Then
+                AppLog("[DEBUG-QueryOllama] WARNUNG: Timeout war <= 0 oder ungültig. Setze Fallback auf 600 Sekunden.")
+                timeoutSecs = 600
+            End If
 
-            Using client As New HttpClient(handler)
-
-                Dim timeoutSecs As Double = Val(SiticoneTextBox_timeout.Text.Trim())
-                If timeoutSecs <= 0 Then
-                    AppLog("[DEBUG-QueryOllama] WARNUNG: Timeout war <= 0 oder ungültig. Setze Fallback auf 600 Sekunden.")
-                    timeoutSecs = 600
-                End If
-                client.Timeout = TimeSpan.FromSeconds(timeoutSecs)
+            ' Nutzt die konfigurierte Factory (inkl. Proxy und Bearer-Auth für Cloud-Dienste)
+            Using client As HttpClient = CreateConfiguredHttpClient(timeoutSecs)
                 AppLog($"[DEBUG-QueryOllama] HttpClient Timeout gesetzt auf: {timeoutSecs} Sekunden.")
 
                 Dim content As New StringContent(requestBody, Encoding.UTF8, "application/json")
@@ -1743,12 +1745,11 @@ Public Class Form1
         Scintilla_model_info_request.Text = "" ' Alte Metadaten vorab leeren
 
         Try
-            Dim apiUrl As String = "http://" & SiticoneTextBox_host.Text & "/api/tags"
-            Using client As New HttpClient()
+            'Dim apiUrl As String = "http://" & SiticoneTextBox_host.Text & "/api/tags"
+            Dim apiUrl As String = $"{GetBaseApiUrl()}/api/tags"
+            Using client As HttpClient = CreateConfiguredHttpClient(15)
                 Dim response As HttpResponseMessage = Await client.GetAsync(apiUrl)
                 If response.IsSuccessStatusCode Then
-
-
 
                     Dim responseBody As String = Await response.Content.ReadAsStringAsync()
 
@@ -1802,11 +1803,8 @@ Public Class Form1
         Dim version As String = "Unknown Version"
 
         Try
-            Dim apiUrl As String = "http://" & SiticoneTextBox_host.Text & "/api/version"
-
-            Using client As New HttpClient()
-                client.Timeout = TimeSpan.FromSeconds(5)
-
+            Dim apiUrl As String = $"{GetBaseApiUrl()}/api/version"
+            Using client As HttpClient = CreateConfiguredHttpClient(5)
                 Dim response As HttpResponseMessage = Await client.GetAsync(apiUrl)
 
                 If response.IsSuccessStatusCode Then
@@ -2103,8 +2101,8 @@ Public Class Form1
 
         ' 4. /api/show abfragen (enthält "capabilities", "model_info" mit context_length & Lizenz)
         Try
-            Dim apiUrl As String = "http://" & SiticoneTextBox_host.Text & "/api/show"
-            Using client As New HttpClient()
+            Dim apiUrl As String = $"{GetBaseApiUrl()}/api/show"
+            Using client As HttpClient = CreateConfiguredHttpClient(15)
                 Dim requestBody As String = "{ ""model"": """ & model_name & """}"
                 Dim content As New StringContent(requestBody, Encoding.UTF8, "application/json")
                 Dim response As HttpResponseMessage = Await client.PostAsync(apiUrl, content)
@@ -2649,6 +2647,10 @@ Public Class Form1
                 SiticoneDropdown_thinking_use.SelectedItem = data("thinking_parameter").ToString
                 SiticoneToggleSwitch_last_context.Checked = data("context_use")
                 SiticoneTextArea_content_prompt.Text = data("content_prompt")
+
+                ' Synchronisiert Switch, Dropdown und VRAM-Balken mit dem geladenen Profil:
+                SyncCalcCtxDropdownFromDgv()
+                UpdateVramCalculationUI()
             Catch ex As Exception
                 MessageBox.Show("Error loading parameters: " & ex.Message)
             End Try
@@ -5031,6 +5033,53 @@ Public Class Form1
     Private Sub SiticoneToggleSwitch_last_context_CheckedChanged(sender As Object, e As EventArgs) Handles SiticoneToggleSwitch_last_context.CheckedChanged
         UpdateMemoryUI()
     End Sub
+
+    ''' <summary>
+    ''' Ermittelt die Basis-URL und stellt sicher, dass http:// oder https:// korrekt gesetzt ist.
+    ''' </summary>
+    Private Function GetBaseApiUrl() As String
+        Dim rawHost As String = SiticoneTextBox_host.Text.Trim()
+
+        If String.IsNullOrWhiteSpace(rawHost) Then
+            Return "http://localhost:11434"
+        End If
+
+        ' Falls der User bereits https:// oder http:// eingegeben hat, dieses beibehalten
+        If Not rawHost.StartsWith("http://", StringComparison.OrdinalIgnoreCase) AndAlso
+           Not rawHost.StartsWith("https://", StringComparison.OrdinalIgnoreCase) Then
+
+            ' Erkennt automatisch Cloud-Domains ohne Port oder Ports 443 als HTTPS
+            If rawHost.Contains(".com") OrElse rawHost.Contains(".cloud") OrElse rawHost.Contains(".io") OrElse rawHost.EndsWith(":443") Then
+                rawHost = "https://" & rawHost
+            Else
+                rawHost = "http://" & rawHost
+            End If
+        End If
+
+        Return rawHost.TrimEnd("/"c)
+    End Function
+
+    ''' <summary>
+    ''' Erzeugt einen vorkonfigurierten HttpClient inklusive Proxy und Bearer API-Key (falls hinterlegt).
+    ''' </summary>
+    Private Function CreateConfiguredHttpClient(Optional timeoutSeconds As Double = 0) As HttpClient
+        Dim handler As New HttpClientHandler()
+        handler.UseProxy = My.Settings.use_proxy
+
+        Dim client As New HttpClient(handler)
+
+        If timeoutSeconds > 0 Then
+            client.Timeout = TimeSpan.FromSeconds(timeoutSeconds)
+        End If
+
+        ' Bearer Token hinzufügen, wenn ein API-Key hinterlegt ist
+        Dim apiKey As String = SiticoneTextBox_apikey.Text.Trim()
+        If Not String.IsNullOrEmpty(apiKey) Then
+            client.DefaultRequestHeaders.Authorization = New System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", apiKey)
+        End If
+
+        Return client
+    End Function
 
 End Class
 
