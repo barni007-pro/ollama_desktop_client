@@ -175,3 +175,10 @@ V 1.6.8.39
   Connect directly to Ollama Cloud, remote instances, and secured reverse proxies (e.g., Nginx, LiteLLM, Cloudflare Tunnel) via HTTPS.
   Added dedicated API key storage and automatic HTTP Bearer token authentication for all inference and metadata requests.
   Intelligent base URL resolution automatically handles both local (http://) and remote (https://) endpoint schemas.
+V 1.6.9.40
+- Preloaded Context Support for New Chats (.cnt):
+  Manually loaded context files (.cnt) now retain their associated model metadata and are immediately active when starting a fresh conversation (0/0),
+  ensuring saved context tokens are properly applied from the very first prompt.
+- Visual Request Timeout Progress Bar:
+  Added a real-time progress bar that visually tracks elapsed request time against the configured timeout limit,
+  giving clear visual feedback before an API call times out.

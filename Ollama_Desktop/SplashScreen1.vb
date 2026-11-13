@@ -4,6 +4,7 @@
     '  des Projekt-Designers wechseln (Menü "Projekt", Option "Eigenschaften").
 
 
+    ' Lade-Event: übernimmt Titel, Versions- und Copyright-Angaben in die Anzeige.
     Private Sub SplashScreen1_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         'Richten Sie den Dialogtext zur Laufzeit gemäß den Assemblyinformationen der Anwendung ein.  
 

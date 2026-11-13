@@ -24,6 +24,7 @@ Namespace My
     ' End Sub
 
     Partial Friend Class MyApplication
+        ' Start-Event: zeigt den Splash-Screen an und lädt im Hintergrund das Hauptformular.
         Private Sub MyApplication_Startup(sender As Object, e As Microsoft.VisualBasic.ApplicationServices.StartupEventArgs) Handles Me.Startup
             ' Splash Screen anzeigen
             Dim splash As New SplashScreen1()

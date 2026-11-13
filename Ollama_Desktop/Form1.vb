@@ -36,29 +36,36 @@ Imports Whisper.net.Ggml
 
 Public Class Form1
 
+    ' Datenklasse für Textinhalt (Text, Dateiname, Dateiendung)
     Public Class text_content_def
         Public Property text As String
         Public Property fileName As String
         Public Property fileExtention As String
     End Class
 
+    ' Liste aller importierten Textdateien für den RAG-Kontext
     Public text_contents As New List(Of text_content_def)
+    ' Aktueller RAG-Kontext (Textdatei-Inhalt)
     Public rag_content As New text_content_def
 
+    ' Datenklasse für Bildinhalt (Base64-Data, Dateiname, Dateiendung)
     Public Class image_content_def
         Public Property base64String As String
         Public Property fileName As String
         Public Property fileExtension As String
     End Class
 
+    ' Liste aller angehängten Bilder
     Dim image_contents As New List(Of image_content_def)
 
+    ' Datenklasse für Audioinhalt (Base64-Data, Dateiname, Dateiendung)
     Public Class audio_content_def
         Public Property base64String As String
         Public Property fileName As String
         Public Property fileExtension As String
     End Class
 
+    ' Liste aller angehängten Audiodateien
     Dim audio_contents As New List(Of audio_content_def)
 
     ' Datenklasse für einen Satz mit Trefferanzahl
@@ -66,6 +73,7 @@ Public Class Form1
         Public Property Text As String
         Public Property HitCount As Integer
         Public Property SentenceIndex As Integer
+        ' Konstruktor: legt einen Satz mit Text, Trefferzähler (0) und Index an.
         Public Sub New(text As String, index As Integer)
             Me.Text = text
             Me.HitCount = 0
@@ -73,12 +81,18 @@ Public Class Form1
         End Sub
     End Class
 
+    ' Dokumentenindex für Volltextsuche im Chat-Verlauf
     Private documentIndex As New DocumentIndex()
 
+    ' JSON-String des letzten API-Requests an Ollama
     Public Request_JSON As String = ""
+    ' JSON-String der letzten API-Antwort von Ollama
     Public Response_JSON As String = ""
+    ' Speicher für Navigation durch vorherige Antworten
     Public Response_json_nav_mem As New List(Of String)
+    ' Zeiger auf die aktuelle Position in der Antwort-Navigation
     Public Response_nav_pointer As Integer = -1
+    ' Liste mit Modell-Informationen (Namen, Beschreibungen)
     Public model_info As New List(Of String)
 
 
@@ -88,10 +102,13 @@ Public Class Form1
         Public Property Code As String
     End Class
 
+    ' Liste aller Code-Blöcke aus der letzten Antwort
     Public CodeBlock_List As New List(Of CodeBlock)
 
+    ' JSON-Darstellung von Code-Blöcken für Tool-Aufrufe
     Public ToolsCodeBlockJson As String = "empty"
 
+    ' Datenklasse für Execute-Befehlswerte (Programm, Argumente, Datei, Endung)
     Public Class Execute_val
         Public Property exe As String
         Public Property arg As String
@@ -99,28 +116,44 @@ Public Class Form1
         Public Property ext As String
     End Class
 
+    ' Gedächtnis-Buffer für den aktuellen Request (Prompt-Geschichte)
     Public request_mem As String = ""
+    ' Gedächtnis-Buffer für die aktuelle Antwort
     Public response_mem As String = ""
+    ' Gedächtnis-Buffer für Tool-Antworten
     Public tools_Response_mem As String = ""
+    ' Extrahierter "Thinking"-Teil aus der Modellantwort
     Public extractedThinking As String = ""
+    ' Extrahierter Lizenz-Text aus der Modellantwort
     Public extractedLicense As String = ""
+    ' Extrahierte Kontext-Positionen (Zahlen) aus der Modellantwort
     Public extractedContext As New List(Of Integer)
 
+    ' Gesamtlaufzeit der letzten Anfrage in Millisekunden
     Public timing_total_duration As Long
+    ' Zeit zum Laden/Initialisieren des Modells in Millisekunden
     Public timing_load_duration As Long
+    ' Anzahl der evaluierten Prompt-Tokens
     Public timing_prompt_eval_count As Long
+    ' Zeit für Prompt-Generierung in Millisekunden
     Public timing_prompt_eval_duration As Long
+    ' Anzahl der generierten Tokens
     Public timing_eval_count As Long
+    ' Zeit für Token-Generierung in Millisekunden
     Public timing_eval_duration As Long
 
+    ' CancellationTokenSource zum Abbrechen laufender Anfragen
     Private cancellationTokenSource As CancellationTokenSource
 
+    ' Datenklasse für Modell-Informationen (Hersteller, Beschreibung)
     Public Class ModelInfo
         Public Property manufacturer As String
         Public Property description As String
     End Class
+    ' Wörterbuch: Modellname -> Hersteller & Beschreibung
     Public ModelInfo_dic As Dictionary(Of String, ModelInfo)
 
+    ' Datenklasse für Einstellungs-Pfade (Help, Modelle, Code, Tools, etc.)
     Public Class SettingsInfo
         Public Property help_path As String
         Public Property model_path As String
@@ -131,12 +164,16 @@ Public Class Form1
         Public Property ssh_path As String
     End Class
 
+    ' Wörterbuch: Sprach-Kürzel -> Pfade für alle Einstellungskategorien
     Public SettingsInfo_dic As Dictionary(Of String, SettingsInfo)
 
+    ' Flag: True solange die App im Startprozess ist
     Public APP_Start = True
 
+    ' Version des verbundenen Ollama-Servers
     Public Ollama_ver As String = My.Settings.serv_ver
 
+    ' Flag: True solange eine API-Anfrage läuft
     Private isRequestRunning As Boolean = False
 
     ' Der Pfad zu unserer geheimen Log-Datei im Windows-Temp-Ordner
@@ -146,29 +183,44 @@ Public Class Form1
     ' SSH Terminal in WebView2 
     Private _sshClient As SshClient
     Private _shellStream As ShellStream
+    ' CancellationTokenSource für SSH-Verbindung
     Private _cts As CancellationTokenSource
     ' Variablen für den SSH LLM-Rückkanal
     Private _llmBuffer As New StringBuilder()
+    ' Lock-Objekt für thread-sicheren Zugriff auf den LLM-Buffer
     Private _bufferLock As New Object()
 
+    ' Aktueller mehrzeiliger Fehlertext
     Private currentErrMultiline As String
+    ' Aktueller Fehler-Formatstring
     Private currentErrFormat As String
+    ' Aktueller "Denied"-Fehlertext
     Private currentErrDenied As String
 
+    ' Mikrofon-Aufnahmecomponente (NAudio)
     Private WithEvents waveIn As WaveInEvent = Nothing
+    ' Writer für die WAV-Datei-Aufnahme
     Private waveWriter As WaveFileWriter = Nothing
 
+    ' Flag: True solange eine Audioaufnahme läuft
     Private isRecordingAudio As Boolean = False
+    ' Pfad zur temporären WAV-Aufnahmedatei
     Private audioTempPath As String = ""
+    ' Index des gewählten Audioeingabegeräts
     Private selectedAudioDeviceIndex As Integer
 
     ' --- Klassenvariablen für Whisper Live ---
+    ' Flag: True solange Whisper Live-Transkription aktiv ist
     Private isListeningWhisper As Boolean = False
+    ' Whisper-Factory zur Initialisierung des Transkriptionsprozesses
     Private whisperFactory As WhisperFactory = Nothing
+    ' Whisper-Processor für die eigentliche Sprachtranskription
     Private whisperProcessor As WhisperProcessor = Nothing
 
     ' NAudio Streamer für Live-Daten
+    ' WaveIn-Quelle für Whisper Live-Eingabedaten
     Private whisperWaveIn As WaveInEvent = Nothing
+    ' Gebufferter Wave-Stream für Whisper-Eingabedaten
     Private whisperBufferedStream As BufferedWaveProvider = Nothing
 
     ' Thread-sichere Warteschlange für fertige Audio-Sätze
@@ -192,6 +244,7 @@ Public Class Form1
 
     ' Die Liste, die alle bisherigen Chat-Schritte speichert
     Private chatHistory As New List(Of ChatTurn)()
+    ' Index des aktuell angezeigten Chat-Turns (-1 = letzter)
     Private currentTurnIndex As Integer = -1
 
     ' Speichert den zuletzt genutzten API-Endpunkt
@@ -209,10 +262,21 @@ Public Class Form1
         Public Property MaxTokensInVram As Integer
     End Class
 
+    ' Ergebnis der letzten VRAM-Berechnung
     Private currentVramResult As VramCalculationResult = Nothing
 
+    ' Flag: True solange Modell-Parameter geladen werden
     Private isLoadingParameters As Boolean = False
 
+    ' Name des geladenen Kontextmodells (leer = kein Kontext)
+    Private loadedContextModel As String = ""
+
+    ' Zeitstempel des Starts der aktuellen Anfrage (für Timeout-Berechnung)
+    Private requestStartTime As DateTime
+    ' Aktueller Timeout-Wert in Sekunden für API-Anfragen
+    Private currentTimeoutSeconds As Double = 600
+
+    ' Lade-Event: initialisiert WebView2, Terminal, Optionen, Editor, Modellliste und VRAM-Einstellungen.
     Private Async Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         isAppReady = False
 
@@ -479,6 +543,7 @@ Public Class Form1
         SiticoneTextArea_prompt.Focus()
     End Sub
 
+    ' Schließe-Event: speichert alle Nutzereingaben und Auswahlzustände in die Einstellungen.
     Private Sub Form1_FormClosed(sender As Object, e As FormClosedEventArgs) Handles MyBase.FormClosed
         My.Settings.ollama_host = SiticoneTextBox_host.Text.Trim()
         My.Settings.ollama_api_key = SiticoneTextBox_apikey.Text.Trim()
@@ -529,6 +594,7 @@ Public Class Form1
         My.Settings.serv_ver = Ollama_ver
     End Sub
 
+    ' Registriert für einen SiticoneButton getrennte Bilder für aktivierten und deaktivierten Zustand.
     Private Sub RegisterStateImages(btn As SiticoneButton,
                                 imgEnabled As Image,
                                 imgDisabled As Image)
@@ -545,6 +611,7 @@ Public Class Form1
         updateImage()
     End Sub
 
+    ' Key-Down-Handler des Prompt-Felds: Enter startet den Request, Ctrl+V importiert Bilder aus der Zwischenablage.
     Private Sub SiticoneTextArea_prompt_KeyDown(sender As Object, e As KeyEventArgs) Handles SiticoneTextArea_prompt.KeyDown
         If e.KeyCode = Keys.Enter AndAlso Not ModifierKeys.HasFlag(Keys.Shift) Then
             e.SuppressKeyPress = True
@@ -558,6 +625,7 @@ Public Class Form1
         End If
     End Sub
 
+    ' Importiert ein Bild aus der Zwischenablage, speichert es temporär und hängt es an die Anfrage.
     Private Sub import_clp_image()
         If Not CheckMediaCapability("vision") Then Exit Sub
         Dim img As Image = Clipboard.GetImage()
@@ -579,6 +647,7 @@ Public Class Form1
         SiticoneFlowPanel_prompt_filecontent.Visible = True
     End Sub
 
+    ' Erstellt einen Datei-Chip im Prompt-Bereich für den übergebenen Text-Inhalt.
     Private Sub CreateAndAddFileChip(fileName As String, fileExtention As String, content As String)
         Dim text_content As New text_content_def With {
             .text = content,
@@ -596,6 +665,7 @@ Public Class Form1
         SiticoneFlowPanel_prompt_filecontent.Visible = True
     End Sub
 
+    ' StateChanged-Handler des Play/Pause-Buttons: startet oder bricht die Agent-Loop ab.
     Private Async Sub SiticonePlayPauseButton_request_StateChanged(sender As Object, e As EventArgs) Handles SiticonePlayPauseButton_request.StateChanged
         AppLog($"[DEBUG-StateChanged] ---> StateChanged EVENT GEFEUERT! IsPlaying: {SiticonePlayPauseButton_request.IsPlaying}")
 
@@ -778,6 +848,7 @@ Public Class Form1
         End Try
     End Sub
 
+    ' Löscht ein Modell über die Ollama-/api/delete-Endpunkt-API.
     Private Async Function OllamaDeleteModel(apiBaseUrl As String, model As String) As Task
         Try
             Using client As New HttpClient()
@@ -799,6 +870,7 @@ Public Class Form1
         End Try
     End Function
 
+    ' Lädt ein Modell über die Ollama-/api/pull-Endpunkt-API herunter.
     Private Async Function OllamaPullModel(apiBaseUrl As String, model As String) As Task
         Try
             Using client As New HttpClient()
@@ -818,11 +890,13 @@ Public Class Form1
     End Function
 
 
+    ' Klick-Handler: lädt die Modellliste des Servers und die Ollama-Version.
     Private Async Sub SiticoneButton_get_llm_Click(sender As Object, e As EventArgs) Handles SiticoneButton_get_llm.Click
         Await LoadModelsAsync()
         Await GetOllamaVersionAsync()
     End Sub
 
+    ' Hauptlauf: baut die Anfrage aus UI-Werten, ruft das Modell ab und verarbeitet die Antwort.
     Private Async Function MainAsync() As Task
         AppLog("[DEBUG-MainAsync] MainAsync gestartet.")
 
@@ -956,6 +1030,7 @@ Public Class Form1
         End Try
     End Function
 
+    ' Rendert einen (neuen) Antwort-Turn in den Verlauf und zeichnet die bisherige Historie neu.
     Sub render_response(response_sub As String, Optional isNewTurn As Boolean = False, Optional promptText As String = "")
         If isNewTurn Then
             Dim currentModel As String = If(SiticoneDropdown_model.SelectedItem IsNot Nothing, SiticoneDropdown_model.SelectedItem.ToString(), "Model")
@@ -974,6 +1049,7 @@ Public Class Form1
         RenderChatHistoryUpTo(currentTurnIndex)
     End Sub
 
+    ' Liest den reinen Antworttext (response bzw. message.content) aus einer Antwort-JSON-Datei aus.
     Private Function GetResponseTextFromJson(jsonString As String) As String
         Try
             Dim json As JObject = JObject.Parse(jsonString)
@@ -988,36 +1064,65 @@ Public Class Form1
         End Try
     End Function
 
+    ' Startet bzw. stoppt den LLM-Timeout-Fortschrittsbalken und die Button-Animation.
     Private Sub LLM_progress(start As Boolean)
+        If start Then
+            Dim timeoutVal As Double = Val(SiticoneTextBox_timeout.Text.Trim())
+            currentTimeoutSeconds = If(timeoutVal > 0, timeoutVal, 600)
+            requestStartTime = DateTime.Now
+
+            SiticonehLineProgress_llm_timeout.Minimum = 0
+            SiticonehLineProgress_llm_timeout.Maximum = 1000
+            SiticonehLineProgress_llm_timeout.Value = 0
+            SiticonehLineProgress_llm_timeout.Visible = True
+        Else
+            SiticonehLineProgress_llm_timeout.Value = 0
+            ' Optional: Balken ausblenden, wenn kein Request läuft
+            ' SiticonehLineProgress_llm_timeout.Visible = False
+        End If
+
         Timer_LLM_progress.Enabled = start
         SiticonePlayPauseButton_request.ShowProgress = start
     End Sub
 
+    ' Timer-Event: animiert den Play/Pause-Button und aktualisiert den Timeout-Fortschritt.
     Private Sub Timer_LLM_progress_Tick(sender As Object, e As EventArgs) Handles Timer_LLM_progress.Tick
+        ' 1. Play/Pause-Button-Animation
         Dim progress_val = SiticonePlayPauseButton_request.PlayProgress
         progress_val += 0.05
         If progress_val >= 1 Then
             progress_val = 0
         End If
         SiticonePlayPauseButton_request.PlayProgress = progress_val
+
+        ' 2. Timeout-Fortschritt berechnen
+        If currentTimeoutSeconds > 0 Then
+            Dim elapsedSeconds As Double = (DateTime.Now - requestStartTime).TotalSeconds
+            Dim ratio As Double = Math.Min(1.0, Math.Max(0.0, elapsedSeconds / currentTimeoutSeconds))
+            SiticonehLineProgress_llm_timeout.Value = CInt(ratio * SiticonehLineProgress_llm_timeout.Maximum)
+        End If
     End Sub
 
+    ' Klick-Handler: springt einen Chat-Verlaufsschritt zurück.
     Private Sub SiticoneButton_nav_l_Click(sender As Object, e As EventArgs) Handles SiticoneButton_nav_l.Click
         If currentTurnIndex > 0 Then
             RenderChatHistoryUpTo(currentTurnIndex - 1)
         End If
     End Sub
 
+    ' Klick-Handler: springt einen Chat-Verlaufsschritt vor.
     Private Sub SiticoneButton_nav_r_Click(sender As Object, e As EventArgs) Handles SiticoneButton_nav_r.Click
         If chatHistory IsNot Nothing AndAlso currentTurnIndex < chatHistory.Count - 1 Then
             RenderChatHistoryUpTo(currentTurnIndex + 1)
         End If
     End Sub
 
+    ' Stellt die UI auf den angegebenen Verlaufsschritt ein (Prompt, Antwort, JSON, Code, Timing).
     Private Sub RenderChatHistoryUpTo(ByVal maxIndex As Integer)
         If chatHistory Is Nothing OrElse chatHistory.Count = 0 Then
             currentTurnIndex = -1
             extractedContext.Clear()
+            loadedContextModel = ""
             extractedThinking = ""
             conversationHistoryMarkdown.Clear()
             Scintilla_response.Text = ""
@@ -1048,6 +1153,7 @@ Public Class Form1
 
         ' 2. Tokens, Kontext, Thinking und Timing dynamisch aus ResponseJSON extrahieren
         extractedContext.Clear()
+        loadedContextModel = ""
         extractedThinking = ""
         timing_total_duration = 0
         timing_load_duration = 0
@@ -1140,6 +1246,7 @@ Public Class Form1
     End Sub
 
 
+    ' Baut den kumulierten Markdown-Verlauf bis zum aktuellen Eintrag neu auf.
     Private Sub RebuildConversationMarkdownUpToCurrent()
         conversationHistoryMarkdown.Clear()
         If chatHistory Is Nothing OrElse chatHistory.Count = 0 OrElse currentTurnIndex < 0 Then Return
@@ -1170,6 +1277,7 @@ Public Class Form1
     End Sub
 
 
+    ' Liefert den HTML-Kopf (Styles/Head) für die generierte Antwortsicht.
     Private Function GetHtmlHeader() As String
         Return "<html><head><meta charset='utf-8'>" &
            "<style>" &
@@ -1180,10 +1288,12 @@ Public Class Form1
            "</style></head><body>"
     End Function
 
+    ' Liefert den HTML-Fuß (Scroll-Script + Body-Schluss) für die generierte Antwortsicht.
     Private Function GetHtmlFooter() As String
         Return "<script>window.scrollTo(0, document.body.scrollHeight);</script></body></html>"
     End Function
 
+    ' Aktualisiert die Aktivität der Zurück-/Vor-Buttons je nach Verlaufslänge.
     Private Sub UpdateButtonStates()
         Dim hasHistory As Boolean = (chatHistory IsNot Nothing AndAlso chatHistory.Count > 0)
 
@@ -1196,6 +1306,7 @@ Public Class Form1
         UpdateMemoryUI()
     End Sub
 
+    ' Klick-Handler: löscht den gesamten Chat-Verlauf und den Kontext-Speicher.
     Private Sub SiticoneButton_nav_clear_Click(sender As Object, e As EventArgs) Handles SiticoneButton_nav_clear.Click
         AppLog("[DEBUG-nav_clear_Click] User hat Navigation und Context gelöscht.")
 
@@ -1205,6 +1316,7 @@ Public Class Form1
         Response_nav_pointer = -1
         Response_json_nav_mem.Clear()
         extractedContext.Clear()
+        loadedContextModel = ""
         extractedThinking = ""
         conversationHistoryMarkdown.Clear()
 
@@ -1221,6 +1333,7 @@ Public Class Form1
         UpdateButtonStates()
     End Sub
 
+    ' Aktualisiert die Seitenzähler-Anzeige und die "Use Last Context"-Information.
     Private Sub UpdateMemoryUI()
         Dim currentPage As Integer = currentTurnIndex + 1
         Dim totalPages As Integer = If(chatHistory IsNot Nothing, chatHistory.Count, 0)
@@ -1247,6 +1360,7 @@ Public Class Form1
         End If
     End Sub
 
+    ' Wandelt Markdown in HTML um (inkl. Mathe, Sprache-Tags und Thinking-Blöcken) und fügt die Vorlage ein.
     Private Function BuildHtml(markDownStr As String) As String
         Dim pipeline = New MarkdownPipelineBuilder() _
         .UseAdvancedExtensions() _
@@ -1273,6 +1387,7 @@ Public Class Form1
         Return fullHtml
     End Function
 
+    ' Ergänzt <lang>-Tags vor Code-Block-Sprachebezeichnungen im Markdown.
     Function AddLanguageTag(markdown As String) As String
         Dim lines As String() = markdown.Split({vbCrLf, vbCr, vbLf}, StringSplitOptions.None)
         Dim result As New System.Text.StringBuilder()
@@ -1291,6 +1406,7 @@ Public Class Form1
         Return result.ToString()
     End Function
 
+    ' Wandelt </think>-Blöcke in zitierte "think:"-Abschnitte um.
     Public Function ConvertThinkBlocks(markdown As String) As String
         Dim pattern As String = "<think>(.*?)</think>"
 
@@ -1308,6 +1424,7 @@ Public Class Form1
         Return result
     End Function
 
+    ' Baut die Ollama-Request-Nutzlast, sendet sie und wertet die Antwort (Text, Bild, TTS) aus.
     Private Async Function QueryOllamaAsync(model As String,
                                             prompt As String,
                                             image_list As List(Of image_content_def),
@@ -1531,6 +1648,7 @@ Public Class Form1
 
                 Try
                     AppLog("[DEBUG-QueryOllama] Sende POST Request an Ollama...")
+                    requestStartTime = DateTime.Now
                     Dim response As HttpResponseMessage = Await client.PostAsync(apiUrl, content, ct)
                     AppLog($"[DEBUG-QueryOllama] Antwort erhalten. StatusCode: {response.StatusCode}")
 
@@ -1618,6 +1736,7 @@ Public Class Form1
 
                         Try
                             extractedContext.Clear()
+                            loadedContextModel = ""
                             extractedThinking = json.SelectToken("thinking")?.ToString()
 
                             Dim tempItems = json("context")?.ToObject(Of List(Of Integer))()
@@ -1666,6 +1785,7 @@ Public Class Form1
 
     End Function
 
+    ' Initialisiert WebView2 und öffnet die Hilfe-HTML-Datei (optional mit Anker-Scroll).
     Private Async Function InitializeWebView2(Optional ByVal anchor As String = "") As Task
         Try
             If WebView21.CoreWebView2 Is Nothing Then
@@ -1719,6 +1839,7 @@ Public Class Form1
         End Try
     End Function
 
+    ' Initialisiert das WebView2-Terminal und lädt die terminal.html.
     Private Async Function InitializeWebViewTerminal() As Task
         Dim userDataFolder As String = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
@@ -1732,6 +1853,7 @@ Public Class Form1
         WebViewTerminal.CoreWebView2.Navigate(htmlPath)
     End Function
 
+    ' Scrollt im WebView2 sanft zu einem HTML-Element mit der übergebenen ID.
     Private Async Function ScrollToAnchor(anchor As String) As Task
         If Not String.IsNullOrEmpty(anchor) Then
             Await Task.Delay(250)
@@ -1740,6 +1862,7 @@ Public Class Form1
         End If
     End Function
 
+    ' Lädt die Modellliste vom Server und füllt das Dropdown sowie die Modell-Metadaten.
     Private Async Function LoadModelsAsync() As Task
         Me.Cursor = Cursors.WaitCursor
         Scintilla_model_info_request.Text = "" ' Alte Metadaten vorab leeren
@@ -1799,6 +1922,7 @@ Public Class Form1
         Me.Cursor = Cursors.Default
     End Function
 
+    ' Ermittelt die Version des Ollama-Servers und aktualisiert die Titelleiste.
     Private Async Function GetOllamaVersionAsync() As Task
         Dim version As String = "Unknown Version"
 
@@ -1830,6 +1954,7 @@ Public Class Form1
 
     End Function
 
+    ' Klick-Handler: öffnet Dateidialog für Dateiimport (Bild, Audio, Text, PDF, JSON).
     Private Sub SiticoneButton_file_Click(sender As Object, e As EventArgs) Handles SiticoneButton_file.Click
         Dim openFileDialog As New OpenFileDialog
         openFileDialog.Filter = "Text Dateien (*.txt)|*.txt|PDF Datei (*.pdf)|*.pdf|JSON Datei (*.json)|*.json|Audio Dateien (*.wav;*.mp3)|*.wav;*.mp3|Bild (*.jpg)|*.jpg|Bild (*.png)|*.png|Alle Dateien (*.*)|*.*"
@@ -1921,6 +2046,7 @@ Public Class Form1
         End If
     End Sub
 
+    ' Entfernt alle Datei-Chips und geleerte Medien-/Text-Inhalte.
     Private Sub ClearFileChips()
         text_contents.Clear()
         image_contents.Clear()
@@ -1931,6 +2057,7 @@ Public Class Form1
     End Sub
 
 
+    ' Erzeugt einen visuellen Datei-Chip mit Icon, Name und Lösch-Button im Prompt-Panel.
     Private Sub AddFileChip(filePath As String, ext As String)
         Dim chip As New SiticonePanel()
         With chip
@@ -2046,6 +2173,7 @@ Public Class Form1
         UpdatePromptLayout()
     End Sub
 
+    ' Modell-Änderungs-Handler: aktualisiert Chips, /api/show, Stimmen, Kontext und VRAM-Berechnung.
     Private Async Sub SiticoneDropdown_model_SelectedIndexChanged(sender As Object, e As EventArgs) Handles SiticoneDropdown_model.SelectedIndexChanged
         Dim rawSelectedModelJson As String = model_info.Item(SiticoneDropdown_model.SelectedIndex)
         Scintilla_model_info.Text = rawSelectedModelJson
@@ -2163,6 +2291,7 @@ Public Class Form1
         UpdateVramCalculationUI()
     End Sub
 
+    ' Extrahiert alle Code-Blöcke (Sprache + Code) aus dem Markdown-Text.
     Public Function ExtractCodeBlocks(markdownContent As String) As List(Of CodeBlock)
         Dim codeBlocks As New List(Of CodeBlock)()
         Dim lines As String() = markdownContent.Split({vbCrLf, vbCr, vbLf}, StringSplitOptions.None)
@@ -2210,6 +2339,7 @@ Public Class Form1
         Return codeBlocks
     End Function
 
+    ' Entfernt die gemeinsame Mindest-Einrückung aus allen Zeilen eines Code-Snippets.
     Function DeleteSpaces(ByVal code As String) As String
         Dim zeilen As String() = code.Split({vbCrLf, vbLf}, StringSplitOptions.None)
         Dim minIndent As Integer = Integer.MaxValue
@@ -2236,10 +2366,12 @@ Public Class Form1
         Return result.ToString().TrimEnd()
     End Function
 
+    ' Code-Sprache-Änderung: ruft change_language() auf.
     Private Sub SiticoneDropdown_language_SelectedIndexChanged(sender As Object, e As EventArgs) Handles SiticoneDropdown_language.SelectedIndexChanged
         change_language()
     End Sub
 
+    ' Stellt den Code-Editor auf die gewählte Sprache ein und aktiviert Run-/Save-Buttons.
     Private Sub change_language()
         SiticoneTextArea_run_output.Text = ""
         SetupEditor(Scintilla_code_block, SiticoneDropdown_language.SelectedItem)
@@ -2257,6 +2389,7 @@ Public Class Form1
 
     End Sub
 
+    ' Klick-Handler: führt den gewählten Code-Block über das zugeordnete Programm aus.
     Private Sub SiticoneButton_code_run_Click(sender As Object, e As EventArgs) Handles SiticoneButton_code_run.Click
         Dim run_parameter = execute_check(CodeBlock_List.Item(SiticoneDropdown_language.SelectedIndex).Language)
         If run_parameter.exe <> "" Then
@@ -2316,6 +2449,7 @@ Public Class Form1
         End If
     End Sub
 
+    ' Führt ein Python-Skript mit JSON-Argument in einem temporären File aus und liefert die Ausgabe.
     Private Function python_code_run(script As String, jsonArgument As String) As String
         Try
             Dim tempFilePath As String = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName() & ".py")
@@ -2348,6 +2482,7 @@ Public Class Form1
         End Try
     End Function
 
+    ' Klick-Handler: speichert den aktuellen Code-Block als Datei (Dateidialog).
     Private Sub SiticoneButton_code_save_Click(sender As Object, e As EventArgs) Handles SiticoneButton_code_save.Click
         Dim Extention As String = execute_check(CodeBlock_List.Item(SiticoneDropdown_language.SelectedIndex).Language).ext
         If Extention <> "" Then
@@ -2362,6 +2497,7 @@ Public Class Form1
         End If
     End Sub
 
+    ' Ermittelt die Ausführungswerte (Programm, Argumente, Datei, Endung) für eine Code-Sprache.
     Private Function execute_check(check_str As String) As Execute_val
         Dim ret_str As New Execute_val
         ret_str.exe = ""
@@ -2381,6 +2517,7 @@ Public Class Form1
         Return ret_str
     End Function
 
+    ' Prüft, ob ein String gültiges JSON ist (Objekt oder Array).
     Public Function IsValidJsonCore(ByVal strInput As String) As Boolean
         If String.IsNullOrWhiteSpace(strInput) Then
             Return False
@@ -2401,6 +2538,7 @@ Public Class Form1
         End Try
     End Function
 
+    ' Navigation-Event: scrollt bei erfolgreicher Navigation automatisch ans Ende der Seite.
     Private Async Sub WebView21_NavigationCompleted(sender As Object, e As CoreWebView2NavigationCompletedEventArgs) Handles WebView21.NavigationCompleted
         If e.IsSuccess Then
             ' Immer direkt ans Ende der generierten HTML-Seite scrollen
@@ -2408,6 +2546,7 @@ Public Class Form1
         End If
     End Sub
 
+    ' Klick-Handler: exportiert die Ansicht als PDF, HTML oder Markdown.
     Private Async Sub SiticoneButton_HTMLtoPDF_Click(sender As Object, e As EventArgs) Handles SiticoneButton_HTMLtoPDF.Click
         Using saveFileDialog As New SaveFileDialog
             saveFileDialog.Filter = "PDF files (*.pdf)|*.pdf|Markdown files (*.md)|*.md|HTML files (*.html)|*.html"
@@ -2439,6 +2578,7 @@ Public Class Form1
         End Using
     End Sub
 
+    ' TextChanged-Handler: aktualisiert die Prompt-Höhe und aktiviert/deaktiviert den Start-Button.
     Private Sub SiticoneTextArea_prompt_TextChanged(sender As Object, e As EventArgs) Handles SiticoneTextArea_prompt.TextChanged
         Me.BeginInvoke(Sub() UpdatePromptLayout())
 
@@ -2449,6 +2589,7 @@ Public Class Form1
         End If
     End Sub
 
+    ' Berechnet und setzt die dynamische Höhe des Prompt-Textfelds und des Panels.
     Private Sub UpdatePromptLayout()
         Dim minTextBoxHeight = 36
         Dim maxTextBoxHeight = 200
@@ -2486,6 +2627,7 @@ Public Class Form1
         Me.PerformLayout()
     End Sub
 
+    ' Zelländerung in dgv_option: aktualisiert die Option-Liste und speichert sie in den Einstellungen.
     Private Sub dgv_option_CellValueChanged(sender As Object, e As DataGridViewCellEventArgs) Handles dgv_option.CellValueChanged
         Dim dgv = CType(sender, DataGridView)
 
@@ -2508,6 +2650,7 @@ Public Class Form1
         My.Settings.Save()
     End Sub
 
+    ' Zeilentilgung in dgv_option: aktualisiert die Option-Liste und speichert sie in den Einstellungen.
     Private Sub dgv_option_RowsRemoved(sender As Object, e As DataGridViewRowsRemovedEventArgs) Handles dgv_option.RowsRemoved
         Dim dgv = CType(sender, DataGridView)
 
@@ -2530,6 +2673,7 @@ Public Class Form1
         My.Settings.Save()
     End Sub
 
+    ' Zelländerung in dvg_execute: aktualisiert die Execute-Liste und speichert sie in den Einstellungen.
     Private Sub dvg_execute_CellValueChanged(sender As Object, e As DataGridViewCellEventArgs) Handles dvg_execute.CellValueChanged
         Dim dgv = CType(sender, DataGridView)
 
@@ -2553,6 +2697,7 @@ Public Class Form1
         My.Settings.Save()
     End Sub
 
+    ' Zeilentilgung in dvg_execute: aktualisiert die Execute-Liste und speichert sie in den Einstellungen.
     Private Sub dvg_execute_RowsRemoved(sender As Object, e As DataGridViewRowsRemovedEventArgs) Handles dvg_execute.RowsRemoved
         Dim dgv = CType(sender, DataGridView)
 
@@ -2576,6 +2721,7 @@ Public Class Form1
         My.Settings.Save()
     End Sub
 
+    ' Klick-Handler: speichert die Modell-Parameter als JSON-Datei (*.model.json).
     Private Sub SiticoneButton_save_parameter_Click(sender As Object, e As EventArgs) Handles SiticoneButton_save_parameter.Click
         Dim saveFileDialog As New SaveFileDialog
         saveFileDialog.Filter = "JSON files (*.model.json)|*.model.json|All files (*.*)|*.*"
@@ -2613,6 +2759,7 @@ Public Class Form1
         End If
     End Sub
 
+    ' Klick-Handler: lädt die Modell-Parameter aus einer JSON-Datei (*.model.json).
     Private Sub SiticoneButton_load_parameter_Click(sender As Object, e As EventArgs) Handles SiticoneButton_load_parameter.Click
         Dim openFileDialog As New OpenFileDialog
         openFileDialog.Filter = "JSON files (*.model.json)|*.model.json|All files (*.*)|*.*"
@@ -2623,6 +2770,7 @@ Public Class Form1
         End If
     End Sub
 
+    ' Lädt die Modell-Parameter (System-Prompt, Optionen, Format, Timeout, etc.) aus der angegebenen JSON-Datei.
     Private Sub load_model(setting_path As String)
         If File.Exists(setting_path) Then
             Dim json = File.ReadAllText(setting_path)
@@ -2657,6 +2805,7 @@ Public Class Form1
         End If
     End Sub
 
+    ' Klick-Handler: speichert die Execute-Parameter als JSON-Datei (*.code.json).
     Private Sub SiticoneButton_save_execute_Click(sender As Object, e As EventArgs) Handles SiticoneButton_save_execute.Click
         Dim saveFileDialog As New SaveFileDialog
         saveFileDialog.Filter = "JSON files (*.code.json)|*.code.json|All files (*.*)|*.*"
@@ -2684,6 +2833,7 @@ Public Class Form1
         End If
     End Sub
 
+    ' Klick-Handler: lädt die Execute-Parameter aus einer JSON-Datei (*.code.json).
     Private Sub SiticoneButton_load_execute_Click(sender As Object, e As EventArgs) Handles SiticoneButton_load_execute.Click
         Dim openFileDialog As New OpenFileDialog
         openFileDialog.Filter = "JSON files (*.code.json)|*.code.json|All files (*.*)|*.*"
@@ -2694,6 +2844,7 @@ Public Class Form1
         End If
     End Sub
 
+    ' Lädt die Execute-Parameter (Sprache, Programm, Argumente, etc.) aus der angegebenen JSON-Datei.
     Private Sub load_execute(setting_path As String)
         If File.Exists(setting_path) Then
             Dim json = File.ReadAllText(setting_path)
@@ -2714,6 +2865,7 @@ Public Class Form1
         End If
     End Sub
 
+    ' Klick-Handler: speichert die Tools-Parameter als JSON-Datei (*.tools.json).
     Private Sub SiticoneButton_save_tools_Click(sender As Object, e As EventArgs) Handles SiticoneButton_save_tools.Click
         Dim saveFileDialog As New SaveFileDialog
         saveFileDialog.Filter = "JSON files (*.tools.json)|*.tools.json|All files (*.*)|*.*"
@@ -2735,6 +2887,7 @@ Public Class Form1
         End If
     End Sub
 
+    ' Klick-Handler: lädt die Tools-Parameter aus einer JSON-Datei (*.tools.json).
     Private Sub SiticoneButton_load_tools_Click(sender As Object, e As EventArgs) Handles SiticoneButton_load_tools.Click
         Dim openFileDialog As New OpenFileDialog
         openFileDialog.Filter = "JSON files (*.tools.json)|*.tools.json|All files (*.*)|*.*"
@@ -2745,6 +2898,7 @@ Public Class Form1
         End If
     End Sub
 
+    ' Lädt die Tools-Parameter (System-Prompt, JSON, Python-Code) aus der angegebenen JSON-Datei.
     Private Sub load_tools(setting_path As String)
         If File.Exists(setting_path) Then
             Try
@@ -2773,6 +2927,7 @@ Public Class Form1
         End If
     End Sub
 
+    ' Klick-Handler: speichert die RAG-Parameter als JSON-Datei (*.rag.json).
     Private Sub SiticoneButton_save_rag_Click(sender As Object, e As EventArgs) Handles SiticoneButton_save_rag.Click
         Dim saveFileDialog As New SaveFileDialog
         saveFileDialog.Filter = "JSON files (*.rag.json)|*.rag.json|All files (*.*)|*.*"
@@ -2793,6 +2948,7 @@ Public Class Form1
         End If
     End Sub
 
+    ' Klick-Handler: lädt die RAG-Parameter aus einer JSON-Datei (*.rag.json).
     Private Sub SiticoneButton_load_rag_Click(sender As Object, e As EventArgs) Handles SiticoneButton_load_rag.Click
         Dim openFileDialog As New OpenFileDialog
         openFileDialog.Filter = "JSON files (*.rag.json)|*.rag.json|All files (*.*)|*.*"
@@ -2803,6 +2959,7 @@ Public Class Form1
         End If
     End Sub
 
+    ' Lädt die RAG-Parameter (System-Prompt, JSON) aus der angegebenen JSON-Datei.
     Private Sub load_rag(setting_path As String)
         If File.Exists(setting_path) Then
             Try
@@ -2827,6 +2984,7 @@ Public Class Form1
         End If
     End Sub
 
+    ' Klick-Handler: speichert die Decision-Parameter als JSON-Datei (*.decision.json).
     Private Sub SiticoneButton_save_decision_Click(sender As Object, e As EventArgs) Handles SiticoneButton_save_decision.Click
         Dim saveFileDialog As New SaveFileDialog
         saveFileDialog.Filter = "JSON files (*.decision.json)|*.decision.json|All files (*.*)|*.*"
@@ -2846,6 +3004,7 @@ Public Class Form1
         End If
     End Sub
 
+    ' Klick-Handler: lädt die Decision-Parameter aus einer JSON-Datei (*.decision.json).
     Private Sub SiticoneButton_load_decision_Click(sender As Object, e As EventArgs) Handles SiticoneButton_load_decision.Click
         Dim openFileDialog As New OpenFileDialog
         openFileDialog.Filter = "JSON files (*.decision.json)|*.decision.json|All files (*.*)|*.*"
@@ -2856,6 +3015,7 @@ Public Class Form1
         End If
     End Sub
 
+    ' Lädt die Decision-Parameter (JSON) aus der angegebenen JSON-Datei.
     Private Sub load_decision(setting_path As String)
         If File.Exists(setting_path) Then
             Try
@@ -2876,6 +3036,7 @@ Public Class Form1
         End If
     End Sub
 
+    ' Klick-Handler: speichert die SSH-Parameter als JSON-Datei (*.ssh.json).
     Private Sub SiticoneButton_save_ssh_Click(sender As Object, e As EventArgs) Handles SiticoneButton_save_ssh.Click
         Dim saveFileDialog As New SaveFileDialog
         saveFileDialog.Filter = "JSON files (*.ssh.json)|*.ssh.json|All files (*.*)|*.*"
@@ -2906,6 +3067,7 @@ Public Class Form1
         End If
     End Sub
 
+    ' Klick-Handler: lädt die SSH-Parameter aus einer JSON-Datei (*.ssh.json).
     Private Sub SiticoneButton_load_ssh_Click(sender As Object, e As EventArgs) Handles SiticoneButton_load_ssh.Click
         Dim openFileDialog As New OpenFileDialog
         openFileDialog.Filter = "JSON files (*.ssh.json)|*.ssh.json|All files (*.*)|*.*"
@@ -2916,6 +3078,7 @@ Public Class Form1
         End If
     End Sub
 
+    ' Lädt die SSH-Parameter (System-Prompt, Verbindung, Fehlermeldungen) aus der angegebenen JSON-Datei.
     Private Sub load_ssh(setting_path As String)
         If File.Exists(setting_path) Then
             Try
@@ -2944,10 +3107,12 @@ Public Class Form1
         End If
     End Sub
 
+    ' Klick-Handler: kopiert die Tool-Antwort in die Zwischenablage.
     Private Sub SiticoneButton_resp_clp_Click(sender As Object, e As EventArgs) Handles SiticoneButton_resp_clp.Click
         Clipboard.SetText(tools_Response_mem)
     End Sub
 
+    ' Öffnet das Windows-Screenshot-Tool (ms-screenclip) über den URI-Protokollhandler.
     Public Sub OpenSnipToolByUri()
         Dim psi As New ProcessStartInfo("ms-screenclip:") With {
             .UseShellExecute = True
@@ -2955,6 +3120,7 @@ Public Class Form1
         Process.Start(psi)
     End Sub
 
+    ' Wartet bis ein Bild in der Zwischenablage verfügbar ist (Timeout-basiert).
     Public Async Function WaitForClipboardImageAsync(timeout As TimeSpan, Optional pollInterval As TimeSpan = Nothing, Optional ct As CancellationToken = Nothing) As Task(Of Image)
         If pollInterval = Nothing OrElse pollInterval <= TimeSpan.Zero Then
             pollInterval = TimeSpan.FromMilliseconds(100)
@@ -2976,6 +3142,7 @@ Public Class Form1
         Return Nothing
     End Function
 
+    ' Klick-Handler: minimiert die App, öffnet das Screenshot-Tool und importiert das Bild.
     Private Async Sub SiticoneButton_screenshot_Click(sender As Object, e As EventArgs) Handles SiticoneButton_screenshot.Click
         If Not CheckMediaCapability("vision") Then Exit Sub
         WindowState = FormWindowState.Minimized
@@ -3000,11 +3167,13 @@ Public Class Form1
         UpdatePromptLayout()
     End Sub
 
+    ' Klick-Handler: löscht den Prompt-Text und alle angehängten Datei-Chips.
     Private Sub SiticoneButton_clear_prompt_Click(sender As Object, e As EventArgs) Handles SiticoneButton_clear_prompt.Click
         SiticoneTextArea_prompt.Clear()
         ClearFileChips()
     End Sub
 
+    ' Lädt die Modelle-Konfiguration (Hersteller & Beschreibung) aus einer JSON-Datei.
     Public Sub LoadModelConfig(filePath As String)
         If Not File.Exists(filePath) Then
             Throw New FileNotFoundException("Model config file not found: " & filePath)
@@ -3014,6 +3183,7 @@ Public Class Form1
         ModelInfo_dic = JsonConvert.DeserializeObject(Of Dictionary(Of String, ModelInfo))(json)
     End Sub
 
+    ' Lädt die Sprach-Pfad-Einstellungen aus einer JSON-Datei.
     Public Sub LoadSettings(filePath As String)
         If Not File.Exists(filePath) Then
             Throw New FileNotFoundException("Settings file not found: " & filePath)
@@ -3024,6 +3194,7 @@ Public Class Form1
         AppLog("[DEBUG-LoadSettings]")
     End Sub
 
+    ' Ermittelt Hersteller und Beschreibung eines Modells aus der Konfigurations-Dictionary.
     Public Function GetModelInfo(model_name As String) As ModelInfo
         Dim key As String = model_name.Split(":"c)(0).Trim().ToLower()
 
@@ -3034,6 +3205,7 @@ Public Class Form1
         End If
     End Function
 
+    ' Klick-Handler: öffnet Dateidialog zum Laden einer RAG-Kontext-Datei (Text/PDF).
     Private Sub SiticoneButton_ragpath_Click(sender As Object, e As EventArgs) Handles SiticoneButton_ragpath.Click
         Dim openFileDialog As New OpenFileDialog
         openFileDialog.Filter = "Text files (*.txt)|*.txt|PDF files (*.pdf)|*.pdf|All files (*.*)|*.*"
@@ -3074,6 +3246,7 @@ Public Class Form1
         End If
     End Sub
 
+    ' Verarbeitet die LLM-Antwort für RAG: sucht nach Keywords und erhöht Trefferzähler.
     Private Sub ProcessLLMResponse(jsonResponse As String, Optional delta As Integer = 0)
         Try
             Dim jsonObj As JObject = JObject.Parse(jsonResponse)
@@ -3093,10 +3266,12 @@ Public Class Form1
         End Try
     End Sub
 
+    ' Klick-Handler: kopiert die RAG-Tool-Antwort in die Zwischenablage.
     Private Sub SiticoneButton_resp_clp_rag_Click(sender As Object, e As EventArgs) Handles SiticoneButton_resp_clp_rag.Click
         Clipboard.SetText(tools_Response_mem)
     End Sub
 
+    ' Klick-Handler: zeigt den "Thinking"-Block des Modells in einem Dialog an.
     Private Sub SiticoneButton_show_thinking_Click(sender As Object, e As EventArgs) Handles SiticoneButton_show_thinking.Click
         Dim btnOk = TaskDialogButton.OK
         Dim btnCopy As New TaskDialogButton("Copy to Clipboard")
@@ -3123,6 +3298,7 @@ Public Class Form1
         TaskDialog.ShowDialog(page)
     End Sub
 
+    ' Klick-Handler: zeigt die Lizenzinformation des gewählten Modells in einem Dialog an.
     Private Sub SiticoneButton_show_licence_Click(sender As Object, e As EventArgs) Handles SiticoneButton_show_licence.Click
         Dim page As New TaskDialogPage With {
             .Caption = "Ollama Desktop",
@@ -3137,6 +3313,7 @@ Public Class Form1
         TaskDialog.ShowDialog(page)
     End Sub
 
+    ' Klick-Handler: lädt Kontext-Token aus einer .cnt-Datei.
     Private Sub SiticoneButton_load_context_Click(sender As Object, e As EventArgs) Handles SiticoneButton_load_context.Click
         Dim modelName As String = SiticoneDropdown_model.SelectedItem?.ToString()
         Dim safeModelName As String = GetSafeFilename(modelName)
@@ -3157,6 +3334,7 @@ Public Class Form1
                     End Using
 
                     MessageBox.Show($"Successful {extractedContext.Count} Context-Token loaded.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    loadedContextModel = modelName
                     UpdateMemoryUI()
                 Catch ex As Exception
                     MessageBox.Show("Error loading: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -3165,6 +3343,7 @@ Public Class Form1
         End Using
     End Sub
 
+    ' Klick-Handler: speichert die aktuellen Kontext-Tokens in eine .cnt-Datei.
     Private Sub SiticoneButton_save_context_Click(sender As Object, e As EventArgs) Handles SiticoneButton_save_context.Click
         If extractedContext Is Nothing OrElse extractedContext.Count = 0 Then
             MessageBox.Show("No context available for saving.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information)
@@ -3194,12 +3373,14 @@ Public Class Form1
         End Using
     End Sub
 
+    ' Ersetzt ungültige Dateinamen-Zeichen durch Unterstriche.
     Private Function GetSafeFilename(input As String) As String
         If String.IsNullOrEmpty(input) Then Return "default"
         Dim invalidChars As String = New String(Path.GetInvalidFileNameChars())
         Return Regex.Replace(input, "[" & Regex.Escape(invalidChars) & "]", "_")
     End Function
 
+    ' Klick-Handler: öffnet das Timing-Statistik-Fenster (FrmTimingStats).
     Private Sub SiticoneButton_timing_Click(sender As Object, e As EventArgs) Handles SiticoneButton_timing.Click
         If timing_total_duration = 0 Then
             MessageBox.Show("No timing data available yet. Please run a query first.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information)
@@ -3219,6 +3400,7 @@ Public Class Form1
         End Using
     End Sub
 
+    ' Dropdown-Änderung: lädt alle Einstellungskategorien aus den zugeordneten JSON-Profilen.
     Private Async Sub SiticoneDropdown_default_SelectedIndexChanged(sender As Object, e As EventArgs) Handles SiticoneDropdown_default.SelectedIndexChanged
         Cursor = Cursors.WaitCursor
         Application.DoEvents()
@@ -3236,66 +3418,82 @@ Public Class Form1
         Cursor = Cursors.Default
     End Sub
 
+    ' Klick-Handler: öffnet die Hilfe-Sektion "Optionen & Parameter".
     Private Async Sub SiticoneButton_link_options_parameter_Click(sender As Object, e As EventArgs) Handles SiticoneButton_link_options_parameter.Click
         Await InitializeWebView2("link_options_parameter")
     End Sub
 
+    ' Klick-Handler: öffnet die Hilfe-Sektion "System-Prompt".
     Private Async Sub SiticoneButton_link_system_prompt_Click(sender As Object, e As EventArgs) Handles SiticoneButton_link_system_prompt.Click
         Await InitializeWebView2("link_system_prompt")
     End Sub
 
+    ' Klick-Handler: öffnet die Hilfe-Sektion "Output-Format".
     Private Async Sub SiticoneButton_link_output_format_Click(sender As Object, e As EventArgs) Handles SiticoneButton_link_output_format.Click
         Await InitializeWebView2("link_output_format")
     End Sub
 
+    ' Klick-Handler: öffnet die Hilfe-Sektion "Tools System-Prompt".
     Private Async Sub SiticoneButton_link_tool_system_prompt_Click(sender As Object, e As EventArgs) Handles SiticoneButton_link_tool_system_prompt.Click
         Await InitializeWebView2("link_tool_system_prompt")
     End Sub
 
+    ' Klick-Handler: öffnet die Hilfe-Sektion "Tools JSON".
     Private Async Sub SiticoneButton_link_tool_json_Click(sender As Object, e As EventArgs) Handles SiticoneButton_link_tool_json.Click
         Await InitializeWebView2("link_tool_json")
     End Sub
 
+    ' Klick-Handler: öffnet die Hilfe-Sektion "Tools Python-Code".
     Private Async Sub SiticoneButton_link_tool_python_code_Click(sender As Object, e As EventArgs) Handles SiticoneButton_link_tool_python_code.Click
         Await InitializeWebView2("link_tool_python_code")
     End Sub
 
+    ' Klick-Handler: öffnet die Hilfe-Sektion "Content-Prompt".
     Private Async Sub SiticoneButton_link_content_prompt_Click(sender As Object, e As EventArgs) Handles SiticoneButton_link_content_prompt.Click
         Await InitializeWebView2("link_content_prompt")
     End Sub
 
+    ' Klick-Handler: öffnet die Hilfe-Sektion "RAG Tools System-Prompt".
     Private Async Sub SiticoneButton_link_rag_tool_system_prompt_Click(sender As Object, e As EventArgs) Handles SiticoneButton_link_rag_tool_system_prompt.Click
         Await InitializeWebView2("link_rag_tool_system_prompt")
     End Sub
 
+    ' Klick-Handler: öffnet die Hilfe-Sektion "Decision Tools".
     Private Async Sub SiticoneButton_link_decision_tool_Click(sender As Object, e As EventArgs) Handles SiticoneButton_link_decition_tool.Click
         Await InitializeWebView2("link_decision_tool_json")
     End Sub
 
+    ' Klick-Handler: öffnet die Hilfe-Sektion "RAG Tools JSON".
     Private Async Sub SiticoneButton_link_rag_tool_json_Click(sender As Object, e As EventArgs) Handles SiticoneButton_link_rag_tool_json.Click
         Await InitializeWebView2("link_rag_tool_json")
     End Sub
 
+    ' Klick-Handler: öffnet die Hilfe-Sektion "Execute-Liste".
     Private Async Sub SiticoneButton_link_execute_list_Click(sender As Object, e As EventArgs) Handles SiticoneButton_link_execute_list.Click
         Await InitializeWebView2("link_execute_list")
     End Sub
 
+    ' Klick-Handler: öffnet die Hilfe-Sektion "Execute & Run".
     Private Async Sub SiticoneButton_execute_run_Click(sender As Object, e As EventArgs) Handles SiticoneButton_execute_run.Click
         Await InitializeWebView2("link_execute_run")
     End Sub
 
+    ' Klick-Handler: öffnet die Hilfe-Sektion "SSH System-Prompt".
     Private Async Sub SiticoneButton_ssh_system_Click(sender As Object, e As EventArgs) Handles SiticoneButton_ssh_system.Click
         Await InitializeWebView2("link_ssh_system")
     End Sub
 
+    ' Klick-Handler: öffnet die Hilfe-Sektion "SSH Response-Prompt".
     Private Async Sub SiticoneButton_ssh_response_Click(sender As Object, e As EventArgs) Handles SiticoneButton_ssh_response.Click
         Await InitializeWebView2("link_ssh_response")
     End Sub
 
+    ' Klick-Handler: öffnet die Hilfe-Sektion "SSH Parameter".
     Private Async Sub SiticoneButton_ssh_par_Click(sender As Object, e As EventArgs) Handles SiticoneButton_ssh_par.Click
         Await InitializeWebView2("link_ssh_par")
     End Sub
 
+    ' Konfiguriert den Scintilla-Editor (Schriftart, Farben, Syntax-Highlighting) für die angegebene Sprache.
     Private Sub SetupEditor(editor As ScintillaNET.Scintilla, langType As String)
         editor.StyleResetDefault()
         editor.Styles(ScintillaNET.Style.Default).Font = "Consolas"
@@ -3392,6 +3590,7 @@ Public Class Form1
         End Select
     End Sub
 
+    ' Klick-Handler: preloadet das gewählte Modell per leerem Request an /api/generate.
     Private Async Sub SiticoneButton_preload_Click(sender As Object, e As EventArgs) Handles SiticoneButton_preload.Click
         If SiticoneDropdown_model.SelectedItem Is Nothing Then
             MessageBox.Show("Please select a model first.")
@@ -3433,20 +3632,24 @@ Public Class Form1
         End Try
     End Sub
 
+    ' Navbar-Selektionsänderung: synchronisiert die gewählte Navbar mit dem TabControl.
     Private Sub SiticoneNavbar_tab_SelectedItemChanged(sender As Object, e As SiticoneNavbar.NavBarSelectionEventArgs) Handles SiticoneNavbar_tab.SelectedItemChanged
         SiticoneTabControl_tab.SelectedIndex = SiticoneNavbar_tab.SelectedIndex
         SiticoneTextArea_prompt.Focus()
     End Sub
 
+    ' TabControl-Änderung: synchronisiert die gewählte TabPage mit der Navbar.
     Private Sub SiticoneTabControl_tab_SelectedIndexChanged(sender As Object, e As EventArgs) Handles SiticoneTabControl_tab.SelectedIndexChanged
         SiticoneNavbar_tab.SelectedIndex = SiticoneTabControl_tab.SelectedIndex
         SiticoneTextArea_prompt.Focus()
     End Sub
 
+    ' Klick-Handler: schließt das Fenster.
     Private Sub SiticoneButton4_close1_Click(sender As Object, e As EventArgs) Handles SiticoneButton4_close1.Click
         Close()
     End Sub
 
+    ' Klick-Handler: wechselt zwischen normaler und maximierter Fenstergröße.
     Private Sub SiticoneButton_max1_Click(sender As Object, e As EventArgs) Handles SiticoneButton_max1.Click
         If WindowState = FormWindowState.Normal Then
             WindowState = FormWindowState.Maximized
@@ -3457,18 +3660,22 @@ Public Class Form1
         End If
     End Sub
 
+    ' Klick-Handler: minimiert das Fenster.
     Private Sub SiticoneButton_min1_Click(sender As Object, e As EventArgs) Handles SiticoneButton_min1.Click
         WindowState = FormWindowState.Minimized
     End Sub
 
+    ' Klick-Handler: blendet die Sidebar-Navbar ein bzw. aus.
     Private Sub SiticoneButton_hamburg_Click(sender As Object, e As EventArgs) Handles SiticoneButton_hamburg.Click
         SiticoneNavbar_tab.Visible = Not SiticoneNavbar_tab.Visible
     End Sub
 
+    ' Klick-Handler: blendet das LLM-API-Einstellungs-Panel ein bzw. aus.
     Private Sub SiticoneButton_LLM_Click(sender As Object, e As EventArgs) Handles SiticoneButton_LLM.Click
         SiticonePanel_llm_setting.Visible = Not SiticonePanel_llm_setting.Visible
     End Sub
 
+    ' Window-Messager-Override: implementiert manuelle Fenstergrößenänderung an den Rändern.
     Protected Overrides Sub WndProc(ByRef m As System.Windows.Forms.Message)
         Const WM_NCHITTEST As Integer = &H84
 
@@ -3520,6 +3727,7 @@ Public Class Form1
         End If
     End Sub
 
+    ' Key-Down-Handler der Form: Shift+F12 startet PowerShell-Log-Monitor, Shift+F11 zeigt Test-Elemente.
     Private Sub Form1_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
         Debug.WriteLine($"[DEBUG-HOTKEY] Taste gedrückt: {e.KeyCode} | Shift: {e.Shift} | Control: {e.Control}")
 
@@ -3551,6 +3759,7 @@ Public Class Form1
         End If
     End Sub
 
+    ' Schreibt eine zeitgestempelte Log-Nachricht in die Debug-Log-Datei.
     Public Sub AppLog(message As String)
         Dim logLine As String = $"[{DateTime.Now:HH:mm:ss.fff}] {message}"
 
@@ -3597,6 +3806,7 @@ Public Class Form1
         End Try
     End Sub
 
+    ' Startet einen Hintergrund-Thread, der SSH-Ausgabetext liest und im WebView2-Terminal anzeigt.
     Private Sub StartReadingLoop(token As CancellationToken)
         Task.Run(Async Function()
                      Dim buffer(4096) As Byte
@@ -3625,6 +3835,7 @@ Public Class Form1
                  End Function, token)
     End Sub
 
+    ' WebMessage-Handler: verarbeitet Resize- und Input-Nachrichten aus dem WebView2-Terminal.
     Private Sub WebViewTerminal_WebMessageReceived(sender As Object, e As CoreWebView2WebMessageReceivedEventArgs) Handles WebViewTerminal.WebMessageReceived
         Dim msg As String = e.TryGetWebMessageAsString()
 
@@ -3654,6 +3865,7 @@ Public Class Form1
         End Try
     End Sub
 
+    ' Schreibt einen LLM-Command in den SSH-Shell-Stream.
     Public Sub ExecuteLlmCommand(llmCommand As String)
         If _shellStream IsNot Nothing AndAlso _shellStream.CanWrite Then
             Dim bytes = Encoding.UTF8.GetBytes(llmCommand & vbLf)
@@ -3662,6 +3874,7 @@ Public Class Form1
         End If
     End Sub
 
+    ' Klick-Handler: testet die SSH-Verbindung mit einem Beispiel-Befehl (sudo ls -al).
     Private Async Sub SiticoneButton_test_Click(sender As Object, e As EventArgs) Handles SiticoneButton_test.Click
         SiticoneButton_test.Enabled = False
 
@@ -3672,6 +3885,7 @@ Public Class Form1
         SiticoneButton_test.Enabled = True
     End Sub
 
+    ' Liefert den aktuellen SSH-Terminal-Buffer und leert ihn anschließend.
     Public Function GetTerminalContextForLlm() As String
         SyncLock _bufferLock
             Dim output = _llmBuffer.ToString()
@@ -3681,6 +3895,7 @@ Public Class Form1
         End SyncLock
     End Function
 
+    ' Führt einen SSH-Befehl aus und wartet bis zur Abschluss-Regex oder Timeout, inkl. Sudo-Passwort-Handling.
     Public Async Function ExecuteCommandAndWaitAsync(command As String, maxWaitTimeSeconds As Integer) As Task(Of String)
         SyncLock _bufferLock
             _llmBuffer.Clear()
@@ -3800,6 +4015,7 @@ Public Class Form1
         Return cleanOutput.Replace(vbLf, vbCrLf)
     End Function
 
+    ' Klick-Handler: startet/stoppt die Audioaufnahme (Mikrofon) und hängt die Datei an die Anfrage.
     Private Sub SiticoneButton_audio_Click(sender As Object, e As EventArgs) Handles SiticoneButton_audio.Click
         Dim mouseEv As MouseEventArgs = TryCast(e, MouseEventArgs)
         If mouseEv IsNot Nothing AndAlso mouseEv.Button = MouseButtons.Right Then Exit Sub
@@ -3881,6 +4097,7 @@ Public Class Form1
         End If
     End Sub
 
+    ' Rechtsklick-Handler: zeigt ein Kontextmenü zur Auswahl des Audioeingabegeräts.
     Private Sub SiticoneAudioButtons_MouseClick(sender As Object, e As MouseEventArgs) Handles SiticoneButton_audio.MouseClick, SiticoneButton_wisper.MouseClick
         If e.Button <> MouseButtons.Right Then Exit Sub
         If isRecordingAudio OrElse isListeningWhisper Then Exit Sub
@@ -3925,6 +4142,7 @@ Public Class Form1
         audioMenu.Show(targetButton, e.Location)
     End Sub
 
+    ' Initialisiert das Whisper-Modell (ggml-base.bin) und setzt die zuletzt gespeicherte Sprache.
     Private Sub InitWhisper()
         Try
             Dim modelPath As String = Path.Combine(System.Windows.Forms.Application.StartupPath, "ggml-base.bin")
@@ -3951,6 +4169,7 @@ Public Class Form1
         End Try
     End Sub
 
+    ' Ändert die Whisper-Transkriptionssprache und speichert sie in den Einstellungen.
     Private Sub ChangeWhisperLanguage(ByVal newLangCode As String)
         Try
             My.Settings.WhisperLanguage = newLangCode
@@ -3970,6 +4189,7 @@ Public Class Form1
         End Try
     End Sub
 
+    ' Klick-Handler: startet/stoppt die Whisper Live-Sprachtranskription.
     Private Async Sub SiticoneButton_wisper_Click(sender As Object, e As EventArgs) Handles SiticoneButton_wisper.Click
         Dim mouseEv As MouseEventArgs = TryCast(e, MouseEventArgs)
         If mouseEv IsNot Nothing AndAlso mouseEv.Button = MouseButtons.Right Then Exit Sub
@@ -4025,11 +4245,13 @@ Public Class Form1
         End If
     End Sub
 
+    ' Setzt die Whisper-Button-Farbgebung auf den neutralen Standard zurück.
     Private Sub ResetWhisperUI()
         SiticoneButton_wisper.ButtonBackColor = Color.Transparent
         SiticoneButton_wisper.HoverBackColor = Color.FromArgb(240, 240, 240)
     End Sub
 
+    ' Verarbeitet den Live-Audio-Stream: erkennt Sprache/Silence und queueut Sätze zur Transkription.
     Private Async Function ProcessWhisperStreamAsync() As Task
         Dim chunkSize As Integer = 16000 * 2 * 0.2
         Dim chunkBuffer(chunkSize - 1) As Byte
@@ -4147,6 +4369,7 @@ Public Class Form1
         End Try
     End Function
 
+    ' Arbeits-Loop: nimmt Audio-Sätze aus der Warteschlange und transkribiert sie sequenziell.
     Private Async Function ProcessWhisperQueueAsync() As Task
         While isListeningWhisper OrElse Not whisperJobQueue.IsEmpty
             Dim nextAudioChunk() As Byte = Nothing
@@ -4160,6 +4383,7 @@ Public Class Form1
         AppLog("[WHISPER] Warteschlange vollständig abgearbeitet.")
     End Function
 
+    ' Transkribiert ein Audio-Chunk über Whisper und hängt den Text in den Prompt ein.
     Private Async Function TranscribeAudioChunkAsync(ByVal audioBytes() As Byte) As Task
         Dim whisperSamples(audioBytes.Length / 2 - 1) As Single
 
@@ -4193,6 +4417,7 @@ Public Class Form1
         End Try
     End Function
 
+    ' Fügt transkribierten Text (bereinigt) ans Ende des Prompt-Felds an.
     Private Sub AppendTranscribedText(ByVal text As String)
         If SiticoneTextArea_prompt.InvokeRequired Then
             Me.BeginInvoke(Sub() AppendTranscribedText(text))
@@ -4217,6 +4442,7 @@ Public Class Form1
         SiticoneTextArea_prompt_TextChanged(Nothing, Nothing)
     End Sub
 
+    ' Setzt die Button-Hintergrundfarbe des Whisper-Buttons (thread-safe).
     Private Sub SetWhisperButtonColor(ByVal targetColor As Color)
         If SiticoneButton_wisper.InvokeRequired Then
             Me.BeginInvoke(Sub() SetWhisperButtonColor(targetColor))
@@ -4227,6 +4453,7 @@ Public Class Form1
         SiticoneButton_wisper.HoverBackColor = targetColor
     End Sub
 
+    ' Dropdown-Änderung: wechselt die Whisper-Sprache, falls sich die Auswahl geändert hat.
     Private Sub SiticoneDropdown_wisperlang_SelectedIndexChanged(sender As Object, e As EventArgs) Handles SiticoneDropdown_wisperlang.SelectedIndexChanged
         If SiticoneDropdown_wisperlang.SelectedItem IsNot Nothing Then
             Dim selectedItem As String = SiticoneDropdown_wisperlang.SelectedItem.ToString()
@@ -4243,6 +4470,7 @@ Public Class Form1
         End If
     End Sub
 
+    ' CheckedChanged-Handler für exklusive Modi (SSH-Bot, Tools, RAG, Decision): stellt sicher dass nur einer aktiv ist.
     Private Sub ExclusiveToggleSwitches_CheckedChanged(sender As Object, e As EventArgs) Handles _
         SiticoneToggleSwitch_sshbot.CheckedChanged,
         SiticoneToggleSwitch_tools.CheckedChanged,
@@ -4540,6 +4768,7 @@ Public Class Form1
         Return 1.6
     End Function
 
+    ' Dropdown-Änderung: speichert die gewählte VRAM-Größe und triggert die VRAM-Berechnung.
     Private Sub SiticoneDropdown_vram_SelectedIndexChanged(sender As Object, e As EventArgs) Handles SiticoneDropdown_vram.SelectedIndexChanged
         If SiticoneDropdown_vram.SelectedItem IsNot Nothing Then
             My.Settings.UserVRAM = SiticoneDropdown_vram.SelectedItem.ToString()
@@ -4548,6 +4777,7 @@ Public Class Form1
         UpdateVramCalculationUI()
     End Sub
 
+    ' Dropdown-Änderung: speichert den Base-System-Overhead und triggert die VRAM-Berechnung.
     Private Sub SiticoneDropdown_vram_base_SelectedIndexChanged(sender As Object, e As EventArgs) Handles SiticoneDropdown_vram_base.SelectedIndexChanged
         If isAppReady Then
             Try
@@ -4561,6 +4791,7 @@ Public Class Form1
         UpdateVramCalculationUI()
     End Sub
 
+    ' Dropdown-Änderung: aktualisiert den num_ctx-Wert in dgv_option und triggert die VRAM-Berechnung.
     Private Sub SiticoneDropdown_calc_ctx_SelectedIndexChanged(sender As Object, e As EventArgs) Handles SiticoneDropdown_calc_ctx.SelectedIndexChanged
         If isAppReady AndAlso Not isLoadingParameters AndAlso SiticoneToggleSwitch_use_num_ctx.Checked Then
             Dim selectedCtx As String = SiticoneDropdown_calc_ctx.SelectedItem?.ToString().Trim()
@@ -4581,6 +4812,7 @@ Public Class Form1
         UpdateVramCalculationUI()
     End Sub
 
+    ' ToggleSwitch-Handler: aktiviert/deaktiviert die num_ctx-Zeile in dgv_option und speichert die Einstellungen.
     Private Sub SiticoneToggleSwitch_use_num_ctx_CheckedChanged(sender As Object, e As EventArgs) Handles SiticoneToggleSwitch_use_num_ctx.CheckedChanged
         If Not isAppReady OrElse isLoadingParameters Then Exit Sub
 
@@ -4613,6 +4845,7 @@ Public Class Form1
         UpdateVramCalculationUI()
     End Sub
 
+    ' Schreibt die aktuellen Zeilen von dgv_option in My.Settings.option_list.
     Private Sub SaveDgvOptionsToSettings()
         Dim newOptionList As New Specialized.StringCollection()
         For Each row As DataGridViewRow In dgv_option.Rows
@@ -4633,6 +4866,7 @@ Public Class Form1
         My.Settings.Save()
     End Sub
 
+    ' Liest das "capabilities"-Array aus dem JSON und setzt die Modell-Chips entsprechend.
     Private Function TryApplyCapabilitiesFromJson(jsonObj As JObject) As Boolean
         If jsonObj Is Nothing OrElse jsonObj("capabilities") Is Nothing OrElse jsonObj("capabilities").Type <> JTokenType.Array Then
             Return False
@@ -4659,6 +4893,7 @@ Public Class Form1
         Return True
     End Function
 
+    ' Liest die context_length aus dem JSON und aktualisiert den Context-Chip.
     Private Function TryApplyContextLengthFromJson(jsonObj As JObject) As Boolean
         If jsonObj Is Nothing Then Return False
 
@@ -4692,11 +4927,13 @@ Public Class Form1
         Return False
     End Function
 
+    ' Klick-Handler: öffnet das Ollama-Prozess-Fenster (FrmOllamaPs).
     Private Sub SiticoneButton_show_ollama_ps_Click(sender As Object, e As EventArgs) Handles SiticoneButton_show_ollama_ps.Click
         Dim psForm As New FrmOllamaPs(SiticoneTextBox_host.Text)
         psForm.Show(Me) ' Öffnet das Fenster nicht-mortal (blockiert Hauptform nicht)
     End Sub
 
+    ' ToggleSwitch-Handler: warnt, falls das gewählte Modell die "thinking"-Fähigkeit nicht unterstützt.
     Private Sub SiticoneToggleSwitch_thinking_use_CheckedChanged(sender As Object, e As EventArgs) Handles SiticoneToggleSwitch_thinking_use.CheckedChanged
         If Not isAppReady OrElse isLoadingParameters Then Exit Sub
 
@@ -4717,6 +4954,7 @@ Public Class Form1
         End If
     End Sub
 
+    ' Prüft alle aktiven Feature-Schalter gegen die Modell-Capabilities und deaktiviert ggf. inkompatible.
     Private Sub CheckActiveSwitchesAgainstModelCapabilities()
         If Not isAppReady OrElse APP_Start Then Exit Sub
 
@@ -4793,6 +5031,7 @@ Public Class Form1
         End If
     End Sub
 
+    ' Prüft ob das gewählte Modell die geforderte Medienfähigkeit (Vision/Audio) unterstützt.
     Private Function CheckMediaCapability(requiredCap As String) As Boolean
         Dim modelName As String = If(SiticoneDropdown_model.SelectedItem?.ToString(), "Unknown")
 
@@ -4949,6 +5188,7 @@ Public Class Form1
         Return If(SiticoneDropdown_model.SelectedItem IsNot Nothing, SiticoneDropdown_model.SelectedItem.ToString(), "Model")
     End Function
 
+    ' Klick-Handler: speichert den kompletten Chat-Verlauf in eine *.chat.json-Datei.
     Private Sub SiticoneButton_chat_save_Click(sender As Object, e As EventArgs) Handles SiticoneButton_chat_save.Click
         If chatHistory Is Nothing OrElse chatHistory.Count = 0 Then
             MessageBox.Show("There is no chat history available to save.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information)
@@ -4974,6 +5214,7 @@ Public Class Form1
         End Using
     End Sub
 
+    ' Klick-Handler: lädt einen Chat-Verlauf aus einer *.chat.json-Datei und stellt die UI neu auf.
     Private Sub SiticoneButton_chat_load_Click(sender As Object, e As EventArgs) Handles SiticoneButton_chat_load.Click
         Using ofd As New OpenFileDialog()
             ofd.Filter = "Chat Files (*.chat.json)|*.chat.json|All files (*.*)|*.*"
@@ -5013,12 +5254,22 @@ Public Class Form1
         End Using
     End Sub
 
+    ' Prüft ob der gespeicherte Kontext zum aktuell gewählten Modell passt und nutzbar ist.
     Private Function IsContextUsable() As Boolean
         If Not SiticoneToggleSwitch_last_context.Checked Then Return False
         If extractedContext Is Nothing OrElse extractedContext.Count = 0 Then Return False
-        If chatHistory Is Nothing OrElse currentTurnIndex < 0 OrElse currentTurnIndex >= chatHistory.Count Then Return False
 
         Dim currentModel As String = SiticoneDropdown_model.SelectedItem?.ToString().Trim()
+        If String.IsNullOrEmpty(currentModel) Then Return False
+
+        ' 1. Fall: Context wurde manuell aus einer .cnt-Datei geladen (funktioniert auch bei 0/0)
+        If Not String.IsNullOrEmpty(loadedContextModel) Then
+            Return String.Equals(currentModel, loadedContextModel.Trim(), StringComparison.OrdinalIgnoreCase)
+        End If
+
+        ' 2. Fall: Context stammt aus dem laufenden Chat-Verlauf
+        If chatHistory Is Nothing OrElse currentTurnIndex < 0 OrElse currentTurnIndex >= chatHistory.Count Then Return False
+
         Dim turnModel As String = chatHistory(currentTurnIndex).Model?.Trim()
 
         ' Falls bei älteren *.chat.json Dateien kein Model-Feld vorhanden war, aus den JSON-Daten ableiten
@@ -5027,9 +5278,10 @@ Public Class Form1
             chatHistory(currentTurnIndex).Model = turnModel
         End If
 
-        Return Not String.IsNullOrEmpty(currentModel) AndAlso String.Equals(currentModel, turnModel, StringComparison.OrdinalIgnoreCase)
+        Return String.Equals(currentModel, turnModel, StringComparison.OrdinalIgnoreCase)
     End Function
 
+    ' ToggleSwitch-Handler: aktualisiert die Kontext-Anzeige bei Ein-/Ausschalten.
     Private Sub SiticoneToggleSwitch_last_context_CheckedChanged(sender As Object, e As EventArgs) Handles SiticoneToggleSwitch_last_context.CheckedChanged
         UpdateMemoryUI()
     End Sub
@@ -5088,6 +5340,7 @@ Public Class DocumentIndex
 
     Private sentences As New List(Of SentenceData)
 
+    ' Indiziert einen Text: zerlegt in Sätze, extrahiert Wörter und speichert die Zuordnung Wort->Satz-Index.
     Public Sub IndexDocument(content As String)
         wordToSentences.Clear()
         sentences.Clear()
@@ -5113,6 +5366,7 @@ Public Class DocumentIndex
         Next
     End Sub
 
+    ' Sucht Sätze nach einem Wort und erhöht deren Trefferzähler (inkl. optionaler Nachbar-Sätze).
     Public Function SearchAndIncrementHits(searchWord As String, Optional delta As Integer = 0) As List(Of SentenceData)
         Dim results As New List(Of SentenceData)()
 
@@ -5143,20 +5397,24 @@ Public Class DocumentIndex
         Return results
     End Function
 
+    ' Liefert alle Sätze mit Trefferzahl > 0, sortiert nach Häufigkeit absteigend.
     Public Function GetSentencesWithHits() As List(Of SentenceData)
         Return sentences.Where(Function(s) s.HitCount > 0).OrderByDescending(Function(s) s.HitCount).ToList()
     End Function
 
+    ' Liefert die komplette Liste aller indexierten Sätze.
     Public Function GetAllSentences() As List(Of SentenceData)
         Return sentences
     End Function
 
+    ' Setzt die Trefferzähler aller indexierten Sätze auf 0.
     Public Sub ResetHits()
         For Each sent In sentences
             sent.HitCount = 0
         Next
     End Sub
 
+    ' Zerlegt einen Text in einzelne Sätze (Zeilen -> Punkt-Splittung).
     Private Function SplitIntoSentences(text As String) As String()
         Dim sentences As New List(Of String)()
 
@@ -5179,6 +5437,7 @@ Public Class DocumentIndex
         Return sentences.ToArray()
     End Function
 
+    ' Zerlegt eine Zeile an Satzzeichen (., !, ?) mit Ausnahmen für Abkürzungen und Zahlen.
     Private Function SplitByPunctuation(text As String) As List(Of String)
         Dim result As New List(Of String)()
 
@@ -5196,6 +5455,7 @@ Public Class DocumentIndex
         Return result
     End Function
 
+    ' Extrahiert alle Wörter (Case-Insensitive) aus einem Satz als HashSet.
     Private Function ExtractWords(sentence As String) As HashSet(Of String)
         Dim words As New HashSet(Of String)(StringComparer.OrdinalIgnoreCase)
         Dim pattern As String = "\b[\w]+\b"
@@ -5444,6 +5704,7 @@ Public Module VramCalculator
         Return totalContextMB
     End Function
 
+    ' Liest einen numerischen Metadaten-Wert (Double) aus dem Modell-JSON anhand des Namensuffixs.
     Private Function GetMetadataDouble(containerObj As JObject, keySuffix As String) As Double
         If containerObj Is Nothing Then Return 0
         For Each prop As JProperty In containerObj.Properties()
@@ -5486,6 +5747,7 @@ Public Module VramCalculator
         Return 0
     End Function
 
+    ' Liest ein numerisches Array (Liste von Doubles) aus dem Modell-JSON anhand des Namensuffixs.
     Private Function GetMetadataDoubleArray(containerObj As JObject, keySuffix As String) As List(Of Double)
         Dim result As New List(Of Double)()
         If containerObj Is Nothing Then Return result
@@ -5517,6 +5779,7 @@ Public Module VramCalculator
         Return result
     End Function
 
+    ' Liest ein Bool-Array (Liste von Booleans) aus dem Modell-JSON anhand des Namensuffixs.
     Private Function GetMetadataBoolArray(containerObj As JObject, keySuffix As String) As List(Of Boolean)
         Dim result As New List(Of Boolean)()
         If containerObj Is Nothing Then Return result
@@ -5542,6 +5805,7 @@ Public Module VramCalculator
         Return result
     End Function
 
+    ' Liest einen String-Metadatenwert aus dem Modell-JSON anhand des Namensuffixs.
     Private Function GetMetadataString(containerObj As JObject, keySuffix As String) As String
         If containerObj Is Nothing Then Return ""
         For Each prop As JProperty In containerObj.Properties()
@@ -5553,6 +5817,7 @@ Public Module VramCalculator
         Return ""
     End Function
 
+    ' Parst eine Parameter-Größenangabe (z. B. "7.5 B") in eine Milliarden-Zahl.
     Private Function ParseParameterSize(paramStr As String) As Double
         If String.IsNullOrWhiteSpace(paramStr) Then Return 8.0
         Dim match = System.Text.RegularExpressions.Regex.Match(paramStr, "([\d\.]+)\s*B", System.Text.RegularExpressions.RegexOptions.IgnoreCase)

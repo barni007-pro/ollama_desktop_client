@@ -2,21 +2,24 @@
 
 Public Class FrmTimingStats
 
+    ' Bestätigt den Dialog über den OK-Button und schließt das Fenster.
     Private Sub OK_Button_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles OK_Button.Click
         Me.DialogResult = System.Windows.Forms.DialogResult.OK
         Me.Close()
     End Sub
 
+    ' Schließt den Dialog über den Abbrechen-Button.
     Private Sub Cancel_Button_Click(ByVal sender As Object, ByVal e As EventArgs)
         DialogResult = DialogResult.Cancel
         Close
     End Sub
 
+    ' Lade-Event des Formulars (aktuell ohne Logik).
     Private Sub FrmTimingStats_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
     End Sub
 
-    ' Konstruktor, der die globalen Werte entgegennimmt
+    ' Konstruktor: nimmt die Laufzeitwerte entgegen und zeigt die Performance-Auswertung an.
     Public Sub New(total As Long, load As Long, pCount As Long, pDuration As Long, eCount As Long, eDuration As Long)
         InitializeComponent()
 

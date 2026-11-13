@@ -5,11 +5,13 @@ Public Class FrmOllamaPs
     Private hostUrl As String
 
 
+    ' Konstruktor: speichert die Ollama-Server-URL und initialisiert die Steuerelemente.
     Public Sub New(ollamaHost As String)
         InitializeComponent()
         Me.hostUrl = ollamaHost
     End Sub
 
+    ' Lade-Event: baut die Tabellenspalten auf, lädt die ersten Daten und startet den Aktualisierungstimer.
     Private Async Sub FrmOllamaPs_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Me.Text = "Ollama Running Models (/api/ps)"
 
@@ -32,6 +34,7 @@ Public Class FrmOllamaPs
         Timer_refresh.Start()
     End Sub
 
+    ' Lädt die aktiven Ollama-Modelle sowie deren Größe und VRAM-Belegung und füllt die Tabelle.
     Private Async Function LoadOllamaPsDataAsync() As Task
         Try
             Using client As New HttpClient()
@@ -157,10 +160,12 @@ Public Class FrmOllamaPs
         End Try
     End Function
 
+    ' Timer-Event: aktualisiert die Modellliste regelmäßig.
     Private Async Sub Timer_refresh_Tick(sender As Object, e As EventArgs) Handles Timer_refresh.Tick
         Await LoadOllamaPsDataAsync()
     End Sub
 
+    ' Schließe-Event: stoppt den Aktualisierungstimer.
     Private Sub FrmOllamaPs_FormClosed(sender As Object, e As FormClosedEventArgs) Handles MyBase.FormClosed
         Timer_refresh.Stop()
     End Sub
