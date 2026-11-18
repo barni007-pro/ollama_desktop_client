@@ -182,3 +182,8 @@ V 1.6.9.40
 - Visual Request Timeout Progress Bar:
   Added a real-time progress bar that visually tracks elapsed request time against the configured timeout limit,
   giving clear visual feedback before an API call times out.
+V 1.7.0.41
+- Model selection has now been moved to the prompt area.
+- Model preloading now also occurs with the selected context size.
+- The Ollama process window communicates via HTTPS when necessary and uses the API key.
+- The graphical bar for memory distribution now includes the base portion as a separate element.

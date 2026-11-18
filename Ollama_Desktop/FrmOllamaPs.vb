@@ -2,13 +2,15 @@
 Imports Newtonsoft.Json.Linq
 
 Public Class FrmOllamaPs
-    Private hostUrl As String
+    Private baseUrl As String
+    Private apiKey As String
 
 
-    ' Konstruktor: speichert die Ollama-Server-URL und initialisiert die Steuerelemente.
-    Public Sub New(ollamaHost As String)
+    ' Konstruktor: speichert die Ollama-Server-Basis-URL (inkl. http/https) und optionalen API-Key.
+    Public Sub New(ollamaBaseUrl As String, Optional ollamaApiKey As String = "")
         InitializeComponent()
-        Me.hostUrl = ollamaHost
+        Me.baseUrl = ollamaBaseUrl
+        Me.apiKey = If(String.IsNullOrWhiteSpace(ollamaApiKey), "", ollamaApiKey.Trim())
     End Sub
 
     ' Lade-Event: baut die Tabellenspalten auf, lädt die ersten Daten und startet den Aktualisierungstimer.
@@ -40,10 +42,15 @@ Public Class FrmOllamaPs
             Using client As New HttpClient()
                 client.Timeout = TimeSpan.FromSeconds(5)
 
+                ' Bearer Token hinzufügen, wenn ein API-Key hinterlegt ist
+                If Not String.IsNullOrEmpty(apiKey) Then
+                    client.DefaultRequestHeaders.Authorization = New System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", apiKey)
+                End If
+
                 ' 1. Alle auf dem Server installierten Modelle via /api/tags abfragen
                 Dim modelSizesDic As New Dictionary(Of String, Long)(StringComparer.OrdinalIgnoreCase)
                 Try
-                    Dim tagsUrl As String = "http://" & hostUrl & "/api/tags"
+                    Dim tagsUrl As String = baseUrl & "/api/tags"
                     Dim tagsResponse = Await client.GetAsync(tagsUrl)
                     If tagsResponse.IsSuccessStatusCode Then
                         Dim tagsJsonStr = Await tagsResponse.Content.ReadAsStringAsync()
@@ -73,7 +80,7 @@ Public Class FrmOllamaPs
                 End Try
 
                 ' 2. Aktive Prozesse via /api/ps abfragen
-                Dim psUrl As String = "http://" & hostUrl & "/api/ps"
+                Dim psUrl As String = baseUrl & "/api/ps"
                 Dim psResponse = Await client.GetAsync(psUrl)
 
                 If psResponse.IsSuccessStatusCode Then

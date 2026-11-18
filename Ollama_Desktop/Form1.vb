@@ -2183,7 +2183,7 @@ Public Class Form1
         End If
 
         Dim model_name = SiticoneDropdown_model.SelectedItem.ToString()
-        SiticoneLabel_show_LLM.Text = model_name
+        'SiticoneLabel_show_LLM.Text = model_name
 
         ' 1. Alle Chips standardmäßig erst einmal zurücksetzen
         SiticoneChip_model_info_Completion.IsSelected = False
@@ -3603,12 +3603,39 @@ Public Class Form1
         SiticoneButton_preload.Enabled = False
 
         Try
-            Dim apiUrl As String = "http://" & SiticoneTextBox_host.Text & "/api/generate"
+            Dim apiUrl As String = GetBaseApiUrl() & "/api/generate"
+
+            ' Options aus den gespeicherten Einstellungen übernehmen (z. B. num_ctx),
+            ' damit das Modell mit dem korrekten Kontextfenster geladen wird.
+            Dim optionsObj As New JObject()
+            For Each optionString As String In My.Settings.option_list
+                Dim values() As String = optionString.Split(New String() {"<|>"}, StringSplitOptions.None)
+                If values.Length >= 4 AndAlso LCase(values(1)) = "true" Then
+                    Try
+                        Select Case values(2)
+                            Case "string"
+                                optionsObj(values(0)) = values(3)
+                            Case "int"
+                                optionsObj(values(0)) = Integer.Parse(values(3))
+                            Case "float"
+                                optionsObj(values(0)) = Double.Parse(values(3))
+                            Case "boolean"
+                                optionsObj(values(0)) = Boolean.Parse(values(3))
+                        End Select
+                    Catch
+                        ' Ungültigen Wert ignorieren
+                    End Try
+                End If
+            Next
 
             Dim jsonPayload As New JObject()
             jsonPayload("model") = modelName
             jsonPayload("prompt") = ""
             jsonPayload("stream") = False
+
+            If optionsObj.Count > 0 Then
+                jsonPayload("options") = optionsObj
+            End If
 
             Dim content As New StringContent(jsonPayload.ToString(), Encoding.UTF8, "application/json")
 
@@ -4619,16 +4646,18 @@ Public Class Form1
         Dim totalPx As Integer = rect.Width
         Dim totalVram As Double = currentVramResult.TotalVramGB
 
-        ' 1. Fester Modell-Anteil & Base-System-Overhead (Blauer Balken)
+        ' 1. Fester Modell-Anteil (Blauer Balken) – ohne Base-Overhead
         Dim baseOverheadGB As Double = currentVramResult.BaseOverheadGB
-        Dim modelBaseGB As Double = currentVramResult.ModelWeightsGB + baseOverheadGB
+        Dim modelWeightsGB As Double = currentVramResult.ModelWeightsGB
+        Dim modelBaseGB As Double = modelWeightsGB + baseOverheadGB
 
         ' 2. Dynamischer Kontext-Bedarf (Grüner/Roter Balken - exakt identisch mit KvCacheGB!)
         Dim totalCtxNeedGB As Double = currentVramResult.KvCacheGB
         Dim totalUsedGB As Double = currentVramResult.TotalUsedGB
 
         ' Farbpalette
-        Dim colorModel As Color = Color.FromArgb(0, 122, 204)          ' Blau (Modell & Base-Load)
+        Dim colorBase As Color = Color.FromArgb(241, 196, 15)           ' Gelb (Base-System-Overhead)
+        Dim colorModel As Color = Color.FromArgb(0, 122, 204)          ' Blau (Modell-Gewichte)
         Dim colorKvNormal As Color = Color.FromArgb(46, 204, 113)       ' Grün (CTX ok)
         Dim colorWarningRed As Color = Color.FromArgb(231, 76, 60)      ' Rot (CTX-Überlauf)
         Dim colorModelOverflow As Color = Color.FromArgb(192, 57, 43)    ' Dunkelrot (Modell zu groß)
@@ -4642,45 +4671,65 @@ Public Class Form1
             End Using
 
         ElseIf totalUsedGB > totalVram Then
-            Dim modelPct As Double = Math.Min(1.0, modelBaseGB / totalVram)
+            ' Base-Anteil (Gelb) ganz am Anfang, dann Modell (Blau), Rest = Überlauf (Rot)
+            Dim basePct As Double = Math.Min(1.0, baseOverheadGB / totalVram)
+            Dim baseWidth As Integer = CInt(totalPx * basePct)
+
+            Dim modelPct As Double = Math.Min(1.0 - basePct, modelWeightsGB / totalVram)
             Dim modelWidth As Integer = CInt(totalPx * modelPct)
 
-            If modelWidth > 0 Then
-                Using b As New SolidBrush(colorModel)
-                    g.FillRectangle(b, 0, 0, modelWidth, rect.Height)
+            If baseWidth > 0 Then
+                Using b As New SolidBrush(colorBase)
+                    g.FillRectangle(b, 0, 0, baseWidth, rect.Height)
                 End Using
             End If
 
-            Dim kvWidth As Integer = totalPx - modelWidth
+            If modelWidth > 0 Then
+                Using b As New SolidBrush(colorModel)
+                    g.FillRectangle(b, baseWidth, 0, modelWidth, rect.Height)
+                End Using
+            End If
+
+            Dim kvWidth As Integer = totalPx - baseWidth - modelWidth
             If kvWidth > 0 Then
                 Using b As New SolidBrush(colorWarningRed)
-                    g.FillRectangle(b, modelWidth, 0, kvWidth, rect.Height)
+                    g.FillRectangle(b, baseWidth + modelWidth, 0, kvWidth, rect.Height)
                 End Using
             End If
 
         Else
-            Dim modelPct As Double = modelBaseGB / totalVram
+            ' Base-Anteil (Gelb) ganz am Anfang, dann Modell (Blau), dann KV-Cache (Grün), Rest frei (Grau)
+            Dim basePct As Double = baseOverheadGB / totalVram
+            Dim modelPct As Double = modelWeightsGB / totalVram
             Dim ctxPct As Double = totalCtxNeedGB / totalVram
 
+            Dim baseWidth As Integer = CInt(totalPx * basePct)
             Dim modelWidth As Integer = CInt(totalPx * modelPct)
             Dim ctxWidth As Integer = CInt(totalPx * ctxPct)
-            Dim freeWidth As Integer = totalPx - modelWidth - ctxWidth
+            Dim freeWidth As Integer = totalPx - baseWidth - modelWidth - ctxWidth
+            If freeWidth < 0 Then freeWidth = 0
+
+            If baseWidth > 0 Then
+                Using b As New SolidBrush(colorBase)
+                    g.FillRectangle(b, 0, 0, baseWidth, rect.Height)
+                End Using
+            End If
 
             If modelWidth > 0 Then
                 Using b As New SolidBrush(colorModel)
-                    g.FillRectangle(b, 0, 0, modelWidth, rect.Height)
+                    g.FillRectangle(b, baseWidth, 0, modelWidth, rect.Height)
                 End Using
             End If
 
             If ctxWidth > 0 Then
                 Using b As New SolidBrush(colorKvNormal)
-                    g.FillRectangle(b, modelWidth, 0, ctxWidth, rect.Height)
+                    g.FillRectangle(b, baseWidth + modelWidth, 0, ctxWidth, rect.Height)
                 End Using
             End If
 
             If freeWidth > 0 Then
                 Using b As New SolidBrush(colorFreeSpace)
-                    g.FillRectangle(b, modelWidth + ctxWidth, 0, freeWidth, rect.Height)
+                    g.FillRectangle(b, baseWidth + modelWidth + ctxWidth, 0, freeWidth, rect.Height)
                 End Using
             End If
         End If
@@ -4689,11 +4738,11 @@ Public Class Form1
 
         Dim statusText As String = ""
         If modelBaseGB > totalVram Then
-            statusText = $"⚠️ Modell zu groß! Model: {currentVramResult.ModelWeightsGB:F1} GB | Base: {baseOverheadGB:F1} GB | System RAM Offload: +{currentVramResult.OverlapRamGB:F1} GB"
+            statusText = $"⚠️ Modell zu groß! Base: {baseOverheadGB:F1} GB | Model: {currentVramResult.ModelWeightsGB:F1} GB | System RAM Offload: +{currentVramResult.OverlapRamGB:F1} GB"
         ElseIf currentVramResult.OverlapRamGB > 0 Then
-            statusText = $"Model: {currentVramResult.ModelWeightsGB:F1} GB | Base: {baseOverheadGB:F1} GB | KV Cache: {currentVramResult.KvCacheGB:F1} GB | ⚠️ System RAM Offload: +{currentVramResult.OverlapRamGB:F1} GB"
+            statusText = $"Base: {baseOverheadGB:F1} GB | Model: {currentVramResult.ModelWeightsGB:F1} GB | KV Cache: {currentVramResult.KvCacheGB:F1} GB | ⚠️ System RAM Offload: +{currentVramResult.OverlapRamGB:F1} GB"
         Else
-            statusText = $"Model: {currentVramResult.ModelWeightsGB:F1} GB | Base: {baseOverheadGB:F1} GB | KV Cache: {currentVramResult.KvCacheGB:F1} GB | Free VRAM: {currentVramResult.FreeVramGB:F1} GB / {currentVramResult.TotalVramGB:F0} GB"
+            statusText = $"Base: {baseOverheadGB:F1} GB | Model: {currentVramResult.ModelWeightsGB:F1} GB | KV Cache: {currentVramResult.KvCacheGB:F1} GB | Free VRAM: {currentVramResult.FreeVramGB:F1} GB / {currentVramResult.TotalVramGB:F0} GB"
         End If
 
         Using font As New Font("Segoe UI", 9, FontStyle.Bold)
@@ -4929,7 +4978,7 @@ Public Class Form1
 
     ' Klick-Handler: öffnet das Ollama-Prozess-Fenster (FrmOllamaPs).
     Private Sub SiticoneButton_show_ollama_ps_Click(sender As Object, e As EventArgs) Handles SiticoneButton_show_ollama_ps.Click
-        Dim psForm As New FrmOllamaPs(SiticoneTextBox_host.Text)
+        Dim psForm As New FrmOllamaPs(GetBaseApiUrl(), SiticoneTextBox_apikey.Text.Trim())
         psForm.Show(Me) ' Öffnet das Fenster nicht-mortal (blockiert Hauptform nicht)
     End Sub
 

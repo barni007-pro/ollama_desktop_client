@@ -218,7 +218,6 @@ Partial Class Form1
         SiticoneDropdown_wisperlang = New SiticoneNetCoreUI.SiticoneDropdown()
         SiticoneTextBox_apikey = New SiticoneNetCoreUI.SiticoneTextBox()
         SiticoneLabel_host = New SiticoneNetCoreUI.SiticoneLabel()
-        SiticoneLabel_model = New SiticoneNetCoreUI.SiticoneLabel()
         SiticoneButton_HTMLtoPDF = New SiticoneNetCoreUI.SiticoneButton()
         SiticonePanel_prompt = New SiticoneNetCoreUI.SiticonePanel()
         SiticonePanel_prompt_action = New SiticoneNetCoreUI.SiticonePanel()
@@ -226,7 +225,6 @@ Partial Class Form1
         SiticoneButton_wisper = New SiticoneNetCoreUI.SiticoneButton()
         SiticoneButton_audio = New SiticoneNetCoreUI.SiticoneButton()
         SiticoneButton_clear_prompt = New SiticoneNetCoreUI.SiticoneButton()
-        SiticoneLabel_show_LLM = New SiticoneNetCoreUI.SiticoneLabel()
         SiticonePlayPauseButton_request = New SiticoneNetCoreUI.SiticonePlayPauseButton()
         SiticoneButton_screenshot = New SiticoneNetCoreUI.SiticoneButton()
         SiticoneButton_timing = New SiticoneNetCoreUI.SiticoneButton()
@@ -376,44 +374,43 @@ Partial Class Form1
         ' SiticoneDropdown_model
         ' 
         SiticoneDropdown_model.AllowMultipleSelection = False
-        SiticoneDropdown_model.BackColor = Color.FromArgb(CByte(209), CByte(232), CByte(255))
+        SiticoneDropdown_model.Anchor = AnchorStyles.Top Or AnchorStyles.Left Or AnchorStyles.Right
+        SiticoneDropdown_model.BackColor = Color.LightGray
         SiticoneDropdown_model.BorderColor = Color.Gray
-        SiticoneDropdown_model.BorderSize = 2
         SiticoneDropdown_model.CanBeep = False
         SiticoneDropdown_model.CanShake = True
-        SiticoneDropdown_model.CornerRadius = 8
+        SiticoneDropdown_model.CornerRadius = 10
         SiticoneDropdown_model.DataSource = Nothing
         SiticoneDropdown_model.DisplayMember = Nothing
-        SiticoneDropdown_model.DropdownBackColor = Color.White
-        SiticoneDropdown_model.DropdownCornerRadius = 8
+        SiticoneDropdown_model.DropdownBackColor = Color.FromArgb(CByte(245), CByte(245), CByte(245))
         SiticoneDropdown_model.DropdownWidth = 0
         SiticoneDropdown_model.DropShadowEnabled = False
-        SiticoneDropdown_model.Font = New Font("Segoe UI", 10F)
-        SiticoneDropdown_model.ForeColor = Color.DimGray
-        SiticoneDropdown_model.HoveredItemBackColor = Color.LightGray
+        SiticoneDropdown_model.Font = New Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        SiticoneDropdown_model.ForeColor = Color.FromArgb(CByte(30), CByte(30), CByte(30))
+        SiticoneDropdown_model.HoveredItemBackColor = Color.FromArgb(CByte(210), CByte(210), CByte(210))
         SiticoneDropdown_model.HoveredItemTextColor = Color.Black
         SiticoneDropdown_model.IsReadonly = False
         SiticoneDropdown_model.ItemHeight = 30
-        SiticoneDropdown_model.Location = New Point(659, 24)
-        SiticoneDropdown_model.MaxDropDownItems = 8
+        SiticoneDropdown_model.Location = New Point(184, 0)
+        SiticoneDropdown_model.MaxDropDownItems = 15
         SiticoneDropdown_model.Name = "SiticoneDropdown_model"
         SiticoneDropdown_model.NotFoundBackColor = Color.Transparent
         SiticoneDropdown_model.NotFoundFont = Nothing
         SiticoneDropdown_model.NotFoundTextColor = Color.Gray
-        SiticoneDropdown_model.PlaceholderColor = Color.Gray
+        SiticoneDropdown_model.PlaceholderColor = Color.FromArgb(CByte(140), CByte(140), CByte(140))
         SiticoneDropdown_model.PlaceholderDisappearsOnFocus = False
         SiticoneDropdown_model.PlaceholderText = "Select a model"
-        SiticoneDropdown_model.SearchTextColor = Color.DimGray
+        SiticoneDropdown_model.SearchTextColor = Color.Black
         SiticoneDropdown_model.SearchTextFont = Nothing
         SiticoneDropdown_model.SelectedIndex = -1
         SiticoneDropdown_model.SelectedItem = Nothing
-        SiticoneDropdown_model.SelectedItemBackColor = Color.LightBlue
-        SiticoneDropdown_model.SelectedItemTextColor = Color.Black
+        SiticoneDropdown_model.SelectedItemBackColor = Color.FromArgb(CByte(50), CByte(50), CByte(50))
+        SiticoneDropdown_model.SelectedItemTextColor = Color.White
         SiticoneDropdown_model.SelectedValue = Nothing
-        SiticoneDropdown_model.Size = New Size(240, 30)
+        SiticoneDropdown_model.Size = New Size(1163, 35)
         SiticoneDropdown_model.TabIndex = 15
         ToolTip1.SetToolTip(SiticoneDropdown_model, "Selects which LLM (Large Language Model) to use for your prompts and conversations.")
-        SiticoneDropdown_model.UnselectedItemTextColor = Color.Black
+        SiticoneDropdown_model.UnselectedItemTextColor = Color.FromArgb(CByte(30), CByte(30), CByte(30))
         SiticoneDropdown_model.ValueMember = Nothing
         ' 
         ' SiticoneButton_get_llm
@@ -7003,7 +7000,7 @@ Partial Class Form1
         SiticoneButton_preload.IsReadOnly = False
         SiticoneButton_preload.IsToggleButton = False
         SiticoneButton_preload.IsToggled = False
-        SiticoneButton_preload.Location = New Point(905, 24)
+        SiticoneButton_preload.Location = New Point(659, 24)
         SiticoneButton_preload.LongPressDurationMS = 1000
         SiticoneButton_preload.Name = "SiticoneButton_preload"
         SiticoneButton_preload.NormalFontStyle = FontStyle.Regular
@@ -7192,16 +7189,6 @@ Partial Class Form1
         SiticoneLabel_host.TabIndex = 24
         SiticoneLabel_host.Text = "Ollama Address:"
         ' 
-        ' SiticoneLabel_model
-        ' 
-        SiticoneLabel_model.BackColor = Color.Transparent
-        SiticoneLabel_model.Font = New Font("Segoe UI", 10F)
-        SiticoneLabel_model.Location = New Point(659, 1)
-        SiticoneLabel_model.Name = "SiticoneLabel_model"
-        SiticoneLabel_model.Size = New Size(116, 21)
-        SiticoneLabel_model.TabIndex = 25
-        SiticoneLabel_model.Text = "LLM:"
-        ' 
         ' SiticoneButton_HTMLtoPDF
         ' 
         SiticoneButton_HTMLtoPDF.AccessibleDescription = "The default button control that accept input though the mouse, touch and keyboard"
@@ -7337,13 +7324,13 @@ Partial Class Form1
         SiticonePanel_prompt_action.Controls.Add(SiticoneButton_wisper)
         SiticonePanel_prompt_action.Controls.Add(SiticoneButton_audio)
         SiticonePanel_prompt_action.Controls.Add(SiticoneButton_clear_prompt)
-        SiticonePanel_prompt_action.Controls.Add(SiticoneLabel_show_LLM)
         SiticonePanel_prompt_action.Controls.Add(SiticonePlayPauseButton_request)
         SiticonePanel_prompt_action.Controls.Add(SiticoneButton_file)
         SiticonePanel_prompt_action.Controls.Add(SiticoneButton_screenshot)
         SiticonePanel_prompt_action.Controls.Add(SiticoneButton_timing)
         SiticonePanel_prompt_action.Controls.Add(SiticoneButton_HTMLtoPDF)
         SiticonePanel_prompt_action.Controls.Add(SiticoneButton_show_thinking)
+        SiticonePanel_prompt_action.Controls.Add(SiticoneDropdown_model)
         SiticonePanel_prompt_action.CornerRadiusBottomLeft = 0F
         SiticonePanel_prompt_action.CornerRadiusBottomRight = 0F
         SiticonePanel_prompt_action.CornerRadiusTopLeft = 0F
@@ -7626,19 +7613,6 @@ Partial Class Form1
         SiticoneButton_clear_prompt.TooltipText = "Clear all Prompt Text and Content"
         SiticoneButton_clear_prompt.UseAdvancedRendering = True
         SiticoneButton_clear_prompt.UseParticles = False
-        ' 
-        ' SiticoneLabel_show_LLM
-        ' 
-        SiticoneLabel_show_LLM.Anchor = AnchorStyles.Top Or AnchorStyles.Left Or AnchorStyles.Right
-        SiticoneLabel_show_LLM.BackColor = Color.Transparent
-        SiticoneLabel_show_LLM.Font = New Font("Segoe UI Semibold", 14.25F, FontStyle.Bold Or FontStyle.Italic, GraphicsUnit.Point, CByte(0))
-        SiticoneLabel_show_LLM.ForeColor = Color.FromArgb(CByte(26), CByte(115), CByte(232))
-        SiticoneLabel_show_LLM.Location = New Point(184, 5)
-        SiticoneLabel_show_LLM.Name = "SiticoneLabel_show_LLM"
-        SiticoneLabel_show_LLM.Size = New Size(1163, 25)
-        SiticoneLabel_show_LLM.TabIndex = 51
-        SiticoneLabel_show_LLM.Text = "no LLM selected"
-        SiticoneLabel_show_LLM.TextAlign = ContentAlignment.MiddleRight
         ' 
         ' SiticonePlayPauseButton_request
         ' 
@@ -8984,10 +8958,8 @@ Partial Class Form1
         SiticonePanel_llm_setting.Controls.Add(SiticoneDropdown_default)
         SiticonePanel_llm_setting.Controls.Add(SiticoneToggleSwitch_test)
         SiticonePanel_llm_setting.Controls.Add(SiticoneLabel_default)
-        SiticonePanel_llm_setting.Controls.Add(SiticoneLabel_model)
         SiticonePanel_llm_setting.Controls.Add(SiticoneButton_get_llm)
         SiticonePanel_llm_setting.Controls.Add(SiticoneButton_preload)
-        SiticonePanel_llm_setting.Controls.Add(SiticoneDropdown_model)
         SiticonePanel_llm_setting.Controls.Add(SiticoneTextBox_host)
         SiticonePanel_llm_setting.CornerRadiusBottomLeft = 20F
         SiticonePanel_llm_setting.CornerRadiusBottomRight = 20F
@@ -9077,7 +9049,7 @@ Partial Class Form1
         SiticoneButton_show_ollama_ps.IsReadOnly = False
         SiticoneButton_show_ollama_ps.IsToggleButton = False
         SiticoneButton_show_ollama_ps.IsToggled = False
-        SiticoneButton_show_ollama_ps.Location = New Point(1018, 24)
+        SiticoneButton_show_ollama_ps.Location = New Point(772, 24)
         SiticoneButton_show_ollama_ps.LongPressDurationMS = 1000
         SiticoneButton_show_ollama_ps.Name = "SiticoneButton_show_ollama_ps"
         SiticoneButton_show_ollama_ps.NormalFontStyle = FontStyle.Regular
@@ -9203,7 +9175,6 @@ Partial Class Form1
     Friend WithEvents ToolTip1 As ToolTip
     Friend WithEvents TabPage_modelinfo As TabPage
     Friend WithEvents SiticoneLabel_host As SiticoneNetCoreUI.SiticoneLabel
-    Friend WithEvents SiticoneLabel_model As SiticoneNetCoreUI.SiticoneLabel
     Friend WithEvents SiticoneLabel4 As SiticoneNetCoreUI.SiticoneLabel
     Friend WithEvents TabPage_codeblock As TabPage
     Friend WithEvents SiticoneDropdown_language As SiticoneNetCoreUI.SiticoneDropdown
@@ -9294,7 +9265,6 @@ Partial Class Form1
     Friend WithEvents SiticoneFlowPanel_prompt_filecontent As SiticoneNetCoreUI.SiticoneFlowPanel
     Friend WithEvents SiticonePanel_prompt_action As SiticoneNetCoreUI.SiticonePanel
     Friend WithEvents SiticonePanel_llm_load As SiticoneNetCoreUI.SiticonePanel
-    Friend WithEvents SiticoneLabel_show_LLM As SiticoneNetCoreUI.SiticoneLabel
     Friend WithEvents SiticoneToggleSwitch_test As SiticoneNetCoreUI.SiticoneToggleSwitch
     Friend WithEvents SiticoneLabel_test As SiticoneNetCoreUI.SiticoneLabel
     Friend WithEvents SiticoneToggleSwitch_system_use As SiticoneNetCoreUI.SiticoneToggleSwitch
