@@ -459,7 +459,7 @@
             </div>
 
             <h3 id="link_tool_json">2. Tool JSON (Schema)</h3>
-            <p>Hier definieren Sie die Schnittstelle (API) Ihres Tools im JSON-Format. Das Modell liest dieses JSON-Schema, um zu wissen, welche Parameter es aus der User-Anfrage extrahieren muss (z.B. <code>"city": "Berlin"</code>).</p>
+            <p>Hier definieren Sie die Schnittstelle (API) Ihres Tools im JSON-Format als Referenz und Schema-Dokumentation. Die Steuerung und das erwartete Ausgabeformat für das Modell werden über den <strong>Tool System Prompt</strong> vorgegeben.</p>
 
             <h3 id="link_tool_python_code">3. Tool Python Code</h3>
             <p>Hier hinterlegen Sie die Logik, die ausgeführt werden soll. <strong>Dieser Code wird von der App automatisch ausgeführt</strong>, sobald das Modell das Tool anfordert.</p>
@@ -529,7 +529,7 @@
             </ol>
 
             <h3 id="link_rag_tool_json">2. RAG Tool JSON (Schema)</h3>
-            <p>Hier definieren Sie die Schnittstelle (API) des RAG-Tools im JSON-Format. Das Modell liest dieses JSON-Schema, um zu wissen, welche Parameter es aus der User-Anfrage extrahieren muss (z.B. <code>"words":["apple pie","recipe","cake","apple","baking"]</code>).</p>
+            <p>Hier definieren Sie die Schnittstelle (API) des RAG-Tools im JSON-Format als Referenz. Die Steuerung der Keyword-Extraktion erfolgt über den <strong>RAG Tool System Prompt</strong>.</p>
         </div>
 
         <div class="card">

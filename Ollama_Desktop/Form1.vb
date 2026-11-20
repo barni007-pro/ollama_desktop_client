@@ -351,11 +351,9 @@ Public Class Form1
         SiticoneTextArea_content_prompt.Text = My.Settings.content_prompt
 
         SiticoneTextArea_Tools_system.Text = My.Settings.tools_system
-        Scintilla_Tools_Json.Text = My.Settings.tools_json
         Scintilla_Tools_pythoncode.Text = My.Settings.tools_pythoncode
 
         SiticoneTextArea_Rag_system.Text = My.Settings.rag_system
-        Scintilla_Rag_Json.Text = My.Settings.rag_json
 
         Scintilla_Decision_Json.Text = My.Settings.decision_json
 
@@ -425,9 +423,7 @@ Public Class Form1
         SetupEditor(Scintilla_model_info_request, "json")
         SetupEditor(Scintilla_model_info, "json")
         SetupEditor(Scintilla_format, "json")
-        SetupEditor(Scintilla_Tools_Json, "json")
         SetupEditor(Scintilla_Tools_pythoncode, "python")
-        SetupEditor(Scintilla_Rag_Json, "json")
         SetupEditor(Scintilla_Decision_Json, "json")
         SetupEditor(Scintilla_Request_JSON, "json")
         SetupEditor(Scintilla_Response_JSON, "json")
@@ -556,11 +552,9 @@ Public Class Form1
         My.Settings.content_prompt = SiticoneTextArea_content_prompt.Text
 
         My.Settings.tools_system = SiticoneTextArea_Tools_system.Text
-        My.Settings.tools_json = Scintilla_Tools_Json.Text
         My.Settings.tools_pythoncode = Scintilla_Tools_pythoncode.Text
 
         My.Settings.rag_system = SiticoneTextArea_Rag_system.Text
-        My.Settings.rag_json = Scintilla_Rag_Json.Text
 
         My.Settings.decision_json = Scintilla_Decision_Json.Text
 
@@ -700,7 +694,6 @@ Public Class Form1
 
                 CodeBlock_List.Clear()
 
-                SiticoneTextBox_request_answer.Text = ""
                 Dim prompt = SiticoneTextArea_prompt.Text.Trim
 
                 ' Ollama Sonderbefehle
@@ -793,7 +786,6 @@ Public Class Form1
                         End If
 
                         If darfAusgefuehrtWerden Then
-                            SiticoneTextBox_request_answer.Text = "SSH Executing: " & sshCommand
                             sshResult = Await ExecuteCommandAndWaitAsync(sshCommand, Val(SiticoneTextBox_ssh_timeout.Text))
                         ElseIf Not sshCommand.Contains(vbLf) Then
                             AppLog("[DEBUG-StateChanged] SSH blockiert.")
@@ -927,20 +919,16 @@ Public Class Form1
             Dim prompt As String = SiticoneTextArea_prompt.Text
             Dim system As String = If(SiticoneToggleSwitch_system_use.Checked, SiticoneTextArea_system.Text, "")
             Dim format As String = If(SiticoneToggleSwitch_format_use.Checked, Scintilla_format.Text, "")
-            Dim tools As String = ""
 
             If SiticoneToggleSwitch_tools.Checked Then
                 AppLog("[DEBUG-MainAsync] Tools-Modus aktiv: Überschreibe System-Prompt mit 'Tools-System'.")
-                tools = Scintilla_Tools_Json.Text
                 system = SiticoneTextArea_Tools_system.Text
             ElseIf SiticoneToggleSwitch_ragtools.Checked Then
                 AppLog("[DEBUG-MainAsync] RAG-Modus aktiv: Überschreibe System-Prompt mit 'RAG-System'.")
-                tools = Scintilla_Rag_Json.Text
                 system = SiticoneTextArea_Rag_system.Text
             ElseIf SiticoneToggleSwitch_sshbot.Checked Then
                 AppLog("[DEBUG-MainAsync] SSH-Bot-Modus aktiv: Überschreibe System-Prompt mit 'SSH-System'.")
                 system = SiticoneTextArea_ssh_system.Text
-                tools = ""
             Else
                 AppLog("[DEBUG-MainAsync] Normaler Modus: Nutze Standard-System-Prompt (falls aktiviert).")
             End If
@@ -981,7 +969,7 @@ Public Class Form1
             request_mem = prompt
 
             AppLog("[DEBUG-MainAsync] Warte auf QueryOllamaAsync...")
-            Dim response As String = Await QueryOllamaAsync(model, prompt, image_contents, audio_contents, text_contents, My.Settings.option_list, system, format, tools, think, think_level, context, extractedContext, cancellationTokenSource.Token)
+            Dim response As String = Await QueryOllamaAsync(model, prompt, image_contents, audio_contents, text_contents, My.Settings.option_list, system, format, think, think_level, context, extractedContext, cancellationTokenSource.Token)
             AppLog("[DEBUG-MainAsync] QueryOllamaAsync hat geantwortet!")
 
             response_mem = response
@@ -1220,9 +1208,6 @@ Public Class Form1
         SiticoneTextArea_run_output.Text = ""
 
         CodeBlock_List = ExtractCodeBlocks(currentMarkdown)
-        If ToolsCodeBlockJson <> "empty" Then
-            SiticoneTextBox_request_answer.Text = ToolsCodeBlockJson
-        End If
         SiticoneButton_code_run.Enabled = False
 
         If CodeBlock_List.Count >= 1 Then
@@ -1433,7 +1418,6 @@ Public Class Form1
                                             option_list As System.Collections.Specialized.StringCollection,
                                             Optional system As String = "",
                                             Optional format As String = "",
-                                            Optional tools As String = "",
                                             Optional think As Boolean = False,
                                             Optional think_level As String = "false",
                                             Optional context As Boolean = False,
@@ -1584,15 +1568,6 @@ Public Class Form1
 
             If Not String.IsNullOrEmpty(system) Then
                 payload("system") = system
-            End If
-
-            If Not String.IsNullOrEmpty(tools) Then
-                Dim raw = tools.Trim()
-                Try
-                    payload("tools") = JToken.Parse(raw)
-                Catch ex As Exception
-                    payload("tools") = raw
-                End Try
             End If
 
             If think Then
@@ -2878,7 +2853,6 @@ Public Class Form1
             Dim data As New Dictionary(Of String, Object) From {
                 {"tools_use", SiticoneToggleSwitch_tools.Checked},
                 {"tools_system_prompt", SiticoneTextArea_Tools_system.Text},
-                {"tools_json", Scintilla_Tools_Json.Text},
                 {"tools_python_code", Scintilla_Tools_pythoncode.Text}
             }
 
@@ -2913,10 +2887,6 @@ Public Class Form1
                     SiticoneTextArea_Tools_system.Text = data("tools_system_prompt").ToString()
                 End If
 
-                If data.ContainsKey("tools_json") Then
-                    Scintilla_Tools_Json.Text = data("tools_json").ToString()
-                End If
-
                 If data.ContainsKey("tools_python_code") Then
                     Scintilla_Tools_pythoncode.Text = data("tools_python_code").ToString()
                 End If
@@ -2939,8 +2909,7 @@ Public Class Form1
 
             Dim data As New Dictionary(Of String, Object) From {
                 {"rag_use", SiticoneToggleSwitch_ragtools.Checked},
-                {"rag_system_prompt", SiticoneTextArea_Rag_system.Text},
-                {"rag_json", Scintilla_Rag_Json.Text}
+                {"rag_system_prompt", SiticoneTextArea_Rag_system.Text}
             }
 
             Dim json = JsonConvert.SerializeObject(data, Formatting.Indented)
@@ -2972,10 +2941,6 @@ Public Class Form1
 
                 If data.ContainsKey("rag_system_prompt") Then
                     SiticoneTextArea_Rag_system.Text = data("rag_system_prompt").ToString()
-                End If
-
-                If data.ContainsKey("rag_json") Then
-                    Scintilla_Rag_Json.Text = data("rag_json").ToString()
                 End If
 
             Catch ex As Exception
@@ -3439,7 +3404,7 @@ Public Class Form1
     End Sub
 
     ' Klick-Handler: öffnet die Hilfe-Sektion "Tools JSON".
-    Private Async Sub SiticoneButton_link_tool_json_Click(sender As Object, e As EventArgs) Handles SiticoneButton_link_tool_json.Click
+    Private Async Sub SiticoneButton_link_tool_json_Click(sender As Object, e As EventArgs)
         Await InitializeWebView2("link_tool_json")
     End Sub
 
@@ -3464,7 +3429,7 @@ Public Class Form1
     End Sub
 
     ' Klick-Handler: öffnet die Hilfe-Sektion "RAG Tools JSON".
-    Private Async Sub SiticoneButton_link_rag_tool_json_Click(sender As Object, e As EventArgs) Handles SiticoneButton_link_rag_tool_json.Click
+    Private Async Sub SiticoneButton_link_rag_tool_json_Click(sender As Object, e As EventArgs)
         Await InitializeWebView2("link_rag_tool_json")
     End Sub
 
@@ -4980,6 +4945,28 @@ Public Class Form1
     Private Sub SiticoneButton_show_ollama_ps_Click(sender As Object, e As EventArgs) Handles SiticoneButton_show_ollama_ps.Click
         Dim psForm As New FrmOllamaPs(GetBaseApiUrl(), SiticoneTextBox_apikey.Text.Trim())
         psForm.Show(Me) ' Öffnet das Fenster nicht-mortal (blockiert Hauptform nicht)
+    End Sub
+
+    ' Klick-Handler: öffnet den Ollama-Server-Manager (FrmServerManager).
+    Private Async Sub SiticoneButton_manage_servers_Click(sender As Object, e As EventArgs) Handles SiticoneButton_manage_servers.Click
+        Using serverForm As New FrmServerManager(SiticoneTextBox_host.Text.Trim(), SiticoneTextBox_apikey.Text.Trim())
+            If serverForm.ShowDialog(Me) = DialogResult.OK AndAlso serverForm.ApplyRequested Then
+                Dim oldHost As String = SiticoneTextBox_host.Text.Trim()
+                Dim oldApiKey As String = SiticoneTextBox_apikey.Text.Trim()
+
+                SiticoneTextBox_host.Text = serverForm.SelectedHost
+                SiticoneTextBox_apikey.Text = serverForm.SelectedApiKey
+                My.Settings.ollama_host = serverForm.SelectedHost
+                My.Settings.ollama_api_key = serverForm.SelectedApiKey
+                My.Settings.Save()
+
+                ' Falls sich Host oder API-Key geändert haben, Modelle und Version neu abrufen
+                If oldHost <> serverForm.SelectedHost OrElse oldApiKey <> serverForm.SelectedApiKey Then
+                    Await LoadModelsAsync()
+                    Await GetOllamaVersionAsync()
+                End If
+            End If
+        End Using
     End Sub
 
     ' ToggleSwitch-Handler: warnt, falls das gewählte Modell die "thinking"-Fähigkeit nicht unterstützt.

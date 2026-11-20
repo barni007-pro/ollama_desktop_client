@@ -168,44 +168,6 @@ oder
 
 {"name":"get_forecast","arguments":{"city":"&lt;Name der Stadt&gt;"}}</Value>
     </Setting>
-    <Setting Name="tools_json" Type="System.String" Scope="User">
-      <Value Profile="(Default)">[
-  {
-    "type": "function",
-    "function": {
-      "name": "get_weather",
-      "description": "Gibt das aktuelle Wetter für eine angegebene Stadt zurück.",
-      "parameters": {
-        "type": "object",
-        "properties": {
-          "city": {
-            "type": "string",
-            "description": "Der Name der Stadt, für die das Wetter abgefragt werden soll."
-          }
-        },
-        "required": ["city"]
-      }
-    }
-  },
-  {
-    "type": "function",
-    "function": {
-      "name": "get_forecast",
-      "description": "Gibt die Wettervorhersage für die nächsten 5 Tage in 3-Stunden-Schritten für eine angegebene Stadt zurück.",
-      "parameters": {
-        "type": "object",
-        "properties": {
-          "city": {
-            "type": "string",
-            "description": "Der Name der Stadt, für die die Wettervorhersage abgefragt werden soll."
-          }
-        },
-        "required": ["city"]
-      }
-    }
-  }
-]</Value>
-    </Setting>
     <Setting Name="tools_pythoncode" Type="System.String" Scope="User">
       <Value Profile="(Default)">import sys
 import json
@@ -301,32 +263,6 @@ Antwort: {"name":"get_text","arguments":{"words":["Apfelkuchen","Rezept","Kuchen
 
 Frage: "Unterschied zwischen Python und Java"
 Antwort: {"name":"get_text","arguments":{"words":["Python","Java","Programmiersprache","Vergleich","Unterschied"]}}</Value>
-    </Setting>
-    <Setting Name="rag_json" Type="System.String" Scope="User">
-      <Value Profile="(Default)">{
-  "type": "function",
-  "function": {
-    "name": "get_text",
-    "description": "Extrahiert relevante Schlüsselwörter, Synonyme und Abkürzungen aus einer Benutzeranfrage für die Textsuche. Gibt 3-6 Suchwörter zurück, die für eine semantische oder Volltextsuche optimiert sind.",
-    "parameters": {
-      "type": "object",
-      "properties": {
-        "words": {
-          "type": "array",
-          "description": "Liste von 3-6 relevanten Suchwörtern, inklusive Synonymen, Abkürzungen und verwandten Begriffen",
-          "items": {
-            "type": "string",
-            "description": "Ein einzelnes Suchwort oder Synonym"
-          },
-          "minItems": 3,
-          "maxItems": 6
-        }
-      },
-      "required": ["words"],
-      "additionalProperties": false
-    }
-  }
-}</Value>
     </Setting>
     <Setting Name="help_path" Type="System.String" Scope="User">
       <Value Profile="(Default)">help\index_DE.html</Value>
@@ -439,6 +375,9 @@ Analysiere das Ergebnis. Wenn das Ziel erreicht ist, beginne deine Antwort ZWING
     </Setting>
     <Setting Name="ollama_api_key" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="server_list" Type="System.String" Scope="User">
+      <Value Profile="(Default)">[{"name":"localhost","host":"localhost:11434","api_key":""}]</Value>
     </Setting>
   </Settings>
 </SettingsFile>

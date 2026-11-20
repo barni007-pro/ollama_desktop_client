@@ -187,3 +187,8 @@ V 1.7.0.41
 - Model preloading now also occurs with the selected context size.
 - The Ollama process window communicates via HTTPS when necessary and uses the API key.
 - The graphical bar for memory distribution now includes the base portion as a separate element.
+V 1.7.1.42
+- Optimized tool execution:
+  Removed redundant tool configuration from requests to ensure full compatibility with the Ollama API.
+- Ollama Server Manager:
+  Easily manage, switch, import, and export multiple Ollama server addresses and API keys in a dedicated list.
