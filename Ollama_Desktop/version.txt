@@ -192,3 +192,6 @@ V 1.7.1.42
   Removed redundant tool configuration from requests to ensure full compatibility with the Ollama API.
 - Ollama Server Manager:
   Easily manage, switch, import, and export multiple Ollama server addresses and API keys in a dedicated list.
+V 1.7.2.43
+- Streaming Mode Support:
+  Added support for streaming responses from the Ollama API, enabling real-time output during generation.

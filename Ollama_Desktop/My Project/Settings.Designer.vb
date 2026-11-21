@@ -202,7 +202,7 @@ Namespace My
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("Antworte immer ausführlich und mit Beispielen. Gruppiere die Anwort in Abschnitte"& _ 
-            ". Antworte immer in deutsch und niemals in englisch.")>  _
+            ". Antworte immer in deutsch.")>  _
         Public Property system() As String
             Get
                 Return CType(Me("system"),String)
@@ -698,7 +698,7 @@ Namespace My
                 Me("ollama_api_key") = value
             End Set
         End Property
-
+        
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("[{""name"":""localhost"",""host"":""localhost:11434"",""api_key"":""""}]")>  _
@@ -708,6 +708,18 @@ Namespace My
             End Get
             Set
                 Me("server_list") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property stream_use() As Boolean
+            Get
+                Return CType(Me("stream_use"),Boolean)
+            End Get
+            Set
+                Me("stream_use") = value
             End Set
         End Property
     End Class

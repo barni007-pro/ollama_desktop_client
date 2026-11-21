@@ -63,6 +63,10 @@ Partial Class Form1
         SiticoneChip_model_info_Vision = New SiticoneNetCoreUI.SiticoneChip()
         SiticoneLabel1_model_info_description = New SiticoneNetCoreUI.SiticoneLabel()
         TabPage_modelparameter = New TabPage()
+        SiticoneFlatPanel_trenn4 = New SiticoneNetCoreUI.SiticoneFlatPanel()
+        SiticoneFlatPanel5 = New SiticoneNetCoreUI.SiticoneFlatPanel()
+        SiticoneLabel10 = New SiticoneNetCoreUI.SiticoneLabel()
+        SiticoneToggleSwitch_stream_use = New SiticoneNetCoreUI.SiticoneToggleSwitch()
         SiticoneLabel27 = New SiticoneNetCoreUI.SiticoneLabel()
         SiticoneDropdown_voice = New SiticoneNetCoreUI.SiticoneDropdown()
         SiticoneFlatPanel_trenn3 = New SiticoneNetCoreUI.SiticoneFlatPanel()
@@ -253,6 +257,8 @@ Partial Class Form1
         SiticoneFlatPanel4.SuspendLayout()
         CType(PictureBox_vram_bar, ComponentModel.ISupportInitialize).BeginInit()
         TabPage_modelparameter.SuspendLayout()
+        SiticoneFlatPanel_trenn4.SuspendLayout()
+        SiticoneFlatPanel5.SuspendLayout()
         SiticoneFlatPanel_trenn3.SuspendLayout()
         SiticoneFlatPanel_thinking_use.SuspendLayout()
         SiticoneFlatPanel_trenn2.SuspendLayout()
@@ -1679,6 +1685,7 @@ Partial Class Form1
         ' TabPage_modelparameter
         ' 
         TabPage_modelparameter.BackColor = Color.WhiteSmoke
+        TabPage_modelparameter.Controls.Add(SiticoneFlatPanel_trenn4)
         TabPage_modelparameter.Controls.Add(SiticoneLabel27)
         TabPage_modelparameter.Controls.Add(SiticoneDropdown_voice)
         TabPage_modelparameter.Controls.Add(SiticoneFlatPanel_trenn3)
@@ -1707,6 +1714,86 @@ Partial Class Form1
         SiticoneTabControl_tab.SetTabImage(TabPage_modelparameter, My.Resources.Resource_svg.Model_Parameter)
         TabPage_modelparameter.TabIndex = 0
         TabPage_modelparameter.Text = "Model Parameter"
+        ' 
+        ' SiticoneFlatPanel_trenn4
+        ' 
+        SiticoneFlatPanel_trenn4.Anchor = AnchorStyles.Bottom Or AnchorStyles.Left
+        SiticoneFlatPanel_trenn4.BackColor = Color.FromArgb(CByte(209), CByte(232), CByte(255))
+        SiticoneFlatPanel_trenn4.Controls.Add(SiticoneFlatPanel5)
+        SiticoneFlatPanel_trenn4.Location = New Point(1068, 607)
+        SiticoneFlatPanel_trenn4.MinimumSize = New Size(20, 20)
+        SiticoneFlatPanel_trenn4.Name = "SiticoneFlatPanel_trenn4"
+        SiticoneFlatPanel_trenn4.Size = New Size(152, 36)
+        SiticoneFlatPanel_trenn4.TabIndex = 67
+        ' 
+        ' SiticoneFlatPanel5
+        ' 
+        SiticoneFlatPanel5.BackColor = Color.Transparent
+        SiticoneFlatPanel5.Controls.Add(SiticoneLabel10)
+        SiticoneFlatPanel5.Controls.Add(SiticoneToggleSwitch_stream_use)
+        SiticoneFlatPanel5.Location = New Point(8, 5)
+        SiticoneFlatPanel5.MinimumSize = New Size(20, 20)
+        SiticoneFlatPanel5.Name = "SiticoneFlatPanel5"
+        SiticoneFlatPanel5.Size = New Size(178, 25)
+        SiticoneFlatPanel5.TabIndex = 66
+        ' 
+        ' SiticoneLabel10
+        ' 
+        SiticoneLabel10.BackColor = Color.Transparent
+        SiticoneLabel10.Dock = DockStyle.Right
+        SiticoneLabel10.Font = New Font("Segoe UI", 10F)
+        SiticoneLabel10.Location = New Point(55, 0)
+        SiticoneLabel10.Name = "SiticoneLabel10"
+        SiticoneLabel10.Size = New Size(123, 25)
+        SiticoneLabel10.TabIndex = 55
+        SiticoneLabel10.Text = "Use Stream"
+        SiticoneLabel10.TextAlign = ContentAlignment.MiddleLeft
+        ' 
+        ' SiticoneToggleSwitch_stream_use
+        ' 
+        SiticoneToggleSwitch_stream_use.AccessibleDescription = "A customizable toggle switch that can be turned on or off."
+        SiticoneToggleSwitch_stream_use.AccessibleName = "Siticone Toggle Switch"
+        SiticoneToggleSwitch_stream_use.AccessibleRole = AccessibleRole.CheckButton
+        SiticoneToggleSwitch_stream_use.CanBeep = True
+        SiticoneToggleSwitch_stream_use.CanShake = True
+        SiticoneToggleSwitch_stream_use.DisabledColor = Color.FromArgb(CByte(200), CByte(200), CByte(200))
+        SiticoneToggleSwitch_stream_use.DisallowToggling = False
+        SiticoneToggleSwitch_stream_use.Dock = DockStyle.Left
+        SiticoneToggleSwitch_stream_use.EnableGlowEffect = True
+        SiticoneToggleSwitch_stream_use.ExtraThumbSize = 2
+        SiticoneToggleSwitch_stream_use.IsOn = False
+        SiticoneToggleSwitch_stream_use.IsReadOnly = False
+        SiticoneToggleSwitch_stream_use.IsRequired = False
+        SiticoneToggleSwitch_stream_use.LabelColor = Color.Black
+        SiticoneToggleSwitch_stream_use.LabelFont = New Font("Segoe UI", 9F)
+        SiticoneToggleSwitch_stream_use.Location = New Point(0, 0)
+        SiticoneToggleSwitch_stream_use.Logger = Nothing
+        SiticoneToggleSwitch_stream_use.Name = "SiticoneToggleSwitch_stream_use"
+        SiticoneToggleSwitch_stream_use.OffBackColor1 = Color.FromArgb(CByte(229), CByte(229), CByte(229))
+        SiticoneToggleSwitch_stream_use.OffBackColor2 = Color.FromArgb(CByte(229), CByte(229), CByte(229))
+        SiticoneToggleSwitch_stream_use.OffBorderColor1 = Color.FromArgb(CByte(229), CByte(229), CByte(229))
+        SiticoneToggleSwitch_stream_use.OffBorderColor2 = Color.FromArgb(CByte(229), CByte(229), CByte(229))
+        SiticoneToggleSwitch_stream_use.OffIcon = Nothing
+        SiticoneToggleSwitch_stream_use.OffThumbColor1 = Color.FromArgb(CByte(60), CByte(60), CByte(60))
+        SiticoneToggleSwitch_stream_use.OffThumbColor2 = Color.FromArgb(CByte(60), CByte(60), CByte(60))
+        SiticoneToggleSwitch_stream_use.OnBackColor1 = Color.FromArgb(CByte(26), CByte(115), CByte(232))
+        SiticoneToggleSwitch_stream_use.OnBackColor2 = Color.FromArgb(CByte(26), CByte(115), CByte(232))
+        SiticoneToggleSwitch_stream_use.OnBorderColor1 = Color.FromArgb(CByte(26), CByte(115), CByte(232))
+        SiticoneToggleSwitch_stream_use.OnBorderColor2 = Color.FromArgb(CByte(26), CByte(115), CByte(232))
+        SiticoneToggleSwitch_stream_use.OnIcon = Nothing
+        SiticoneToggleSwitch_stream_use.OnThumbColor1 = Color.White
+        SiticoneToggleSwitch_stream_use.OnThumbColor2 = Color.White
+        SiticoneToggleSwitch_stream_use.PreventToggleOff = False
+        SiticoneToggleSwitch_stream_use.RippleColor = Color.FromArgb(CByte(100), CByte(255), CByte(255), CByte(255))
+        SiticoneToggleSwitch_stream_use.RippleExpansionRate = 2F
+        SiticoneToggleSwitch_stream_use.RippleOpacityDecay = 0.02F
+        SiticoneToggleSwitch_stream_use.Size = New Size(50, 25)
+        SiticoneToggleSwitch_stream_use.TabIndex = 59
+        SiticoneToggleSwitch_stream_use.ToggleOffSoundPath = ""
+        SiticoneToggleSwitch_stream_use.ToggleOnSoundPath = ""
+        ToolTip1.SetToolTip(SiticoneToggleSwitch_stream_use, "Aktiviert den Streaming-Modus: Antwort-Chunks werden live empfangen und im Markdown-Tab angezeigt.")
+        SiticoneToggleSwitch_stream_use.ToolTipText = ""
+        SiticoneToggleSwitch_stream_use.TrackDeviceTheme = True
         ' 
         ' SiticoneLabel27
         ' 
@@ -8914,6 +9001,8 @@ Partial Class Form1
         CType(PictureBox_vram_bar, ComponentModel.ISupportInitialize).EndInit()
         TabPage_modelparameter.ResumeLayout(False)
         TabPage_modelparameter.PerformLayout()
+        SiticoneFlatPanel_trenn4.ResumeLayout(False)
+        SiticoneFlatPanel5.ResumeLayout(False)
         SiticoneFlatPanel_trenn3.ResumeLayout(False)
         SiticoneFlatPanel_thinking_use.ResumeLayout(False)
         SiticoneFlatPanel_trenn2.ResumeLayout(False)
@@ -9185,5 +9274,9 @@ Partial Class Form1
     Friend WithEvents SiticoneTextBox_apikey As SiticoneNetCoreUI.SiticoneTextBox
     Friend WithEvents SiticonehLineProgress_llm_timeout As SiticoneNetCoreUI.SiticoneHLineProgress
     Friend WithEvents SiticoneButton_manage_servers As SiticoneNetCoreUI.SiticoneButton
+    Friend WithEvents SiticoneToggleSwitch_stream_use As SiticoneNetCoreUI.SiticoneToggleSwitch
+    Friend WithEvents SiticoneFlatPanel5 As SiticoneNetCoreUI.SiticoneFlatPanel
+    Friend WithEvents SiticoneLabel10 As SiticoneNetCoreUI.SiticoneLabel
+    Friend WithEvents SiticoneFlatPanel_trenn4 As SiticoneNetCoreUI.SiticoneFlatPanel
 
 End Class

@@ -143,7 +143,7 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="system" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Antworte immer ausführlich und mit Beispielen. Gruppiere die Anwort in Abschnitte. Antworte immer in deutsch und niemals in englisch.</Value>
+      <Value Profile="(Default)">Antworte immer ausführlich und mit Beispielen. Gruppiere die Anwort in Abschnitte. Antworte immer in deutsch.</Value>
     </Setting>
     <Setting Name="tools_system" Type="System.String" Scope="User">
       <Value Profile="(Default)">Du bist ein Wetter-Assistent. Deine Aufgabe ist es, Wetteranfragen zu analysieren und das passende Tool aufzurufen.
@@ -378,6 +378,9 @@ Analysiere das Ergebnis. Wenn das Ziel erreicht ist, beginne deine Antwort ZWING
     </Setting>
     <Setting Name="server_list" Type="System.String" Scope="User">
       <Value Profile="(Default)">[{"name":"localhost","host":"localhost:11434","api_key":""}]</Value>
+    </Setting>
+    <Setting Name="stream_use" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
     </Setting>
   </Settings>
 </SettingsFile>

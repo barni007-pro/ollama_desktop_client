@@ -1,5 +1,5 @@
 {
-  "system_prompt": "Antworte immer ausführlich und mit Beispielen. Gruppiere die Anwort in Abschnitte. Antworte immer in deutsch und niemals in englisch.",
+  "system_prompt": "Antworte immer ausführlich und mit Beispielen. Gruppiere die Anwort in Abschnitte. Antworte immer in deutsch.",
   "option_parameter": [
     {
       "OptionName": "temperature",
@@ -75,5 +75,6 @@
   "thinking_use": false,
   "thinking_parameter": "false",
   "context_use": true,
-  "content_prompt": "Bearbeite die Anweisung basierend auf dem Dateiinhalt der folgenden Datei:\r\n{files}\r\nAnweisung:\r\n{prompt}"
+  "content_prompt": "Bearbeite die Anweisung basierend auf dem Dateiinhalt der folgenden Datei:\r\n{files}\r\nAnweisung:\r\n{prompt}",
+  "stream_use": true
 }

@@ -346,6 +346,7 @@ Public Class Form1
         SiticoneTextArea_system.Text = My.Settings.system
         SiticoneToggleSwitch_system_use.Checked = My.Settings.system_use
         SiticoneToggleSwitch_format_use.Checked = My.Settings.format_use
+        SiticoneToggleSwitch_stream_use.Checked = My.Settings.stream_use
         SiticoneToggleSwitch_last_context.Checked = My.Settings.context_use
         Scintilla_format.Text = My.Settings.format
         SiticoneTextArea_content_prompt.Text = My.Settings.content_prompt
@@ -547,6 +548,7 @@ Public Class Form1
         My.Settings.system = SiticoneTextArea_system.Text
         My.Settings.system_use = SiticoneToggleSwitch_system_use.Checked
         My.Settings.format_use = SiticoneToggleSwitch_format_use.Checked
+        My.Settings.stream_use = SiticoneToggleSwitch_stream_use.Checked
         My.Settings.context_use = SiticoneToggleSwitch_last_context.Checked
         My.Settings.format = Scintilla_format.Text
         My.Settings.content_prompt = SiticoneTextArea_content_prompt.Text
@@ -968,6 +970,14 @@ Public Class Form1
             prompt = prompt.Replace(vbCr, "")
             request_mem = prompt
 
+            ' Bei aktivem Streaming vorab auf TabPage_responsemd wechseln und Scintilla leeren für die Live-Ausgabe
+            If SiticoneToggleSwitch_stream_use IsNot Nothing AndAlso SiticoneToggleSwitch_stream_use.Checked Then
+                SiticoneTabControl_tab.SelectedTab = TabPage_responsemd
+                Scintilla_response.Text = ""
+                TabPage_responsemd.Refresh()
+                Scintilla_response.Refresh()
+            End If
+
             AppLog("[DEBUG-MainAsync] Warte auf QueryOllamaAsync...")
             Dim response As String = Await QueryOllamaAsync(model, prompt, image_contents, audio_contents, text_contents, My.Settings.option_list, system, format, think, think_level, context, extractedContext, cancellationTokenSource.Token)
             AppLog("[DEBUG-MainAsync] QueryOllamaAsync hat geantwortet!")
@@ -1010,6 +1020,7 @@ Public Class Form1
                 Scintilla_Response_JSON.Text = "empty"
                 Scintilla_response.Text = "empty"
                 WebView21.NavigateToString(BuildHtml("empty"))
+                SiticoneTabControl_tab.SelectedTab = TabPage_responsehtml
             End If
 
         Finally
@@ -1428,6 +1439,8 @@ Public Class Form1
 
         ' Prüfen, ob das Modell Sprachausgabe (Text-to-Speech) unterstützt
         Dim isSpeechMode As Boolean = (SiticoneChip_model_info_Speech IsNot Nothing AndAlso SiticoneChip_model_info_Speech.IsSelected)
+        ' Streaming-Modus prüfen (nur für normale Generierung, nicht für Speech oder DecisionTools)
+        Dim isStreamMode As Boolean = (SiticoneToggleSwitch_stream_use IsNot Nothing AndAlso SiticoneToggleSwitch_stream_use.Checked AndAlso Not isSpeechMode AndAlso Not SiticoneToggleSwitch_decisiontools.Checked)
         ' Gewählte Stimme aus dem Dropdown ermitteln (Fallback auf "default")
         Dim selectedVoice As String = If(SiticoneDropdown_voice.SelectedItem IsNot Nothing, SiticoneDropdown_voice.SelectedItem.ToString().Trim(), "default")
 
@@ -1533,12 +1546,12 @@ Public Class Form1
             requestBody = payload.ToString(Newtonsoft.Json.Formatting.None)
 
         Else
-            AppLog($"[DEBUG-QueryOllama] Modus: Normal ({apiUrl})")
+            AppLog($"[DEBUG-QueryOllama] Modus: Normal ({apiUrl}) - Streaming: {isStreamMode}")
 
             Dim payload As New Dictionary(Of String, Object) From {
                 {"model", model},
                 {"prompt", prompt},
-                {"stream", False}
+                {"stream", isStreamMode}
             }
 
             If Not String.IsNullOrEmpty(format) Then
@@ -1624,7 +1637,10 @@ Public Class Form1
                 Try
                     AppLog("[DEBUG-QueryOllama] Sende POST Request an Ollama...")
                     requestStartTime = DateTime.Now
-                    Dim response As HttpResponseMessage = Await client.PostAsync(apiUrl, content, ct)
+                    Dim requestMsg As New HttpRequestMessage(HttpMethod.Post, apiUrl) With {
+                        .Content = content
+                    }
+                    Dim response As HttpResponseMessage = Await client.SendAsync(requestMsg, HttpCompletionOption.ResponseHeadersRead, ct)
                     AppLog($"[DEBUG-QueryOllama] Antwort erhalten. StatusCode: {response.StatusCode}")
 
                     If response.IsSuccessStatusCode Then
@@ -1651,7 +1667,162 @@ Public Class Form1
                             Return audioPlayerHtml
                         End If
 
-                        ' --- Fall 2: Standard-Antwort (JSON aus /api/generate oder /v1/systemone) ---
+                        ' --- Fall 2: Live-Streaming (/api/generate mit stream = True) ---
+                        If isStreamMode Then
+                            AppLog("[DEBUG-QueryOllama] Starte Stream-Lesevorgang im Hintergrund...")
+
+                            ' Progress-Handler auf dem UI-Thread für flüssige Live-Ausgabe in Scintilla ohne Einfrieren des UI
+                            Dim chunkProgress As New Progress(Of String)(
+                                Sub(chunk As String)
+                                    If Not String.IsNullOrEmpty(chunk) Then
+                                        Scintilla_response.AppendText(chunk)
+                                        Scintilla_response.GotoPosition(Scintilla_response.TextLength)
+                                        Scintilla_response.ScrollCaret()
+                                    End If
+                                End Sub
+                            )
+
+                            ' Das Lesen und Parsen der Chunks läuft vollständig im Hintergrund-Task, damit der UI-Thread und Timer frei bleiben
+                            Dim streamData = Await Task.Run(
+                                Async Function() As Task(Of Tuple(Of String, String, String))
+                                    Dim sbResponse As New StringBuilder()
+                                    Dim sbThinking As New StringBuilder()
+                                    Dim lastLine As String = Nothing
+
+                                    Using responseStream As Stream = Await response.Content.ReadAsStreamAsync().ConfigureAwait(False)
+                                        Using reader As New StreamReader(responseStream, Encoding.UTF8)
+                                            While True
+                                                If ct.IsCancellationRequested Then
+                                                    ct.ThrowIfCancellationRequested()
+                                                End If
+
+                                                Dim line As String = Await reader.ReadLineAsync(ct).ConfigureAwait(False)
+                                                If line Is Nothing Then Exit While
+                                                If String.IsNullOrWhiteSpace(line) Then Continue While
+
+                                                Try
+                                                    Dim chunkJson As JObject = JObject.Parse(line)
+                                                    lastLine = line
+
+                                                    ' Thinking-Tokens sammeln
+                                                    Dim chunkThinking As String = chunkJson.SelectToken("thinking")?.ToString()
+                                                    If Not String.IsNullOrEmpty(chunkThinking) Then
+                                                        sbThinking.Append(chunkThinking)
+                                                    End If
+
+                                                    ' Response-Token sammeln und via Progress an UI melden
+                                                    Dim chunkText As String = chunkJson.SelectToken("response")?.ToString()
+                                                    If Not String.IsNullOrEmpty(chunkText) Then
+                                                        sbResponse.Append(chunkText)
+                                                        CType(chunkProgress, IProgress(Of String)).Report(chunkText)
+                                                    End If
+
+                                                    ' Fehler im Stream-Chunk abfangen
+                                                    If chunkJson("error") IsNot Nothing Then
+                                                        Dim errText = chunkJson("error").ToString()
+                                                        Dim errMsg = vbCrLf & "Error: " & errText
+                                                        sbResponse.Append(errMsg)
+                                                        CType(chunkProgress, IProgress(Of String)).Report(errMsg)
+                                                    End If
+                                                Catch ex As Exception
+                                                    AppLog($"[DEBUG-QueryOllama] Fehler beim Parsen eines Stream-Chunks: {ex.Message}")
+                                                End Try
+                                            End While
+                                        End Using
+                                    End Using
+
+                                    Return Tuple.Create(sbResponse.ToString(), sbThinking.ToString(), lastLine)
+                                End Function, ct
+                            )
+
+                            Dim streamExtractedResponse As String = streamData.Item1
+                            Dim fullThinkingText As String = streamData.Item2
+                            Dim lastChunkObj As JObject = If(Not String.IsNullOrEmpty(streamData.Item3), JObject.Parse(streamData.Item3), Nothing)
+
+                            ' Generiertes Bild aus letztem Chunk verarbeiten (falls vorhanden)
+                            If lastChunkObj IsNot Nothing Then
+                                Dim streamImageBase64 As String = lastChunkObj.SelectToken("image")?.ToString()
+                                If Not String.IsNullOrEmpty(streamImageBase64) Then
+                                    AppLog("[DEBUG-QueryOllama] Bild in Antwort gefunden. Starte Speicherung...")
+                                    Try
+                                        Dim imageBytes As Byte() = Convert.FromBase64String(streamImageBase64)
+                                        Dim fileExtension As String = ".png"
+
+                                        If imageBytes.Length > 1 Then
+                                            If imageBytes(0) = &HFF AndAlso imageBytes(1) = &HD8 Then
+                                                fileExtension = ".jpg"
+                                            ElseIf imageBytes(0) = &H89 AndAlso imageBytes(1) = &H50 Then
+                                                fileExtension = ".png"
+                                            ElseIf imageBytes(0) = &H47 AndAlso imageBytes(1) = &H49 Then
+                                                fileExtension = ".gif"
+                                            ElseIf imageBytes(0) = &H42 AndAlso imageBytes(1) = &H4D Then
+                                                fileExtension = ".bmp"
+                                            End If
+                                        End If
+
+                                        Dim fileName As String = $"ollama_img_{DateTime.Now:yyyyMMdd_HHmmss}_{Guid.NewGuid().ToString().Substring(0, 5)}{fileExtension}"
+                                        Dim tempFilePath As String = IO.Path.Combine(IO.Path.GetTempPath(), fileName)
+
+                                        IO.File.WriteAllBytes(tempFilePath, imageBytes)
+                                        AppLog($"[DEBUG-QueryOllama] Bild gespeichert unter: {tempFilePath}")
+
+                                        Dim fileNameOnly As String = IO.Path.GetFileName(tempFilePath)
+                                        Dim virtualUrl As String = $"https://ollama.local/{fileNameOnly}"
+                                        Dim markdownImage As String = $"![Generiertes Bild]({virtualUrl})"
+
+                                        If String.IsNullOrEmpty(streamExtractedResponse) Then
+                                            streamExtractedResponse = markdownImage
+                                        Else
+                                            streamExtractedResponse &= vbCrLf & vbCrLf & markdownImage
+                                        End If
+                                    Catch ex As Exception
+                                        AppLog($"[DEBUG-QueryOllama] FEHLER beim Speichern des Bildes: {ex.Message}")
+                                        streamExtractedResponse &= vbCrLf & $"[ERROR_SAVING_IMAGE: {ex.Message}]"
+                                    End Try
+                                End If
+
+                                If fullThinkingText.Length > 0 Then
+                                    lastChunkObj("thinking") = fullThinkingText
+                                    extractedThinking = fullThinkingText
+                                Else
+                                    extractedThinking = lastChunkObj.SelectToken("thinking")?.ToString()
+                                End If
+
+                                lastChunkObj("response") = streamExtractedResponse
+                                Response_JSON = lastChunkObj.ToString(Formatting.None)
+
+                                Try
+                                    extractedContext.Clear()
+                                    loadedContextModel = ""
+
+                                    Dim tempItems = lastChunkObj("context")?.ToObject(Of List(Of Integer))()
+                                    If tempItems IsNot Nothing Then
+                                        extractedContext.AddRange(tempItems)
+                                    End If
+
+                                    timing_total_duration = lastChunkObj.SelectToken("total_duration")?.Value(Of Long)
+                                    timing_load_duration = lastChunkObj.SelectToken("load_duration")?.Value(Of Long)
+                                    timing_prompt_eval_count = lastChunkObj.SelectToken("prompt_eval_count")?.Value(Of Long)
+                                    timing_prompt_eval_duration = lastChunkObj.SelectToken("prompt_eval_duration")?.Value(Of Long)
+                                    timing_eval_count = lastChunkObj.SelectToken("eval_count")?.Value(Of Long)
+                                    timing_eval_duration = lastChunkObj.SelectToken("eval_duration")?.Value(Of Long)
+                                    SiticoneButton_timing.Enabled = True
+                                    AppLog("[DEBUG-QueryOllama] Stream Timing und Context erfolgreich geparst.")
+                                Catch ex As Exception
+                                    AppLog($"[DEBUG-QueryOllama] FEHLER beim Parsen von Timing/Context aus Stream: {ex.Message}")
+                                    SiticoneButton_timing.Enabled = False
+                                End Try
+                            Else
+                                Dim fallbackJson As New JObject()
+                                fallbackJson("response") = streamExtractedResponse
+                                Response_JSON = fallbackJson.ToString(Formatting.None)
+                            End If
+
+                            AppLog("[DEBUG-QueryOllama] <--- Stream erfolgreich beendet.")
+                            Return streamExtractedResponse
+                        End If
+
+                        ' --- Fall 3: Standard-Antwort (JSON aus /api/generate oder /v1/systemone ohne Streaming) ---
                         Dim responseBody As String = Await response.Content.ReadAsStringAsync()
 
                         If My.Settings.test_response <> "" Then
@@ -2726,7 +2897,8 @@ Public Class Form1
                 {"thinking_use", SiticoneToggleSwitch_thinking_use.Checked},
                 {"thinking_parameter", SiticoneDropdown_thinking_use.SelectedItem},
                 {"context_use", SiticoneToggleSwitch_last_context.Checked},
-                {"content_prompt", SiticoneTextArea_content_prompt.Text}
+                {"content_prompt", SiticoneTextArea_content_prompt.Text},
+                {"stream_use", If(SiticoneToggleSwitch_stream_use IsNot Nothing, SiticoneToggleSwitch_stream_use.Checked, False)}
             }
 
             Dim json = JsonConvert.SerializeObject(data, Formatting.Indented)
@@ -2770,6 +2942,9 @@ Public Class Form1
                 SiticoneDropdown_thinking_use.SelectedItem = data("thinking_parameter").ToString
                 SiticoneToggleSwitch_last_context.Checked = data("context_use")
                 SiticoneTextArea_content_prompt.Text = data("content_prompt")
+                If data.ContainsKey("stream_use") AndAlso SiticoneToggleSwitch_stream_use IsNot Nothing Then
+                    SiticoneToggleSwitch_stream_use.Checked = CBool(data("stream_use"))
+                End If
 
                 ' Synchronisiert Switch, Dropdown und VRAM-Balken mit dem geladenen Profil:
                 SyncCalcCtxDropdownFromDgv()
@@ -3280,27 +3455,27 @@ Public Class Form1
 
     ' Klick-Handler: lädt Kontext-Token aus einer .cnt-Datei.
     Private Sub SiticoneButton_load_context_Click(sender As Object, e As EventArgs) Handles SiticoneButton_load_context.Click
-        Dim modelName As String = SiticoneDropdown_model.SelectedItem?.ToString()
-        Dim safeModelName As String = GetSafeFilename(modelName)
+        Dim modelName = SiticoneDropdown_model.SelectedItem?.ToString
+        Dim safeModelName = GetSafeFilename(modelName)
 
-        Using ofd As New OpenFileDialog()
+        Using ofd As New OpenFileDialog
             ofd.Filter = $"Context File (*.{safeModelName}.cnt)|*.{safeModelName}.cnt"
             ofd.Title = "Ollama Context load"
 
-            If ofd.ShowDialog() = DialogResult.OK Then
+            If ofd.ShowDialog = DialogResult.OK Then
                 Try
                     Using reader As New BinaryReader(File.Open(ofd.FileName, FileMode.Open))
-                        Dim count As Integer = reader.ReadInt32()
+                        Dim count = reader.ReadInt32
 
-                        extractedContext.Clear()
-                        For i As Integer = 0 To count - 1
-                            extractedContext.Add(reader.ReadInt32())
+                        extractedContext.Clear
+                        For i = 0 To count - 1
+                            extractedContext.Add(reader.ReadInt32)
                         Next
                     End Using
 
                     MessageBox.Show($"Successful {extractedContext.Count} Context-Token loaded.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     loadedContextModel = modelName
-                    UpdateMemoryUI()
+                    UpdateMemoryUI
                 Catch ex As Exception
                     MessageBox.Show("Error loading: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
@@ -3315,19 +3490,19 @@ Public Class Form1
             Return
         End If
 
-        Dim modelName As String = SiticoneDropdown_model.SelectedItem?.ToString()
-        Dim safeModelName As String = GetSafeFilename(modelName)
+        Dim modelName = SiticoneDropdown_model.SelectedItem?.ToString
+        Dim safeModelName = GetSafeFilename(modelName)
 
-        Using sfd As New SaveFileDialog()
+        Using sfd As New SaveFileDialog
             sfd.Filter = $"Context File (*.{safeModelName}.cnt)|*.{safeModelName}.cnt"
             sfd.Title = "Ollama Context save"
-            sfd.FileName = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss")
+            sfd.FileName = Date.Now.ToString("yyyy-MM-dd_HH-mm-ss")
 
-            If sfd.ShowDialog() = DialogResult.OK Then
+            If sfd.ShowDialog = DialogResult.OK Then
                 Try
                     Using writer As New BinaryWriter(File.Open(sfd.FileName, FileMode.Create))
                         writer.Write(extractedContext.Count)
-                        For Each id As Integer In extractedContext
+                        For Each id In extractedContext
                             writer.Write(id)
                         Next
                     End Using
@@ -5319,7 +5494,7 @@ Public Class Form1
 
     ' ToggleSwitch-Handler: aktualisiert die Kontext-Anzeige bei Ein-/Ausschalten.
     Private Sub SiticoneToggleSwitch_last_context_CheckedChanged(sender As Object, e As EventArgs) Handles SiticoneToggleSwitch_last_context.CheckedChanged
-        UpdateMemoryUI()
+        UpdateMemoryUI
     End Sub
 
     ''' <summary>
