@@ -232,6 +232,11 @@ Public Class Form1
     ' Kumulierter Markdown-Verlauf für die HTML-Ausgabe bei aktivem Kontext
     Private conversationHistoryMarkdown As New StringBuilder()
 
+    ' --- Statusmeldungen im Stream-Modus ---
+    ' Gesammelte Statuszeilen des letzten Streams (werden beim Rendern wiederhergestellt)
+    Private streamStatusHeader As String = ""
+    Private streamStatusFooter As String = ""
+
     ' Variable zur Verfolgung des aktuellen Navigations-Indexes im Chat-Verlauf
     ' Speichert die Rohdaten eines Chat-Schritts
     Public Class ChatTurn
@@ -240,6 +245,8 @@ Public Class Form1
         Public Property ResponseJson As String
         Public Property API As String
         Public Property Model As String
+        Public Property StatusHeader As String
+        Public Property StatusFooter As String
     End Class
 
     ' Die Liste, die alle bisherigen Chat-Schritte speichert
@@ -978,6 +985,10 @@ Public Class Form1
                 Scintilla_response.Refresh()
             End If
 
+            ' Statuszeilen des vorherigen Streams zurücksetzen (werden erst im Stream-Modus neu gefüllt)
+            streamStatusHeader = ""
+            streamStatusFooter = ""
+
             AppLog("[DEBUG-MainAsync] Warte auf QueryOllamaAsync...")
             Dim response As String = Await QueryOllamaAsync(model, prompt, image_contents, audio_contents, text_contents, My.Settings.option_list, system, format, think, think_level, context, extractedContext, cancellationTokenSource.Token)
             AppLog("[DEBUG-MainAsync] QueryOllamaAsync hat geantwortet!")
@@ -1039,7 +1050,9 @@ Public Class Form1
                 .RequestJson = Request_JSON,
                 .ResponseJson = Response_JSON,
                 .API = Current_API,
-                .Model = currentModel
+                .Model = currentModel,
+                .StatusHeader = streamStatusHeader,
+                .StatusFooter = streamStatusFooter
             }
             chatHistory.Add(newTurn)
             currentTurnIndex = chatHistory.Count - 1
@@ -1192,7 +1205,11 @@ Public Class Form1
         ' 3. Markdown für den selektierten Eintrag ermitteln und in Scintilla setzen
         Dim currentMarkdown As String = GetResponseMarkdown(turn.ResponseJson, turn.RequestJson, turn.API)
         response_mem = currentMarkdown
-        Scintilla_response.Text = currentMarkdown.Replace(vbLf, vbCrLf)
+
+        ' Statuszeilen des Stream-Modus oberhalb und unterhalb des Antwort-Textes anzeigen
+        Dim statusHeader As String = If(turn.StatusHeader, "")
+        Dim statusFooter As String = If(turn.StatusFooter, "")
+        Scintilla_response.Text = (statusHeader & currentMarkdown & statusFooter).Replace(vbLf, vbCrLf)
 
         ' 4. Request JSON und Response JSON im Scintilla Viewer formatieren
         Try
@@ -1420,6 +1437,115 @@ Public Class Form1
         Return result
     End Function
 
+    ' --- Statusmeldungen für den Stream-Modus ---
+    ' Baut eine Statuszeile im Format "[Status: ...]" für die Live-Ausgabe.
+    Private Function StreamStatusText(key As String) As String
+        Dim msg As String
+        Select Case key
+            Case "request"
+                msg = "Request sent - model may be loading..."
+            Case "loading"
+                msg = "Loading model..."
+            Case "prefill"
+                msg = "Evaluating prompt (prefill)..."
+            Case "thinking"
+                msg = "Model is thinking..."
+            Case "generating"
+                msg = "Generating response..."
+            Case "done"
+                msg = "Done"
+            Case "cancelled"
+                msg = "Cancelled"
+            Case "error"
+                msg = "Error"
+            Case Else
+                msg = key
+        End Select
+
+        Return "[Status: " & msg & "]"
+    End Function
+
+    ' Liest einen numerischen Wert (als Long) aus einem JSON-Token; 0 falls nicht vorhanden/kein Zahl.
+    Private Function JsonLong(token As JToken) As Long
+        If token Is Nothing Then Return 0
+        Try
+            Return token.Value(Of Long)
+        Catch
+            Return 0
+        End Try
+    End Function
+
+    ' Prüft über /api/ps, ob das angeforderte Modell aktuell im Server-Speicher geladen ist.
+    ' Damit kann die Statusmeldung "Modell wird geladen" nur ausgegeben werden, wenn
+    ' tatsächlich ein Ladevorgang stattfindet.
+    Private Async Function IsModelLoadedAsync(model As String, baseUrl As String) As Task(Of Boolean)
+        Try
+            Using psClient As HttpClient = CreateConfiguredHttpClient(3)
+                Dim psUrl As String = $"{baseUrl}/api/ps"
+                Dim psBody As String = Await psClient.GetStringAsync(psUrl)
+
+                Dim psJson As JObject = JObject.Parse(psBody)
+                Dim psModels As JArray = psJson("models")
+                If psModels Is Nothing Then Return False
+
+                Dim wanted As String = NormalizeModelName(model)
+
+                For Each psModel As JToken In psModels
+                    Dim psName As String = psModel("name")?.ToString()
+                    If String.IsNullOrEmpty(psName) Then Continue For
+
+                    If NormalizeModelName(psName) = wanted Then
+                        Return True
+                    End If
+                Next
+
+                Return False
+            End Using
+        Catch ex As Exception
+            ' Bei Servern ohne /api/ps (z.B. Cloud-APIs) keine Lade-Meldung ausgeben
+            AppLog($"[DEBUG-Stream] Modell-Ladecheck nicht möglich: {ex.Message}")
+            Return True
+        End Try
+    End Function
+
+    ' Normalisiert einen Modellnamen für den Vergleich (ohne ":latest"-Suffix, Kleinschreibung).
+    Private Function NormalizeModelName(model As String) As String
+        If String.IsNullOrWhiteSpace(model) Then Return ""
+        Dim name As String = model.Trim().ToLowerInvariant()
+        If name.EndsWith(":latest") Then
+            name = name.Substring(0, name.Length - ":latest".Length)
+        End If
+        Return name
+    End Function
+
+    ' Baut die Abschluss-Statuszeile inkl. Grund und Metriken aus dem finalen Chunk.
+    Private Function BuildStreamDoneStatus(lastChunk As JObject) As String
+        Dim reason As String = lastChunk?.SelectToken("done_reason")?.ToString()
+        If String.IsNullOrWhiteSpace(reason) Then
+            reason = "unknown"
+        End If
+
+        Dim loadMs As Double = JsonLong(lastChunk?.SelectToken("load_duration")) / 1e6
+        Dim promptMs As Double = JsonLong(lastChunk?.SelectToken("prompt_eval_duration")) / 1e6
+        Dim totalS As Double = JsonLong(lastChunk?.SelectToken("total_duration")) / 1e9
+        Dim evalCount As Long = JsonLong(lastChunk?.SelectToken("eval_count"))
+        Dim evalDur As Double = JsonLong(lastChunk?.SelectToken("eval_duration")) / 1e9
+
+        Dim tps As Double = If(evalDur > 0, evalCount / evalDur, 0.0)
+
+        Dim parts As New List(Of String)()
+        parts.Add(StreamStatusText("done"))
+        parts.Add($"Reason: {reason}")
+        parts.Add($"Load: {loadMs:F0} ms")
+        If promptMs > 0 Then
+            parts.Add($"Prefill: {promptMs:F0} ms")
+        End If
+        parts.Add($"Total: {totalS:F2} s")
+        parts.Add($"Speed: {tps:F1} Tokens/s")
+
+        Return String.Join(" | ", parts)
+    End Function
+
     ' Baut die Ollama-Request-Nutzlast, sendet sie und wertet die Antwort (Text, Bild, TTS) aus.
     Private Async Function QueryOllamaAsync(model As String,
                                             prompt As String,
@@ -1640,6 +1766,51 @@ Public Class Form1
                     Dim requestMsg As New HttpRequestMessage(HttpMethod.Post, apiUrl) With {
                         .Content = content
                     }
+
+                    ' Statusmeldungen des Stream-Modus VOR dem Request ausgeben.
+                    ' Wichtig: SendAsync blockiert, bis der Server die HTTP-Header sendet - und Ollama
+                    ' liefert diese erst NACH dem Modell-Laden. Die Statuszeilen müssen deshalb
+                    ' schon vor dem Request in die Anzeige geschrieben werden.
+                    Dim chunkProgress As Progress(Of String) = Nothing
+                    Dim sbHeader As New StringBuilder()
+                    Dim headerLock As New Object()
+
+                    If isStreamMode Then
+                        chunkProgress = New Progress(Of String)(
+                            Sub(chunk As String)
+                                If Not String.IsNullOrEmpty(chunk) Then
+                                    Scintilla_response.AppendText(chunk)
+                                    Scintilla_response.GotoPosition(Scintilla_response.TextLength)
+                                    Scintilla_response.ScrollCaret()
+                                End If
+                            End Sub
+                        )
+
+                        ' Kopf-Statuszeilen (Anfrage / Modell-Laden) ausgeben.
+                        ' Das Modell wird nur dann als "wird geladen" gemeldet, wenn es laut
+                        ' /api/ps noch nicht im Server-Speicher liegt.
+                        ' Diese Ausgabe laeuft direkt auf dem UI-Thread, daher wird synchron
+                        ' in das Scintilla-Control geschrieben - so ist die Zeile SOFORT sichtbar.
+                        Dim emitHeader = Sub(key As String)
+                            Dim statusLine As String = StreamStatusText(key) & vbCrLf
+                            SyncLock headerLock
+                                sbHeader.Append(statusLine)
+                            End SyncLock
+                            Scintilla_response.AppendText(statusLine)
+                            Scintilla_response.GotoPosition(Scintilla_response.TextLength)
+                            Scintilla_response.ScrollCaret()
+                        End Sub
+
+                        ' Erste Meldung sofort anzeigen - noch vor jedem Server-Call.
+                        emitHeader("request")
+
+                        ' Pruefung, ob das Modell bereits geladen ist (lokaler, schneller Server-Call)
+                        Dim modelAlreadyLoaded As Boolean = Await IsModelLoadedAsync(model, baseUrl)
+                        If Not modelAlreadyLoaded Then
+                            emitHeader("loading")
+                        End If
+                    End If
+
                     Dim response As HttpResponseMessage = Await client.SendAsync(requestMsg, HttpCompletionOption.ResponseHeadersRead, ct)
                     AppLog($"[DEBUG-QueryOllama] Antwort erhalten. StatusCode: {response.StatusCode}")
 
@@ -1671,32 +1842,48 @@ Public Class Form1
                         If isStreamMode Then
                             AppLog("[DEBUG-QueryOllama] Starte Stream-Lesevorgang im Hintergrund...")
 
-                            ' Progress-Handler auf dem UI-Thread für flüssige Live-Ausgabe in Scintilla ohne Einfrieren des UI
-                            Dim chunkProgress As New Progress(Of String)(
-                                Sub(chunk As String)
-                                    If Not String.IsNullOrEmpty(chunk) Then
-                                        Scintilla_response.AppendText(chunk)
-                                        Scintilla_response.GotoPosition(Scintilla_response.TextLength)
-                                        Scintilla_response.ScrollCaret()
-                                    End If
-                                End Sub
-                            )
-
+                            ' Statusmeldungen werden als eigene Zeilen ausgegeben, der Antwort-Text
+                            ' läuft davon getrennt weiter (Reihenfolge im Scintilla: Status, Text, Status).
+                            ' Der Progress-Handler und die Kopf-Statuszeilen wurden bereits VOR dem
+                            ' HTTP-Request ausgegeben (siehe Block oberhalb von SendAsync).
                             ' Das Lesen und Parsen der Chunks läuft vollständig im Hintergrund-Task, damit der UI-Thread und Timer frei bleiben
                             Dim streamData = Await Task.Run(
-                                Async Function() As Task(Of Tuple(Of String, String, String))
+                                Async Function() As Task(Of Tuple(Of String, String, String, String, String))
                                     Dim sbResponse As New StringBuilder()
                                     Dim sbThinking As New StringBuilder()
                                     Dim lastLine As String = Nothing
+                                    Dim gotDone As Boolean = False
+                                    Dim streamError As Boolean = False
+                                    Dim seenThinking As Boolean = False
+                                    Dim seenGenerating As Boolean = False
+
+                                    ' Statusmeldung genau einmal ausgeben (gehört zur Kopf-Gruppe vor dem Text).
+                                    ' Der Hintergrund-Task schreibt in sbHeader - daher mit Lock.
+                                    Dim emitOnce = Sub(key As String)
+                                        Dim statusLine As String = StreamStatusText(key) & vbCrLf
+                                        SyncLock headerLock
+                                            sbHeader.Append(statusLine)
+                                        End SyncLock
+                                        CType(chunkProgress, IProgress(Of String)).Report(statusLine)
+                                    End Sub
+
+                                    ' Sobald die Verbindung steht, beginnt Ollama mit der Prompt-Evaluierung
+                                    emitOnce("prefill")
 
                                     Using responseStream As Stream = Await response.Content.ReadAsStreamAsync().ConfigureAwait(False)
                                         Using reader As New StreamReader(responseStream, Encoding.UTF8)
                                             While True
                                                 If ct.IsCancellationRequested Then
-                                                    ct.ThrowIfCancellationRequested()
+                                                    Exit While
                                                 End If
 
-                                                Dim line As String = Await reader.ReadLineAsync(ct).ConfigureAwait(False)
+                                                Dim line As String = Nothing
+                                                Try
+                                                    line = Await reader.ReadLineAsync(ct).ConfigureAwait(False)
+                                                Catch ex As OperationCanceledException
+                                                    Exit While
+                                                End Try
+
                                                 If line Is Nothing Then Exit While
                                                 If String.IsNullOrWhiteSpace(line) Then Continue While
 
@@ -1704,26 +1891,43 @@ Public Class Form1
                                                     Dim chunkJson As JObject = JObject.Parse(line)
                                                     lastLine = line
 
-                                                    ' Thinking-Tokens sammeln
-                                                    Dim chunkThinking As String = chunkJson.SelectToken("thinking")?.ToString()
-                                                    If Not String.IsNullOrEmpty(chunkThinking) Then
-                                                        sbThinking.Append(chunkThinking)
-                                                    End If
-
-                                                    ' Response-Token sammeln und via Progress an UI melden
-                                                    Dim chunkText As String = chunkJson.SelectToken("response")?.ToString()
-                                                    If Not String.IsNullOrEmpty(chunkText) Then
-                                                        sbResponse.Append(chunkText)
-                                                        CType(chunkProgress, IProgress(Of String)).Report(chunkText)
-                                                    End If
-
-                                                    ' Fehler im Stream-Chunk abfangen
+                                                    ' Fehler im Stream-Chunk abfangen (HTTP-Status bleibt dabei 200)
                                                     If chunkJson("error") IsNot Nothing Then
                                                         Dim errText = chunkJson("error").ToString()
                                                         Dim errMsg = vbCrLf & "Error: " & errText
                                                         sbResponse.Append(errMsg)
                                                         CType(chunkProgress, IProgress(Of String)).Report(errMsg)
+                                                        streamError = True
+                                                        Exit While
                                                     End If
+
+                                                    ' Thinking-Tokens sammeln -> Phase "thinking"
+                                                    Dim chunkThinking As String = chunkJson.SelectToken("thinking")?.ToString()
+                                                    If Not String.IsNullOrEmpty(chunkThinking) Then
+                                                        sbThinking.Append(chunkThinking)
+                                                        If Not seenThinking Then
+                                                            seenThinking = True
+                                                            emitOnce("thinking")
+                                                        End If
+                                                    End If
+
+                                                    ' Response-Token sammeln und via Progress an UI melden -> Phase "generating"
+                                                    Dim chunkText As String = chunkJson.SelectToken("response")?.ToString()
+                                                    If Not String.IsNullOrEmpty(chunkText) Then
+                                                        sbResponse.Append(chunkText)
+                                                        If Not seenGenerating Then
+                                                            seenGenerating = True
+                                                            emitOnce("generating")
+                                                        End If
+                                                        CType(chunkProgress, IProgress(Of String)).Report(chunkText)
+                                                    End If
+
+                                                    ' Abschluss-Chunk erkennen
+                                                    If chunkJson.SelectToken("done")?.Value(Of Boolean) = True Then
+                                                        gotDone = True
+                                                        Exit While
+                                                    End If
+
                                                 Catch ex As Exception
                                                     AppLog($"[DEBUG-QueryOllama] Fehler beim Parsen eines Stream-Chunks: {ex.Message}")
                                                 End Try
@@ -1731,13 +1935,39 @@ Public Class Form1
                                         End Using
                                     End Using
 
-                                    Return Tuple.Create(sbResponse.ToString(), sbThinking.ToString(), lastLine)
-                                End Function, ct
+                                    ' Abschluss-Statuszeile aus dem finalen Chunk bauen (Metriken + Grund)
+                                    Dim doneChunk As JObject = Nothing
+                                    If Not String.IsNullOrEmpty(lastLine) Then
+                                        Try
+                                            doneChunk = JObject.Parse(lastLine)
+                                        Catch
+                                        End Try
+                                    End If
+
+                                    ' Die Abschlusszeile beginnt mit einem Zeilenumbruch, damit sie
+                                    ' immer in einer eigenen Zeile steht (auch direkt nach dem letzten Token).
+                                    Dim finalLine As String
+                                    If gotDone Then
+                                        finalLine = vbCrLf & BuildStreamDoneStatus(doneChunk) & vbCrLf
+                                    ElseIf streamError Then
+                                        finalLine = vbCrLf & StreamStatusText("error") & vbCrLf
+                                    Else
+                                        finalLine = vbCrLf & StreamStatusText("cancelled") & vbCrLf
+                                    End If
+                                    CType(chunkProgress, IProgress(Of String)).Report(finalLine)
+
+                                    Return Tuple.Create(sbResponse.ToString(), sbThinking.ToString(), lastLine,
+                                                        sbHeader.ToString(), finalLine)
+                                End Function
                             )
 
                             Dim streamExtractedResponse As String = streamData.Item1
                             Dim fullThinkingText As String = streamData.Item2
                             Dim lastChunkObj As JObject = If(Not String.IsNullOrEmpty(streamData.Item3), JObject.Parse(streamData.Item3), Nothing)
+
+                            ' Statuszeilen (Kopf = Phasen vor dem Text, Fuß = Abschluss) für die spätere Anzeige merken
+                            streamStatusHeader = streamData.Item4
+                            streamStatusFooter = streamData.Item5
 
                             ' Generiertes Bild aus letztem Chunk verarbeiten (falls vorhanden)
                             If lastChunkObj IsNot Nothing Then

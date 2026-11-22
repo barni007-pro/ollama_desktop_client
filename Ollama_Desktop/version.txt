@@ -195,3 +195,11 @@ V 1.7.1.42
 V 1.7.2.43
 - Streaming Mode Support:
   Added support for streaming responses from the Ollama API, enabling real-time output during generation.
+V 1.7.3.44
+- Real-Time Status Messages for Streaming Mode:
+  Displays granular lifecycle status updates directly in the output during streaming generation:
+  - Immediate request submission status and pre-flight model memory verification via /api/ps ("Loading model...").
+  - Prompt evaluation phase ("Evaluating prompt (prefill)...").
+  - Dedicated thinking indicator ("Model is thinking...") and generation phase ("Generating response...").
+  - Comprehensive done summary with reason and performance metrics (load time, prefill time, total duration, tokens/s), as well as graceful cancellation and error reporting.
+  - Full persistence of status headers and footers across conversation turns and history browsing.
