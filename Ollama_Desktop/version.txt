@@ -203,3 +203,17 @@ V 1.7.3.44
   - Dedicated thinking indicator ("Model is thinking...") and generation phase ("Generating response...").
   - Comprehensive done summary with reason and performance metrics (load time, prefill time, total duration, tokens/s), as well as graceful cancellation and error reporting.
   - Full persistence of status headers and footers across conversation turns and history browsing.
+V 1.8.0.45
+- Critical Bugfixes & Stability Improvements:
+  - Fixed a 100% CPU busy-wait loop in the SSH terminal reader (`StartReadingLoop`) and added UI disposal/CoreWebView2 guards.
+  - Fixed culture-dependent float parsing for model options (handling both comma and dot decimal separators via `InvariantCulture`).
+  - Fixed uninitialized `sshResult` NullReferenceException risk and added connection, empty password-prompt, and regex validation checks in `ExecuteCommandAndWaitAsync`.
+  - Removed duplicate `Form1` instantiation during application startup in `ApplicationEvents.vb`.
+  - Fixed `QueryOllamaAsync` to check the passed `image_list` and `audio_list` parameters instead of global lists.
+  - Updated Ollama CLI commands (`ollama pull`, `rm`, `delete`) to use `GetBaseApiUrl()`, `CreateConfiguredHttpClient()` (including proxy and Bearer auth), safe timeout handling, and proper JSON serialization.
+  - Fixed Whisper live transcription stop race condition (preventing loss of the final spoken phrase), odd byte-length integer division (`\ 2`), and missing `whisperFactory` null check on language change.
+  - Added bounds checking when saving code blocks (`SiticoneButton_code_save_Click`).
+  - Fixed potential stdout/stderr pipe deadlock and ensured temporary script cleanup via `Try...Finally` in `python_code_run`.
+  - Added HTML encoding and proper `JObject` JSON serialization for speech output rendering and `Response_JSON`.
+  - Removed redundant `SaveServers()` call on close in `FrmServerManager`.
+  - Resolved all compiler warnings in `Form1.vb` (missing `Await`, shared member access via `WaveInEvent`, and obsolete `CaretLineVisible`).

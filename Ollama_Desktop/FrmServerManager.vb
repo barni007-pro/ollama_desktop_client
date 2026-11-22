@@ -157,13 +157,14 @@ Public Class FrmServerManager
     End Sub
 
     Private Sub Button_close_Click(sender As Object, e As EventArgs) Handles Button_close.Click
-        SaveServers()
         Me.DialogResult = DialogResult.Cancel
         Me.Close()
     End Sub
 
     Private Sub FrmServerManager_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
-        SaveServers()
+        If Not ApplyRequested Then
+            SaveServers()
+        End If
     End Sub
 
     ''' <summary>

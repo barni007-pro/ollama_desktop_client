@@ -212,6 +212,8 @@ Public Class Form1
     ' --- Klassenvariablen für Whisper Live ---
     ' Flag: True solange Whisper Live-Transkription aktiv ist
     Private isListeningWhisper As Boolean = False
+    ' Flag: True solange der Stream-Reader-Task noch Restdaten einreiht
+    Private isWhisperStreamRunning As Boolean = False
     ' Whisper-Factory zur Initialisierung des Transkriptionsprozesses
     Private whisperFactory As WhisperFactory = Nothing
     ' Whisper-Processor für die eigentliche Sprachtranskription
@@ -708,7 +710,7 @@ Public Class Form1
                 ' Ollama Sonderbefehle
                 If iterationCount = 1 AndAlso prompt.StartsWith("ollama") Then
                     AppLog("[DEBUG-StateChanged] Ollama Sonderbefehl erkannt.")
-                    Dim apiBaseUrl = "http://" & SiticoneTextBox_host.Text & "/api"
+                    Dim apiBaseUrl = $"{GetBaseApiUrl()}/api"
                     Dim parts = prompt.Split(" "c)
                     If parts.Length >= 3 Then
                         Dim command = parts(1).ToLower
@@ -786,22 +788,20 @@ Public Class Form1
                             End If
                         End If
 
-                        Dim sshResult As String
+                        Dim sshResult As String = ""
 
                         If sshCommand.Contains(vbLf) Then
                             AppLog("[DEBUG-StateChanged] LLM hat mehrzeiligen Block gesendet. Blockiere Ausführung!")
                             darfAusgefuehrtWerden = False
-                            sshResult = currentErrMultiline
-                        End If
-
-                        If darfAusgefuehrtWerden Then
+                            sshResult = If(currentErrMultiline, "")
+                        ElseIf darfAusgefuehrtWerden Then
                             sshResult = Await ExecuteCommandAndWaitAsync(sshCommand, Val(SiticoneTextBox_ssh_timeout.Text))
-                        ElseIf Not sshCommand.Contains(vbLf) Then
+                        Else
                             AppLog("[DEBUG-StateChanged] SSH blockiert.")
-                            sshResult = currentErrDenied
+                            sshResult = If(currentErrDenied, "")
                         End If
 
-                        Dim cleanResult = sshResult.Replace(vbCr, "").Replace(vbLf, vbCrLf)
+                        Dim cleanResult = If(sshResult, "").Replace(vbCr, "").Replace(vbLf, vbCrLf)
 
                         SiticoneTextArea_prompt.Text = SiticoneTextArea_ssh_response.Text _
                           .Replace("{original_prompt}", originalGoal) _
@@ -852,14 +852,12 @@ Public Class Form1
     ' Löscht ein Modell über die Ollama-/api/delete-Endpunkt-API.
     Private Async Function OllamaDeleteModel(apiBaseUrl As String, model As String) As Task
         Try
-            Using client As New HttpClient()
+            Using client As HttpClient = CreateConfiguredHttpClient(30)
                 Dim url As String = $"{apiBaseUrl}/delete"
-                Dim req As New HttpRequestMessage(HttpMethod.Delete, url)
-                req.Content = New StringContent(
-                $"{{ ""model"": ""{model}"" }}",
-                Encoding.UTF8,
-                "application/json"
-            )
+                Dim payload As New JObject() From {{"model", model}}
+                Dim req As New HttpRequestMessage(HttpMethod.Delete, url) With {
+                    .Content = New StringContent(payload.ToString(Formatting.None), Encoding.UTF8, "application/json")
+                }
 
                 Dim response = Await client.SendAsync(req)
                 Dim result = Await response.Content.ReadAsStringAsync()
@@ -874,11 +872,12 @@ Public Class Form1
     ' Lädt ein Modell über die Ollama-/api/pull-Endpunkt-API herunter.
     Private Async Function OllamaPullModel(apiBaseUrl As String, model As String) As Task
         Try
-            Using client As New HttpClient()
-                client.Timeout = TimeSpan.FromSeconds(Val(SiticoneTextBox_timeout.Text))
+            Dim timeoutSecs As Double = Val(SiticoneTextBox_timeout.Text.Trim())
+            If timeoutSecs <= 0 Then timeoutSecs = 600
+            Using client As HttpClient = CreateConfiguredHttpClient(timeoutSecs)
                 Dim url As String = $"{apiBaseUrl}/pull"
-                Dim json = $"{{ ""model"": ""{model}"" }}"
-                Dim content As New StringContent(json, Encoding.UTF8, "application/json")
+                Dim payload As New JObject() From {{"model", model}}
+                Dim content As New StringContent(payload.ToString(Formatting.None), Encoding.UTF8, "application/json")
 
                 Dim response = Await client.PostAsync(url, content)
                 Dim result = Await response.Content.ReadAsStringAsync()
@@ -1587,31 +1586,16 @@ Public Class Form1
 
         Dim requestBody As String = ""
 
-        If image_contents.Count > 0 AndAlso prompt = "" Then
+        If image_list IsNot Nothing AndAlso image_list.Count > 0 AndAlso prompt = "" Then
             prompt = "Analyse Image"
         End If
 
-        If audio_contents.Count > 0 AndAlso prompt = "" Then
+        If audio_list IsNot Nothing AndAlso audio_list.Count > 0 AndAlso prompt = "" Then
             prompt = "Analyse Audio"
         End If
 
         ' Options-Dictionary vorbereiten
-        Dim options As New Dictionary(Of String, Object)
-        For Each optionString As String In My.Settings.option_list
-            Dim values() As String = optionString.Split(New String() {"<|>"}, StringSplitOptions.None)
-            If LCase(values(1)) = "true" Then
-                Select Case values(2)
-                    Case "string"
-                        options(values(0)) = values(3)
-                    Case "int"
-                        options(values(0)) = Integer.Parse(values(3))
-                    Case "float"
-                        options(values(0)) = Double.Parse(values(3))
-                    Case "boolean"
-                        options(values(0)) = Boolean.Parse(values(3))
-                End Select
-            End If
-        Next
+        Dim options As Dictionary(Of String, Object) = BuildConfiguredOptions()
 
         ' 2. PAYLOAD GENERIERUNG
         If isSpeechMode Then
@@ -1826,14 +1810,24 @@ Public Class Form1
                             AppLog($"[DEBUG-QueryOllama] Speech-WAV empfangen und gespeichert: {tempFilePath} ({audioBytes.Length} Bytes)")
 
                             ' HTML5-Audio-Player mit Autoplay für WebView2 vorbereiten (inklusive Modell und Stimme)
-                            Dim virtualUrl As String = $"https://ollama.local/{fileName}"
+                            Dim virtualUrl As String = $"https://ollama.local/{Uri.EscapeDataString(fileName)}"
+                            Dim safeModel As String = HttpUtility.HtmlEncode(model)
+                            Dim safeVoice As String = HttpUtility.HtmlEncode(selectedVoice)
+                            Dim safePrompt As String = HttpUtility.HtmlEncode(prompt)
                             Dim audioPlayerHtml As String = $"<div style='margin: 15px 0; padding: 12px; background-color: #252526; border-radius: 8px; border: 1px solid #3e3e42;'>" &
-                                                            $"<div style='font-size: 0.9em; font-weight: bold; color: #569cd6; margin-bottom: 8px;'>🔊 Generated speech output ({model} | Voice: {selectedVoice}):</div>" &
-                                                            $"<div style='font-style: italic; color: #cccccc; margin-bottom: 10px;'>""{prompt}""</div>" &
+                                                            $"<div style='font-size: 0.9em; font-weight: bold; color: #569cd6; margin-bottom: 8px;'>🔊 Generated speech output ({safeModel} | Voice: {safeVoice}):</div>" &
+                                                            $"<div style='font-style: italic; color: #cccccc; margin-bottom: 10px;'>""{safePrompt}""</div>" &
                                                             $"<audio controls autoplay src='{virtualUrl}' style='width: 100%; height: 35px;'></audio>" &
                                                             $"</div>"
 
-                            Response_JSON = $"{{ ""model"": ""{model}"", ""voice"": ""{selectedVoice}"", ""status"": ""audio_generated"", ""bytes"": {audioBytes.Length}, ""file"": ""{fileName}"" }}"
+                            Dim speechRespJson As New JObject() From {
+                                {"model", model},
+                                {"voice", selectedVoice},
+                                {"status", "audio_generated"},
+                                {"bytes", audioBytes.Length},
+                                {"file", fileName}
+                            }
+                            Response_JSON = speechRespJson.ToString(Formatting.None)
                             AppLog("[DEBUG-QueryOllama] <--- Speech-Generierung erfolgreich abgeschlossen.")
                             Return audioPlayerHtml
                         End If
@@ -2827,8 +2821,8 @@ Public Class Form1
 
     ' Führt ein Python-Skript mit JSON-Argument in einem temporären File aus und liefert die Ausgabe.
     Private Function python_code_run(script As String, jsonArgument As String) As String
+        Dim tempFilePath As String = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName() & ".py")
         Try
-            Dim tempFilePath As String = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName() & ".py")
             File.WriteAllText(tempFilePath, script)
 
             Dim escapedJson As String = jsonArgument.Replace("""", "\""")
@@ -2841,11 +2835,10 @@ Public Class Form1
             psi.RedirectStandardError = True
             psi.CreateNoWindow = True
             Using process As Process = Process.Start(psi)
+                Dim errorTask As Task(Of String) = process.StandardError.ReadToEndAsync()
                 Dim output As String = process.StandardOutput.ReadToEnd()
-                Dim errorOutput As String = process.StandardError.ReadToEnd()
                 process.WaitForExit()
-
-                File.Delete(tempFilePath)
+                Dim errorOutput As String = errorTask.GetAwaiter().GetResult()
 
                 If Not String.IsNullOrEmpty(errorOutput) Then
                     Return $"Error executing the script:{Environment.NewLine}{errorOutput}"
@@ -2855,12 +2848,19 @@ Public Class Form1
             End Using
         Catch ex As Exception
             Return $"Exception when running the script: {ex.Message}"
+        Finally
+            Try
+                If File.Exists(tempFilePath) Then File.Delete(tempFilePath)
+            Catch
+            End Try
         End Try
     End Function
 
     ' Klick-Handler: speichert den aktuellen Code-Block als Datei (Dateidialog).
     Private Sub SiticoneButton_code_save_Click(sender As Object, e As EventArgs) Handles SiticoneButton_code_save.Click
-        Dim Extention As String = execute_check(CodeBlock_List.Item(SiticoneDropdown_language.SelectedIndex).Language).ext
+        Dim idx As Integer = SiticoneDropdown_language.SelectedIndex
+        If idx < 0 OrElse idx >= CodeBlock_List.Count Then Return
+        Dim Extention As String = execute_check(CodeBlock_List.Item(idx).Language).ext
         If Extention <> "" Then
             Dim saveFileDialog As New SaveFileDialog()
             saveFileDialog.Filter = "Code Files (*." & Extention & ")|*." & Extention
@@ -3878,8 +3878,7 @@ Public Class Form1
 
         editor.Styles(ScintillaNET.Style.LineNumber).BackColor = Color.FromArgb(250, 250, 250)
         editor.Styles(ScintillaNET.Style.LineNumber).ForeColor = Color.DarkGray
-        editor.CaretLineVisible = True
-        editor.CaretLineBackColor = Color.FromArgb(245, 248, 255)
+        editor.CaretLineBackColor = Color.FromArgb(255, 245, 248, 255)
 
         editor.SetKeywords(0, "")
         editor.SetKeywords(1, "")
@@ -3977,26 +3976,7 @@ Public Class Form1
 
             ' Options aus den gespeicherten Einstellungen übernehmen (z. B. num_ctx),
             ' damit das Modell mit dem korrekten Kontextfenster geladen wird.
-            Dim optionsObj As New JObject()
-            For Each optionString As String In My.Settings.option_list
-                Dim values() As String = optionString.Split(New String() {"<|>"}, StringSplitOptions.None)
-                If values.Length >= 4 AndAlso LCase(values(1)) = "true" Then
-                    Try
-                        Select Case values(2)
-                            Case "string"
-                                optionsObj(values(0)) = values(3)
-                            Case "int"
-                                optionsObj(values(0)) = Integer.Parse(values(3))
-                            Case "float"
-                                optionsObj(values(0)) = Double.Parse(values(3))
-                            Case "boolean"
-                                optionsObj(values(0)) = Boolean.Parse(values(3))
-                        End Select
-                    Catch
-                        ' Ungültigen Wert ignorieren
-                    End Try
-                End If
-            Next
+            Dim optionsObj As JObject = JObject.FromObject(BuildConfiguredOptions())
 
             Dim jsonPayload As New JObject()
             jsonPayload("model") = modelName
@@ -4180,7 +4160,7 @@ Public Class Form1
             _shellStream = _sshClient.CreateShellStream("xterm-256color", 80, 24, 800, 600, 1024)
 
             If WebViewTerminal IsNot Nothing AndAlso WebViewTerminal.CoreWebView2 IsNot Nothing Then
-                WebViewTerminal.CoreWebView2.ExecuteScriptAsync("if (typeof updateTerminalSize === 'function') updateTerminalSize();")
+                Await WebViewTerminal.CoreWebView2.ExecuteScriptAsync("if (typeof updateTerminalSize === 'function') updateTerminalSize();")
             End If
 
             _cts = New CancellationTokenSource()
@@ -4205,28 +4185,38 @@ Public Class Form1
 
     ' Startet einen Hintergrund-Thread, der SSH-Ausgabetext liest und im WebView2-Terminal anzeigt.
     Private Sub StartReadingLoop(token As CancellationToken)
-        Task.Run(Async Function()
+        Task.Run(Async Function() As Task
                      Dim buffer(4096) As Byte
                      Try
-                         While _sshClient.IsConnected AndAlso Not token.IsCancellationRequested
+                         While _sshClient IsNot Nothing AndAlso _sshClient.IsConnected AndAlso
+                               _shellStream IsNot Nothing AndAlso Not token.IsCancellationRequested
                              If _shellStream.DataAvailable Then
                                  Dim count = _shellStream.Read(buffer, 0, buffer.Length)
-                                 Dim text = Encoding.UTF8.GetString(buffer, 0, count)
+                                 If count > 0 Then
+                                     Dim text = Encoding.UTF8.GetString(buffer, 0, count)
+                                     Dim base64Str = Convert.ToBase64String(buffer, 0, count)
 
-                                 Dim base64Str = Convert.ToBase64String(buffer, 0, count)
-                                 Me.Invoke(Sub()
-                                               WebViewTerminal.CoreWebView2.ExecuteScriptAsync($"window.writeFromDotNet('{base64Str}');")
-                                           End Sub)
-
-                                 SyncLock _bufferLock
-                                     _llmBuffer.Append(text)
-                                     AppLog($"[DEBUG-StartReadingLoop] Append _llmBuffer {text.Length} Zeichen hinzu...")
-                                     If _llmBuffer.Length > 10000 Then
-                                         _llmBuffer.Remove(0, _llmBuffer.Length - 10000)
+                                     If Not Me.IsDisposed Then
+                                         Me.BeginInvoke(Sub()
+                                                            If Not Me.IsDisposed AndAlso WebViewTerminal IsNot Nothing AndAlso WebViewTerminal.CoreWebView2 IsNot Nothing Then
+                                                                Dim ignore = WebViewTerminal.CoreWebView2.ExecuteScriptAsync($"window.writeFromDotNet('{base64Str}');")
+                                                            End If
+                                                        End Sub)
                                      End If
-                                 End SyncLock
+
+                                     SyncLock _bufferLock
+                                         _llmBuffer.Append(text)
+                                         AppLog($"[DEBUG-StartReadingLoop] Append _llmBuffer {text.Length} Zeichen hinzu...")
+                                         If _llmBuffer.Length > 10000 Then
+                                             _llmBuffer.Remove(0, _llmBuffer.Length - 10000)
+                                         End If
+                                     End SyncLock
+                                 End If
+                             Else
+                                 Await Task.Delay(15, token).ConfigureAwait(False)
                              End If
                          End While
+                     Catch ex As OperationCanceledException
                      Catch ex As Exception
                      End Try
                  End Function, token)
@@ -4294,6 +4284,11 @@ Public Class Form1
 
     ' Führt einen SSH-Befehl aus und wartet bis zur Abschluss-Regex oder Timeout, inkl. Sudo-Passwort-Handling.
     Public Async Function ExecuteCommandAndWaitAsync(command As String, maxWaitTimeSeconds As Integer) As Task(Of String)
+        If _shellStream Is Nothing OrElse Not _shellStream.CanWrite Then
+            AppLog("[DEBUG-ExecuteCommandAndWaitAsync] Keine aktive SSH-Verbindung (_shellStream ist Nothing oder nicht beschreibbar).")
+            Return "[SYSTEM: Keine aktive SSH-Verbindung.]"
+        End If
+
         SyncLock _bufferLock
             _llmBuffer.Clear()
             AppLog("[DEBUG-ExecuteCommandAndWaitAsync] Clear _llmBuffer...")
@@ -4312,7 +4307,13 @@ Public Class Form1
         ExecuteLlmCommand(safeCommand)
         AppLog("[DEBUG-ExecuteCommandAndWaitAsync] SSH Command: " & safeCommand)
 
-        Dim promptRegex As New Regex(SiticoneTextBox_ssh_regex.Text, RegexOptions.Multiline)
+        Dim promptRegex As Regex
+        Try
+            promptRegex = New Regex(SiticoneTextBox_ssh_regex.Text, RegexOptions.Multiline)
+        Catch ex As ArgumentException
+            AppLog($"[DEBUG-ExecuteCommandAndWaitAsync] Ungültige SSH-Regex '{SiticoneTextBox_ssh_regex.Text}': {ex.Message}")
+            Return $"[SYSTEM: Ungültiger SSH-Regex-Ausdruck: {ex.Message}]"
+        End Try
         Dim passwordRequest As String = SiticoneTextBox_ssh_pwrequest.Text
         Dim sudoPassword As String = SiticoneTextBox_ssh_sudopw.Text
 
@@ -4336,7 +4337,7 @@ Public Class Form1
             cleanOutput = ansiStripRegex.Replace(currentOutput, "")
             cleanOutput = cleanOutput.Replace(vbCr, "").Replace(vbLf, vbCrLf)
 
-            If Not passwordSent AndAlso cleanOutput.Contains(passwordRequest) Then
+            If Not passwordSent AndAlso Not String.IsNullOrEmpty(passwordRequest) AndAlso cleanOutput.Contains(passwordRequest) Then
                 AppLog("[DEBUG-ExecuteCommandAndWaitAsync] SSH Sudo password requested. Sending password...")
 
                 Dim pwBytes = Encoding.UTF8.GetBytes(sudoPassword & vbLf)
@@ -4422,7 +4423,7 @@ Public Class Form1
             Try
                 audioTempPath = Path.Combine(Path.GetTempPath(), $"Voice_{DateTime.Now:yyyyMMdd_HHmmss}.wav")
 
-                If selectedAudioDeviceIndex >= waveIn.DeviceCount Then
+                If selectedAudioDeviceIndex >= WaveInEvent.DeviceCount Then
                     AppLog($"[AUDIO] Warnung: Gespeichertes Gerät (Index {selectedAudioDeviceIndex}) nicht mehr verfügbar. Fallback auf Windows-Standard (0).")
                     selectedAudioDeviceIndex = 0
                 End If
@@ -4503,13 +4504,13 @@ Public Class Form1
         Dim audioMenu As New ContextMenuStrip()
 
         Try
-            Dim deviceCount As Integer = waveIn.DeviceCount
+            Dim deviceCount As Integer = WaveInEvent.DeviceCount
 
             If deviceCount = 0 Then
                 audioMenu.Items.Add("Keine Mikrofone gefunden").Enabled = False
             Else
                 For i As Integer = 0 To deviceCount - 1
-                    Dim capabilities = waveIn.GetCapabilities(i)
+                    Dim capabilities = WaveInEvent.GetCapabilities(i)
                     Dim itemName As String = capabilities.ProductName
 
                     Dim menuItem As New ToolStripMenuItem(itemName)
@@ -4572,6 +4573,11 @@ Public Class Form1
             My.Settings.WhisperLanguage = newLangCode
             My.Settings.Save()
 
+            If whisperFactory Is Nothing Then
+                AppLog("[WHISPER] Warnung: Whisper-Modell ist nicht geladen, Sprachwechsel wird nur gespeichert.")
+                Exit Sub
+            End If
+
             whisperProcessor?.Dispose()
 
             Dim builder = whisperFactory.CreateBuilder()
@@ -4587,7 +4593,7 @@ Public Class Form1
     End Sub
 
     ' Klick-Handler: startet/stoppt die Whisper Live-Sprachtranskription.
-    Private Async Sub SiticoneButton_wisper_Click(sender As Object, e As EventArgs) Handles SiticoneButton_wisper.Click
+    Private Sub SiticoneButton_wisper_Click(sender As Object, e As EventArgs) Handles SiticoneButton_wisper.Click
         Dim mouseEv As MouseEventArgs = TryCast(e, MouseEventArgs)
         If mouseEv IsNot Nothing AndAlso mouseEv.Button = MouseButtons.Right Then Exit Sub
 
@@ -4599,6 +4605,7 @@ Public Class Form1
         If Not isListeningWhisper Then
             Try
                 isListeningWhisper = True
+                isWhisperStreamRunning = True
 
                 Dim waitGreen As Color = Color.FromArgb(46, 204, 113)
                 SiticoneButton_wisper.ButtonBackColor = waitGreen
@@ -4622,6 +4629,8 @@ Public Class Form1
                 Task.Run(AddressOf ProcessWhisperQueueAsync)
 
             Catch ex As Exception
+                isListeningWhisper = False
+                isWhisperStreamRunning = False
                 MessageBox.Show("Fehler beim Starten des Transkripts: " & ex.Message, "Fehler", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 ResetWhisperUI()
             End Try
@@ -4673,9 +4682,9 @@ Public Class Form1
                 Dim localBuffer(currentChunkSize - 1) As Byte
                 Dim bytesRead As Integer = whisperBufferedStream.Read(localBuffer, 0, currentChunkSize)
 
-                If bytesRead > 0 Then
+                If bytesRead >= 2 Then
                     If isListeningWhisper Then
-                        Dim floatSamples(bytesRead / 2 - 1) As Single
+                        Dim floatSamples(bytesRead \ 2 - 1) As Single
                         Dim rmsSum As Double = 0
                         For i As Integer = 0 To floatSamples.Length - 1
                             Dim sample As Short = BitConverter.ToInt16(localBuffer, i * 2)
@@ -4757,6 +4766,8 @@ Public Class Form1
             phraseBuffer.Clear()
         End If
 
+        isWhisperStreamRunning = False
+
         Try
             whisperWaveIn?.Dispose()
             whisperWaveIn = Nothing
@@ -4768,7 +4779,7 @@ Public Class Form1
 
     ' Arbeits-Loop: nimmt Audio-Sätze aus der Warteschlange und transkribiert sie sequenziell.
     Private Async Function ProcessWhisperQueueAsync() As Task
-        While isListeningWhisper OrElse Not whisperJobQueue.IsEmpty
+        While isListeningWhisper OrElse isWhisperStreamRunning OrElse Not whisperJobQueue.IsEmpty
             Dim nextAudioChunk() As Byte = Nothing
 
             If whisperJobQueue.TryDequeue(nextAudioChunk) Then
@@ -4782,7 +4793,8 @@ Public Class Form1
 
     ' Transkribiert ein Audio-Chunk über Whisper und hängt den Text in den Prompt ein.
     Private Async Function TranscribeAudioChunkAsync(ByVal audioBytes() As Byte) As Task
-        Dim whisperSamples(audioBytes.Length / 2 - 1) As Single
+        If audioBytes Is Nothing OrElse audioBytes.Length < 2 Then Return
+        Dim whisperSamples(audioBytes.Length \ 2 - 1) As Single
 
         For i As Integer = 0 To whisperSamples.Length - 1
             Dim sample As Short = BitConverter.ToInt16(audioBytes, i * 2)
@@ -5772,6 +5784,47 @@ Public Class Form1
         End If
 
         Return client
+    End Function
+
+    ''' <summary>
+    ''' Parst die aktivierten Modell-Optionen aus My.Settings.option_list kulturunabhängig.
+    ''' </summary>
+    Private Function BuildConfiguredOptions() As Dictionary(Of String, Object)
+        Dim options As New Dictionary(Of String, Object)()
+        If My.Settings.option_list Is Nothing Then Return options
+
+        For Each optionString As String In My.Settings.option_list
+            If String.IsNullOrEmpty(optionString) Then Continue For
+            Dim values() As String = optionString.Split(New String() {"<|>"}, StringSplitOptions.None)
+            If values.Length < 4 OrElse Not String.Equals(values(1).Trim(), "true", StringComparison.OrdinalIgnoreCase) Then Continue For
+
+            Dim optKey As String = values(0).Trim()
+            Dim optType As String = values(2).Trim().ToLowerInvariant()
+            Dim optVal As String = values(3).Trim()
+
+            Select Case optType
+                Case "string"
+                    options(optKey) = values(3)
+                Case "int"
+                    Dim intVal As Integer
+                    If Integer.TryParse(optVal, Globalization.NumberStyles.Integer, Globalization.CultureInfo.InvariantCulture, intVal) Then
+                        options(optKey) = intVal
+                    End If
+                Case "float"
+                    Dim dblVal As Double
+                    Dim normalized As String = optVal.Replace(","c, "."c)
+                    If Double.TryParse(normalized, Globalization.NumberStyles.Float, Globalization.CultureInfo.InvariantCulture, dblVal) Then
+                        options(optKey) = dblVal
+                    End If
+                Case "boolean"
+                    Dim boolVal As Boolean
+                    If Boolean.TryParse(optVal, boolVal) Then
+                        options(optKey) = boolVal
+                    End If
+            End Select
+        Next
+
+        Return options
     End Function
 
 End Class

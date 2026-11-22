@@ -31,9 +31,6 @@ Namespace My
             splash.Show()
             Application.DoEvents()
 
-            ' Hauptformular im Hintergrund laden (ohne anzuzeigen)
-            Dim mainForm As New Form1()
-
             ' Mindestanzeigezeit für Splash Screen (optional)
             System.Threading.Thread.Sleep(3000) ' z.B. 3 Sekunden Mindestzeit
 
