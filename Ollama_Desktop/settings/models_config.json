@@ -227,6 +227,10 @@
     "manufacturer": "Tencent",
     "description": "Massive open MoE model featuring broad multilingual coverage and extensive context support."
   },
+  "inkling-2-mini": {
+    "manufacturer": "Thinking Machines Lab",
+    "description": "Looped MoE multimodal model (26.4B total, ~3.4B-5.4B active) with vision and 1M context, optimized for local coding agents and reasoning."
+  },
   "internlm3": {
     "manufacturer": "Shanghai AI Lab",
     "description": "Bilingual (Chinese/English) open-source model with strong reasoning, tool-calling, and agent support."

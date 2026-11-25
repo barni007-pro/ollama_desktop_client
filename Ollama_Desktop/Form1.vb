@@ -1562,8 +1562,8 @@ Public Class Form1
 
         AppLog($"[DEBUG-QueryOllama] ---> QueryOllamaAsync gestartet. Model: '{model}'")
 
-        ' Prüfen, ob das Modell Sprachausgabe (Text-to-Speech) unterstützt
-        Dim isSpeechMode As Boolean = (SiticoneChip_model_info_Speech IsNot Nothing AndAlso SiticoneChip_model_info_Speech.IsSelected)
+        ' Prüfen, ob die Speech-API (/v1/audio/speech) über den Switch aktiviert ist
+        Dim isSpeechMode As Boolean = (SiticoneToggleSwitch_speech_api_use IsNot Nothing AndAlso SiticoneToggleSwitch_speech_api_use.Checked)
         ' Streaming-Modus prüfen (nur für normale Generierung, nicht für Speech oder DecisionTools)
         Dim isStreamMode As Boolean = (SiticoneToggleSwitch_stream_use IsNot Nothing AndAlso SiticoneToggleSwitch_stream_use.Checked AndAlso Not isSpeechMode AndAlso Not SiticoneToggleSwitch_decisiontools.Checked)
         ' Gewählte Stimme aus dem Dropdown ermitteln (Fallback auf "default")
@@ -2656,6 +2656,16 @@ Public Class Form1
             MessageBox.Show("Error loading model information: " & ex.Message)
         End Try
 
+        ' Speech-API-Switch anhand der Modell-Capability vorauswählen
+        If SiticoneToggleSwitch_speech_api_use IsNot Nothing Then
+            isLoadingParameters = True
+            Try
+                SiticoneToggleSwitch_speech_api_use.Checked = SiticoneChip_model_info_Speech.IsSelected
+            Finally
+                isLoadingParameters = False
+            End Try
+        End If
+
         UpdateMemoryUI()
         CheckActiveSwitchesAgainstModelCapabilities()
         UpdateVramCalculationUI()
@@ -3668,19 +3678,86 @@ Public Class Form1
         TaskDialog.ShowDialog(page)
     End Sub
 
-    ' Klick-Handler: zeigt die Lizenzinformation des gewählten Modells in einem Dialog an.
+    ' Klick-Handler: zeigt die Lizenzinformation des gewählten Modells in einem skalierbaren Dialog an.
     Private Sub SiticoneButton_show_licence_Click(sender As Object, e As EventArgs) Handles SiticoneButton_show_licence.Click
-        Dim page As New TaskDialogPage With {
-            .Caption = "Ollama Desktop",
-            .Heading = "License",
-            .Text = SiticoneDropdown_model.SelectedItem & ":",
-            .Expander = New TaskDialogExpander With {
-                .Text = extractedLicense,
-                .Expanded = True
+        Dim modelName As String = If(SiticoneDropdown_model.SelectedItem?.ToString(), "Unknown Model")
+        Dim rawLicense As String = If(String.IsNullOrWhiteSpace(extractedLicense), "No license information available.", extractedLicense)
+        Dim normalizedLicense As String = rawLicense.Replace(vbCrLf, vbLf).Replace(vbCr, vbLf).Replace(vbLf, vbCrLf)
+
+        Using dlg As New Form()
+            dlg.Text = $"License - {modelName}"
+            dlg.StartPosition = FormStartPosition.CenterParent
+            dlg.FormBorderStyle = FormBorderStyle.Sizable
+            dlg.MinimizeBox = False
+            dlg.MaximizeBox = True
+            dlg.ShowInTaskbar = False
+            dlg.Size = New Size(700, 520)
+            dlg.MinimumSize = New Size(420, 300)
+            dlg.Padding = New Padding(12)
+
+            Dim lblHeader As New Label() With {
+                .Text = $"Model: {modelName}",
+                .Dock = DockStyle.Top,
+                .AutoSize = False,
+                .Height = 26,
+                .Font = New Font("Segoe UI", 10.0F, FontStyle.Bold),
+                .TextAlign = ContentAlignment.MiddleLeft
             }
-        }
-        page.Buttons.Add(TaskDialogButton.OK)
-        TaskDialog.ShowDialog(page)
+
+            Dim txtLicense As New System.Windows.Forms.TextBox() With {
+                .Dock = DockStyle.Fill,
+                .Multiline = True,
+                .ReadOnly = True,
+                .WordWrap = True,
+                .ScrollBars = ScrollBars.Vertical,
+                .Font = New Font("Segoe UI", 9.5F, FontStyle.Regular),
+                .BackColor = SystemColors.Window,
+                .ForeColor = SystemColors.WindowText,
+                .Text = normalizedLicense
+            }
+
+            Dim bottomPanel As New Panel() With {
+                .Dock = DockStyle.Bottom,
+                .Height = 42,
+                .Padding = New Padding(0, 10, 0, 0)
+            }
+
+            Dim btnCopy As New System.Windows.Forms.Button() With {
+                .Text = "Copy",
+                .Size = New Size(90, 30),
+                .Location = New Point(0, 10)
+            }
+            AddHandler btnCopy.Click, Sub()
+                                          Clipboard.SetText(normalizedLicense)
+                                      End Sub
+
+            Dim btnOk As New System.Windows.Forms.Button() With {
+                .Text = "OK",
+                .DialogResult = DialogResult.OK,
+                .Size = New Size(90, 30),
+                .Anchor = AnchorStyles.Top Or AnchorStyles.Right,
+                .Location = New Point(bottomPanel.ClientSize.Width - 90, 10)
+            }
+
+            bottomPanel.Controls.Add(btnCopy)
+            bottomPanel.Controls.Add(btnOk)
+
+            ' Reihenfolge wichtig für Dock-Layout: Fill zuerst, Top/Bottom danach
+            dlg.Controls.Add(txtLicense)
+            dlg.Controls.Add(lblHeader)
+            dlg.Controls.Add(bottomPanel)
+
+            dlg.AcceptButton = btnOk
+            dlg.CancelButton = btnOk
+
+            AddHandler dlg.Shown, Sub()
+                                      txtLicense.SelectionStart = 0
+                                      txtLicense.SelectionLength = 0
+                                      btnOk.Focus()
+                                  End Sub
+
+            dlg.ShowDialog(Me)
+        End Using
     End Sub
 
     ' Klick-Handler: lädt Kontext-Token aus einer .cnt-Datei.
@@ -5402,6 +5479,28 @@ Public Class Form1
 
                 If res = DialogResult.No Then
                     SiticoneToggleSwitch_thinking_use.Checked = False
+                End If
+            End If
+        End If
+    End Sub
+
+    ' ToggleSwitch-Handler: warnt, falls das gewählte Modell die "speech"-Fähigkeit nicht unterstützt.
+    Private Sub SiticoneToggleSwitch_speech_api_use_CheckedChanged(sender As Object, e As EventArgs) Handles SiticoneToggleSwitch_speech_api_use.CheckedChanged
+        If Not isAppReady OrElse isLoadingParameters Then Exit Sub
+
+        If SiticoneToggleSwitch_speech_api_use.Checked Then
+            If Not SiticoneChip_model_info_Speech.IsSelected Then
+                Dim modelName As String = If(SiticoneDropdown_model.SelectedItem?.ToString(), "Unknown")
+                Dim res = MessageBox.Show(
+                    $"The selected model '{modelName}' does not report the 'speech' capability (/v1/audio/speech)." & vbCrLf & vbCrLf &
+                    "Enabling the Speech API with this model might not work as expected or may cause an error." & vbCrLf & vbCrLf &
+                    "Do you want to enable this feature anyway?",
+                    "Model Compatibility Warning",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Warning)
+
+                If res = DialogResult.No Then
+                    SiticoneToggleSwitch_speech_api_use.Checked = False
                 End If
             End If
         End If

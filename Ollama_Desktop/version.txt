@@ -217,3 +217,11 @@ V 1.8.0.45
   - Added HTML encoding and proper `JObject` JSON serialization for speech output rendering and `Response_JSON`.
   - Removed redundant `SaveServers()` call on close in `FrmServerManager`.
   - Resolved all compiler warnings in `Form1.vb` (missing `Await`, shared member access via `WaveInEvent`, and obsolete `CaretLineVisible`).
+V 1.8.1.46
+- Speech API Toggle Switch (`SiticoneToggleSwitch_speech_api_use`):
+  - Users can now explicitly choose between the `/v1/audio/speech` API and the standard `/api/generate` API.
+  - Automatically pre-selects the switch when selecting a model that reports the `speech` capability.
+  - Displays a compatibility confirmation prompt when manually enabling the Speech API for models without the `speech` capability, allowing users to override if desired.
+- add inkling-2-mini to models_config.json
+- Resizable License Dialog:
+  - Replaced the native `TaskDialog` in `SiticoneButton_show_licence_Click` with a custom, resizable dialog (`700x520` default, scrollable with word wrap and a Copy button) to prevent overly wide windows on unwrapped license texts.
